@@ -3,7 +3,7 @@ using IvoryProxy.Core.Interceptors;
 
 namespace IvoryProxy.Tests.Interceptors
 {
-    public class SwallowExceptionInterceptor : ExceptionMethodInterceptor
+    public class SwallowExceptionInterceptor : ExceptionInterceptor
     {
         /// <inheritdoc />
         protected override void OnException(Exception exception)

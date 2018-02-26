@@ -7,25 +7,25 @@ namespace IvoryProxy.Core.Activators
     /// <summary>
     /// Активатор перехватчиков на основе конструктора по умолчанию.
     /// </summary>
-    internal class DefaultCtorMethodInterceptorActivator : IMethodInterceptorActivator
+    internal class DefaultCtorInterceptorActivator : IInterceptorActivator
     {      
         /// <inheritdoc />
-        public IMethodInterceptor CreateInstance(Type interceptorType)
+        public IInterceptor CreateInstance(Type interceptorType)
         {
             if (interceptorType == null)
                 throw new ArgumentNullException(nameof(interceptorType));
             
-            if (!typeof(IMethodInterceptor).IsAssignableFrom(interceptorType) || !interceptorType.IsClass)
+            if (!typeof(IInterceptor).IsAssignableFrom(interceptorType) || !interceptorType.IsClass)
             {
                 throw new IvoryProxyException(
-                    $"Тип перехватчика должен быть классом и реализовывать интерфейс '{typeof(IMethodInterceptor)}'. " +
+                    $"Тип перехватчика должен быть классом и реализовывать интерфейс '{typeof(IInterceptor)}'. " +
                     $"Исходный тип: {interceptorType.FullName} . " +
                     $"Параметр: {nameof(interceptorType)}");
             }
 
             try
             {
-                return (IMethodInterceptor) Activator.CreateInstance(interceptorType);
+                return (IInterceptor) Activator.CreateInstance(interceptorType);
             }
             catch (Exception e)
             {

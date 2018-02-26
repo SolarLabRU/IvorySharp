@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace IvoryProxy.Core
 {
@@ -7,6 +8,11 @@ namespace IvoryProxy.Core
     /// </summary>
     public interface IMethodInvocation
     {
+        /// <summary>
+        /// Тип, в котором определен метод <see cref="TargetMethod"/>.
+        /// </summary>
+        Type DeclaringType { get; }
+
         /// <summary>
         /// Экземпляр целевого объекта, метод которого был вызван.
         /// </summary>
@@ -27,6 +33,11 @@ namespace IvoryProxy.Core
         /// </summary>
         bool IsReturnVoid { get; }
         
+        /// <summary>
+        /// Признак того, что возвращаемое значение было установлено.
+        /// </summary>
+        bool IsReturnValueWasSet { get; }
+
         /// <summary>
         /// Метод, вызов которого был запрошен.
         /// </summary>

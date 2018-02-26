@@ -2,7 +2,7 @@
 
 namespace IvoryProxy.Tests.Interceptors
 {
-    public class IncrementResultInterceptor : IInterceptor
+    public class PowTwoResultInterceptor : IInterceptor
     {
         /// <inheritdoc />
         public void Intercept(IMethodInvocation invocation)
@@ -10,7 +10,7 @@ namespace IvoryProxy.Tests.Interceptors
             invocation.Proceed();
             if (invocation.ReturnValue is int intResult)
             {
-                invocation.TrySetReturnValue(intResult + 1);
+                invocation.TrySetReturnValue(intResult * intResult);
             }
         }
 

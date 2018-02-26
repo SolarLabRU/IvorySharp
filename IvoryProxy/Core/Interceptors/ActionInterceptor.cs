@@ -8,7 +8,7 @@ namespace IvoryProxy.Core.Interceptors
     /// <summary>
     /// Перехватывает вызов метода, добавляя действия на пре и пост обработку.
     /// </summary>
-    public abstract class ActionMethodInterceptor : IMethodInterceptor
+    public abstract class ActionInterceptor : IInterceptor
     {
         /// <summary>
         /// Вызывается перед выполнением метода.
@@ -82,6 +82,12 @@ namespace IvoryProxy.Core.Interceptors
                     throw new AggregateException(exception, inner);
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public virtual bool CanIntercept(IMethodPreExecutionContext context)
+        {
+            return true;
         }
 
         /// <summary>

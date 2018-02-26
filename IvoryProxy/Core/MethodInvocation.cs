@@ -8,6 +8,9 @@ namespace IvoryProxy.Core
     /// </summary>
     internal class MethodInvocation : IMethodInvocation, IMethodPreExecutionContext, IMethodPostExecutionContext
     {
+        /// <inheritdoc />
+        public Type DeclaringType { get; }
+
         /// <summary>
         /// Экземпляр целевого объекта, метод которого был вызван.
         /// </summary>
@@ -37,18 +40,20 @@ namespace IvoryProxy.Core
         /// Признак того, что возвращаемое значение было установлено.
         /// </summary>
         public bool IsReturnValueWasSet { get; private set; }
-        
+
         /// <summary>
         /// Инициализирует экземпляр <see cref="MethodInvocation"/>.
         /// </summary>
         /// <param name="target">Экземпляр целевого объекта, метод которого был вызван.</param>
         /// <param name="arguments">Массив параметров, с которыми был вызван метод.</param>
         /// <param name="targetMethod">Метод, вызов которого был запрошен.</param>
-        public MethodInvocation(object target, object[] arguments, MethodInfo targetMethod)
+        /// <param name="declaringType">Тип, в котором определен метод <paramref name="targetMethod"/>.</param>
+        public MethodInvocation(object target, object[] arguments, MethodInfo targetMethod, Type declaringType)
         {
             Target = target;
             Arguments = arguments ?? Array.Empty<object>();
             TargetMethod = targetMethod;
+            DeclaringType = declaringType;
             IsReturnVoid = targetMethod.ReturnType == typeof(void);
         }
 

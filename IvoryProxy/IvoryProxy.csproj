@@ -1,5 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <IsWindows Condition="'$(OS)' == 'Windows_NT'">true</IsWindows>
+    <IsUnix Condition="'$(OS)' == 'Unix'">true</IsUnix>
+  </PropertyGroup>
+    
+  <PropertyGroup Condition="'$(IsUnix)'=='true'">
     <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+    
+  <PropertyGroup Condition="'$(IsWindows)' == 'true'">
+    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <VersionPrefix>alpha</VersionPrefix>
+    <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Title>IvoryProxy</Title>
+    <Description>Allows to intercept methods in runtime via attributes (AOP aspects style).</Description>
+    <Authors>bitshift.it@icloud.com</Authors>
+    <Copyright>Copyright © Igor Polyakov 2018</Copyright>
+    <PackageProjectUrl>https://github.com/rex-core/IvoryProxy</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/rex-core/IvoryProxy/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/rex-core/IvoryProxy.git</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 </Project>

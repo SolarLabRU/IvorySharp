@@ -1,6 +1,4 @@
-﻿using IvoryProxy.Core.Proxies;
-
-namespace IvoryProxy.Core
+﻿namespace IvoryProxy.Core
 {
     /// <summary>
     /// Генератор динамических прокси объектов.
@@ -8,7 +6,7 @@ namespace IvoryProxy.Core
     public interface IProxyGenerator
     {
         /// <summary>
-        /// Создает прокси для интерфейса типа <typeparamref name="TObject"/>.
+        /// Создает прокси для интерфейса типа <typeparamref name="T"/>.
         /// </summary>
         /// <param name="source">Исходный объект.</param>
         /// <typeparam name="T">Тип объекта для проксирования. Обязательно интерфейс.</typeparam>

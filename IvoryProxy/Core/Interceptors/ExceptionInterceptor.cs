@@ -9,7 +9,7 @@ namespace IvoryProxy.Core.Interceptors
     /// <summary>
     /// Базовый класс перехватчика вызовов методов с заменой обработки исключений.
     /// </summary>
-    public abstract class ExceptionMethodInterceptor : IMethodInterceptor
+    public abstract class ExceptionInterceptor : IInterceptor
     {
         /// <summary>
         /// Обработчик исключений.
@@ -63,6 +63,12 @@ namespace IvoryProxy.Core.Interceptors
             }
 
             invocation.TrySetReturnValue(ValueHelper.GetDefault(invocation.TargetMethod.ReturnType));
+        }
+
+        /// <inheritdoc />
+        public virtual bool CanIntercept(IMethodPreExecutionContext context)
+        {
+            return true;
         }
     }
 }

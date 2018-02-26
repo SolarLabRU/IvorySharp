@@ -1,4 +1,4 @@
-﻿namespace IvoryProxy.Core.Proxies
+﻿namespace IvoryProxy.Core
 {
     /// <summary>
     /// Интерфейс динамическго прокси.
@@ -15,13 +15,6 @@
         /// <summary>
         /// Прокси объекта.
         /// </summary>
-        T Proxy { get; }
-
-        /// <summary>
-        /// Выполняет вызов метода в соответствии с моделью <paramref name="invocation"/>.
-        /// </summary>
-        /// <param name="invocation">Модель вызова метода.</param>
-        /// <returns>Результат выполнения метода.</returns>
-        void Proceed(IMethodInvocation invocation);
+        T TransparentProxy { get; }
     }
 }
