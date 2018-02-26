@@ -22,6 +22,6 @@
         /// </summary>
         /// <param name="invocation">Модель вызова метода.</param>
         /// <returns>Результат выполнения метода.</returns>
-        object Proceed(IMethodInvocation invocation);
+        void Proceed(IMethodInvocation invocation);
     }
 }

@@ -7,6 +7,8 @@ using IvoryProxy.Core.Providers;
 
 namespace IvoryProxy.Core.Proxies
 {
+    #if NETCOREAPP2_0
+      
     /// <summary>
     /// Реализация динамического прокси на основе <see cref="DispatchProxy"/>.
     /// </summary>
@@ -52,9 +54,9 @@ namespace IvoryProxy.Core.Proxies
         }
         
         /// <inheritdoc />
-        public object Proceed(IMethodInvocation invocation)
+        public void Proceed(IMethodInvocation invocation)
         {
-            return Invoke(invocation.TargetMethod, invocation.Arguments);
+            Invoke(invocation.TargetMethod, invocation.Arguments);
         }
 
         /// <inheritdoc />
@@ -117,4 +119,6 @@ namespace IvoryProxy.Core.Proxies
             Proxy = proxy;
         }
     }
+    
+    #endif
 }
