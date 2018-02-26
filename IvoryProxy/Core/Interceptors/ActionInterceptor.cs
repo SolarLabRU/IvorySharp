@@ -85,7 +85,7 @@ namespace IvoryProxy.Core.Interceptors
         }
 
         /// <inheritdoc />
-        public virtual bool CanIntercept(IMethodPreExecutionContext context)
+        public virtual bool CanIntercept(IMethodInvocation invocation)
         {
             return true;
         }

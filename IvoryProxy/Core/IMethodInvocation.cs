@@ -12,11 +12,11 @@ namespace IvoryProxy.Core
         /// Тип, в котором определен метод <see cref="TargetMethod"/>.
         /// </summary>
         Type DeclaringType { get; }
-
+            
         /// <summary>
         /// Экземпляр целевого объекта, метод которого был вызван.
         /// </summary>
-        object Target { get; }
+        object InvocationTarget { get; }
         
         /// <summary>
         /// Массив параметров, с которыми был вызван метод.
@@ -26,17 +26,7 @@ namespace IvoryProxy.Core
         /// <summary>
         /// Возвращаемое значение.
         /// </summary>
-        object ReturnValue { get; }
-        
-        /// <summary>
-        /// Признак того, что метод возвращает <see cref="System.Void"/>.
-        /// </summary>
-        bool IsReturnVoid { get; }
-        
-        /// <summary>
-        /// Признак того, что возвращаемое значение было установлено.
-        /// </summary>
-        bool IsReturnValueWasSet { get; }
+        object ReturnValue { get; set; }    
 
         /// <summary>
         /// Метод, вызов которого был запрошен.
@@ -48,11 +38,5 @@ namespace IvoryProxy.Core
         /// </summary>
         /// <returns>Результат вызова.</returns>
         void Proceed();
-
-        /// <summary>
-        /// Выполняет попытку установки результата вызова метода.
-        /// </summary>
-        /// <param name="result">Результат вызова метода.</param>
-        bool TrySetReturnValue(object result);
     }
 }

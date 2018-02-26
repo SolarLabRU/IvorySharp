@@ -10,7 +10,7 @@ namespace IvoryProxy.Core
         /// <summary>
         /// Экземпляр целевого объекта, метод которого был вызван.
         /// </summary>
-        object Target { get; }
+        object InvocationTarget { get; }
         
         /// <summary>
         /// Массив параметров, с которыми был вызван метод.

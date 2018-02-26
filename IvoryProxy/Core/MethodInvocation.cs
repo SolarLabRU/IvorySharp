@@ -14,7 +14,7 @@ namespace IvoryProxy.Core
         /// <summary>
         /// Экземпляр целевого объекта, метод которого был вызван.
         /// </summary>
-        public object Target { get; }
+        public object InvocationTarget { get; }
 
         /// <summary>
         /// Массив параметров, с которыми был вызван метод.
@@ -24,23 +24,27 @@ namespace IvoryProxy.Core
         /// <summary>
         /// Возвращаемое значение.
         /// </summary>
-        public object ReturnValue { get; private set; }
+        public object ReturnValue
+        {
+            get => _returnValue;
+            set { 
+                ReturnValueWasSet = true;
+                _returnValue = value;
+            }
+        }
+
+        private object _returnValue;
 
         /// <summary>
-        /// Признак того, что метод возвращает <see cref="System.Void"/>.
+        /// Признак того, что возвращаемое значение было установлено.
         /// </summary>
-        public bool IsReturnVoid { get; }
+        public bool ReturnValueWasSet { get; set; }
 
         /// <summary>
         /// Метод, вызов которого был запрошен.
         /// </summary>
         public MethodInfo TargetMethod { get; }
     
-        /// <summary>
-        /// Признак того, что возвращаемое значение было установлено.
-        /// </summary>
-        public bool IsReturnValueWasSet { get; private set; }
-
         /// <summary>
         /// Инициализирует экземпляр <see cref="MethodInvocation"/>.
         /// </summary>
@@ -50,31 +54,17 @@ namespace IvoryProxy.Core
         /// <param name="declaringType">Тип, в котором определен метод <paramref name="targetMethod"/>.</param>
         public MethodInvocation(object target, object[] arguments, MethodInfo targetMethod, Type declaringType)
         {
-            Target = target;
+            InvocationTarget = target;
             Arguments = arguments ?? Array.Empty<object>();
             TargetMethod = targetMethod;
             DeclaringType = declaringType;
-            IsReturnVoid = targetMethod.ReturnType == typeof(void);
-        }
-
-        /// <inheritdoc />
-        public bool TrySetReturnValue(object result)
-        {
-            if (IsReturnVoid)
-            {
-                return false;
-            }
-
-            IsReturnValueWasSet = true;
-            ReturnValue = result;
-            return true;
         }
 
         /// <inheritdoc />
         public void Proceed()
         {
-            var result = TargetMethod.Invoke(Target, Arguments);
-            TrySetReturnValue(result);
+            ReturnValue = TargetMethod.Invoke(InvocationTarget, Arguments);
+            ReturnValueWasSet = true;
         }
     }
 }

@@ -10,13 +10,14 @@ namespace IvoryProxy.Tests.Interceptors
             invocation.Proceed();
             if (invocation.ReturnValue is int intResult)
             {
-                invocation.TrySetReturnValue(intResult + 1);
+                invocation.ReturnValue = intResult + 1;
             }
         }
 
-        public bool CanIntercept(IMethodPreExecutionContext context)
+        /// <inheritdoc />
+        public bool CanIntercept(IMethodInvocation invocation)
         {
-            return context.TargetMethod.ReturnType == typeof(int);
+            return invocation.TargetMethod.ReturnType == typeof(int);
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using IvoryProxy.Core.Exceptions;
-using IvoryProxy.Core.Providers;
 using IvoryProxy.Extensions;
 
 namespace IvoryProxy.Core.Proxies
@@ -22,19 +21,19 @@ namespace IvoryProxy.Core.Proxies
         /// <summary>
         /// Провайдер перехватчиков.
         /// </summary>
-        public IInterceptorProvider InterceptorProvider { get; }
+        public IInterceptorSelector InterceptorSelector { get; }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="IvoryInterceptorProxyBase{T}"/>.
         /// </summary>
         /// <param name="decorated">Исходный объект.</param>
         /// <param name="transparentProxy">Проксированный объект.</param>
-        /// <param name="interceptorProvider">Провайдер перехватчиков вызовов.</param>
-        internal IvoryInterceptorProxyBase(T decorated, T transparentProxy, IInterceptorProvider interceptorProvider)
+        /// <param name="interceptorSelector">Провайдер перехватчиков вызовов.</param>
+        internal IvoryInterceptorProxyBase(T decorated, T transparentProxy, IInterceptorSelector interceptorSelector)
         {
             Decorated = decorated ?? throw new ArgumentNullException(nameof(decorated));
             TransparentProxy = transparentProxy ?? throw new ArgumentNullException(nameof(transparentProxy));
-            InterceptorProvider = interceptorProvider ?? throw new ArgumentNullException(nameof(interceptorProvider));
+            InterceptorSelector = interceptorSelector ?? throw new ArgumentNullException(nameof(interceptorSelector));
         }
 
         /// <summary>
@@ -49,10 +48,8 @@ namespace IvoryProxy.Core.Proxies
             }
             else
             {
-                var interceptor = InterceptorProvider.GetInterceptor(invocation);
-                var preExecutionContext = invocation.ToPreExecutionContext();
-
-                if (interceptor == null || !interceptor.CanIntercept(preExecutionContext))
+                var interceptor = InterceptorSelector.FirstOrDefaultInterceptor(invocation);
+                if (interceptor == null || !interceptor.CanIntercept(invocation))
                 {
                     Bypass(invocation);
                 }
@@ -83,14 +80,13 @@ namespace IvoryProxy.Core.Proxies
             {
                 interceptor.Intercept(invocation);
 
-                if (!invocation.IsReturnVoid && !invocation.IsReturnValueWasSet)
+                if (invocation is MethodInvocation mi && !mi.IsVoidResult() && !mi.ReturnValueWasSet)
                 {
                     throw new IvoryProxyException(
                         $"Не было установлено значение проксированного метода '{invocation.TargetMethod.Name}' " +
-                        $"класса '{invocation.Target.GetType().FullName}'. " +
+                        $"интерфейса '{invocation.DeclaringType.FullName}'. " +
                         $"Проверьте, что в методе '{nameof(IInterceptor.Intercept)}' " +
-                        $"перехватчика '{interceptor.GetType().FullName}' вызывается метод " +
-                        $"'{nameof(IMethodInvocation.TrySetReturnValue)}' параметра с типом '{nameof(IMethodInvocation)}'. " +
+                        $"перехватчика '{interceptor.GetType().FullName}' устанавливается свойство '{nameof(IMethodInvocation.ReturnValue)}'. " +
                         $"Если полная замена метода не была задумана, то убедитесь в наличии " +
                         $"вызова метода '{nameof(IMethodInvocation.Proceed)}' входного параметра.");
                 }

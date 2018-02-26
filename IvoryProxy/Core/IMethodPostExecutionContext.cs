@@ -10,7 +10,7 @@ namespace IvoryProxy.Core
         /// <summary>
         /// Экземпляр целевого объекта, метод которого был вызван.
         /// </summary>
-        object Target { get; }
+        object InvocationTarget { get; }
         
         /// <summary>
         /// Массив параметров, с которыми был вызван метод.
@@ -26,10 +26,5 @@ namespace IvoryProxy.Core
         /// Возвращаемое значение.
         /// </summary>
         object ReturnValue { get; }
-        
-        /// <summary>
-        /// Признак того, что метод возвращает <see cref="System.Void"/>.
-        /// </summary>
-        bool IsReturnVoid { get; }
     }
 }

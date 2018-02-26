@@ -9,7 +9,7 @@ namespace IvoryProxy.Core.Providers
     /// <summary>
     /// Провайдер перехватчиков вызовов методов на основе атрибутов.
     /// </summary>
-    internal class AttributeBasedInterceptorProvider : IInterceptorProvider
+    internal class AttributeInterceptorSelector : IInterceptorSelector
     {
         /// <summary>
         /// Активатор перехватчиков.
@@ -17,19 +17,19 @@ namespace IvoryProxy.Core.Providers
         protected IInterceptorActivator InterceptorActivator { get; set; }
 
         /// <summary>
-        /// Инициализирует экземпляр класса <see cref="AttributeBasedInterceptorProvider"/>
+        /// Инициализирует экземпляр класса <see cref="AttributeInterceptorSelector"/>
         /// с активатором по умолчанию <see cref="DefaultCtorInterceptorActivator"/>.
         /// </summary>
-        public AttributeBasedInterceptorProvider()
+        public AttributeInterceptorSelector()
         {
             InterceptorActivator = new DefaultCtorInterceptorActivator();
         }
 
         /// <summary>
-        /// Инициализирует экземпляр класса <see cref="AttributeBasedInterceptorProvider"/>.
+        /// Инициализирует экземпляр класса <see cref="AttributeInterceptorSelector"/>.
         /// </summary>
         /// <param name="activator">Активатор перехватчиков вызовов методов.</param>
-        public AttributeBasedInterceptorProvider(IInterceptorActivator activator)
+        public AttributeInterceptorSelector(IInterceptorActivator activator)
         {
             if (activator == null)
                 throw new ArgumentNullException(nameof(activator));
@@ -38,7 +38,7 @@ namespace IvoryProxy.Core.Providers
         }
         
         /// <inheritdoc />
-        public IInterceptor GetInterceptor(IMethodInvocation invocation)
+        public IInterceptor FirstOrDefaultInterceptor(IMethodInvocation invocation)
         {
             if (invocation == null)
                 throw new ArgumentNullException(nameof(invocation));

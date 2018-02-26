@@ -14,8 +14,8 @@
         /// <summary>
         /// Определяет возможность перехвата вызова метода.
         /// </summary>
-        /// <param name="context">Контент вызова метода.</param>
-        /// <returns>Признак возможности перехвата вызова метода.</returns>
-        bool CanIntercept(IMethodPreExecutionContext context);
+        /// <param name="invocation">Модель вызова метода.</param>
+        /// <returns>Признак invocation перехвата вызова метода.</returns>
+        bool CanIntercept(IMethodInvocation invocation);
     }
 }

@@ -28,24 +28,24 @@
         /// </summary>
         /// <param name="decorated">Исходный объект.</param>
         internal IvoryRealProxy(T decorated)
-            : this(decorated, new AttributeBasedInterceptorProvider())
+            : this(decorated, new AttributeInterceptorSelector())
         { }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="IvoryRealProxy{T}"/>.
         /// </summary>
         /// <param name="decorated">Исходный объект.</param>
-        /// <param name="interceptorProvider">Провайдер перехватчиков.</param>
-        internal IvoryRealProxy(T decorated, IInterceptorProvider interceptorProvider)
+        /// <param name="interceptorSelector">Провайдер перехватчиков.</param>
+        internal IvoryRealProxy(T decorated, IInterceptorSelector interceptorSelector)
             : base(typeof(T))
         {
             if (decorated == null)
                 throw new ArgumentNullException(nameof(decorated));
 
-            if (interceptorProvider == null)
-                throw new ArgumentNullException(nameof(interceptorProvider));
+            if (interceptorSelector == null)
+                throw new ArgumentNullException(nameof(interceptorSelector));
 
-            _interceptorProxyBase = new IvoryInterceptorProxyBase<T>(decorated, (T)GetTransparentProxy(), interceptorProvider);
+            _interceptorProxyBase = new IvoryInterceptorProxyBase<T>(decorated, (T)GetTransparentProxy(), interceptorSelector);
         }
 
         /// <inheritdoc />

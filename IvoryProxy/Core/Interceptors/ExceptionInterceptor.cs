@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
+using IvoryProxy.Extensions;
 using IvoryProxy.Helpers;
 
 namespace IvoryProxy.Core.Interceptors
@@ -32,7 +33,7 @@ namespace IvoryProxy.Core.Interceptors
                 invocation.Proceed();
 
                 // TODO[IP] Написать тесты на это и разобраться нужно ли вообще перехватывать исключения в задачах
-                if (invocation.IsReturnVoid && invocation.ReturnValue is Task taskResult)
+                if (invocation.IsVoidResult() && invocation.ReturnValue is Task taskResult)
                 {
                     taskResult.ContinueWith(task =>
                     {
@@ -62,11 +63,11 @@ namespace IvoryProxy.Core.Interceptors
                 }
             }
 
-            invocation.TrySetReturnValue(ValueHelper.GetDefault(invocation.TargetMethod.ReturnType));
+            invocation.ReturnValue = ValueHelper.GetDefault(invocation.TargetMethod.ReturnType);
         }
 
         /// <inheritdoc />
-        public virtual bool CanIntercept(IMethodPreExecutionContext context)
+        public virtual bool CanIntercept(IMethodInvocation invocation)
         {
             return true;
         }

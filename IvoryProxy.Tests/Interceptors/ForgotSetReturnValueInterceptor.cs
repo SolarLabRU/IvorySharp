@@ -10,7 +10,7 @@ namespace IvoryProxy.Tests.Interceptors
             //throw new System.NotImplementedException();
         }
 
-        public bool CanIntercept(IMethodPreExecutionContext context)
+        public bool CanIntercept(IMethodInvocation invocation)
         {
             return true;
         }

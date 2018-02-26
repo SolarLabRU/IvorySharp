@@ -39,7 +39,7 @@ namespace IvoryProxy.Core.Proxies
             object proxy = Create<T, IvoryDispatchProxy<T>>();
             
             var typedProxy = (IvoryDispatchProxy<T>) proxy;        
-            typedProxy.Initialize(decorated, (T)proxy, new AttributeBasedInterceptorProvider());
+            typedProxy.Initialize(decorated, (T)proxy, new AttributeInterceptorSelector());
             
             return typedProxy;
         }
@@ -68,10 +68,10 @@ namespace IvoryProxy.Core.Proxies
         /// </summary>
         /// <param name="decorated">Исходный объект.</param>
         /// <param name="proxy">Проксированный объект.</param>
-        /// <param name="interceptorProvider">Провайдер перехватчиков вызовов методов.</param>
-        protected virtual void Initialize(T decorated, T proxy, IInterceptorProvider interceptorProvider)
+        /// <param name="interceptorSelector">Провайдер перехватчиков вызовов методов.</param>
+        protected virtual void Initialize(T decorated, T proxy, IInterceptorSelector interceptorSelector)
         {
-            _interceptorProxyBase = new IvoryInterceptorProxyBase<T>(decorated, proxy, interceptorProvider);
+            _interceptorProxyBase = new IvoryInterceptorProxyBase<T>(decorated, proxy, interceptorSelector);
         }
     }
     

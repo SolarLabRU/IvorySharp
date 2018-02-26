@@ -12,7 +12,7 @@ namespace IvoryProxy.Tests.Interceptors
             throw new TException();
         }
 
-        public bool CanIntercept(IMethodPreExecutionContext context)
+        public bool CanIntercept(IMethodInvocation invocation)
         {
             return true;
         }

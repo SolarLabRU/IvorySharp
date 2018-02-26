@@ -10,7 +10,7 @@ namespace IvoryProxy.Extensions
             if (invocation is MethodInvocation mi)
                 return mi;
 
-            return new MethodInvocation(invocation.Target, invocation.Arguments, invocation.TargetMethod, invocation.DeclaringType);
+            return new MethodInvocation(invocation.InvocationTarget, invocation.Arguments, invocation.TargetMethod, invocation.DeclaringType);
         }
 
         public static IMethodPostExecutionContext ToPostExecutionContext(this IMethodInvocation invocation)
@@ -18,16 +18,21 @@ namespace IvoryProxy.Extensions
             if (invocation is MethodInvocation mi)
                 return mi;
 
-            var baseInvocation = new MethodInvocation(invocation.Target, invocation.Arguments, invocation.TargetMethod, invocation.DeclaringType);
-            baseInvocation.TrySetReturnValue(invocation.ReturnValue);
+            var baseInvocation = new MethodInvocation(invocation.InvocationTarget, invocation.Arguments, invocation.TargetMethod, invocation.DeclaringType);
+            invocation.ReturnValue = baseInvocation.ReturnValue;
 
             return baseInvocation;
         }
 
         public static bool IsInterceptDisallowed(this IMethodInvocation invocation)
         {
-            return invocation.Target.GetType().HasAttribute<DisallowInterceptAttribute>(inherit: false) ||
+            return invocation.DeclaringType.HasAttribute<DisallowInterceptAttribute>(inherit: false) ||
                    invocation.TargetMethod.HasAttribte<DisallowInterceptAttribute>(inherit: false);
+        }
+
+        public static bool IsVoidResult(this IMethodInvocation invocation)
+        {
+            return invocation.TargetMethod.ReturnType == typeof(void);
         }
     }
 }
