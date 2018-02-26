@@ -1,6 +1,4 @@
-﻿using IvoryProxy.Core.Interceptors;
-
-namespace IvoryProxy.Core.Providers
+﻿namespace IvoryProxy.Core
 {
     /// <summary>
     /// Провайдер перехватчиков вызова метода.
