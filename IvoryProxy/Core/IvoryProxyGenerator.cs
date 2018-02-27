@@ -9,6 +9,11 @@ namespace IvoryProxy.Core
     /// </summary>
     public class IvoryProxyGenerator : IProxyGenerator
     {
+        /// <summary>
+        /// Экземпляр генератора по умолчанию.
+        /// </summary>
+        public static IvoryProxyGenerator Default { get; } = new IvoryProxyGenerator();
+        
         /// <inheritdoc />
         public IIvoryProxy<T> CreateInterfaceProxy<T>(T source)
             where T : class

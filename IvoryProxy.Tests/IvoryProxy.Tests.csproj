@@ -4,11 +4,9 @@
     <IsWindows Condition="'$(OS)' == 'Windows_NT'">true</IsWindows>
     <IsUnix Condition="'$(OS)' == 'Unix'">true</IsUnix>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(IsUnix)'=='true'">
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(IsWindows)' == 'true'">
     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
   </PropertyGroup>

@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using IvoryProxy.Core.Exceptions;
+using IvoryProxy.Core.Interceptors;
+using IvoryProxy.Core.Providers;
 using IvoryProxy.Extensions;
 
 namespace IvoryProxy.Core.Proxies
@@ -21,42 +23,35 @@ namespace IvoryProxy.Core.Proxies
         /// <summary>
         /// Провайдер перехватчиков.
         /// </summary>
-        public IInterceptorSelector InterceptorSelector { get; }
+        public IInterceptorProvider InterceptorProvider { get; }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="IvoryInterceptorProxyBase{T}"/>.
         /// </summary>
         /// <param name="decorated">Исходный объект.</param>
         /// <param name="transparentProxy">Проксированный объект.</param>
-        /// <param name="interceptorSelector">Провайдер перехватчиков вызовов.</param>
-        internal IvoryInterceptorProxyBase(T decorated, T transparentProxy, IInterceptorSelector interceptorSelector)
+        /// <param name="interceptorProvider">Провайдер перехватчиков вызовов.</param>
+        internal IvoryInterceptorProxyBase(T decorated, T transparentProxy, IInterceptorProvider interceptorProvider)
         {
             Decorated = decorated ?? throw new ArgumentNullException(nameof(decorated));
             TransparentProxy = transparentProxy ?? throw new ArgumentNullException(nameof(transparentProxy));
-            InterceptorSelector = interceptorSelector ?? throw new ArgumentNullException(nameof(interceptorSelector));
+            InterceptorProvider = interceptorProvider ?? throw new ArgumentNullException(nameof(interceptorProvider));
         }
 
         /// <summary>
         /// Выполняет обработку вызова метода <paramref name="invocation"/>.
         /// </summary>
         /// <param name="invocation">Модель вызова метода.</param>
-        public void Proxy(IMethodInvocation invocation)
+        public void Proxy(IInvocation invocation)
         {
-            if (invocation.IsInterceptDisallowed())
+            if (invocation.IsInterceptionDisallowed())
             {
                 Bypass(invocation);
             }
             else
             {
-                var interceptor = InterceptorSelector.FirstOrDefaultInterceptor(invocation);
-                if (interceptor == null || !interceptor.CanIntercept(invocation))
-                {
-                    Bypass(invocation);
-                }
-                else
-                {
-                    Intercept(invocation, interceptor);
-                }
+                var interceptor = InterceptorProvider.GetInterceptor(invocation);
+                Intercept(invocation, interceptor);
             }
         }
 
@@ -64,7 +59,7 @@ namespace IvoryProxy.Core.Proxies
         /// Выполняет вызов метода без изменений.
         /// </summary>
         /// <param name="invocation">Модель вызова метода.</param>
-        protected virtual void Bypass(IMethodInvocation invocation)
+        protected virtual void Bypass(IInvocation invocation)
         {
             invocation.Proceed();
         }
@@ -74,21 +69,21 @@ namespace IvoryProxy.Core.Proxies
         /// </summary>
         /// <param name="invocation">Модель вызова метода.</param>
         /// <param name="interceptor">Экземпляр перехватчика вызова.</param>
-        protected virtual void Intercept(IMethodInvocation invocation, IInterceptor interceptor)
+        protected virtual void Intercept(IInvocation invocation, IInterceptor interceptor)
         {
             try
             {
                 interceptor.Intercept(invocation);
 
-                if (invocation is MethodInvocation mi && !mi.IsVoidResult() && !mi.ReturnValueWasSet)
+                if (invocation is Invocation mi && !mi.IsVoidResult() && !mi.ReturnValueWasSet)
                 {
                     throw new IvoryProxyException(
                         $"Не было установлено значение проксированного метода '{invocation.TargetMethod.Name}' " +
                         $"интерфейса '{invocation.DeclaringType.FullName}'. " +
                         $"Проверьте, что в методе '{nameof(IInterceptor.Intercept)}' " +
-                        $"перехватчика '{interceptor.GetType().FullName}' устанавливается свойство '{nameof(IMethodInvocation.ReturnValue)}'. " +
+                        $"перехватчика '{interceptor.GetType().FullName}' устанавливается свойство '{nameof(IInvocation.ReturnValue)}'. " +
                         $"Если полная замена метода не была задумана, то убедитесь в наличии " +
-                        $"вызова метода '{nameof(IMethodInvocation.Proceed)}' входного параметра.");
+                        $"вызова метода '{nameof(IInvocation.Proceed)}' входного параметра.");
                 }
             }
             catch (TargetInvocationException e) when(e.InnerException != null)

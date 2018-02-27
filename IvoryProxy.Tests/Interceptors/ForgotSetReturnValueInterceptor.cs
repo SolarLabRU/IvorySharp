@@ -3,14 +3,14 @@ using IvoryProxy.Core.Interceptors;
 
 namespace IvoryProxy.Tests.Interceptors
 {
-    public class ForgotSetReturnValueInterceptor : IInterceptor
+    public class ForgotSetReturnValueInterceptor : IvoryInterceptor
     {
-        public void Intercept(IMethodInvocation invocation)
+        public override void Intercept(IInvocation invocation)
         {
             //throw new System.NotImplementedException();
         }
 
-        public bool CanIntercept(IMethodInvocation invocation)
+        public bool CanIntercept(IInvocation invocation)
         {
             return true;
         }

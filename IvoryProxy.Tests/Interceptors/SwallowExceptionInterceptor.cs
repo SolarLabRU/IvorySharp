@@ -1,20 +1,28 @@
 ﻿using System;
+using IvoryProxy.Core;
 using IvoryProxy.Core.Interceptors;
 
 namespace IvoryProxy.Tests.Interceptors
 {
-    public class SwallowExceptionInterceptor : ExceptionInterceptor
+    public class SwallowExceptionInterceptor : IvoryInterceptor
     {
-        /// <inheritdoc />
-        protected override void OnException(Exception exception)
+        public override void Intercept(IInvocation invocation)
         {
-            //throw new NotImplementedException();
-        }
-
-        /// <inheritdoc />
-        protected override bool CanSwallowException(Exception exception)
-        {
-            return true;
+            try
+            {
+                invocation.Proceed();
+            }
+            catch (Exception e)
+            {
+                //
+            }
+            finally
+            {
+                var returnType = invocation.TargetMethod.ReturnType;
+                invocation.ReturnValue = returnType != typeof(void) && returnType.IsValueType
+                    ? Activator.CreateInstance(returnType)
+                    : null;
+            }
         }
     }
 }

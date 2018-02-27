@@ -1,5 +1,6 @@
 ﻿using System;
 using IvoryProxy.Core.Exceptions;
+using IvoryProxy.Core.Interceptors;
 
 namespace IvoryProxy.Core.Activators
 {

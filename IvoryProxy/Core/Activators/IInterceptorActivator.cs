@@ -1,6 +1,7 @@
 ﻿using System;
+using IvoryProxy.Core.Interceptors;
 
-namespace IvoryProxy.Core
+namespace IvoryProxy.Core.Activators
 {
     /// <summary>
     /// Активатор перехватчика вызова метода.

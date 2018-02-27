@@ -28,7 +28,7 @@ namespace IvoryProxy.Core.Proxies
         /// Создает прокси объекта.
         /// </summary>
         /// <param name="decorated">Исходный объект.</param>
-        /// <returns></returns>
+        /// <returns>Экземпляр прокси.</returns>
         /// <exception cref="IvoryProxyException">В случае, если тип <typeparamref name="T"/> не является интерфейсом.</exception>
         /// <exception cref="ArgumentNullException">В случае, если <paramref name="decorated"/> равен <c>null</c>.</exception>
         public static IvoryDispatchProxy<T> CreateProxy(T decorated)
@@ -39,7 +39,7 @@ namespace IvoryProxy.Core.Proxies
             object proxy = Create<T, IvoryDispatchProxy<T>>();
             
             var typedProxy = (IvoryDispatchProxy<T>) proxy;        
-            typedProxy.Initialize(decorated, (T)proxy, new AttributeInterceptorSelector());
+            typedProxy.Initialize(decorated, (T)proxy, new AttributeInterceptorProvider());
             
             return typedProxy;
         }
@@ -49,7 +49,7 @@ namespace IvoryProxy.Core.Proxies
         {
             try
             {
-                var invocation = new MethodInvocation(Decorated, args, targetMethod, typeof(T));
+                var invocation = new Invocation(Decorated, args, targetMethod, typeof(T));
                 _interceptorProxyBase.Proxy(invocation);
 
                 return invocation.ReturnValue;
@@ -68,10 +68,10 @@ namespace IvoryProxy.Core.Proxies
         /// </summary>
         /// <param name="decorated">Исходный объект.</param>
         /// <param name="proxy">Проксированный объект.</param>
-        /// <param name="interceptorSelector">Провайдер перехватчиков вызовов методов.</param>
-        protected virtual void Initialize(T decorated, T proxy, IInterceptorSelector interceptorSelector)
+        /// <param name="interceptorProvider">Провайдер перехватчиков вызовов методов.</param>
+        protected virtual void Initialize(T decorated, T proxy, IInterceptorProvider interceptorProvider)
         {
-            _interceptorProxyBase = new IvoryInterceptorProxyBase<T>(decorated, proxy, interceptorSelector);
+            _interceptorProxyBase = new IvoryInterceptorProxyBase<T>(decorated, proxy, interceptorProvider);
         }
     }
     

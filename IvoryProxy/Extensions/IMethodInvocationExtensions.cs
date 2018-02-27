@@ -5,32 +5,32 @@ namespace IvoryProxy.Extensions
 {
     internal static class IMethodInvocationExtensions
     {
-        public static IMethodPreExecutionContext ToPreExecutionContext(this IMethodInvocation invocation)
+        public static IMethodPreExecutionContext ToPreExecutionContext(this IInvocation invocation)
         {
-            if (invocation is MethodInvocation mi)
+            if (invocation is Invocation mi)
                 return mi;
 
-            return new MethodInvocation(invocation.InvocationTarget, invocation.Arguments, invocation.TargetMethod, invocation.DeclaringType);
+            return new Invocation(invocation.InvocationTarget, invocation.Arguments, invocation.TargetMethod, invocation.DeclaringType);
         }
 
-        public static IMethodPostExecutionContext ToPostExecutionContext(this IMethodInvocation invocation)
+        public static IMethodPostExecutionContext ToPostExecutionContext(this IInvocation invocation)
         {
-            if (invocation is MethodInvocation mi)
+            if (invocation is Invocation mi)
                 return mi;
 
-            var baseInvocation = new MethodInvocation(invocation.InvocationTarget, invocation.Arguments, invocation.TargetMethod, invocation.DeclaringType);
+            var baseInvocation = new Invocation(invocation.InvocationTarget, invocation.Arguments, invocation.TargetMethod, invocation.DeclaringType);
             invocation.ReturnValue = baseInvocation.ReturnValue;
 
             return baseInvocation;
         }
 
-        public static bool IsInterceptDisallowed(this IMethodInvocation invocation)
+        public static bool IsInterceptionDisallowed(this IInvocation invocation)
         {
             return invocation.DeclaringType.HasAttribute<DisallowInterceptAttribute>(inherit: false) ||
                    invocation.TargetMethod.HasAttribte<DisallowInterceptAttribute>(inherit: false);
         }
 
-        public static bool IsVoidResult(this IMethodInvocation invocation)
+        public static bool IsVoidResult(this IInvocation invocation)
         {
             return invocation.TargetMethod.ReturnType == typeof(void);
         }

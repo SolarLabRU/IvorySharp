@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvoryProxy", "IvoryProxy\Iv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvoryProxy.Tests", "IvoryProxy.Tests\IvoryProxy.Tests.csproj", "{A6B642C8-0818-4DAD-977A-18A43EBE4F8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvoryProxy.Benchmark", "IvoryProxy.Benchmark\IvoryProxy.Benchmark.csproj", "{0A77A778-D307-4967-9304-6D6C6E9402AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{A6B642C8-0818-4DAD-977A-18A43EBE4F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6B642C8-0818-4DAD-977A-18A43EBE4F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6B642C8-0818-4DAD-977A-18A43EBE4F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A77A778-D307-4967-9304-6D6C6E9402AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A77A778-D307-4967-9304-6D6C6E9402AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A77A778-D307-4967-9304-6D6C6E9402AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A77A778-D307-4967-9304-6D6C6E9402AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

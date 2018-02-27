@@ -1,4 +1,4 @@
-﻿namespace IvoryProxy.Core
+﻿namespace IvoryProxy.Core.Proxies
 {
     /// <summary>
     /// Интерфейс динамическго прокси.

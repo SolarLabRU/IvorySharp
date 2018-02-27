@@ -6,7 +6,7 @@ namespace IvoryProxy.Core
     /// <summary>
     /// Интерфейс модели вызова метода.
     /// </summary>
-    public interface IMethodInvocation
+    public interface IInvocation
     {
         /// <summary>
         /// Тип, в котором определен метод <see cref="TargetMethod"/>.

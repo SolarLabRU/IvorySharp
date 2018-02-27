@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
+using IvoryProxy.Helpers;
 
 namespace IvoryProxy.Core
 {
     /// <summary>
     /// Модель вызова метода.
     /// </summary>
-    internal class MethodInvocation : IMethodInvocation, IMethodPreExecutionContext, IMethodPostExecutionContext
+    internal class Invocation : IInvocation, IMethodPreExecutionContext, IMethodPostExecutionContext
     {
         /// <inheritdoc />
         public Type DeclaringType { get; }
@@ -46,13 +48,13 @@ namespace IvoryProxy.Core
         public MethodInfo TargetMethod { get; }
     
         /// <summary>
-        /// Инициализирует экземпляр <see cref="MethodInvocation"/>.
+        /// Инициализирует экземпляр <see cref="Invocation"/>.
         /// </summary>
         /// <param name="target">Экземпляр целевого объекта, метод которого был вызван.</param>
         /// <param name="arguments">Массив параметров, с которыми был вызван метод.</param>
         /// <param name="targetMethod">Метод, вызов которого был запрошен.</param>
         /// <param name="declaringType">Тип, в котором определен метод <paramref name="targetMethod"/>.</param>
-        public MethodInvocation(object target, object[] arguments, MethodInfo targetMethod, Type declaringType)
+        public Invocation(object target, object[] arguments, MethodInfo targetMethod, Type declaringType)
         {
             InvocationTarget = target;
             Arguments = arguments ?? Array.Empty<object>();
@@ -63,8 +65,15 @@ namespace IvoryProxy.Core
         /// <inheritdoc />
         public void Proceed()
         {
-            ReturnValue = TargetMethod.Invoke(InvocationTarget, Arguments);
-            ReturnValueWasSet = true;
+            try
+            {
+                ReturnValue = TargetMethod.Invoke(InvocationTarget, Arguments);
+                ReturnValueWasSet = true;
+            }
+            catch (Exception e)
+            {
+                ExceptionDispatchInfo.Capture(ExceptionHelper.UnwrapTargetInvocationException(e)).Throw();
+            }
         }
     }
 }

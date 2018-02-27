@@ -183,7 +183,7 @@ namespace IvoryProxy.Tests
         }
 
         [Fact]
-        public void Intercept_Interface_GlobalAndLocalInterceptors_AppliedMostPrecise()
+        public void Intercept_Interface_GlobalAndLocalInterceptors_AppliedBothInRightOrder()
         {
             // Arrange
             var proxyGenerator = new IvoryProxyGenerator();

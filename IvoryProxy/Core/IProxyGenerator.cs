@@ -1,4 +1,6 @@
-﻿namespace IvoryProxy.Core
+﻿using IvoryProxy.Core.Proxies;
+
+namespace IvoryProxy.Core
 {
     /// <summary>
     /// Генератор динамических прокси объектов.

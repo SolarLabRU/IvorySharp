@@ -4,15 +4,15 @@ using IvoryProxy.Core.Interceptors;
 
 namespace IvoryProxy.Tests.Interceptors
 {
-    public class ThrowExceptionInterceptor<TException> : IInterceptor where TException : Exception, new()
+    public class ThrowExceptionInterceptor<TException> : IvoryInterceptor where TException : Exception, new()
     {
         /// <inheritdoc />
-        public void Intercept(IMethodInvocation invocation)
+        public override void Intercept(IInvocation invocation)
         {
             throw new TException();
         }
 
-        public bool CanIntercept(IMethodInvocation invocation)
+        public bool CanIntercept(IInvocation invocation)
         {
             return true;
         }
