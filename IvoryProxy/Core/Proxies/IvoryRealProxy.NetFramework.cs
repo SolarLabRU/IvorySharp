@@ -28,24 +28,24 @@
         /// </summary>
         /// <param name="decorated">Исходный объект.</param>
         internal IvoryRealProxy(T decorated)
-            : this(decorated, new AttributeInterceptorSelector())
+            : this(decorated, new AttributeInterceptorProvider())
         { }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="IvoryRealProxy{T}"/>.
         /// </summary>
         /// <param name="decorated">Исходный объект.</param>
-        /// <param name="interceptorSelector">Провайдер перехватчиков.</param>
-        internal IvoryRealProxy(T decorated, IInterceptorSelector interceptorSelector)
+        /// <param name="interceptorProvider">Провайдер перехватчиков.</param>
+        internal IvoryRealProxy(T decorated, IInterceptorProvider interceptorProvider)
             : base(typeof(T))
         {
             if (decorated == null)
                 throw new ArgumentNullException(nameof(decorated));
 
-            if (interceptorSelector == null)
-                throw new ArgumentNullException(nameof(interceptorSelector));
+            if (interceptorProvider == null)
+                throw new ArgumentNullException(nameof(interceptorProvider));
 
-            _interceptorProxyBase = new IvoryInterceptorProxyBase<T>(decorated, (T)GetTransparentProxy(), interceptorSelector);
+            _interceptorProxyBase = new IvoryInterceptorProxyBase<T>(decorated, (T)GetTransparentProxy(), interceptorProvider);
         }
 
         /// <inheritdoc />
@@ -53,7 +53,7 @@
         {
             if (msg is IMethodCallMessage mcm)
             {
-                var invocation = new MethodInvocation(Decorated, mcm.Args, (MethodInfo)mcm.MethodBase, typeof(T));
+                var invocation = new Invocation(Decorated, mcm.Args, (MethodInfo)mcm.MethodBase, typeof(T));
 
                 _interceptorProxyBase.Proxy(invocation);
 

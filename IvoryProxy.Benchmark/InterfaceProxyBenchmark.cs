@@ -44,19 +44,19 @@ namespace IvoryProxy.Benchmark
                 new BypassCastleInterceptor());
         }
         
-        [Benchmark]
+        [Benchmark(OperationsPerInvoke = 10)]
         public void DispatchVoidMethod_NoProxy()
         {
             _serviceInstance.VoidMethod();
         }
 
-        [Benchmark]
+        [Benchmark(OperationsPerInvoke = 10)]
         public void DispatchVoidMethod_Proxy()
         {
             _proxyInstance.VoidMethod();
         }
 
-        [Benchmark]
+        [Benchmark(OperationsPerInvoke = 10)]
         public void DispatchVoidMethod_CastleProxy()
         {
             _castleProxyInstance.VoidMethod();
