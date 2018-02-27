@@ -8,7 +8,7 @@ namespace IvoryProxy.Core
     /// <summary>
     /// Модель вызова метода.
     /// </summary>
-    internal class Invocation : IInvocation, IMethodPreExecutionContext, IMethodPostExecutionContext
+    internal class Invocation : IInvocation
     {
         /// <inheritdoc />
         public Type DeclaringType { get; }
