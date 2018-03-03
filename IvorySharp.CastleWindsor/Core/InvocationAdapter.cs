@@ -104,6 +104,7 @@ namespace IvorySharp.CastleWindsor.Core
         void IvorySharp.Core.IInvocation.Proceed()
         {
             ((IInvocation)this).Proceed();
+            ReturnValue = _castleInvocation.ReturnValue;
         }
     }
 }

@@ -62,14 +62,14 @@ namespace IvorySharp.Aspects.Pipeline
         }
         
         /// <summary>
-        /// Возвращает признак того, что в текущем состоянии пайплайна можно выбросить исключение.
+        /// Возвращает признак того, что в текущем состоянии пайплайна необходимо выбросить исключение.
         /// </summary>
         /// <param name="pipeline">Пайплайн выполнения.</param>
         /// <returns>Признак того, что в текущем состоянии пайплайна можно выбросить исключение.</returns>
-        internal static bool CanThrow(IInvocationPipeline pipeline)
+        internal static bool ShouldThrowException(IInvocationPipeline pipeline)
         {
             return pipeline.CurrentException != null  &&
-                   (pipeline.FlowBehaviour == FlowBehaviour.ThrowException ||
+                   (pipeline.FlowBehaviour == FlowBehaviour.ThrowException || 
                     pipeline.FlowBehaviour == FlowBehaviour.RethrowException);
         }
     }

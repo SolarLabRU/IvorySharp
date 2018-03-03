@@ -15,12 +15,21 @@ namespace IvorySharp.Aspects.Configuration
         /// </summary>
         internal WeavingAspectsConfiguration Configuration { get; }
 
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="AspectsConfiguration"/>.
+        /// </summary>
+        /// <param name="aspectsContainer">Контейнер аспектов.</param>
         internal AspectsConfiguration(AspectsContainer aspectsContainer)
         {
             _aspectsContainer = aspectsContainer;
             Configuration = new WeavingAspectsConfiguration();
         }
 
+        /// <summary>
+        /// Устанавливает явное включение поддержки аспектов для всех типов, которые помечены
+        /// атрибутом <typeparamref name="TAttribute"/>.
+        /// </summary>
+        /// <typeparam name="TAttribute">Тип атрибута.</typeparam>
         public void UseExplicitWeavingAttribute<TAttribute>() where TAttribute : Attribute
         {
             Configuration.ExplicitWeaingAttributeType = typeof(TAttribute);

@@ -18,7 +18,7 @@ namespace IvorySharp.Aspects
         /// <summary>
         /// Инициализирует экземпляр класса <see cref="AggregatedMethodBoundaryAspect"/>.
         /// </summary>
-        /// <param name="boundaryAspects"></param>
+        /// <param name="boundaryAspects">Коллекция аспектов.</param>
         internal AggregatedMethodBoundaryAspect(IReadOnlyCollection<IMethodBoundaryAspect> boundaryAspects)
         {
             _boundaryAspects = boundaryAspects.IsNotEmpty() ? boundaryAspects : Array.Empty<IMethodBoundaryAspect>();
@@ -54,26 +54,31 @@ namespace IvorySharp.Aspects
         /// <param name="pipeline">Пайплайн.</param>
         /// <param name="boundaryName">Наименование обработчика.</param>
         /// <param name="boundary">Обработчик.</param>
-        internal void IterateAspectsBeforeCurrent(
+        internal void IterateAspectsBeforeLastApplied(
             IInvocationPipeline pipeline, string boundaryName, Action<IMethodBoundaryAspect, IInvocationPipeline> boundary)
         {
+            // Если ничего не выполнилось, то и обходить нечего.
             if (_currentExecutingBoundary == null)
                 return;
 
             var previousAspects = _boundaryAspects.TakeWhile(b => b != _currentExecutingBoundary);
+            var upcastedPipeline = (InvocationPipeline) pipeline;
+            
             try
             {
                 foreach (var aspect in previousAspects)
                 {
-                    if (InvocationPipelineFlow.CanContinueBoundary(pipeline, boundaryName))
+                    upcastedPipeline.CurrentExecutingAspect = aspect;
+                    
+                    if (InvocationPipelineFlow.CanContinueBoundary(upcastedPipeline, boundaryName))
                     {
-                        boundary(aspect, pipeline);
+                        boundary(aspect, upcastedPipeline);
                     }
                 }
             }
             catch (Exception e)
             {
-                pipeline.ThrowException(e);
+                upcastedPipeline.ThrowException(e);
             }
         }
 
@@ -88,20 +93,24 @@ namespace IvorySharp.Aspects
             Action<IMethodBoundaryAspect, IInvocationPipeline> boundary,
             [CallerMemberName] string boundaryName = "")
         {
+            var upcastedPipeline = (InvocationPipeline) pipeline;
+            
             try
             {
                 foreach (var aspect in _boundaryAspects)
                 {
-                    if (InvocationPipelineFlow.CanContinueBoundary(pipeline, boundaryName))
+                    upcastedPipeline.CurrentExecutingAspect = aspect;
+                    
+                    if (InvocationPipelineFlow.CanContinueBoundary(upcastedPipeline, boundaryName))
                     {
                         _currentExecutingBoundary = aspect;
-                        boundary(aspect, pipeline);
+                        boundary(aspect, upcastedPipeline);
                     }
                 }
             }
             catch (Exception e)
             {
-                pipeline.ThrowException(e);
+                upcastedPipeline.ThrowException(e);
             }
         }
     }

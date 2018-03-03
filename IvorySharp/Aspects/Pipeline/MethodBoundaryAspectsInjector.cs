@@ -60,16 +60,17 @@ namespace IvorySharp.Aspects.Pipeline
                 aggregateAspect.OnException(pipeline);
 
                 // Если никто не смог обработать, то прокидываем его наверх
-                if (InvocationPipelineFlow.CanThrow(pipeline))
+                if (InvocationPipelineFlow.ShouldThrowException(pipeline))
                 {
                     pipeline.CurrentException.Rethrow();
                 }             
+                
                 // Если задано несколько аспектов, то у всех до текущего
                 // в случае исключения должен быть вызван OnSuccess, так как хендлер
                 // решил вернуть результат вместо ошибки.
                 else 
                 {
-                    aggregateAspect.IterateAspectsBeforeCurrent(
+                    aggregateAspect.IterateAspectsBeforeLastApplied(
                         pipeline, 
                         nameof(IMethodBoundaryAspect.OnSuccess), 
                         (a, p) => a.OnSuccess(p));
@@ -84,14 +85,14 @@ namespace IvorySharp.Aspects.Pipeline
                 
                 // В самом конце устанавливаем значение, если оно поддерживается исходным методом
                 if (!invocation.Context.Method.IsVoidReturn())
-                    pipeline.InvocationContext.ReturnValue = invocation.Context.ReturnValue;
+                    pipeline.Context.ReturnValue = invocation.Context.ReturnValue;
             }
         }
-
+        
         private void ThrowIfRequested(InvocationPipeline pipeline)
         {
             // Если аспект запросил выкидывание исключения
-            if (InvocationPipelineFlow.CanThrow(pipeline))
+            if (InvocationPipelineFlow.ShouldThrowException(pipeline))
             {
                 // Явно устанавливаем состояние, при котором обработчики исключений
                 // не будут пытаться обработать данное исключение

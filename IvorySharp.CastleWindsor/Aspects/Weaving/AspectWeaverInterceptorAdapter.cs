@@ -24,7 +24,9 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
             var adaptedInvocation = new InvocationAdapter(invocation);
             
             _aspectWeaveInterceptor.Intercept(adaptedInvocation);
-            invocation.ReturnValue = adaptedInvocation.ReturnValue;
+            
+            if (adaptedInvocation.ReturnValue != null)
+                invocation.ReturnValue = adaptedInvocation.ReturnValue;
         }
     }
 }
