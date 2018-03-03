@@ -16,7 +16,7 @@ namespace IvorySharp.Aspects
         private IMethodBoundaryAspect _currentExecutingBoundary;
 
         /// <summary>
-        /// Инициализирует экземпляр класса <see cref=""/>.
+        /// Инициализирует экземпляр класса <see cref="AggregatedMethodBoundaryAspect"/>.
         /// </summary>
         /// <param name="boundaryAspects"></param>
         internal AggregatedMethodBoundaryAspect(IReadOnlyCollection<IMethodBoundaryAspect> boundaryAspects)
@@ -52,10 +52,10 @@ namespace IvorySharp.Aspects
         /// Выполняет обход всех аспектов, до последнего выполненного
         /// </summary>
         /// <param name="pipeline">Пайплайн.</param>
-        /// <param name="boundary">Наименование обработчика.</param>
-        /// <param name="consumer">Обработчик.</param>
+        /// <param name="boundaryName">Наименование обработчика.</param>
+        /// <param name="boundary">Обработчик.</param>
         internal void IterateAspectsBeforeCurrent(
-            IInvocationPipeline pipeline, string boundary, Action<IMethodBoundaryAspect, IInvocationPipeline> consumer)
+            IInvocationPipeline pipeline, string boundaryName, Action<IMethodBoundaryAspect, IInvocationPipeline> boundary)
         {
             if (_currentExecutingBoundary == null)
                 return;
@@ -65,9 +65,9 @@ namespace IvorySharp.Aspects
             {
                 foreach (var aspect in previousAspects)
                 {
-                    if (InvocationPipelineFlow.CanContinueBoundary(pipeline, boundary))
+                    if (InvocationPipelineFlow.CanContinueBoundary(pipeline, boundaryName))
                     {
-                        consumer(aspect, pipeline);
+                        boundary(aspect, pipeline);
                     }
                 }
             }
@@ -81,21 +81,21 @@ namespace IvorySharp.Aspects
         /// Выполняет обход всех аспектов.
         /// </summary>
         /// <param name="pipeline">Пайплайн.</param>
-        /// <param name="consumer">Обработчик.</param>
-        /// <param name="boundary">Наименование обработчика. Заполняется само, инициализировать не надо.</param>
+        /// <param name="boundary">Обработчик.</param>
+        /// <param name="boundaryName">Наименование обработчика. Заполняется само, инициализировать не надо.</param>
         private void IterateAspects(
             IInvocationPipeline pipeline,
-            Action<IMethodBoundaryAspect, IInvocationPipeline> consumer,
-            [CallerMemberName] string boundary = "")
+            Action<IMethodBoundaryAspect, IInvocationPipeline> boundary,
+            [CallerMemberName] string boundaryName = "")
         {
             try
             {
                 foreach (var aspect in _boundaryAspects)
                 {
-                    if (InvocationPipelineFlow.CanContinueBoundary(pipeline, boundary))
+                    if (InvocationPipelineFlow.CanContinueBoundary(pipeline, boundaryName))
                     {
                         _currentExecutingBoundary = aspect;
-                        consumer(aspect, pipeline);
+                        boundary(aspect, pipeline);
                     }
                 }
             }

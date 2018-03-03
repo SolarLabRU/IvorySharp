@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Benchmark", "Ivo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Tests", "IvorySharp.Tests\IvorySharp.Tests.csproj", "{97B21EEF-17AD-480E-AD0F-45641E95E032}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.CastleWindsor", "IvorySharp.CastleWindsor\IvorySharp.CastleWindsor.csproj", "{08456C5B-8399-4D56-AE4D-20CCB41EF8B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{97B21EEF-17AD-480E-AD0F-45641E95E032}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97B21EEF-17AD-480E-AD0F-45641E95E032}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97B21EEF-17AD-480E-AD0F-45641E95E032}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08456C5B-8399-4D56-AE4D-20CCB41EF8B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08456C5B-8399-4D56-AE4D-20CCB41EF8B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08456C5B-8399-4D56-AE4D-20CCB41EF8B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08456C5B-8399-4D56-AE4D-20CCB41EF8B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

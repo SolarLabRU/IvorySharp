@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using IvorySharp.Reflection;
 
 namespace IvorySharp.Core
 {
@@ -36,7 +35,11 @@ namespace IvorySharp.Core
         /// </summary>
         public Type InstanceDeclaringType { get; }
         
-        internal InvocationContext(IReadOnlyCollection<object> arguments, MethodInfo method, object instance, Type instanceDeclaringType)
+        public InvocationContext(
+            IReadOnlyCollection<object> arguments, 
+            MethodInfo method, 
+            object instance, 
+            Type instanceDeclaringType)
         {
             Arguments = arguments;
             Method = method;

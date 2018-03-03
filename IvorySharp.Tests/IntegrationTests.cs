@@ -1,16 +1,24 @@
 using System;
 using IvorySharp.Aspects;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Weaving;
-using IvorySharp.Proxying;
 using Xunit;
 
 namespace IvorySharp.Tests
 {
+    internal class DummyConfigurations : IWeavingAspectsConfiguration
+    {
+        public Type ExplicitWeaingAttributeType { get; } = null;
+    }
+    
     public class IntegrationTests
     {
+        private AspectWeaver _aspectWeaver;
+        
         public IntegrationTests()
         {
+            _aspectWeaver = new AspectWeaver(new DummyConfigurations());
             BaseObservableAspect.ResetFlags();
         }
         
@@ -18,8 +26,7 @@ namespace IvorySharp.Tests
         public void SingleMethodBoundaryAspect_NoExceptionFlow()
         {
             // Arrange
-            var weaver = new AspectWeaver(InterceptProxyGenerator.Default, new MethodAspectSelector());
-            var proxy = (IAppService)weaver.Weave(new AppService(), typeof(IAppService));
+            var proxy = (IAppService)_aspectWeaver.Weave(new AppService(), typeof(IAppService));
 
             // Act
             proxy.BypassAspectSingle();
@@ -34,8 +41,7 @@ namespace IvorySharp.Tests
         public void SingleMethodBoundaryAspect_ExceptionHandler_NotHandle_Exeption_Rethrows()
         {
             // Arrange
-            var weaver = new AspectWeaver(InterceptProxyGenerator.Default, new MethodAspectSelector());
-            var proxy = (IAppService)weaver.Weave(new AppService(), typeof(IAppService));
+            var proxy = (IAppService)_aspectWeaver.Weave(new AppService(), typeof(IAppService));
 
             // Act
             var exception = Assert.Throws<ArgumentException>(() => proxy.ThrowsExceptionNotHandled());
@@ -51,8 +57,7 @@ namespace IvorySharp.Tests
         public void SingleMethodBoundaryAspect_ExceptionHandler_ThrowsNewException()
         {
             // Arrange
-            var weaver = new AspectWeaver(InterceptProxyGenerator.Default, new MethodAspectSelector());
-            var proxy = (IAppService)weaver.Weave(new AppService(), typeof(IAppService));
+            var proxy = (IAppService)_aspectWeaver.Weave(new AppService(), typeof(IAppService));
 
             // Act
             var exception = Assert.Throws<InvalidOperationException>(() => proxy.ThrowsNewException());
@@ -68,8 +73,7 @@ namespace IvorySharp.Tests
         public void SingleMethodBoundaryAspect_ExceptionHandler_SwallowException()
         {
             // Arrange
-            var weaver = new AspectWeaver(InterceptProxyGenerator.Default, new MethodAspectSelector());
-            var proxy = (IAppService)weaver.Weave(new AppService(), typeof(IAppService));
+            var proxy = (IAppService)_aspectWeaver.Weave(new AppService(), typeof(IAppService));
 
             // Act
             var result = proxy.SwallowExceptionWithVal();
@@ -86,8 +90,7 @@ namespace IvorySharp.Tests
         public void MultipleMethodBoundaryAspects_OnEntry_Exception_NotHandledByHandler()
         {
             // Arrange
-            var weaver = new AspectWeaver(InterceptProxyGenerator.Default, new MethodAspectSelector());
-            var proxy = (IAppService)weaver.Weave(new AppService(), typeof(IAppService));
+            var proxy = (IAppService)_aspectWeaver.Weave(new AppService(), typeof(IAppService));
 
             // Act
             var result = Assert.Throws<AccessViolationException>(() => proxy.ThrowsOnEntry());
@@ -103,8 +106,7 @@ namespace IvorySharp.Tests
         public void MultipleMethodBoundaryAspects_OnSuccess_Exception_NotHandledByHandler()
         {
             // Arrange
-            var weaver = new AspectWeaver(InterceptProxyGenerator.Default, new MethodAspectSelector());
-            var proxy = (IAppService)weaver.Weave(new AppService(), typeof(IAppService));
+            var proxy = (IAppService)_aspectWeaver.Weave(new AppService(), typeof(IAppService));
 
             // Act
             var result = Assert.Throws<AccessViolationException>(() => proxy.ThrowsOnSuccess());
@@ -120,8 +122,7 @@ namespace IvorySharp.Tests
         public void MultipleMethodBoundaryAspects_OnException_Exception_NotHandledByHandler()
         {
             // Arrange
-            var weaver = new AspectWeaver(InterceptProxyGenerator.Default, new MethodAspectSelector());
-            var proxy = (IAppService)weaver.Weave(new AppService(), typeof(IAppService));
+            var proxy = (IAppService)_aspectWeaver.Weave(new AppService(), typeof(IAppService));
 
             // Act
             var result = Assert.Throws<AccessViolationException>(() => proxy.ThrowsOnException());
@@ -137,8 +138,7 @@ namespace IvorySharp.Tests
         public void MultipleMethodBoundaryAspects_OnExit_Exception_NotHandledByHandler()
         {
             // Arrange
-            var weaver = new AspectWeaver(InterceptProxyGenerator.Default, new MethodAspectSelector());
-            var proxy = (IAppService)weaver.Weave(new AppService(), typeof(IAppService));
+            var proxy = (IAppService)_aspectWeaver.Weave(new AppService(), typeof(IAppService));
 
             // Act
             var result = Assert.Throws<AccessViolationException>(() => proxy.ThrowsOnExit());

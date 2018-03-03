@@ -1,6 +1,7 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
 using IvorySharp.Aspects;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Fakes;
 using IvorySharp.Core;
@@ -8,6 +9,11 @@ using IvorySharp.Proxying;
 
 namespace IvorySharp.Benchmark
 {
+    internal class DummyConfigurations : IWeavingAspectsConfiguration
+    {
+        public Type ExplicitWeaingAttributeType { get; } = null;
+    }
+    
     internal class BypassInterceptor : IInterceptor
     {
         public void Intercept(IInvocation invocation)
@@ -35,7 +41,7 @@ namespace IvorySharp.Benchmark
         {
             _generator = InterceptProxyGenerator.Default;
             _interceptor = new BypassInterceptor();
-            _aspectWeaver = new AspectWeaver(InterceptProxyGenerator.Default, new MethodAspectSelector());
+            _aspectWeaver = new AspectWeaver(new DummyConfigurations());
 
             _serviceInstance = new AppService();
             _bypassProxyInstance =

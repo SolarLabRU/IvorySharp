@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Reflection;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
@@ -11,30 +11,27 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     public class AspectWeaveInterceptor : IInterceptor
     {
-        /// <summary>
-        /// Селектор аспектов.
-        /// </summary>
-        public IMethodAspectSelector MethodAspectSelector { get; }
-
+        private readonly IWeavingAspectsConfiguration _configurations;
+        
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="AspectWeaveInterceptor"/>.
         /// </summary>
-        /// <param name="methodAspectSelector">Селектор аспектов.</param>
-        public AspectWeaveInterceptor(IMethodAspectSelector methodAspectSelector)
+        /// <param name="aspectsConfiguration">Конфигурация аспектов.</param>
+        public AspectWeaveInterceptor(IWeavingAspectsConfiguration aspectsConfiguration)
         {
-            MethodAspectSelector = methodAspectSelector ?? throw new ArgumentNullException(nameof(methodAspectSelector));
+            _configurations = aspectsConfiguration ?? throw new ArgumentNullException(nameof(aspectsConfiguration));
         }
 
         /// <inheritdoc />
         public void Intercept(IInvocation invocation)
         {
-            if (IsNotWeaveable(invocation))
+            if (!IsWeaveable(invocation))
             {
                 invocation.Proceed();
                 return;
             }
 
-            var methodBoundaryAspects = MethodAspectSelector.GetMethodBoundaryAspects(invocation);
+            var methodBoundaryAspects = MethodAspectSelector.Instance.GetMethodBoundaryAspects(invocation);
             if (methodBoundaryAspects.IsEmpty())
             {
                 invocation.Proceed();
@@ -44,15 +41,9 @@ namespace IvorySharp.Aspects.Weaving
             MethodBoundaryAspectsInjector.Instance.InjectAspects(invocation, methodBoundaryAspects);
         }
 
-        /// <summary>
-        /// Возвращает признак того, что для вызова нельзя применить внедрение аспектов.
-        /// </summary>
-        /// <param name="invocation">Модель вызова.</param>
-        /// <returns>Признак того, что для вызова нельзя применить внедрение аспектов.</returns>
-        private bool IsNotWeaveable(IInvocation invocation)
+        private bool IsWeaveable(IInvocation invocation)
         {
-            return invocation.Context.InstanceDeclaringType.GetCustomAttribute<SupressAspectAttribute>(inherit: false) != null ||
-                   invocation.Context.Method.GetCustomAttribute<SupressAspectAttribute>(inherit: false) != null;
-        }
+            return invocation.Context.InstanceDeclaringType.IsWeavable(_configurations);
+        }    
     }
 }

@@ -11,8 +11,13 @@ namespace IvorySharp.Aspects
     /// <summary>
     /// Реализация селектора аспектов.
     /// </summary>
-    public class MethodAspectSelector : IMethodAspectSelector
+    internal class MethodAspectSelector
     {
+        /// <summary>
+        /// Экземпляр селектора аспектов.
+        /// </summary>
+        internal static MethodAspectSelector Instance { get; } = new MethodAspectSelector();
+        
         private static ConcurrentDictionary<MethodInfo, AspectBinding[]> _aspectsCache;
 
         static MethodAspectSelector()
@@ -20,7 +25,13 @@ namespace IvorySharp.Aspects
             _aspectsCache = new ConcurrentDictionary<MethodInfo, AspectBinding[]>();
         }
 
-        /// <inheritdoc />
+        private MethodAspectSelector() { }
+
+        /// <summary>
+        /// Получает все допустимые к применению аспекты для вызова.
+        /// </summary>
+        /// <param name="invocation">Модель вызова.</param>
+        /// <returns>Коллекция аспектов.</returns>
         public IReadOnlyCollection<IMethodBoundaryAspect> GetMethodBoundaryAspects(IInvocation invocation)
         {
             var aspectBindings = GetAspectBindings(invocation);
@@ -60,7 +71,7 @@ namespace IvorySharp.Aspects
             /// </summary>
             public readonly Type AspectType;
 
-            public AspectBinding(Type aspectType, Func<IMethodBoundaryAspect> aspectProvider)
+            internal AspectBinding(Type aspectType, Func<IMethodBoundaryAspect> aspectProvider)
             {
                 AspectType = aspectType;
                 AspectProvider = aspectProvider;

@@ -1,4 +1,5 @@
 ﻿using System;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.Proxying;
 
 namespace IvorySharp.Aspects.Weaving
@@ -8,13 +9,15 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     public class AspectWeaver
     {
-        private readonly IInterceptProxyGenerator _proxyGenerator;
-        private readonly IMethodAspectSelector _methodAspectSelector;
+        private readonly IWeavingAspectsConfiguration _configuration;
 
-        public AspectWeaver(IInterceptProxyGenerator proxyGenerator, IMethodAspectSelector methodAspectSelector)
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="AspectWeaver"/>.
+        /// </summary>
+        /// <param name="configuration">Конфигурация аспектов.</param>
+        public AspectWeaver(IWeavingAspectsConfiguration configuration)
         {
-            _proxyGenerator = proxyGenerator;
-            _methodAspectSelector = methodAspectSelector;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -25,8 +28,8 @@ namespace IvorySharp.Aspects.Weaving
         /// <returns>Экземпляр связанного с аспектами исходного объекта типа <paramref name="targetDeclaredType"/>.</returns>
         public object Weave(object target, Type targetDeclaredType)
         {
-            var interceptor = new AspectWeaveInterceptor(_methodAspectSelector);
-            return _proxyGenerator.CreateInterceptProxy(target, targetDeclaredType, interceptor);
+            var interceptor = new AspectWeaveInterceptor(_configuration);
+            return InterceptProxyGenerator.Default.CreateInterceptProxy(target, targetDeclaredType, interceptor);
         }
     }
 }
