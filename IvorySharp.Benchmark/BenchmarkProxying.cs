@@ -43,31 +43,31 @@ namespace IvorySharp.Benchmark
             _bypassWeavedInstance = (IAppService) _aspectWeaver.Weave(new AppService(), typeof(IAppService));
         }
 
-//
-//        [Benchmark]
-//        public void Create_Class_Weaved()
-//        {
-//            IAppService service = (IAppService)_aspectWeaver.Weave(new AppService(), typeof(IAppService));
-//            
-//            GC.KeepAlive(service);
-//        }
-//        
-//        [Benchmark]
-//        public void Create_Class_Using_New()
-//        {
-//            IAppService service = new AppService();
-//            
-//            GC.KeepAlive(service);
-//        }
-//
-//        [Benchmark]
-//        public void Create_NetCoreInvocationProxy()
-//        {
-//            var service = _generator.CreateInterceptProxy<IAppService>(new AppService(), _interceptor);
-//            
-//            GC.KeepAlive(service);
-//        }
-//
+
+        [Benchmark]
+        public void Create_Class_Weaved()
+        {
+            IAppService service = (IAppService) _aspectWeaver.Weave(new AppService(), typeof(IAppService));
+
+            GC.KeepAlive(service);
+        }
+
+        [Benchmark]
+        public void Create_Class_Using_New()
+        {
+            IAppService service = new AppService();
+
+            GC.KeepAlive(service);
+        }
+
+        [Benchmark]
+        public void Create_NetCoreInvocationProxy()
+        {
+            var service = _generator.CreateInterceptProxy<IAppService>(new AppService(), _interceptor);
+
+            GC.KeepAlive(service);
+        }
+
         [Benchmark]
         public void Dispatch_Class_VoidMethod()
         {

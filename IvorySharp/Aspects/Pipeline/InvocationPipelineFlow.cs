@@ -5,7 +5,7 @@ namespace IvorySharp.Aspects.Pipeline
     /// <summary>
     /// Вспомогательный класс для работы с потоком выполнения пайплайна.
     /// </summary>
-    internal class InvocationPipelineFlow
+    internal static class InvocationPipelineFlow
     {
         /// <summary>
         /// Выполняет признак того, что в текущем состоянии пайплайна может быть выполнен обработчик с указанным именем.
@@ -40,7 +40,7 @@ namespace IvorySharp.Aspects.Pipeline
                 return true;
             }
 
-            // Обработчик вызывается если состояние Return или Default.
+            // Обработчик 'OnSuccess' вызывается если состояние Return или Default.
             if (boundary == nameof(IMethodBoundaryAspect.OnSuccess))
             {
                 return pipeline.FlowBehaviour == FlowBehaviour.Default ||

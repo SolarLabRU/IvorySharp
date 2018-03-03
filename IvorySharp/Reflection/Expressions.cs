@@ -17,10 +17,12 @@ namespace IvorySharp.Reflection
                 throw new ArgumentException(
                     $"Преобразование [{type.Name}] -> [{typeof(TConvert).Name}] не поддерживается");
 
-            return Expression.Lambda<Func<TConvert>>(
+            var creatorExpression = Expression.Lambda<Func<TConvert>>(
                 Expression.Convert(
                     Expression.New(type), typeof(TConvert))
-            ).Compile();
+            );
+
+            return creatorExpression.Compile();
         }
 
         public static Func<object, object[], object> CreateMethodInvoker(MethodInfo pMethodInfo)
@@ -68,9 +70,7 @@ namespace IvorySharp.Reflection
                 argumentsParameterExpression
             );
 
-            var compiledLambda = lambdaExpression.Compile();
-
-            return compiledLambda;
+            return lambdaExpression.Compile();
         }
     }
 }

@@ -6,36 +6,30 @@ using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline
 {
-    public interface IInvocationPipelineInjector
-    {
-        void Inject(IInvocation invocation);
-    }
-    
     /// <summary>
-    /// Компонент для внедрения пайплайна выполнения метода.
+    /// Компонент для внедрения аспектов в пайплайн выполнения метода.
     /// </summary>
-    internal class InvocationPipelineInjector : IInvocationPipelineInjector
+    internal class MethodBoundaryAspectsInjector 
     {
-        private readonly IMethodBoundaryAspect _methodBoundaryAspect;
-
         /// <summary>
-        /// Инициализирует новый экземпляр <see cref="InvocationPipelineInjector"/>.
+        /// Экземпляр компонента.
         /// </summary>
-        /// <param name="boundaryAspects">Список аспектов.</param>
-        internal InvocationPipelineInjector(IReadOnlyCollection<IMethodBoundaryAspect> boundaryAspects)
+        internal static readonly MethodBoundaryAspectsInjector Instance = new MethodBoundaryAspectsInjector();
+        
+        /// <summary>
+        /// Выполняет внедрение аспектов в выполнение метода.
+        /// </summary>
+        /// <param name="invocation">Модель выполнения метода.</param>
+        /// <param name="aspects">Коллекция аспектов.</param>
+        public void InjectAspects(IInvocation invocation, IReadOnlyCollection<IMethodBoundaryAspect> aspects)
         {
-            _methodBoundaryAspect = new AggregatedMethodBoundaryAspect(boundaryAspects);
-        }
-
-        /// <inheritdoc />
-        public void Inject(IInvocation invocation)
-        {
+            var aggregateAspect = new AggregatedMethodBoundaryAspect(aspects);
             var pipeline = new InvocationPipeline(invocation.Context);
 
             try
             {
                 // Всегда выполняем OnEntry 
-                _methodBoundaryAspect.OnEntry(pipeline);
+                aggregateAspect.OnEntry(pipeline);
 
                 ThrowIfRequested(pipeline);
                 
@@ -47,7 +41,7 @@ namespace IvorySharp.Aspects.Pipeline
                     invocation.Proceed();
                 }
 
-                _methodBoundaryAspect.OnSuccess(pipeline);
+                aggregateAspect.OnSuccess(pipeline);
                 
                 ThrowIfRequested(pipeline);
             }
@@ -63,7 +57,7 @@ namespace IvorySharp.Aspects.Pipeline
                 // Устанавливаем состояние прокидывания исключений по цепочке хендлеров
                 pipeline.FlowBehaviour = FlowBehaviour.RethrowException;
 
-                _methodBoundaryAspect.OnException(pipeline);
+                aggregateAspect.OnException(pipeline);
 
                 // Если никто не смог обработать, то прокидываем его наверх
                 if (InvocationPipelineFlow.CanThrow(pipeline))
@@ -73,9 +67,9 @@ namespace IvorySharp.Aspects.Pipeline
                 // Если задано несколько аспектов, то у всех до текущего
                 // в случае исключения должен быть вызван OnSuccess, так как хендлер
                 // решил вернуть результат вместо ошибки.
-                else if (_methodBoundaryAspect is AggregatedMethodBoundaryAspect aggregate)
+                else 
                 {
-                    aggregate.IterateAspectsBeforeCurrent(
+                    aggregateAspect.IterateAspectsBeforeCurrent(
                         pipeline, 
                         nameof(IMethodBoundaryAspect.OnSuccess), 
                         (a, p) => a.OnSuccess(p));
@@ -85,7 +79,7 @@ namespace IvorySharp.Aspects.Pipeline
             }
             finally
             {
-                _methodBoundaryAspect.OnExit(pipeline);
+                aggregateAspect.OnExit(pipeline);
                 ThrowIfRequested(pipeline);
                 
                 // В самом конце устанавливаем значение, если оно поддерживается исходным методом

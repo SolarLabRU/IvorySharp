@@ -41,8 +41,7 @@ namespace IvorySharp.Aspects.Weaving
                 return;
             }
 
-            var pipelineInjector = new InvocationPipelineInjector(methodBoundaryAspects);
-            pipelineInjector.Inject(invocation);
+            MethodBoundaryAspectsInjector.Instance.InjectAspects(invocation, methodBoundaryAspects);
         }
 
         /// <summary>
