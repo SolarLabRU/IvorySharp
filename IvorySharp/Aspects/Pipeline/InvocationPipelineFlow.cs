@@ -17,11 +17,10 @@ namespace IvorySharp.Aspects.Pipeline
         /// <exception cref="InvalidOperationException">Если имя обработчика неизвестно.</exception>
         internal static bool CanContinueBoundary(IInvocationPipeline pipeline, string boundary)
         {
-            // Независимо от состояния в которое перешел пайплайн
-            // точка входа в метод выполняется всегда.
             if (boundary == nameof(IMethodBoundaryAspect.OnEntry))
             {
-                return pipeline.FlowBehaviour != FlowBehaviour.ThrowException;
+                return pipeline.FlowBehaviour != FlowBehaviour.ThrowException &&
+                       pipeline.FlowBehaviour != FlowBehaviour.Return;
             }
 
             // Исключения обрабатываем только если флоу по умолчанию или 
@@ -38,7 +37,7 @@ namespace IvorySharp.Aspects.Pipeline
             // точка выхода из метода выполняется всегда.
             if (boundary == nameof(IMethodBoundaryAspect.OnExit))
             {
-                return pipeline.FlowBehaviour != FlowBehaviour.ThrowException;
+                return true;
             }
 
             // Обработчик 'OnSuccess' вызывается если состояние Return или Default.
@@ -59,7 +58,8 @@ namespace IvorySharp.Aspects.Pipeline
         /// <returns>Признак того, что в текущем состоянии пайплайна можно выполнить перехват исходного метода.</returns>
         internal static bool CanIntercept(IInvocationPipeline pipeline)
         {
-            return pipeline.FlowBehaviour != FlowBehaviour.Return;
+            return pipeline.FlowBehaviour != FlowBehaviour.Return && 
+                   pipeline.FlowBehaviour != FlowBehaviour.ThrowException;
         }
         
         /// <summary>
