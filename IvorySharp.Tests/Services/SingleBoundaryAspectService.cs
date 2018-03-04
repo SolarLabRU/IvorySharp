@@ -2,7 +2,7 @@
 
 namespace IvorySharp.Tests.Services
 {
-    public class BoundaryAspectsService : IBoundaryAspectsService
+    public class SingleBoundaryAspectService : ISingleBoundaryAspectService
     {
         public void BypassEmptyMethod()
         {

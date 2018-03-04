@@ -1,4 +1,7 @@
-﻿using Castle.DynamicProxy;
+﻿using System;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
+using Castle.DynamicProxy;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.CastleWindsor.Core;
@@ -21,12 +24,22 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
         /// <inheritdoc />
         public void Intercept(IInvocation invocation)
         {
-            var adaptedInvocation = new InvocationAdapter(invocation);
-            
-            _aspectWeaveInterceptor.Intercept(adaptedInvocation);
-            
-            if (adaptedInvocation.ReturnValue != null)
-                invocation.ReturnValue = adaptedInvocation.ReturnValue;
+            try
+            {
+                var adaptedInvocation = new InvocationAdapter(invocation);
+
+                _aspectWeaveInterceptor.Intercept(adaptedInvocation);
+
+                if (adaptedInvocation.ReturnValue != null)
+                    invocation.ReturnValue = adaptedInvocation.ReturnValue;
+            }
+            catch (TargetInvocationException e)
+            {
+                if (e.InnerException != null)
+                    ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+
+                throw;
+            }
         }
     }
 }

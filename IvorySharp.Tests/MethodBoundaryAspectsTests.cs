@@ -13,16 +13,20 @@ namespace IvorySharp.Tests
     /// </summary>
     public class MethodBoundaryAspectsTests
     {
-        private WeavedServiceProvider<IBoundaryAspectsService, BoundaryAspectsService> _boundaryAspectServiceProvider;
+        private readonly WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService> _sAspectServiceProvider;
+        private readonly WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService> _mAspectServiceProvider;
 
         public MethodBoundaryAspectsTests()
         {
-            _boundaryAspectServiceProvider = new WeavedServiceProvider<IBoundaryAspectsService, BoundaryAspectsService>(
-                new BoundaryAspectsService(), 
+            _sAspectServiceProvider = new WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService>(
+                new SingleBoundaryAspectService(), 
+                new ImpliticAspectsWeavingSettings());
+            
+            _mAspectServiceProvider = new WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService>(
+                new MultipleBoundaryAspectsService(), 
                 new ImpliticAspectsWeavingSettings());
             
             ObservableBoundaryAspect.ClearCallings();
-            IncrementReturnValueAspect.ResetAppliedBoundaries();
         }
 
         #region Single Aspect
@@ -37,7 +41,7 @@ namespace IvorySharp.Tests
         public void SingleAspect_NormalFlow_BoundariesCalled(WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
+            var service = _sAspectServiceProvider.GetService(storeType);
 
             // Act
             service.BypassEmptyMethod();
@@ -58,15 +62,11 @@ namespace IvorySharp.Tests
         public void SingleAspect_NormalFlow_ReturnValueChangesBy_Exit_And_Success_Boundaries(WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
-            
-            IncrementReturnValueAspect.SetAppliedBoundaries(
-                nameof(IMethodBoundaryAspect.OnSuccess), 
-                nameof(IMethodBoundaryAspect.OnExit));
-            
+            var service = _sAspectServiceProvider.GetService(storeType);
+
             // Act
             var result = service.Identity(5);
-            var context = ObservableBoundaryAspect.GetContext(typeof(IncrementReturnValueAspect), BoundaryType.Exit);
+            var context = ObservableBoundaryAspect.GetContext(typeof(IncrementValueAspect), BoundaryType.Exit);
             
             // Assert           
             Assert.Equal(7, context.Source.ReturnValue);
@@ -82,10 +82,7 @@ namespace IvorySharp.Tests
         public void SingleAspect_NormalFlow_ReturnValueNotChanged_By_Entry_Boundary(WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
-            
-            IncrementReturnValueAspect.SetAppliedBoundaries(
-                nameof(IMethodBoundaryAspect.OnEntry));
+            var service = _sAspectServiceProvider.GetService(storeType);
             
             // Act
             var result = service.Identity2(5);
@@ -104,7 +101,7 @@ namespace IvorySharp.Tests
         public void SingleAspect_ExceptionFlow_EmptyMethod_SwallowException_NotThrowed(WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
+            var service = _sAspectServiceProvider.GetService(storeType);
       
             // Act & Assert
             service.ExceptionalEmptyMethod();
@@ -122,7 +119,7 @@ namespace IvorySharp.Tests
         public void SingleAspect_ExceptionFlow_ValueReturnMethod_SwallowException_DefaultResult(WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
+            var service = _sAspectServiceProvider.GetService(storeType);
       
             // Act & Assert
             var result = service.ExceptionalIdentity(120);
@@ -141,7 +138,7 @@ namespace IvorySharp.Tests
         public void SingleAspect_ExceptionFlow_RefReturnMethod_SwallowException_NullResult(WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
+            var service = _sAspectServiceProvider.GetService(storeType);
       
             // Act & Assert
             var result = service.ExceptionalRef();
@@ -160,7 +157,7 @@ namespace IvorySharp.Tests
         public void SingleAspect_ExceptionFlow_ValueReturnMethod_SwallowException_SetResult(WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
+            var service = _sAspectServiceProvider.GetService(storeType);
       
             // Act & Assert
             var result = service.ExceptionalIdentity2(120);
@@ -179,7 +176,7 @@ namespace IvorySharp.Tests
         public void SingleAspect_ExceptionFlow_RefReturnMethod_SwallowException_SetResult(WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
+            var service = _sAspectServiceProvider.GetService(storeType);
       
             // Act & Assert
             var result = service.ExceptionalRef2();
@@ -197,7 +194,7 @@ namespace IvorySharp.Tests
         public void SingleAspect_ExceptionFlow_BypassAspect_NotSwallowException(WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
+            var service = _sAspectServiceProvider.GetService(storeType);
       
             // Act & Assert
             Assert.Throws<Exception>(() => service.ExceptionalEmptyMethod2());
@@ -215,12 +212,30 @@ namespace IvorySharp.Tests
             WeavedServiceStoreType storeType)
         {
             // Arrange
-            var service = _boundaryAspectServiceProvider.GetService(storeType);
+            var service = _sAspectServiceProvider.GetService(storeType);
       
             // Act & Assert
             Assert.Throws<ArgumentException>(() => service.ExceptionalEmptyMethod3());
             
             AspectAssert.OnExceptionCalled(typeof(ReplaceExceptionAspect));
+        }
+
+        /// <summary>
+        /// Выполняет проверку, что несколько обработчиков выполняются в порядке убывания приоритета.
+        /// </summary>
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        public void MultipleAspects_NormalFlow_AspectsExecutedInAscOrder(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _mAspectServiceProvider.GetService(storeType);
+
+            // Act
+            var result = service.Identity(3);
+
+            // Assert           
+            Assert.Equal(10, result);
         }
         
         #endregion

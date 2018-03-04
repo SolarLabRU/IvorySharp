@@ -3,15 +3,17 @@ using IvorySharp.Tests.Aspects;
 
 namespace IvorySharp.Tests.Services
 {
-    public interface IBoundaryAspectsService
+    public interface ISingleBoundaryAspectService
     {
         [BypassAspect]
         void BypassEmptyMethod();
 
-        [IncrementReturnValueAspect]
+        [IncrementValueAspect(
+            nameof(IMethodBoundaryAspect.OnExit), 
+            nameof(IMethodBoundaryAspect.OnSuccess))]
         int Identity(int argument);
 
-        [IncrementReturnValueAspect]
+        [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnEntry))]
         int Identity2(int argument);
 
         [SwallowExceptionAspectDefaultReturn]

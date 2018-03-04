@@ -3,20 +3,15 @@ using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Tests.Aspects
 {
-    public class IncrementReturnValueAspect : ObservableBoundaryAspect
+    public class IncrementValueAspect : ObservableBoundaryAspect
     {
-        private static string[] _appliedBoundaries = new string[0];
+        private string[] _appliedBoundaries;
 
-        public static void SetAppliedBoundaries(params string[] boundaries)
+        public IncrementValueAspect(params string[] appliedBoundaries)
         {
-            _appliedBoundaries = boundaries;
+            _appliedBoundaries = appliedBoundaries;
         }
 
-        public static void ResetAppliedBoundaries()
-        {
-            _appliedBoundaries = new string[0];
-        }
-        
         protected override void Success(IInvocationPipeline pipeline)
         {
             if (!_appliedBoundaries.Contains(nameof(OnSuccess)))
