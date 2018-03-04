@@ -16,6 +16,9 @@ namespace IvorySharp.Tests.Services
         [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnEntry))]
         int Identity2(int argument);
 
+        [MultiplyAspect]
+        int Identity3(int argument);
+
         [SwallowExceptionAspectDefaultReturn]
         void ExceptionalEmptyMethod();
 

@@ -15,16 +15,21 @@ namespace IvorySharp.Tests
     {
         private readonly WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService> _sAspectServiceProvider;
         private readonly WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService> _mAspectServiceProvider;
-
+        private readonly WeavedServiceProvider<ITopLevelBoundaryService, TopLevelBoundaryService> _tAspectServiceProvider;
+        private readonly WeavedServiceProvider<INotMarkedExplicitBoundaryService, ExplicitBoundaryService> _tnmExplicitServiceProvider;
+        private readonly WeavedServiceProvider<IMarkedExplicitBoundaryService, ExplicitBoundaryService> _tmExplicitServiceProvider;
+        
         public MethodBoundaryAspectsTests()
         {
-            _sAspectServiceProvider = new WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService>(
-                new SingleBoundaryAspectService(), 
-                new ImpliticAspectsAspectsWeavingSettings());
+            _sAspectServiceProvider = new WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService>(new ImpliticAspectsWeavingSettings());
             
-            _mAspectServiceProvider = new WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService>(
-                new MultipleBoundaryAspectsService(), 
-                new ImpliticAspectsAspectsWeavingSettings());
+            _mAspectServiceProvider = new WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService>(new ImpliticAspectsWeavingSettings());
+            
+            _tAspectServiceProvider = new WeavedServiceProvider<ITopLevelBoundaryService, TopLevelBoundaryService>(new ImpliticAspectsWeavingSettings());
+            
+            _tnmExplicitServiceProvider = new WeavedServiceProvider<INotMarkedExplicitBoundaryService, ExplicitBoundaryService>(new ExplicitAspectWeavingSettings());
+            
+            _tmExplicitServiceProvider = new WeavedServiceProvider<IMarkedExplicitBoundaryService, ExplicitBoundaryService>(new ExplicitAspectWeavingSettings());
             
             ObservableBoundaryAspect.ClearCallings();
         }
@@ -245,6 +250,149 @@ namespace IvorySharp.Tests
             // Act
             var result = service.Identity(3);
 
+            // Assert           
+            Assert.Equal(10, result);
+        }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_RootLevelAspectsApplied(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _tAspectServiceProvider.GetService(storeType);
+
+            // Act
+            var result = service.Identity4(3);
+
+            // Assert           
+            Assert.Equal(4, result);
+        }
+        
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_SuppressWeaveAttribute_PreventsRootBoundaryExecuting(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _tAspectServiceProvider.GetService(storeType);
+
+            // Act
+            var result = service.Identity2(3);
+
+            // Assert           
+            Assert.Equal(3, result);
+        }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_RootLevelAspect_With_SingleMethodAspect(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _tAspectServiceProvider.GetService(storeType);
+
+            // Act
+            var result = service.Identity(2);
+
+            // Assert           
+            Assert.Equal(9, result);
+        }
+        
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_RootLevelAspect_With_MultipleMethodAspect(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _tAspectServiceProvider.GetService(storeType);
+
+            // Act
+            var result = service.Identity3(2);
+
+            // Assert           
+            Assert.Equal(5, result);
+        }
+        
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void ExplicitMarkers_AspectsNotApplied_If_Service_NotMarked(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _tnmExplicitServiceProvider.GetService(storeType);
+
+            // Act
+            var result = service.Identity(2);
+
+            // Assert           
+            Assert.Equal(2, result);
+        }
+        
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void ExplicitMarkers_AspectsApplied_If_Service_Marked(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _tmExplicitServiceProvider.GetService(storeType);
+
+            // Act
+            var result = service.Identity(2);
+
+            // Assert           
+            Assert.Equal(3, result);
+        }
+        
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void ExplicitMarkers_SuppressedAspect_NotApplied_If_Service_NotMarker(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _tnmExplicitServiceProvider.GetService(storeType);
+
+            // Act
+            var result = service.Identity2(2);
+
+            // Assert           
+            Assert.Equal(2, result);
+        }
+                
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void ExplicitMarkers_SuppressedAspect_NotApplied_If_Service_Marker(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _tmExplicitServiceProvider.GetService(storeType);
+
+            // Act
+            var result = service.Identity2(2);
+
+            // Assert           
+            Assert.Equal(2, result);
+        }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void SingleAspect_NormalFlow_ServiceProvider_GetInstance_Correct(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _sAspectServiceProvider.GetService(storeType);
+            
+            // Act
+            var result = service.Identity3(5);
+         
             // Assert           
             Assert.Equal(10, result);
         }

@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Tests.Aspects
 {
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Interface)]
     public class IncrementValueAspect : ObservableBoundaryAspect
     {
         private string[] _appliedBoundaries;

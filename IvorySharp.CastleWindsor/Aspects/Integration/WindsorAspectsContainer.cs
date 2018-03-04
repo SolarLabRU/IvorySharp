@@ -14,27 +14,23 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
     public class WindsorAspectsContainer : AspectsContainer
     {
         private readonly IKernel _kernel;
+        private readonly IServiceProvider _serviceProvider;
 
         public WindsorAspectsContainer(IWindsorContainer container)
         {
             _kernel = container.Kernel;
+            _serviceProvider = new Dependency.WindsorServiceProvider(_kernel);
         }
 
         /// <inheritdoc />
         public override void BindAspects(IAspectsWeavingSettings settings)
         {
             var interceptor = new AspectWeaverInterceptorAdapter(settings);
-            var serviceProvider = new Dependency.WindsorServiceProvider(_kernel);
 
             _kernel.Register(
                 Component
                     .For<AspectWeaverInterceptorAdapter>()
                     .Instance(interceptor));
-
-            _kernel.Register(
-                Component
-                    .For<IServiceProvider>()
-                    .Instance(serviceProvider));
 
             _kernel.AddFacility(new WindsorAspectFacility(settings));
         }
@@ -42,7 +38,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
         /// <inheritdoc />
         public override IServiceProvider GetServiceProvider()
         {
-            return _kernel.Resolve<IServiceProvider>();
+            return _serviceProvider;
         }
     }
 }

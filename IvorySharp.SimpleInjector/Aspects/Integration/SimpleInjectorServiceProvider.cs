@@ -8,15 +8,15 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
     /// <summary>
     /// Провайдер сервисов.
     /// </summary>
-    public class SimpleInjectoServiceProvider : IServiceProvider
+    public class SimpleInjectorServiceProvider : IServiceProvider
     {
         private readonly Container _container;
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="SimpleInjectoServiceProvider"/>.
+        /// Инициализирует экземпляр <see cref="SimpleInjectorServiceProvider"/>.
         /// </summary>
         /// <param name="container">Контейнер зависимостей.</param>
-        public SimpleInjectoServiceProvider(Container container)
+        public SimpleInjectorServiceProvider(Container container)
         {
             _container = container;
         }

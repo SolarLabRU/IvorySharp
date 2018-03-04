@@ -5,6 +5,8 @@ using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.CastleWindsor.Aspects.Integration;
 using IvorySharp.SimpleInjector.Aspects.Integration;
+using IvorySharp.Tests.Services;
+using IvorySharp.Tests.WeavingSettings;
 using SimpleInjector;
 
 namespace IvorySharp.Tests.Helpers
@@ -17,18 +19,26 @@ namespace IvorySharp.Tests.Helpers
         private Container _simpleInjectorContainer;
         private AspectWeaver _aspectWeaver;
 
-        public WeavedServiceProvider(TService instance, IAspectsWeavingSettings configuration)
+        public WeavedServiceProvider(IAspectsWeavingSettings configuration)
         {
             _windsorContainer = new WindsorContainer();
             _simpleInjectorContainer = new Container();
 
             AspectsConfigurator
                 .UseContainer(new WindsorAspectsContainer(_windsorContainer))
-                .Initialize();
+                .Initialize(c =>
+                {
+                    if (configuration.ExplicitWeavingAttributeType != null)
+                        c.UseExplicitWeavingAttribute<EnableWeavingAttribute>();
+                });
             
             AspectsConfigurator
                 .UseContainer(new SimpleInjectorAspectContainer(_simpleInjectorContainer))
-                .Initialize();
+                .Initialize(c =>
+                {
+                    if (configuration.ExplicitWeavingAttributeType != null)
+                        c.UseExplicitWeavingAttribute<EnableWeavingAttribute>();
+                });
 
             _windsorContainer.Register(
                 Component
@@ -36,7 +46,14 @@ namespace IvorySharp.Tests.Helpers
                     .ImplementedBy<TImplementation>()
             );
             
+            _windsorContainer.Register(
+                Component
+                    .For<IMultiplyService>()
+                    .ImplementedBy<MultiplyService>()
+            );
+            
             _simpleInjectorContainer.Register<TService, TImplementation>();
+            _simpleInjectorContainer.Register<IMultiplyService, MultiplyService>();
 
             _aspectWeaver = new AspectWeaver(configuration);
         }

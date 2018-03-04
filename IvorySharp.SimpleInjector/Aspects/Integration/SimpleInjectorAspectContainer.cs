@@ -18,6 +18,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
     public class SimpleInjectorAspectContainer : AspectsContainer
     {       
         private readonly Container _container;
+        private readonly IServiceProvider _serviceProvider;
         
         /// <summary>
         /// Инициализирует экземпляр <see cref="SimpleInjectorAspectContainer"/>.
@@ -25,10 +26,8 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         /// <param name="container">Контейнер зависимостей.</param>
         public SimpleInjectorAspectContainer(Container container)
         {
-            _container = container;
-            
-            _container.RegisterSingleton<SimpleInjectoServiceProvider>(
-                () => new SimpleInjectoServiceProvider(container));
+            _container = container;        
+            _serviceProvider = new SimpleInjectorServiceProvider(container);
         }
 
         /// <inheritdoc />
@@ -56,7 +55,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         /// <inheritdoc />
         public override IServiceProvider GetServiceProvider()
         {
-            return _container.GetInstance<SimpleInjectoServiceProvider>();
+            return _serviceProvider;
         }
     }
 }

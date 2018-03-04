@@ -18,6 +18,11 @@ namespace IvorySharp.Tests.Services
             return argument;
         }
 
+        public int Identity3(int argument)
+        {
+            return argument;
+        }
+
         public void ExceptionalEmptyMethod()
         {
             throw new Exception();

@@ -72,7 +72,7 @@ namespace IvorySharp.Aspects.Weaving
             // Если включена настройка явного указания атрибута для обвязки
             if (settings.ExplicitWeavingAttributeType != null)
             {
-                var explicitMarkers = ctx.InstanceDeclaredType.GetCustomAttributes(ctx.InstanceDeclaredType);
+                var explicitMarkers = ctx.InstanceDeclaredType.GetCustomAttributes(settings.ExplicitWeavingAttributeType);
                 if (explicitMarkers.IsEmpty())
                     return false;
             }
@@ -85,7 +85,8 @@ namespace IvorySharp.Aspects.Weaving
             if (suppressWeavingAttribute.IsNotEmpty())
                 return false;
 
-            return ctx.Method.GetCustomAttributes<MethodAspect>().IsNotEmpty();
+            return ctx.Method.GetCustomAttributes<MethodAspect>().IsNotEmpty() || 
+                   ctx.InstanceDeclaredType.GetCustomAttributes<MethodAspect>().IsNotEmpty();
         }
         
         /// <summary>
@@ -106,7 +107,7 @@ namespace IvorySharp.Aspects.Weaving
             if (settings.ExplicitWeavingAttributeType != null)
             {
                 var explicitMarkers = type.GetCustomAttributes(settings.ExplicitWeavingAttributeType);
-                if (explicitMarkers.IsNotEmpty())
+                if (explicitMarkers.IsEmpty())
                     return false;
             }
 
