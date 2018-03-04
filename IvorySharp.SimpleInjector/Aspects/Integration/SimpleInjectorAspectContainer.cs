@@ -17,13 +17,6 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
     /// </summary>
     public class SimpleInjectorAspectContainer : AspectsContainer
     {       
-        private static Type[] _notWeavableTypes = new[]
-        {
-            typeof(IMethodAspect),
-            typeof(IMethodBoundaryAspect),
-            typeof(IInterceptor)
-        };
-        
         private readonly Container _container;
         
         /// <summary>
@@ -33,28 +26,22 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         public SimpleInjectorAspectContainer(Container container)
         {
             _container = container;
+            
+            _container.RegisterSingleton<SimpleInjectoServiceProvider>(
+                () => new SimpleInjectoServiceProvider(container));
         }
 
         /// <inheritdoc />
-        public override void BindAspects(IWeavingAspectsConfiguration configuration)
+        public override void BindAspects(IAspectsWeavingSettings settings)
         {  
-            var weaver = new AspectWeaver(configuration);
+            var weaver = new AspectWeaver(settings);
             Func<object, Type, object> proxier = (o, type) => weaver.Weave(o, type);
             
             _container.ExpressionBuilt += (sender, args) =>
             {
-                if (!args.RegisteredServiceType.IsInterface)
+                if (!AspectWeaver.IsWeavable(args.RegisteredServiceType, settings))
                     return;
                 
-                if (_notWeavableTypes.Contains(args.RegisteredServiceType))
-                    return;
-
-                if (configuration.ExplicitWeaingAttributeType != null &&
-                    args.RegisteredServiceType.GetCustomAttribute(configuration.ExplicitWeaingAttributeType) == null)
-                {
-                    return;
-                }
-
                 args.Expression = Expression.Convert(
                     Expression.Invoke(
                         Expression.Constant(proxier),
@@ -69,7 +56,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         /// <inheritdoc />
         public override IServiceProvider GetServiceProvider()
         {
-            throw new NotImplementedException();
+            return _container.GetInstance<SimpleInjectoServiceProvider>();
         }
     }
 }

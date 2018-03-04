@@ -21,22 +21,28 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
         }
 
         /// <inheritdoc />
-        public override void BindAspects(IWeavingAspectsConfiguration configuration)
+        public override void BindAspects(IAspectsWeavingSettings settings)
         {
-            var interceptor = new AspectWeaverInterceptorAdapter(configuration);
+            var interceptor = new AspectWeaverInterceptorAdapter(settings);
+            var serviceProvider = new Dependency.WindsorServiceProvider(_kernel);
 
             _kernel.Register(
                 Component
                     .For<AspectWeaverInterceptorAdapter>()
                     .Instance(interceptor));
 
-            _kernel.AddFacility(new WindsorAspectFacility(configuration));
+            _kernel.Register(
+                Component
+                    .For<IServiceProvider>()
+                    .Instance(serviceProvider));
+
+            _kernel.AddFacility(new WindsorAspectFacility(settings));
         }
 
         /// <inheritdoc />
         public override IServiceProvider GetServiceProvider()
         {
-            throw new System.NotImplementedException();
+            return _kernel.Resolve<IServiceProvider>();
         }
     }
 }

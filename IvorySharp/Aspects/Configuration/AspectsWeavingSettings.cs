@@ -6,10 +6,10 @@ namespace IvorySharp.Aspects.Configuration
     /// <summary>
     /// Модель настроек по внедрению аспектов.
     /// </summary>
-    internal class AspectsWeavingSettings : IWeavingAspectsConfiguration
+    internal class AspectsWeavingSettings : IAspectsWeavingSettings
     {
         /// <inheritdoc />
-        public Type ExplicitWeaingAttributeType { get; set; }
+        public Type ExplicitWeavingAttributeType { get; set; }
 
         /// <inheritdoc />
         public IServiceProvider ServiceProvider { get; set; }

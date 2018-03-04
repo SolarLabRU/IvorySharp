@@ -11,8 +11,8 @@ namespace IvorySharp.Aspects.Integration
         /// <summary>
         /// Выполняет привязку аспектов к зарегистрированным в контейнере компонентам.
         /// </summary>
-        /// <param name="configuration">Конфигурация.</param>
-        public abstract void BindAspects(IWeavingAspectsConfiguration configuration);
+        /// <param name="settings">Конфигурация.</param>
+        public abstract void BindAspects(IAspectsWeavingSettings settings);
 
         /// <summary>
         /// Возвращает сервис провайдер.

@@ -12,16 +12,6 @@ namespace IvorySharp.Extensions
             return type.IsValueType || type.GetConstructor(Type.EmptyTypes) != null;
         }
 
-        internal static bool IsWeavable(this Type type, IWeavingAspectsConfiguration configurations)
-        {
-            if (configurations.ExplicitWeaingAttributeType == null)
-            {
-                return true;
-            }
-
-            return type.GetCustomAttribute(configurations.ExplicitWeaingAttributeType) != null;
-        }
-
         internal static object GetDefaultValue(this Type type)
         {
             if (type == null)

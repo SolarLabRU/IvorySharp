@@ -17,7 +17,7 @@ namespace IvorySharp.Tests.Helpers
         private Container _simpleInjectorContainer;
         private AspectWeaver _aspectWeaver;
 
-        public WeavedServiceProvider(TService instance, IWeavingAspectsConfiguration configuration)
+        public WeavedServiceProvider(TService instance, IAspectsWeavingSettings configuration)
         {
             _windsorContainer = new WindsorContainer();
             _simpleInjectorContainer = new Container();

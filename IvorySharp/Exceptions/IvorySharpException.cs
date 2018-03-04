@@ -12,21 +12,21 @@ namespace IvorySharp.Exceptions
         /// <summary>
         /// Инициализирует экземпляр <see cref="IvorySharpException"/>.
         /// </summary>
-        internal IvorySharpException()
+        public IvorySharpException()
         {
         }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="IvorySharpException"/>.
         /// </summary>
-        internal IvorySharpException(string message) : base(message)
+        public IvorySharpException(string message) : base(message)
         {
         }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="IvorySharpException"/>.
         /// </summary>
-        internal IvorySharpException(string message, Exception innerException) : base(message, innerException)
+        public IvorySharpException(string message, Exception innerException) : base(message, innerException)
         {
         }
 

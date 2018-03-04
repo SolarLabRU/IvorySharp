@@ -12,15 +12,15 @@ namespace IvorySharp.Aspects.Pipeline
     /// </summary>
     internal class MethodBoundaryAspectsInjector
     {
-        private readonly IWeavingAspectsConfiguration _aspectsConfiguration;
+        private readonly IAspectsWeavingSettings _settings;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="MethodBoundaryAspectsInjector"/>.
         /// </summary>
-        /// <param name="aspectsConfiguration">Конфигурация обвязки аспектов.</param>
-        internal MethodBoundaryAspectsInjector(IWeavingAspectsConfiguration aspectsConfiguration)
+        /// <param name="settings">Конфигурация обвязки аспектов.</param>
+        internal MethodBoundaryAspectsInjector(IAspectsWeavingSettings settings)
         {
-            _aspectsConfiguration = aspectsConfiguration;
+            _settings = settings;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace IvorySharp.Aspects.Pipeline
         public void InjectAspects(IInvocation invocation, IReadOnlyCollection<IMethodBoundaryAspect> aspects)
         {
             var aggregateAspect = new AggregatedMethodBoundaryAspect(aspects);
-            var pipeline = new InvocationPipeline(invocation.Context, _aspectsConfiguration.ServiceProvider);
+            var pipeline = new InvocationPipeline(invocation.Context, _settings.ServiceProvider);
 
             try
             {

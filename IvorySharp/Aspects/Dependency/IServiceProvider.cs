@@ -12,7 +12,7 @@ namespace IvorySharp.Aspects.Dependency
         /// </summary>
         /// <typeparam name="TService">Тип сервиса.</typeparam>
         /// <returns>Экземпляр сервиса.</returns>
-        TService GetService<TService>();
+        TService GetService<TService>() where TService : class;
         
         /// <summary>
         /// Получает экземпляр именованного сервиса.
@@ -20,14 +20,14 @@ namespace IvorySharp.Aspects.Dependency
         /// <param name="key">Ключ сервиса.</param>
         /// <typeparam name="TService">Тип сервиса.</typeparam>
         /// <returns>Экземпляр сервиса.</returns>
-        TService GetService<TService>(string key);    
+        TService GetNamedService<TService>(string key) where TService : class;    
         
         /// <summary>
         /// Получает экземпляр сервиса по типу.
         /// </summary>
         /// <param name="serviceType">Тип сервиса.</param>
         /// <returns>Экземпляр сервиса.</returns>
-        object GetNamedService(Type serviceType);
+        object GetService(Type serviceType);
         
         /// <summary>
         /// Получает экземпляр сервиса по типу.

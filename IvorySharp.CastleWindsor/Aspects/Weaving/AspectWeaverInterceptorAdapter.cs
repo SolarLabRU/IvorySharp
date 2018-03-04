@@ -16,7 +16,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
     {
         private readonly AspectWeaveInterceptor _aspectWeaveInterceptor;
         
-        public AspectWeaverInterceptorAdapter(IWeavingAspectsConfiguration configurations)
+        public AspectWeaverInterceptorAdapter(IAspectsWeavingSettings configurations)
         {
             _aspectWeaveInterceptor = new AspectWeaveInterceptor(configurations);
         }

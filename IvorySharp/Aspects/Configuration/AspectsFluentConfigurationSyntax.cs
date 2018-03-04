@@ -30,7 +30,7 @@ namespace IvorySharp.Aspects.Configuration
         public void Initialize(Action<AspectsConfiguration> configurator)
         {
             configurator(_aspectsConfiguration);
-            _container.BindAspects(_aspectsConfiguration.WeavingSettings);
+            _container.BindAspects(_aspectsConfiguration.AspectsWeavingSettings);
             _aspectsWeavingSettings.ServiceProvider = _container.GetServiceProvider();
         }
 
@@ -39,7 +39,7 @@ namespace IvorySharp.Aspects.Configuration
         /// </summary>
         public void Initialize()
         {
-            _container.BindAspects(_aspectsConfiguration.WeavingSettings);
+            _container.BindAspects(_aspectsConfiguration.AspectsWeavingSettings);
         }
     }
 }

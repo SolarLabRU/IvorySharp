@@ -13,17 +13,17 @@ namespace IvorySharp.Aspects.Configuration
         /// <summary>
         /// Набор настроек для аспектов.
         /// </summary>
-        internal AspectsWeavingSettings WeavingSettings { get; }
+        internal AspectsWeavingSettings AspectsWeavingSettings { get; }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectsConfiguration"/>.
         /// </summary>
         /// <param name="aspectsContainer">Контейнер аспектов.</param>
-        /// <param name="weavingSettings">Конфигурация обвязки аспектов.</param>
-        internal AspectsConfiguration(AspectsContainer aspectsContainer, AspectsWeavingSettings weavingSettings)
+        /// <param name="aspectsWeavingSettings">Конфигурация обвязки аспектов.</param>
+        internal AspectsConfiguration(AspectsContainer aspectsContainer, AspectsWeavingSettings aspectsWeavingSettings)
         {
             _aspectsContainer = aspectsContainer;
-            WeavingSettings = weavingSettings;
+            AspectsWeavingSettings = aspectsWeavingSettings;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace IvorySharp.Aspects.Configuration
         /// <typeparam name="TAttribute">Тип атрибута.</typeparam>
         public void UseExplicitWeavingAttribute<TAttribute>() where TAttribute : Attribute
         {
-            WeavingSettings.ExplicitWeaingAttributeType = typeof(TAttribute);
+            AspectsWeavingSettings.ExplicitWeavingAttributeType = typeof(TAttribute);
         }
     }
 }

@@ -10,23 +10,23 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     public class AspectWeaveInterceptor : IInterceptor
     {
-        private readonly IWeavingAspectsConfiguration _configurations;
+        private readonly IAspectsWeavingSettings _settings;
         private readonly MethodBoundaryAspectsInjector _aspectsInjector;
         
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="AspectWeaveInterceptor"/>.
         /// </summary>
-        /// <param name="aspectsConfiguration">Конфигурация аспектов.</param>
-        public AspectWeaveInterceptor(IWeavingAspectsConfiguration aspectsConfiguration)
+        /// <param name="settings">Конфигурация аспектов.</param>
+        public AspectWeaveInterceptor(IAspectsWeavingSettings settings)
         {
-            _configurations = aspectsConfiguration;
-            _aspectsInjector = new MethodBoundaryAspectsInjector(aspectsConfiguration);
+            _settings = settings;
+            _aspectsInjector = new MethodBoundaryAspectsInjector(settings);
         }
 
         /// <inheritdoc />
         public void Intercept(IInvocation invocation)
         {
-            if (!IsWeaveable(invocation))
+            if (!AspectWeaver.IsWeavable(invocation, _settings))
             {
                 invocation.Proceed();
                 return;
@@ -40,16 +40,6 @@ namespace IvorySharp.Aspects.Weaving
             }
 
             _aspectsInjector.InjectAspects(invocation, methodBoundaryAspects);
-        }
-
-        /// <summary>
-        /// Возвращает признак того, что возможно выполнить обвязку для метода.
-        /// </summary>
-        /// <param name="invocation">Модель вызова метода.</param>
-        /// <returns>Признак возможности применения аспектов.</returns>
-        private bool IsWeaveable(IInvocation invocation)
-        {
-            return invocation.Context.InstanceDeclaredType.IsWeavable(_configurations);
-        }    
+        }   
     }
 }

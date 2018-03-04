@@ -10,9 +10,9 @@ using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.Benchmark
 {
-    internal class DummyConfigurations : IWeavingAspectsConfiguration
+    internal class DummyConfigurations : IAspectsWeavingSettings
     {
-        public Type ExplicitWeaingAttributeType { get; } = null;
+        public Type ExplicitWeavingAttributeType { get; } = null;
         public IServiceProvider ServiceProvider { get; } = null;
     }
     

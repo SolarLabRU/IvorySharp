@@ -4,9 +4,9 @@ using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.Tests.WeavingSettings
 {
-    public class ImpliticAspectsWeavingSettings : IWeavingAspectsConfiguration
+    public class ImpliticAspectsAspectsWeavingSettings : IAspectsWeavingSettings
     {
-        public Type ExplicitWeaingAttributeType { get; } = null;
+        public Type ExplicitWeavingAttributeType { get; } = null;
         public IServiceProvider ServiceProvider { get; } = null;
     }
 }

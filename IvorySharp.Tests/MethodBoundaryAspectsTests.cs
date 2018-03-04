@@ -20,11 +20,11 @@ namespace IvorySharp.Tests
         {
             _sAspectServiceProvider = new WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService>(
                 new SingleBoundaryAspectService(), 
-                new ImpliticAspectsWeavingSettings());
+                new ImpliticAspectsAspectsWeavingSettings());
             
             _mAspectServiceProvider = new WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService>(
                 new MultipleBoundaryAspectsService(), 
-                new ImpliticAspectsWeavingSettings());
+                new ImpliticAspectsAspectsWeavingSettings());
             
             ObservableBoundaryAspect.ClearCallings();
         }
