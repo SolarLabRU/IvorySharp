@@ -26,9 +26,9 @@ namespace IvorySharp.Tests.Services
         [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnSuccess), Order = 2)]
         int IdentityInnerSuccess(int argument);
         
-        [Return42Aspect(nameof(IMethodBoundaryAspect.OnEntry), Order = 0)]
-        [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnSuccess), Order = 1)]
-        [BypassAspect(Order = 2)]
+        [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnSuccess), Order = 0)] // Этот выполнится
+        [Return42Aspect(nameof(IMethodBoundaryAspect.OnEntry), Order = 1)] // Этот остановит пайплайн
+        [BypassAspect(Order = 2)] // Этот не выполнится
         int IdentityReturnOnEntry(int argument);
     }
 }

@@ -21,7 +21,7 @@ namespace IvorySharp.Aspects.Pipeline
             // точка входа в метод выполняется всегда.
             if (boundary == nameof(IMethodBoundaryAspect.OnEntry))
             {
-                return true;
+                return pipeline.FlowBehaviour != FlowBehaviour.ThrowException;
             }
 
             // Исключения обрабатываем только если флоу по умолчанию или 
@@ -38,7 +38,7 @@ namespace IvorySharp.Aspects.Pipeline
             // точка выхода из метода выполняется всегда.
             if (boundary == nameof(IMethodBoundaryAspect.OnExit))
             {
-                return true;
+                return pipeline.FlowBehaviour != FlowBehaviour.ThrowException;
             }
 
             // Обработчик 'OnSuccess' вызывается если состояние Return или Default.

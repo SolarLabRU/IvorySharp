@@ -400,9 +400,9 @@ namespace IvorySharp.Tests
             AspectAssert.OnSuccessNotCalled(typeof(Return42Aspect));
             AspectAssert.OnExitNotCalled(typeof(Return42Aspect));
             
-            AspectAssert.OnEntryCalled(typeof(BypassAspect));
-            AspectAssert.OnSuccessCalled(typeof(BypassAspect));
-            AspectAssert.OnExitCalled(typeof(BypassAspect));
+            AspectAssert.OnEntryNotCalled(typeof(BypassAspect));
+            AspectAssert.OnSuccessNotCalled(typeof(BypassAspect));
+            AspectAssert.OnExitNotCalled(typeof(BypassAspect));
             
             AspectAssert.OnEntryCalled(typeof(IncrementValueAspect));
             AspectAssert.OnSuccessCalled(typeof(IncrementValueAspect));

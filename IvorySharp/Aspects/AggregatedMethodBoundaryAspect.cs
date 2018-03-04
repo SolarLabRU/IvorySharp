@@ -14,8 +14,8 @@ namespace IvorySharp.Aspects
     {
         private readonly IReadOnlyCollection<IMethodBoundaryAspect> _boundaryAspects;
         private IMethodBoundaryAspect _currentExecutingBoundary;
-        private IMethodBoundaryAspect _aspectTriggeredReturn;
-
+        private int? _triggeredStopPipelineAspectOrder = null;
+        
         /// <summary>
         /// Инициализирует экземпляр класса <see cref="AggregatedMethodBoundaryAspect"/>.
         /// </summary>
@@ -104,16 +104,25 @@ namespace IvorySharp.Aspects
                     
                     if (InvocationPipelineFlow.CanContinueBoundary(upcastedPipeline, boundaryName))
                     {
-                        // Для аспекта, который запросил возврат другие действия выполняться не должны
-                        if (_aspectTriggeredReturn == aspect)
+                        // Если пайплайн был прерван, то последующие обработчики выполняться не должны
+                        if (_triggeredStopPipelineAspectOrder.HasValue &&
+                            aspect.Order >= _triggeredStopPipelineAspectOrder.Value)
+                        {
                             continue;
-                                    
+                        }
+                             
                         _currentExecutingBoundary = aspect;
                         
                         boundary(aspect, upcastedPipeline);
 
-                        if (_aspectTriggeredReturn == null && upcastedPipeline.FlowBehaviour == FlowBehaviour.Return)
-                            _aspectTriggeredReturn = aspect;
+                        if (!_triggeredStopPipelineAspectOrder.HasValue)
+                        {
+                            if (pipeline.FlowBehaviour == FlowBehaviour.ThrowException ||
+                                pipeline.FlowBehaviour == FlowBehaviour.Return)
+                            {
+                                _triggeredStopPipelineAspectOrder = aspect.Order;
+                            }
+                        }
                     }
                 }
             }

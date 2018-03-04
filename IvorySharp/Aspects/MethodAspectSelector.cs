@@ -47,6 +47,9 @@ namespace IvorySharp.Aspects
                     .OrderBy(a => a.Order)
                     .ToList();
 
+                for (var i = 0; i < allAspects.Count; i++)
+                    allAspects[i].Order = allAspects[i].Order + i;
+                
                 _cache[invocation.Context.Method] = allAspects;
                 
                 return allAspects;
