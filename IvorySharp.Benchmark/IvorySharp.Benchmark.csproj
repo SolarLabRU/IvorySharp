@@ -1,12 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.10.12" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IvorySharp\IvorySharp.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <IsWindows Condition="'$(OS)' == 'Windows_NT'">true</IsWindows>
+        <IsUnix Condition="'$(OS)' == 'Unix'">true</IsUnix>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(IsUnix)'=='true'">
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(IsWindows)' == 'true'">
+        <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" Version="0.10.12"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\IvorySharp\IvorySharp.csproj"/>
+    </ItemGroup>
 </Project>

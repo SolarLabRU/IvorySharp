@@ -1,19 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Castle.Windsor" Version="4.1.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="SimpleInjector" Version="4.0.12" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IvorySharp.CastleWindsor\IvorySharp.CastleWindsor.csproj" />
-    <ProjectReference Include="..\IvorySharp.SimpleInjector\IvorySharp.SimpleInjector.csproj" />
-    <ProjectReference Include="..\IvorySharp\IvorySharp.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <IsWindows Condition="'$(OS)' == 'Windows_NT'">true</IsWindows>
+        <IsUnix Condition="'$(OS)' == 'Unix'">true</IsUnix>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(IsUnix)'=='true'">
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(IsWindows)' == 'true'">
+        <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
+    </PropertyGroup>
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Castle.Windsor" Version="4.1.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0"/>
+        <PackageReference Include="SimpleInjector" Version="4.0.12"/>
+        <PackageReference Include="xunit" Version="2.3.1"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1"/>
+        <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\IvorySharp.CastleWindsor\IvorySharp.CastleWindsor.csproj"/>
+        <ProjectReference Include="..\IvorySharp.SimpleInjector\IvorySharp.SimpleInjector.csproj"/>
+        <ProjectReference Include="..\IvorySharp\IvorySharp.csproj"/>
+    </ItemGroup>
 </Project>
