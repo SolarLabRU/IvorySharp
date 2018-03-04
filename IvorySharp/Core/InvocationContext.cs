@@ -33,7 +33,7 @@ namespace IvorySharp.Core
         /// Объявленный тип сущности, метод которой был вызван.
         /// Может быть интерфейсом, который реализуется экземпляром <see cref="Instance"/>.
         /// </summary>
-        public Type InstanceDeclaredType { get; }
+        public Type InstanceDeclaringType { get; }
         
         /// <summary>
         /// Инициализирует экземпляр модели вызова метода.
@@ -41,17 +41,17 @@ namespace IvorySharp.Core
         /// <param name="arguments">Параметры вызова.</param>
         /// <param name="method">Вызываемый метод.</param>
         /// <param name="instance">Экземпляр объекта.</param>
-        /// <param name="instanceDeclaredType">Объявленный тип объекта.</param>
+        /// <param name="instanceDeclaringType">Объявленный тип объекта.</param>
         public InvocationContext(
             IReadOnlyCollection<object> arguments, 
             MethodInfo method, 
             object instance, 
-            Type instanceDeclaredType)
+            Type instanceDeclaringType)
         {
             Arguments = arguments;
             Method = method;
             Instance = instance;
-            InstanceDeclaredType = instanceDeclaredType;
+            InstanceDeclaringType = instanceDeclaringType;
         }
     }
 }

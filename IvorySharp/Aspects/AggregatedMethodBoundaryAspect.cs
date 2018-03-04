@@ -12,8 +12,9 @@ namespace IvorySharp.Aspects
     /// </summary>
     internal class AggregatedMethodBoundaryAspect : MethodBoundaryAspect
     {
-        private IReadOnlyCollection<IMethodBoundaryAspect> _boundaryAspects;
+        private readonly IReadOnlyCollection<IMethodBoundaryAspect> _boundaryAspects;
         private IMethodBoundaryAspect _currentExecutingBoundary;
+        private IMethodBoundaryAspect _aspectTriggeredReturn;
 
         /// <summary>
         /// Инициализирует экземпляр класса <see cref="AggregatedMethodBoundaryAspect"/>.
@@ -61,7 +62,7 @@ namespace IvorySharp.Aspects
             if (_currentExecutingBoundary == null)
                 return;
 
-            var previousAspects = _boundaryAspects.TakeWhile(b => b != _currentExecutingBoundary);
+            var previousAspects = _boundaryAspects.Reverse().TakeWhile(b => b != _currentExecutingBoundary);
             var upcastedPipeline = (InvocationPipeline) pipeline;
             
             try
@@ -94,7 +95,7 @@ namespace IvorySharp.Aspects
             [CallerMemberName] string boundaryName = "")
         {
             var upcastedPipeline = (InvocationPipeline) pipeline;
-            
+         
             try
             {
                 foreach (var aspect in _boundaryAspects)
@@ -103,8 +104,16 @@ namespace IvorySharp.Aspects
                     
                     if (InvocationPipelineFlow.CanContinueBoundary(upcastedPipeline, boundaryName))
                     {
+                        // Для аспекта, который запросил возврат другие действия выполняться не должны
+                        if (_aspectTriggeredReturn == aspect)
+                            continue;
+                                    
                         _currentExecutingBoundary = aspect;
+                        
                         boundary(aspect, upcastedPipeline);
+
+                        if (_aspectTriggeredReturn == null && upcastedPipeline.FlowBehaviour == FlowBehaviour.Return)
+                            _aspectTriggeredReturn = aspect;
                     }
                 }
             }

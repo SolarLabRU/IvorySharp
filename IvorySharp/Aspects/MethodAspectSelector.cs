@@ -34,7 +34,7 @@ namespace IvorySharp.Aspects
         {
             if (!_cache.TryGetValue(invocation.Context.Method, out var aspects))
             {
-                var declaredTypeAspects = invocation.Context.InstanceDeclaredType
+                var declaredTypeAspects = invocation.Context.InstanceDeclaringType
                     .GetCustomAttributes<MethodBoundaryAspect>();
 
                 var methodAspects = invocation.Context.Method

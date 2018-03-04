@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using IvorySharp.Core;
 using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
@@ -35,7 +36,12 @@ namespace IvorySharp.Aspects.Pipeline
         /// можно вызывать в текущем контексте.
         /// </summary>
         bool CanReturnResult { get; }
-
+        
+        /// <summary>
+        /// Пользовательское состояние, устанавливаемое в рамках выполнения текущего аспекта.
+        /// </summary>
+        object AspectExecutionState { get; set; }
+        
         /// <summary>
         /// Прекращает выполнение пайплайна, возвращая результат.
         /// Вся ответственность за приведение типов лежит на стороне клиентского кода.

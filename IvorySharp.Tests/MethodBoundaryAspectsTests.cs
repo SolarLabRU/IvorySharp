@@ -317,6 +317,97 @@ namespace IvorySharp.Tests
             // Assert           
             Assert.Equal(5, result);
         }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_ExceptionFlow_If_ExceptionThrowedOnSuccess_It_Will_NotHandled_BySelf_Or_Outer_Aspect(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _mAspectServiceProvider.GetService(storeType);
+
+            // Act & Assert      
+            Assert.Throws<Exception>(() => service.IdentityThrowOnSuccess(20));
+        }
+        
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_ExceptionFlow_If_ExceptionThrowedOnEntry_It_Will_NotHandled_BySelf_Or_Outer_Aspect(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _mAspectServiceProvider.GetService(storeType);
+
+            // Act & Assert      
+            Assert.Throws<Exception>(() => service.IdentityThrowOnEntry(20));
+        }
+        
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_ExceptionFlow_If_ExceptionThrowedOnExit_It_Will_NotHandled_BySelf_Or_Outer_Aspect(
+            WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _mAspectServiceProvider.GetService(storeType);
+
+            // Act & Assert      
+            Assert.Throws<Exception>(() => service.IdentityThrowOnExit(20));
+        }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_ExceptionFlow_If_ExceptionSwallowed_ByInnerHandler_OuterOnSuccess_Called(
+            WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _mAspectServiceProvider.GetService(storeType);
+
+            // Act  
+            var result = service.IdentityInnerSuccess(10);
+            
+            // Assert
+            Assert.Equal(1, result);
+            
+            AspectAssert.OnExceptionCalled(typeof(SwallowExceptionAspectDefaultReturn));
+            AspectAssert.OnSuccessNotCalled(typeof(SwallowExceptionAspectDefaultReturn));
+            AspectAssert.OnSuccessCalled(typeof(BypassAspect));
+            AspectAssert.OnSuccessCalled(typeof(IncrementValueAspect));
+        }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_If_BoundaryCallsReturn_Inner_OnSuccess_NotCalled_ButOuter_Does(
+            WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _mAspectServiceProvider.GetService(storeType);
+
+            // Act  
+            var result = service.IdentityReturnOnEntry(20);
+            
+            // Assert
+            Assert.Equal(43, result);
+            
+            AspectAssert.OnEntryCalled(typeof(Return42Aspect));
+            AspectAssert.OnSuccessNotCalled(typeof(Return42Aspect));
+            AspectAssert.OnExitNotCalled(typeof(Return42Aspect));
+            
+            AspectAssert.OnEntryCalled(typeof(BypassAspect));
+            AspectAssert.OnSuccessCalled(typeof(BypassAspect));
+            AspectAssert.OnExitCalled(typeof(BypassAspect));
+            
+            AspectAssert.OnEntryCalled(typeof(IncrementValueAspect));
+            AspectAssert.OnSuccessCalled(typeof(IncrementValueAspect));
+            AspectAssert.OnExitCalled(typeof(IncrementValueAspect));
+        }
         
         [Theory]
         [InlineData(WeavedServiceStoreType.TransientWeaving)]

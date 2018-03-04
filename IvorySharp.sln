@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.CastleWindsor", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.SimpleInjector", "IvorySharp.SimpleInjector\IvorySharp.SimpleInjector.csproj", "{8229702F-FC55-4381-B531-C10E8DA12432}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Examples", "IvorySharp.Examples\IvorySharp.Examples.csproj", "{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{8229702F-FC55-4381-B531-C10E8DA12432}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8229702F-FC55-4381-B531-C10E8DA12432}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8229702F-FC55-4381-B531-C10E8DA12432}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

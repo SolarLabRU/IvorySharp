@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
@@ -11,6 +13,9 @@ namespace IvorySharp.Aspects.Pipeline
     /// </summary>
     internal class InvocationPipeline : IInvocationPipeline
     {
+        private static readonly object SyncRoot = new object();
+        private readonly IDictionary<Type, object> _pipelineData;
+
         /// <summary>
         /// Текущий выполняемый аспект.
         /// </summary>
@@ -31,6 +36,12 @@ namespace IvorySharp.Aspects.Pipeline
         /// <inheritdoc />
         public bool CanReturnResult { get; }
 
+        /// <inheritdoc />
+        public object AspectExecutionState {
+            get => GetAspectState();
+            set => SetAspectState(value);
+        }
+
         /// <summary>
         /// Инициализирует экземпляр <see cref="InvocationPipeline"/>.
         /// </summary>
@@ -38,6 +49,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <param name="serviceProvider">Провайдер сервисов.</param>
         internal InvocationPipeline(InvocationContext invocationContext, IServiceProvider serviceProvider)
         {
+            _pipelineData = new ConcurrentDictionary<Type, object>();
             Context = invocationContext;
             ServiceProvider = serviceProvider;
             CanReturnResult = !Context.Method.IsVoidReturn();
@@ -53,7 +65,7 @@ namespace IvorySharp.Aspects.Pipeline
             {
                 throw new IvorySharpException(
                     $"Невозможно вернуть значение '{returnValue}' из аспекта '{CurrentExecutingAspect?.GetType().FullName}'. " +
-                    $"Метод '{Context.Method.Name}' типа '{Context.InstanceDeclaredType.FullName}' " +
+                    $"Метод '{Context.Method.Name}' типа '{Context.InstanceDeclaringType.FullName}' " +
                     $"не имеет возвращаемого значения (void). " +
                     $"Для возврата используйте перегрузку '{nameof(ReturnValue)}' без параметров.");
             }
@@ -101,6 +113,30 @@ namespace IvorySharp.Aspects.Pipeline
         {
             CurrentException = exception;
             FlowBehaviour = FlowBehaviour.ThrowException;
+        }
+
+        internal object GetAspectState()
+        {
+            lock (SyncRoot)
+            {
+                if (CurrentExecutingAspect == null)
+                    return null;
+                
+                return _pipelineData.TryGetValue(CurrentExecutingAspect.GetType(), out var data)
+                    ? data 
+                    : null;
+            }
+        }
+
+        internal void SetAspectState(object newState)
+        {
+            lock (SyncRoot)
+            {
+                if (CurrentExecutingAspect == null)
+                    return;
+
+                _pipelineData[CurrentExecutingAspect.GetType()] = newState;
+            }
         }
     }
 }
