@@ -2,6 +2,7 @@
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
+using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -14,6 +15,9 @@ namespace IvorySharp.Aspects.Pipeline
         /// Текущий выполняемый аспект.
         /// </summary>
         internal IMethodAspect CurrentExecutingAspect { get; set; }
+
+        /// <inheritdoc />
+        public IServiceProvider ServiceProvider { get; }
 
         /// <inheritdoc />
         public InvocationContext Context { get; }
@@ -31,9 +35,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// Инициализирует экземпляр <see cref="InvocationPipeline"/>.
         /// </summary>
         /// <param name="invocationContext">Контекст выполнения.</param>
-        internal InvocationPipeline(InvocationContext invocationContext)
+        /// <param name="serviceProvider">Провайдер сервисов.</param>
+        internal InvocationPipeline(InvocationContext invocationContext, IServiceProvider serviceProvider)
         {
             Context = invocationContext;
+            ServiceProvider = serviceProvider;
             CanReturnResult = !Context.Method.IsVoidReturn();
         }
 

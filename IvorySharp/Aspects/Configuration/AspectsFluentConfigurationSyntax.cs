@@ -8,6 +8,7 @@ namespace IvorySharp.Aspects.Configuration
     /// </summary>
     public class AspectsFluentConfigurationSyntax
     {
+        private readonly AspectsWeavingSettings _aspectsWeavingSettings;
         private readonly AspectsConfiguration _aspectsConfiguration;
         private readonly AspectsContainer _container;
 
@@ -18,17 +19,19 @@ namespace IvorySharp.Aspects.Configuration
         internal AspectsFluentConfigurationSyntax(AspectsContainer aspectsContainer)
         {
             _container = aspectsContainer;
-            _aspectsConfiguration = new AspectsConfiguration(_container);
+            _aspectsWeavingSettings = new AspectsWeavingSettings();
+            _aspectsConfiguration = new AspectsConfiguration(_container, _aspectsWeavingSettings);
         }
 
         /// <summary>
         /// Инициализирует библиотеку для работы.
         /// </summary>
-        /// <param name="configurer">Конфигуратор настроек.</param>
-        public void Initialize(Action<AspectsConfiguration> configurer)
+        /// <param name="configurator">Конфигуратор настроек.</param>
+        public void Initialize(Action<AspectsConfiguration> configurator)
         {
-            configurer(_aspectsConfiguration);
-            _container.BindAspects(_aspectsConfiguration.Configuration);
+            configurator(_aspectsConfiguration);
+            _container.BindAspects(_aspectsConfiguration.WeavingSettings);
+            _aspectsWeavingSettings.ServiceProvider = _container.GetServiceProvider();
         }
 
         /// <summary>
@@ -36,7 +39,7 @@ namespace IvorySharp.Aspects.Configuration
         /// </summary>
         public void Initialize()
         {
-            _container.BindAspects(_aspectsConfiguration.Configuration);
+            _container.BindAspects(_aspectsConfiguration.WeavingSettings);
         }
     }
 }

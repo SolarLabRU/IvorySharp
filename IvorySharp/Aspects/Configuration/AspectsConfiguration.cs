@@ -4,7 +4,7 @@ using IvorySharp.Aspects.Integration;
 namespace IvorySharp.Aspects.Configuration
 {
     /// <summary>
-    /// Модель конфигурации аспектов.
+    /// Модель настройки аспектов.
     /// </summary>
     public class AspectsConfiguration
     {
@@ -13,16 +13,17 @@ namespace IvorySharp.Aspects.Configuration
         /// <summary>
         /// Набор настроек для аспектов.
         /// </summary>
-        internal WeavingAspectsConfiguration Configuration { get; }
+        internal AspectsWeavingSettings WeavingSettings { get; }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectsConfiguration"/>.
         /// </summary>
         /// <param name="aspectsContainer">Контейнер аспектов.</param>
-        internal AspectsConfiguration(AspectsContainer aspectsContainer)
+        /// <param name="weavingSettings">Конфигурация обвязки аспектов.</param>
+        internal AspectsConfiguration(AspectsContainer aspectsContainer, AspectsWeavingSettings weavingSettings)
         {
             _aspectsContainer = aspectsContainer;
-            Configuration = new WeavingAspectsConfiguration();
+            WeavingSettings = weavingSettings;
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace IvorySharp.Aspects.Configuration
         /// <typeparam name="TAttribute">Тип атрибута.</typeparam>
         public void UseExplicitWeavingAttribute<TAttribute>() where TAttribute : Attribute
         {
-            Configuration.ExplicitWeaingAttributeType = typeof(TAttribute);
+            WeavingSettings.ExplicitWeaingAttributeType = typeof(TAttribute);
         }
     }
 }

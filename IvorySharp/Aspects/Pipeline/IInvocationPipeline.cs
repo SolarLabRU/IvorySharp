@@ -1,5 +1,6 @@
 ﻿using System;
 using IvorySharp.Core;
+using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -8,6 +9,11 @@ namespace IvorySharp.Aspects.Pipeline
     /// </summary>
     public interface IInvocationPipeline
     {
+        /// <summary>
+        /// Провайдер сервисов.
+        /// </summary>
+        IServiceProvider ServiceProvider { get; }
+        
         /// <summary>
         /// Параметры вызова метода.
         /// </summary>

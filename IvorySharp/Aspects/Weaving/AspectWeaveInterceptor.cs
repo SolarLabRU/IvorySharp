@@ -1,5 +1,4 @@
-﻿using System;
-using IvorySharp.Aspects.Configuration;
+﻿using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
@@ -12,6 +11,7 @@ namespace IvorySharp.Aspects.Weaving
     public class AspectWeaveInterceptor : IInterceptor
     {
         private readonly IWeavingAspectsConfiguration _configurations;
+        private readonly MethodBoundaryAspectsInjector _aspectsInjector;
         
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="AspectWeaveInterceptor"/>.
@@ -19,7 +19,8 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="aspectsConfiguration">Конфигурация аспектов.</param>
         public AspectWeaveInterceptor(IWeavingAspectsConfiguration aspectsConfiguration)
         {
-            _configurations = aspectsConfiguration ?? throw new ArgumentNullException(nameof(aspectsConfiguration));
+            _configurations = aspectsConfiguration;
+            _aspectsInjector = new MethodBoundaryAspectsInjector(aspectsConfiguration);
         }
 
         /// <inheritdoc />
@@ -38,7 +39,7 @@ namespace IvorySharp.Aspects.Weaving
                 return;
             }
 
-            MethodBoundaryAspectsInjector.Instance.InjectAspects(invocation, methodBoundaryAspects);
+            _aspectsInjector.InjectAspects(invocation, methodBoundaryAspects);
         }
 
         /// <summary>

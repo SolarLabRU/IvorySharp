@@ -2,6 +2,7 @@
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Integration;
 using IvorySharp.CastleWindsor.Aspects.Weaving;
 
@@ -30,6 +31,12 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
                     .Instance(interceptor));
 
             _kernel.AddFacility(new WindsorAspectFacility(configuration));
+        }
+
+        /// <inheritdoc />
+        public override IServiceProvider GetServiceProvider()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

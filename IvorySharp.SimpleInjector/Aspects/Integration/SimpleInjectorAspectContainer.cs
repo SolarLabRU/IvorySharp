@@ -8,6 +8,7 @@ using IvorySharp.Aspects.Integration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Core;
 using SimpleInjector;
+using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.SimpleInjector.Aspects.Integration
 {
@@ -63,6 +64,12 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
                     args.RegisteredServiceType
                 );
             };
+        }
+
+        /// <inheritdoc />
+        public override IServiceProvider GetServiceProvider()
+        {
+            throw new NotImplementedException();
         }
     }
 }

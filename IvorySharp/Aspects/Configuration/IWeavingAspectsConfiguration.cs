@@ -1,4 +1,5 @@
 ﻿using System;
+using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.Aspects.Configuration
 {
@@ -12,5 +13,10 @@ namespace IvorySharp.Aspects.Configuration
         /// для которых включена компоновка аспектов.
         /// </summary>
         Type ExplicitWeaingAttributeType { get; }
+        
+        /// <summary>
+        /// Провайдер сервисов.
+        /// </summary>
+        IServiceProvider ServiceProvider { get; }
     }
 }

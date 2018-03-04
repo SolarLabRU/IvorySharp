@@ -6,12 +6,14 @@ using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Fakes;
 using IvorySharp.Core;
 using IvorySharp.Proxying;
+using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.Benchmark
 {
     internal class DummyConfigurations : IWeavingAspectsConfiguration
     {
         public Type ExplicitWeaingAttributeType { get; } = null;
+        public IServiceProvider ServiceProvider { get; } = null;
     }
     
     internal class BypassInterceptor : IInterceptor
