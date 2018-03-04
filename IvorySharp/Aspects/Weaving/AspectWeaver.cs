@@ -4,7 +4,6 @@ using System.Reflection;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
-using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
 using IvorySharp.Proxying;
 
@@ -25,7 +24,16 @@ namespace IvorySharp.Aspects.Weaving
             typeof(IInvocation),
             typeof(IServiceProvider),
             typeof(IInvocationPipeline)
-        };   
+        };
+
+        /// <summary>
+        /// Массив методов, которые нельзя перехватывать.
+        /// </summary>
+        public static readonly MethodInfo[] NotInterceptableMethods =
+        {
+            typeof(object).GetMethod(nameof(GetType)),
+            typeof(object).GetMethod(nameof(ReferenceEquals))
+        };
         
         private readonly IAspectsWeavingSettings _configuration;
 

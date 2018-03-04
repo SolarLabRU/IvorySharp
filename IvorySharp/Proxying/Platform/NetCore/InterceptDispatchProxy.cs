@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
+using IvorySharp.Aspects.Weaving;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 
@@ -47,11 +49,9 @@ namespace IvorySharp.Proxying.Platform.NetCore
         {
             try
             {
-                var invocation = new Invocation(new InvocationContext(args, targetMethod, _target, _targetDeclaredType));
-                _interceptor.Intercept(invocation);
-                
-                if (!targetMethod.IsVoidReturn())
-                    return invocation.Context.ReturnValue;
+                return AspectWeaver.NotInterceptableMethods.Any(m => ReferenceEquals(m, targetMethod)) 
+                    ? Bypass(targetMethod, args)
+                    : Intercept(targetMethod, args);
             }
             catch (TargetInvocationException e)
             {
@@ -59,6 +59,21 @@ namespace IvorySharp.Proxying.Platform.NetCore
             }
 
             return default(object);
+        }
+
+        private object Bypass(MethodInfo targetMethod, object[] args)
+        {
+            return targetMethod.Invoke(_target, args);
+        }
+
+        private object Intercept(MethodInfo targetMethod, object[] args)
+        {
+            var invocation = new Invocation(new InvocationContext(args, targetMethod, _target, _targetDeclaredType));
+            _interceptor.Intercept(invocation);
+
+            return targetMethod.IsVoidReturn()
+                ? default(object)
+                : invocation.Context.ReturnValue;
         }
 
         /// <summary>
