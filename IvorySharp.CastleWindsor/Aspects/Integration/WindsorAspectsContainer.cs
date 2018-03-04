@@ -29,18 +29,6 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
                     .For<AspectWeaverInterceptorAdapter>()
                     .Instance(interceptor));
 
-            _kernel.Register(
-                Component
-                    .For(GetType())
-                    .Named(nameof(WindsorAspectsContainer))
-                    .Instance(this));
-
-            _kernel.Register(
-                Component
-                    .For<IWeavingAspectsConfiguration>()
-                    .Instance(configuration)
-            );
-
             _kernel.AddFacility(new WindsorAspectFacility(configuration));
         }
     }

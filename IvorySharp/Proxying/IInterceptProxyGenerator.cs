@@ -25,9 +25,9 @@ namespace IvorySharp.Proxying
         /// перехватчик <paramref name="interceptor"/>.
         /// </summary>
         /// <param name="target">Экземпляр объекта.</param>
-        /// <param name="targetDeclatedType">Объявленный тип объекта (такого же типа будет прокси).</param>
+        /// <param name="targetDeclaredType">Объявленный тип объекта (такого же типа будет прокси).</param>
         /// <param name="interceptor">Экземпляр перехватчика.</param>
         /// <returns>Экземпляр прокси.</returns>
-        object CreateInterceptProxy(object target, Type targetDeclatedType, IInterceptor interceptor);
+        object CreateInterceptProxy(object target, Type targetDeclaredType, IInterceptor interceptor);
     }
 }

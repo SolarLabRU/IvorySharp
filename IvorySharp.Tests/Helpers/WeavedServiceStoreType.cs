@@ -3,6 +3,7 @@
     public enum WeavedServiceStoreType
     {
         TransientWeaving = 1,
-        CastleWindsor = 2
+        CastleWindsor = 2,
+        SimpleInjector = 3
     }
 }

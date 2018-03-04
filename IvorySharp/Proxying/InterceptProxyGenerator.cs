@@ -23,9 +23,9 @@ namespace IvorySharp.Proxying
         }
 
         /// <inheritdoc />
-        public object CreateInterceptProxy(object target, Type targetDeclatedType, IInterceptor interceptor)
+        public object CreateInterceptProxy(object target, Type targetDeclaredType, IInterceptor interceptor)
         {
-            return InterceptDispatchProxy.CreateTransparentProxy(target, targetDeclatedType, interceptor);
+            return InterceptDispatchProxy.CreateTransparentProxy(target, targetDeclaredType, interceptor);
         }
     }
 }
