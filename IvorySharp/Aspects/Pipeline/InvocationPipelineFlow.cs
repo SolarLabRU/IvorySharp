@@ -1,4 +1,5 @@
 ﻿using System;
+using IvorySharp.Exceptions;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -47,7 +48,7 @@ namespace IvorySharp.Aspects.Pipeline
                        pipeline.FlowBehaviour == FlowBehaviour.Return;
             }
 
-            throw new InvalidOperationException(
+            throw new IvorySharpException(
                 $"Для обработчика '{boundary}' невозможно определить признак продолжения пайплана");
         }
 

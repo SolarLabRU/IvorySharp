@@ -7,12 +7,12 @@ namespace IvorySharp.Extensions
 {
     internal static class TypeExtensions
     {
-        public static bool HasDefaultConstructor(this Type type)
+        internal static bool HasDefaultConstructor(this Type type)
         {
             return type.IsValueType || type.GetConstructor(Type.EmptyTypes) != null;
         }
 
-        public static bool IsWeavable(this Type type, IWeavingAspectsConfiguration configurations)
+        internal static bool IsWeavable(this Type type, IWeavingAspectsConfiguration configurations)
         {
             if (configurations.ExplicitWeaingAttributeType == null)
             {
@@ -22,7 +22,7 @@ namespace IvorySharp.Extensions
             return type.GetCustomAttribute(configurations.ExplicitWeaingAttributeType) != null;
         }
 
-        public static object GetDefaultValue(this Type type)
+        internal static object GetDefaultValue(this Type type)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));

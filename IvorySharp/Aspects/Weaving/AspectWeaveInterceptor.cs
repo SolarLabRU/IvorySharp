@@ -41,9 +41,14 @@ namespace IvorySharp.Aspects.Weaving
             MethodBoundaryAspectsInjector.Instance.InjectAspects(invocation, methodBoundaryAspects);
         }
 
+        /// <summary>
+        /// Возвращает признак того, что возможно выполнить обвязку для метода.
+        /// </summary>
+        /// <param name="invocation">Модель вызова метода.</param>
+        /// <returns>Признак возможности применения аспектов.</returns>
         private bool IsWeaveable(IInvocation invocation)
         {
-            return invocation.Context.InstanceDeclaringType.IsWeavable(_configurations);
+            return invocation.Context.InstanceDeclaredType.IsWeavable(_configurations);
         }    
     }
 }

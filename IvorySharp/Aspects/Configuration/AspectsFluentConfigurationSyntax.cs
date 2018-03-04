@@ -11,6 +11,10 @@ namespace IvorySharp.Aspects.Configuration
         private readonly AspectsConfiguration _aspectsConfiguration;
         private readonly AspectsContainer _container;
 
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="AspectsFluentConfigurationSyntax"/>.
+        /// </summary>
+        /// <param name="aspectsContainer">Контейнер аспектов.</param>
         internal AspectsFluentConfigurationSyntax(AspectsContainer aspectsContainer)
         {
             _container = aspectsContainer;

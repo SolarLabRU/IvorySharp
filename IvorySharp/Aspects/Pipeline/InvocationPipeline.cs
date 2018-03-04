@@ -1,5 +1,6 @@
 ﻿using System;
 using IvorySharp.Core;
+using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline
@@ -44,9 +45,9 @@ namespace IvorySharp.Aspects.Pipeline
             
             if (Context.Method.IsVoidReturn())
             {
-                throw new InvalidOperationException(
+                throw new IvorySharpException(
                     $"Невозможно вернуть значение '{returnValue}' из аспекта '{CurrentExecutingAspect?.GetType().FullName}'. " +
-                    $"Метод '{Context.Method.Name}' типа '{Context.InstanceDeclaringType.FullName}' " +
+                    $"Метод '{Context.Method.Name}' типа '{Context.InstanceDeclaredType.FullName}' " +
                     $"не имеет возвращаемого значения (void). " +
                     $"Для возврата используйте перегрузку '{nameof(ReturnValue)}' без параметров.");
             }
@@ -59,7 +60,7 @@ namespace IvorySharp.Aspects.Pipeline
             {
                 if (!Context.Method.ReturnType.IsInstanceOfType(returnValue))
                 {
-                    throw new InvalidOperationException(
+                    throw new IvorySharpException(
                         $"Невозможно вернуть значение '{returnValue}' из аспекта '{CurrentExecutingAspect?.GetType().FullName}'. " +
                         $"Тип результата '{returnValue.GetType().FullName}' невозможно привести к возвращаемому типу '{Context.Method.ReturnType.FullName}' " +
                         $"метода '{Context.Method.Name}' сервиса 'InvocationContext.InstanceDeclaringType.FullName'.");

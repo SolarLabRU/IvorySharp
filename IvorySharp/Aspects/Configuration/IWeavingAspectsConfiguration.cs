@@ -3,7 +3,7 @@
 namespace IvorySharp.Aspects.Configuration
 {
     /// <summary>
-    /// Настройки по внедрению аспектов аспектов.
+    /// Настройки по внедрению аспектов.
     /// </summary>
     public interface IWeavingAspectsConfiguration
     {
