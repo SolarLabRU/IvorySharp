@@ -33,5 +33,10 @@ namespace IvorySharp.Tests.Services
         {
             return argument;
         }
+
+        public int IdentityThrowPipelineOnEntry(int argument)
+        {
+            return argument;
+        }
     }
 }

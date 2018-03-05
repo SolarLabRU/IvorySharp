@@ -1,6 +1,7 @@
 ﻿using IvorySharp.Aspects;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Tests.Aspects;
+using IvorySharp.Tests.Helpers;
 using IvorySharp.Tests.WeavingSettings;
 
 namespace IvorySharp.Tests.Services

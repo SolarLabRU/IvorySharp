@@ -30,5 +30,10 @@ namespace IvorySharp.Tests.Services
         [Return42Aspect(nameof(IMethodBoundaryAspect.OnEntry), Order = 1)] // Этот остановит пайплайн
         [BypassAspect(Order = 2)] // Этот не выполнится
         int IdentityReturnOnEntry(int argument);
+
+        [BypassAspect(Order = 0)] // Не вызовется от Success, но вызовется Exit
+        [PipelineThrowAspect(Order = 1)] // Этот выбросит исключение и остановит пайплайн
+        [Return42Aspect(nameof(IMethodBoundaryAspect.OnExit), nameof(IMethodBoundaryAspect.OnSuccess), Order = 2)] // Не выполнится
+        int IdentityThrowPipelineOnEntry(int argument);
     }
 }

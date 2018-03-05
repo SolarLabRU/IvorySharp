@@ -9,13 +9,4 @@ namespace IvorySharp.Tests.WeavingSettings
         public Type ExplicitWeavingAttributeType { get; } = null;
         public IServiceProvider ServiceProvider { get; } = null;
     }
-
-    public class ExplicitAspectWeavingSettings : IAspectsWeavingSettings
-    {
-        public Type ExplicitWeavingAttributeType { get; } = typeof(EnableWeavingAttribute);
-        public IServiceProvider ServiceProvider { get; }
-    }
-    
-    [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Method)]
-    public class EnableWeavingAttribute : Attribute { }
 }

@@ -413,6 +413,36 @@ namespace IvorySharp.Tests
         [InlineData(WeavedServiceStoreType.TransientWeaving)]
         [InlineData(WeavedServiceStoreType.CastleWindsor)]
         [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_ExceptionFlow_If_BoundaryThrowPipeline_NextAspect_NotInvoked_ButPrevious_CallsOnExit(
+                WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _mAspectServiceProvider.GetService(storeType);
+
+            // Act  
+            Assert.Throws<Exception>(() => service.IdentityThrowPipelineOnEntry(20));
+            
+            // Assert
+            AspectAssert.OnEntryNotCalled(typeof(Return42Aspect));
+            AspectAssert.OnExitNotCalled(typeof(Return42Aspect));
+            AspectAssert.OnSuccessNotCalled(typeof(Return42Aspect));
+            AspectAssert.OnExceptionNotCalled(typeof(Return42Aspect));
+            
+            AspectAssert.OnEntryCalled(typeof(PipelineThrowAspect));
+            AspectAssert.OnExitNotCalled(typeof(PipelineThrowAspect));
+            AspectAssert.OnSuccessNotCalled(typeof(PipelineThrowAspect));
+            AspectAssert.OnExceptionNotCalled(typeof(PipelineThrowAspect));
+            
+            AspectAssert.OnEntryCalled(typeof(BypassAspect));
+            AspectAssert.OnExitCalled(typeof(BypassAspect));
+            AspectAssert.OnSuccessNotCalled(typeof(BypassAspect));
+            AspectAssert.OnExceptionNotCalled(typeof(BypassAspect));
+        }
+        
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
         public void ExplicitMarkers_AspectsNotApplied_If_Service_NotMarked(WeavedServiceStoreType storeType)
         {
             // Arrange
