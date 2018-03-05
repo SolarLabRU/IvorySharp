@@ -6,7 +6,7 @@ namespace IvorySharp.Benchmark
     {
         static void Main(string[] args)
         {
-            BenchmarkSwitcher.FromAssembly(typeof(ReflectionBenchmark).Assembly).Run();
+            BenchmarkSwitcher.FromAssembly(typeof(BenchmarkProxyCreation).Assembly).Run();
         }
     }
 }

@@ -5,16 +5,15 @@ namespace IvorySharp.Benchmark.Fakes
     public interface IAppService
     {
         [BypassAspect]
-        void VoidMethod();
+        int Identity(int argument);
     }
 
     public class AppService : IAppService
     {
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        public void VoidMethod()
+        public int Identity(int argument)
         {
-            string nothing = null;
-            return;
+            return argument;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace IvorySharp.Aspects
     /// </summary>
     internal class MethodAspectSelector
     {
-        private static ConcurrentDictionary<MethodInfo, List<MethodBoundaryAspect>> _cache;
+        private static readonly ConcurrentDictionary<MethodInfo, List<MethodBoundaryAspect>> _cache;
 
         /// <summary>
         /// Экземпляр селектора аспектов.
@@ -35,10 +35,10 @@ namespace IvorySharp.Aspects
             if (!_cache.TryGetValue(invocation.Context.Method, out var aspects))
             {
                 var declaredTypeAspects = invocation.Context.InstanceDeclaringType
-                    .GetCustomAttributes<MethodBoundaryAspect>();
+                    .GetCustomAttributes<MethodBoundaryAspect>(inherit: false);
 
                 var methodAspects = invocation.Context.Method
-                    .GetCustomAttributes<MethodBoundaryAspect>();
+                    .GetCustomAttributes<MethodBoundaryAspect>(inherit: false);
 
                 var allAspects = declaredTypeAspects
                     .Union(methodAspects)

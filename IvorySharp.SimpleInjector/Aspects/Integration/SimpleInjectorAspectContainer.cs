@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -37,10 +38,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
             Func<object, Type, object> proxier = (o, type) => weaver.Weave(o, type);
             
             _container.ExpressionBuilt += (sender, args) =>
-            {
-                if (!AspectWeaver.IsWeavable(args.RegisteredServiceType, settings))
-                    return;
-                
+            { 
                 args.Expression = Expression.Convert(
                     Expression.Invoke(
                         Expression.Constant(proxier),

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 using IvorySharp.Aspects.Configuration;
@@ -14,6 +15,13 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     public class AspectWeaver
     {
+        private static readonly ConcurrentDictionary<MethodInfo, bool> _weavableMethodsCached;
+
+        static AspectWeaver()
+        {
+            _weavableMethodsCached = new ConcurrentDictionary<MethodInfo, bool>();
+        }
+        
         /// <summary>
         /// Массив типов для которых нельзя применять обвязку.
         /// </summary>
@@ -69,32 +77,45 @@ namespace IvorySharp.Aspects.Weaving
         /// <returns>Признак возможности применения обвязки для указанного типа.</returns>
         public static bool IsWeavable(IInvocation invocation, IAspectsWeavingSettings settings)
         {
+            bool CacheResultAndReturn(bool result)
+            {
+                _weavableMethodsCached.AddOrUpdate(invocation.Context.Method, result, (_, __) => result);
+                return result;
+            }
+            
+            if (_weavableMethodsCached.TryGetValue(invocation.Context.Method, out var isWeavable))
+                return isWeavable;
+            
             var ctx = invocation.Context;
             
             if (!ctx.InstanceDeclaringType.IsInterface)
-                return false;
+                return CacheResultAndReturn(false);
 
             if (NotWeavableTypes.Contains(ctx.InstanceDeclaringType))
-                return false;
+                return CacheResultAndReturn(false);
             
             // Если включена настройка явного указания атрибута для обвязки
             if (settings.ExplicitWeavingAttributeType != null)
             {
-                var explicitMarkers = ctx.InstanceDeclaringType.GetCustomAttributes(settings.ExplicitWeavingAttributeType);
+                var explicitMarkers = ctx.InstanceDeclaringType.GetCustomAttributes(
+                    settings.ExplicitWeavingAttributeType, inherit: false);
+                
                 if (explicitMarkers.IsEmpty())
-                    return false;
+                    return CacheResultAndReturn(false);
             }
             
-            var suppressWeavingAttribute = ctx.InstanceDeclaringType.GetCustomAttributes<SuppressWeaving>();
+            var suppressWeavingAttribute = ctx.InstanceDeclaringType.GetCustomAttributes<SuppressWeaving>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())
-                return false;
+                return CacheResultAndReturn(false);
 
-            suppressWeavingAttribute = ctx.Method.GetCustomAttributes<SuppressWeaving>();
+            suppressWeavingAttribute = ctx.Method.GetCustomAttributes<SuppressWeaving>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())
-                return false;
+                return CacheResultAndReturn(false);
 
-            return ctx.Method.GetCustomAttributes<MethodAspect>().IsNotEmpty() || 
-                   ctx.InstanceDeclaringType.GetCustomAttributes<MethodAspect>().IsNotEmpty();
+            var hasAttribute = ctx.Method.GetCustomAttributes<MethodAspect>(inherit: false).IsNotEmpty() || 
+                   ctx.InstanceDeclaringType.GetCustomAttributes<MethodAspect>(inherit: false).IsNotEmpty();
+
+            return CacheResultAndReturn(hasAttribute);
         }
         
         /// <summary>
@@ -114,23 +135,23 @@ namespace IvorySharp.Aspects.Weaving
             // Если включена настройка явного указания атрибута для обвязки
             if (settings.ExplicitWeavingAttributeType != null)
             {
-                var explicitMarkers = type.GetCustomAttributes(settings.ExplicitWeavingAttributeType);
+                var explicitMarkers = type.GetCustomAttributes(settings.ExplicitWeavingAttributeType, inherit: false);
                 if (explicitMarkers.IsEmpty())
                     return false;
             }
 
             // Если тип помечен атрибутом, который запрещает применение аспектов
-            var suppressWeavingAttribute = type.GetCustomAttributes<SuppressWeaving>();
+            var suppressWeavingAttribute = type.GetCustomAttributes<SuppressWeaving>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())
                 return false;
             
-            var aspectAttribute = type.GetCustomAttributes<MethodAspect>();
+            var aspectAttribute = type.GetCustomAttributes<MethodAspect>(inherit: false);
             if (aspectAttribute.IsNotEmpty())
                 return true;
 
             foreach (var method in type.GetMethods())
             {
-                var methodAspectAttributes = method.GetCustomAttributes<MethodAspect>();
+                var methodAspectAttributes = method.GetCustomAttributes<MethodAspect>(inherit: false);
                 if (methodAspectAttributes.IsNotEmpty())
                     return true;
             }
