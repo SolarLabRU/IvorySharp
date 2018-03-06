@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using IvorySharp.Core;
 using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 

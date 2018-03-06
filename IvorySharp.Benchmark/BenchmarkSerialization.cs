@@ -3,7 +3,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 
 namespace IvorySharp.Benchmark
 {
@@ -15,7 +14,6 @@ namespace IvorySharp.Benchmark
         public string LastName { get; set; }
     }
     
-    [CoreJob]
     public class BenchmarkSerialization
     {
         private Person _person;

@@ -5,7 +5,7 @@ using IvorySharp.Aspects.Weaving;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 
-namespace IvorySharp.Proxying.Platform.NetCore
+namespace IvorySharp.Proxying
 {
     /// <summary>
     /// Прокси для перехвата методов на основе <see cref="DispatchProxy"/>.

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.ExceptionServices;
 using Castle.DynamicProxy;
 using IvorySharp.Aspects.Configuration;

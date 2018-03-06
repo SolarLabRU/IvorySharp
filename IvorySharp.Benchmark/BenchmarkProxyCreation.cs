@@ -1,6 +1,5 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Fakes;
 using IvorySharp.Core;
@@ -8,7 +7,6 @@ using IvorySharp.Proxying;
 
 namespace IvorySharp.Benchmark
 {
-    [CoreJob]
     public class BenchmarkProxyCreation
     {
         private IInterceptor _interceptor;

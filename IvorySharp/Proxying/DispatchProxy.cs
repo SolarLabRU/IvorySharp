@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace IvorySharp.Proxying.Platform.NetCore
+namespace IvorySharp.Proxying
 {
     /// <summary>
     /// Базовый класс прокси для .NET Core.

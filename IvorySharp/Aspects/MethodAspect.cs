@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace IvorySharp.Aspects
+﻿namespace IvorySharp.Aspects
 {
     /// <summary>
     /// Базовый класс для аспектов, применяемых на уровне метода.

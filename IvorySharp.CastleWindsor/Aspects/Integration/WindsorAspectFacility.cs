@@ -1,14 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Linq;
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
-using IvorySharp.Aspects;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.CastleWindsor.Aspects.Weaving;
-using IvorySharp.Core;
 
 namespace IvorySharp.CastleWindsor.Aspects.Integration
 {

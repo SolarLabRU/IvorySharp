@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using System.Reflection;
-using IvorySharp.Aspects.Configuration;
 
 namespace IvorySharp.Extensions
 {

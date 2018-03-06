@@ -6,7 +6,6 @@ using IvorySharp.Aspects.Weaving;
 using IvorySharp.CastleWindsor.Aspects.Integration;
 using IvorySharp.SimpleInjector.Aspects.Integration;
 using IvorySharp.Tests.Services;
-using IvorySharp.Tests.WeavingSettings;
 using SimpleInjector;
 
 namespace IvorySharp.Tests.Helpers

@@ -1,5 +1,4 @@
-﻿using System;
-using IvorySharp.Aspects.Integration;
+﻿using IvorySharp.Aspects.Integration;
 
 namespace IvorySharp.Aspects.Configuration
 {

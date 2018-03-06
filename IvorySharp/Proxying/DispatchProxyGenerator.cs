@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 
-namespace IvorySharp.Proxying.Platform.NetCore
+namespace IvorySharp.Proxying
 {
     // Helper class to handle the IL EMIT for the generation of proxies.
     // Much of this code was taken directly from the Silverlight proxy generation.

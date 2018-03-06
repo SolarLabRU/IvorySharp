@@ -1,5 +1,4 @@
-﻿using System;
-using IvorySharp.Aspects.Pipeline;
+﻿using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Tests.Aspects
 {

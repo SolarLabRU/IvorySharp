@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IvorySharp.Aspects;
 using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Tests.Aspects

@@ -25,6 +25,8 @@ namespace IvorySharp.Examples
             {
                 var customer = service.GetCustomer(1);
             }
+
+            Console.ReadLine();
         }
 
         private static void RegisterServices()

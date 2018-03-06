@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using IvorySharp.Aspects;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Integration;
 using IvorySharp.Aspects.Weaving;
-using IvorySharp.Core;
 using SimpleInjector;
 using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 

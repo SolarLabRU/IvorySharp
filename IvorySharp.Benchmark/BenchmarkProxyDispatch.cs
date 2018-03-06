@@ -1,12 +1,10 @@
 ﻿using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Fakes;
 using IvorySharp.Proxying;
 
 namespace IvorySharp.Benchmark
 {
-    [CoreJob]
     public class BenchmarkProxyDispatch
     {
         private IAppService _serviceInstance;
