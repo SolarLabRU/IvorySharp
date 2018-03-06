@@ -10,6 +10,11 @@ namespace IvorySharp.Core
     public class InvocationContext
     {
         /// <summary>
+        /// Сравнивает два контекста на основе методов.
+        /// </summary>
+        public static IEqualityComparer<InvocationContext> MethodComparer { get; } = new MethodEqualityComparer();
+
+        /// <summary>
         /// Возвращаемое значение метода.
         /// </summary>
         public object ReturnValue { get; set; }
@@ -52,6 +57,25 @@ namespace IvorySharp.Core
             Method = method;
             Instance = instance;
             InstanceDeclaringType = instanceDeclaringType;
+        }
+        
+        private sealed class MethodEqualityComparer : IEqualityComparer<InvocationContext>
+        {
+            /// <inheritdoc />
+            public bool Equals(InvocationContext x, InvocationContext y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return x.Method.Equals(y.Method);
+            }
+
+            /// <inheritdoc />
+            public int GetHashCode(InvocationContext obj)
+            {
+                return obj.Method.GetHashCode();
+            }
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Reflection;
 using IvorySharp.Extensions;
-using IvorySharp.Reflection;
 
 namespace IvorySharp.Core
 {
@@ -11,39 +9,33 @@ namespace IvorySharp.Core
     /// </summary>
     internal class Invocation : IInvocation
     {
-        private static ConcurrentDictionary<MethodInfo, Func<object, object[], object>> _invokersCache;
-
-        static Invocation()
-        {
-            _invokersCache = new ConcurrentDictionary<MethodInfo, Func<object, object[], object>>();
-        }
-
         /// <summary>
         /// Контекст выполнения метода.
         /// </summary>
         public InvocationContext Context { get; }
 
         /// <summary>
+        /// Делегат для быстрого вызова метода.
+        /// </summary>
+        public Func<object, object[], object> MethodInvoker { get; }
+
+        /// <summary>
         /// Инициализирует экземпляр класса <see cref="Invocation"/>.
         /// </summary>
         /// <param name="context">Контекст выполнения метода.</param>
-        internal Invocation(InvocationContext context)
+        /// <param name="methodInvoker">Делегат для быстрого вызова метода.</param>
+        internal Invocation(InvocationContext context, Func<object, object[], object> methodInvoker)
         {
             Context = context;
+            MethodInvoker = methodInvoker;
         }
 
         /// <inheritdoc />
         public void Proceed()
         {
-            if (!_invokersCache.TryGetValue(Context.Method, out var invoker))
-            {
-                invoker = Expressions.CreateMethodInvoker(Context.Method);
-                _invokersCache.AddOrUpdate(Context.Method, _ => invoker, (_, __) => invoker);
-            }
-
             try
             {
-                Context.ReturnValue = invoker(Context.Instance, (object[]) Context.Arguments);
+                Context.ReturnValue = MethodInvoker(Context.Instance, (object[]) Context.Arguments);
             }
             catch (TargetInvocationException e)
             {

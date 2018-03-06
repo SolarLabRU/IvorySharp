@@ -22,40 +22,35 @@ namespace IvorySharp.Aspects
         {
             _cache = new ConcurrentDictionary<MethodInfo, List<MethodBoundaryAspect>>();
         }
-        
-        private MethodAspectSelector() { }
+
+        private MethodAspectSelector()
+        {
+        }
 
         /// <summary>
         /// Получает все допустимые к применению аспекты для вызова.
         /// </summary>
-        /// <param name="invocation">Модель вызова.</param>
+        /// <param name="context"></param>
         /// <returns>Коллекция аспектов.</returns>
-        public IReadOnlyCollection<IMethodBoundaryAspect> GetMethodBoundaryAspects(IInvocation invocation)
+        public MethodBoundaryAspect[] GetMethodBoundaryAspects(InvocationContext context)
         {
-            if (!_cache.TryGetValue(invocation.Context.Method, out var aspects))
-            {
-                var declaredTypeAspects = invocation.Context.InstanceDeclaringType
-                    .GetCustomAttributes<MethodBoundaryAspect>(inherit: false);
+            var declaredTypeAspects = context.InstanceDeclaringType
+                .GetCustomAttributes<MethodBoundaryAspect>(inherit: false);
 
-                var methodAspects = invocation.Context.Method
-                    .GetCustomAttributes<MethodBoundaryAspect>(inherit: false);
+            var methodAspects = context.Method
+                .GetCustomAttributes<MethodBoundaryAspect>(inherit: false);
 
-                var allAspects = declaredTypeAspects
-                    .Union(methodAspects)
-                    .Where(a => !a.GetType().IsAbstract)
-                    .Distinct()
-                    .OrderBy(a => a.Order)
-                    .ToList();
+            var allAspects = declaredTypeAspects
+                .Union(methodAspects)
+                .Where(a => !a.GetType().IsAbstract)
+                .Distinct()
+                .OrderBy(a => a.Order)
+                .ToArray();
 
-                for (var i = 0; i < allAspects.Count; i++)
-                    allAspects[i].Order = allAspects[i].Order + i;
-                
-                _cache[invocation.Context.Method] = allAspects;
-                
-                return allAspects;
-            }
+            for (var i = 0; i < allAspects.Length; i++)
+                allAspects[i].Order = allAspects[i].Order + i;
 
-            return aspects;
+            return allAspects;
         }
     }
 }

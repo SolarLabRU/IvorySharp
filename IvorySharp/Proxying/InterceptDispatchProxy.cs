@@ -4,6 +4,7 @@ using System.Reflection;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
+using IvorySharp.Reflection;
 
 namespace IvorySharp.Proxying
 {
@@ -15,6 +16,8 @@ namespace IvorySharp.Proxying
         private IInterceptor _interceptor;
         private object _target;
         private Type _targetDeclaredType;
+
+        private Func<MethodInfo, Func<object, object[], object>> _methodInvokerFactory;
         
         /// <summary>
         /// Создает экземпляр прокси объекта типа <paramref name="targetDeclaredType"/>.
@@ -61,14 +64,30 @@ namespace IvorySharp.Proxying
             return default(object);
         }
 
+        /// <summary>
+        /// Выполняет вызов метода без перехвата.
+        /// </summary>
+        /// <param name="targetMethod">Исходный метод.</param>
+        /// <param name="args">Аргументы метода.</param>
+        /// <returns>Результат выполнения метода (null, если тип void).</returns>
         private object Bypass(MethodInfo targetMethod, object[] args)
         {
             return targetMethod.Invoke(_target, args);
         }
 
+        /// <summary>
+        /// Выполняет перехват вызова метода.
+        /// </summary>
+        /// <param name="targetMethod">Исходный метод.</param>
+        /// <param name="args">Аргументы метода.</param>
+        /// <returns>Результат выполнения метода (null, если тип void).</returns>
         private object Intercept(MethodInfo targetMethod, object[] args)
         {
-            var invocation = new Invocation(new InvocationContext(args, targetMethod, _target, _targetDeclaredType));
+            var context = new InvocationContext(args, targetMethod, _target, _targetDeclaredType);
+            var invoker = _methodInvokerFactory(targetMethod);
+            
+            var invocation = new Invocation(context, invoker);
+            
             _interceptor.Intercept(invocation);
 
             return targetMethod.IsVoidReturn()
@@ -87,6 +106,9 @@ namespace IvorySharp.Proxying
             _target = target;
             _targetDeclaredType = targetDeclaredType;
             _interceptor = interceptor;
+
+            _methodInvokerFactory = Memoizer.Memoize<MethodInfo, Func<object, object[], object>>(
+                Expressions.CreateMethodInvoker);
         }
     }
 }

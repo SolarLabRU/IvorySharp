@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 using IvorySharp.Aspects.Configuration;
@@ -15,13 +14,6 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     public class AspectWeaver
     {
-        private static readonly ConcurrentDictionary<MethodInfo, bool> _weavableMethodsCached;
-
-        static AspectWeaver()
-        {
-            _weavableMethodsCached = new ConcurrentDictionary<MethodInfo, bool>();
-        }
-        
         /// <summary>
         /// Массив типов для которых нельзя применять обвязку.
         /// </summary>
@@ -72,50 +64,40 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Возвращает признак возможности применения обвязки для указанного типа.
         /// </summary>
-        /// <param name="invocation">Вызов для применения обвязки.</param>
+        /// <param name="invocationContext">Контекст вызова.</param>
         /// <param name="settings">Настройки.</param>
         /// <returns>Признак возможности применения обвязки для указанного типа.</returns>
-        public static bool IsWeavable(IInvocation invocation, IAspectsWeavingSettings settings)
+        public static bool IsWeavable(InvocationContext invocationContext, IAspectsWeavingSettings settings)
         {
-            bool CacheResultAndReturn(bool result)
-            {
-                _weavableMethodsCached.AddOrUpdate(invocation.Context.Method, result, (_, __) => result);
-                return result;
-            }
-            
-            if (_weavableMethodsCached.TryGetValue(invocation.Context.Method, out var isWeavable))
-                return isWeavable;
-            
-            var ctx = invocation.Context;
-            
-            if (!ctx.InstanceDeclaringType.IsInterface)
-                return CacheResultAndReturn(false);
+            if (!invocationContext.InstanceDeclaringType.IsInterface)
+                return false;
 
-            if (NotWeavableTypes.Contains(ctx.InstanceDeclaringType))
-                return CacheResultAndReturn(false);
+            if (NotWeavableTypes.Contains(invocationContext.InstanceDeclaringType))
+                return false;
             
             // Если включена настройка явного указания атрибута для обвязки
             if (settings.ExplicitWeavingAttributeType != null)
             {
-                var explicitMarkers = ctx.InstanceDeclaringType.GetCustomAttributes(
+                var explicitMarkers = invocationContext.InstanceDeclaringType.GetCustomAttributes(
                     settings.ExplicitWeavingAttributeType, inherit: false);
                 
                 if (explicitMarkers.IsEmpty())
-                    return CacheResultAndReturn(false);
+                    return false;
             }
             
-            var suppressWeavingAttribute = ctx.InstanceDeclaringType.GetCustomAttributes<SuppressWeaving>(inherit: false);
+            var suppressWeavingAttribute = invocationContext.InstanceDeclaringType.GetCustomAttributes<SuppressWeaving>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())
-                return CacheResultAndReturn(false);
+                return false;
 
-            suppressWeavingAttribute = ctx.Method.GetCustomAttributes<SuppressWeaving>(inherit: false);
+            suppressWeavingAttribute = invocationContext.Method.GetCustomAttributes<SuppressWeaving>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())
-                return CacheResultAndReturn(false);
+                return false;
 
-            var hasAttribute = ctx.Method.GetCustomAttributes<MethodAspect>(inherit: false).IsNotEmpty() || 
-                   ctx.InstanceDeclaringType.GetCustomAttributes<MethodAspect>(inherit: false).IsNotEmpty();
+            var hasAttribute = 
+                invocationContext.Method.GetCustomAttributes<MethodAspect>(inherit: false).IsNotEmpty() || 
+                invocationContext.InstanceDeclaringType.GetCustomAttributes<MethodAspect>(inherit: false).IsNotEmpty();
 
-            return CacheResultAndReturn(hasAttribute);
+            return hasAttribute;
         }
         
         /// <summary>

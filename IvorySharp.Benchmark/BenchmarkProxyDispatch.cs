@@ -28,7 +28,7 @@ namespace IvorySharp.Benchmark
         }
 
         [Benchmark]
-        public void Dispatch_NetCoreInvocationProxy_IdentityMethod()
+        public void Dispatch_Proxy_IdentityMethod()
         {
             _bypassProxyInstance.Identity(10);
         }
