@@ -22,9 +22,6 @@ namespace IvorySharp.Aspects.Pipeline
         internal IMethodAspect CurrentExecutingAspect { get; set; }
 
         /// <inheritdoc />
-        public IServiceProvider ServiceProvider { get; }
-
-        /// <inheritdoc />
         public InvocationContext Context { get; }
 
         /// <inheritdoc />
@@ -51,7 +48,6 @@ namespace IvorySharp.Aspects.Pipeline
         {
             _pipelineData = new ConcurrentDictionary<Type, object>();
             Context = invocationContext;
-            ServiceProvider = serviceProvider;
             CanReturnResult = !Context.Method.IsVoidReturn();
         }
 

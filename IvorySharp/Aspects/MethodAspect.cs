@@ -27,7 +27,6 @@ namespace IvorySharp.Aspects
         /// <summary>
         /// Выполняет инициализацию аспекта. Должен переопределяться в наследниках.
         /// </summary>
-        /// <param name="settings">Модель настроек.</param>
-        public virtual void Initialize(IAspectsWeavingSettings settings) { }
+        public virtual void Initialize() { }
     }
 }

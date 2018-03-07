@@ -59,7 +59,7 @@ namespace IvorySharp.Aspects.Weaving
             foreach (var aspect in methodBoundaryAspects)
             {
                 _aspectDependencyInjector.InjectDependencies(aspect);
-                aspect.Initialize(_settings);
+                aspect.Initialize();
             }
             
             _aspectsInjector.InjectAspects(invocation, methodBoundaryAspects);

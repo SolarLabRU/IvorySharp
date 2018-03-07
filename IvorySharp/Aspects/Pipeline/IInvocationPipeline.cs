@@ -10,11 +10,6 @@ namespace IvorySharp.Aspects.Pipeline
     public interface IInvocationPipeline
     {
         /// <summary>
-        /// Провайдер сервисов.
-        /// </summary>
-        IServiceProvider ServiceProvider { get; }
-        
-        /// <summary>
         /// Параметры вызова метода.
         /// </summary>
         InvocationContext Context { get; }

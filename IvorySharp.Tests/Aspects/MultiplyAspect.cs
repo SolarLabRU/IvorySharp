@@ -1,16 +1,19 @@
-﻿using IvorySharp.Aspects.Pipeline;
+﻿using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Tests.Services;
 
 namespace IvorySharp.Tests.Aspects
 {
     public class MultiplyAspect : ObservableBoundaryAspect
     {
+        [InjectDependency]
+        public IMultiplyService  MultiplyService { get; set; }
+        
         public override void OnExit(IInvocationPipeline pipeline)
         {
-            var multiplyService = pipeline.ServiceProvider.GetService<IMultiplyService>();
             var retVal = (int) pipeline.Context.ReturnValue;
 
-            pipeline.Context.ReturnValue = multiplyService.Multiply(retVal, 2);
+            pipeline.Context.ReturnValue = MultiplyService.Multiply(retVal, 2);
         }
     }
 }

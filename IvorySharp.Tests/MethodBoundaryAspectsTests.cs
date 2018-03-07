@@ -506,7 +506,7 @@ namespace IvorySharp.Tests
         [Theory]
         [InlineData(WeavedServiceStoreType.CastleWindsor)]
         [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_NormalFlow_ServiceProvider_GetInstance_Correct(WeavedServiceStoreType storeType)
+        public void SingleAspect_NormalFlow_ServiceProvider_InjectInstance_Correct(WeavedServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
