@@ -39,5 +39,8 @@ namespace IvorySharp.Tests.Services
 
         [SwallowExceptionAspectNewObjectResult]
         object ExceptionalRef2();
+
+        [DependencyAspect]
+        int DependencyIdentity(int argument);
     }
 }

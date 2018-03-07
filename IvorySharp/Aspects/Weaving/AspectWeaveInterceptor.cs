@@ -1,5 +1,6 @@
 ﻿using System;
 using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
@@ -11,20 +12,27 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     public class AspectWeaveInterceptor : IInterceptor
     {
-        private MethodBoundaryAspectsInjector _aspectsInjector;     
+        private IAspectsWeavingSettings _settings;
+        
+        private MethodBoundaryAspectsInjector _aspectsInjector;
+        private MethodAspectDependencyInjector _aspectDependencyInjector;
+        
         private Func<InvocationContext, MethodBoundaryAspect[]> _methodBoundariesMemoizedProvider;
         private Func<InvocationContext, bool> _isWeavableMemoizedProvider;
-        
+
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="AspectWeaveInterceptor"/>.
         /// </summary>
         /// <param name="settings">Конфигурация аспектов.</param>
         public AspectWeaveInterceptor(IAspectsWeavingSettings settings)
         {
+            _settings = settings;
+            
             _aspectsInjector = new MethodBoundaryAspectsInjector(settings);
+            _aspectDependencyInjector = new MethodAspectDependencyInjector(settings.ServiceProvider);
 
             _methodBoundariesMemoizedProvider = Memoizer.Memoize(
-                MethodAspectSelector.Instance.GetMethodBoundaryAspects,
+                MethodAspectFactory.Instance.CreateMethodBoundaryAspects,
                 InvocationContext.MethodComparer);
 
             _isWeavableMemoizedProvider = Memoizer.Memoize(
@@ -48,6 +56,12 @@ namespace IvorySharp.Aspects.Weaving
                 return;
             }
 
+            foreach (var aspect in methodBoundaryAspects)
+            {
+                _aspectDependencyInjector.InjectDependencies(aspect);
+                aspect.Initialize(_settings);
+            }
+            
             _aspectsInjector.InjectAspects(invocation, methodBoundaryAspects);
         }   
     }

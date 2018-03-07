@@ -517,6 +517,23 @@ namespace IvorySharp.Tests
             // Assert           
             Assert.Equal(10, result);
         }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void AspectDependency_WithPublicGetSet_Works_ServiceInjected(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _sAspectServiceProvider.GetService(storeType);
+            
+            // Act
+            var result = service.DependencyIdentity(5);
+         
+            // Assert           
+            AspectAssert.OnEntryCalled(typeof(DependencyAspect));
+            AspectAssert.OnSuccessCalled(typeof(DependencyAspect));
+            AspectAssert.OnExitCalled(typeof(DependencyAspect));
+        }
         
         #endregion
     }

@@ -51,8 +51,15 @@ namespace IvorySharp.Tests.Helpers
                     .ImplementedBy<MultiplyService>()
             );
             
+            _windsorContainer.Register(
+                Component
+                    .For<IDependencyService>()
+                    .ImplementedBy<DependencyService>()
+            );
+            
             _simpleInjectorContainer.Register<TService, TImplementation>();
             _simpleInjectorContainer.Register<IMultiplyService, MultiplyService>();
+            _simpleInjectorContainer.Register<IDependencyService, DependencyService>();
 
             _aspectWeaver = new AspectWeaver(configuration);
         }

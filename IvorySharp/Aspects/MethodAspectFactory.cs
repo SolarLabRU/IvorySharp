@@ -1,38 +1,30 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Core;
 
 namespace IvorySharp.Aspects
 {
     /// <summary>
-    /// Реализация селектора аспектов.
+    /// Реализация фабрики аспектов.
     /// </summary>
-    internal class MethodAspectSelector
+    internal class MethodAspectFactory
     {
-        private static readonly ConcurrentDictionary<MethodInfo, List<MethodBoundaryAspect>> _cache;
-
         /// <summary>
         /// Экземпляр селектора аспектов.
         /// </summary>
-        internal static MethodAspectSelector Instance { get; } = new MethodAspectSelector();
+        internal static MethodAspectFactory Instance { get; } = new MethodAspectFactory();
 
-        static MethodAspectSelector()
-        {
-            _cache = new ConcurrentDictionary<MethodInfo, List<MethodBoundaryAspect>>();
-        }
-
-        private MethodAspectSelector()
+        private MethodAspectFactory()
         {
         }
 
         /// <summary>
-        /// Получает все допустимые к применению аспекты для вызова.
+        /// Создает аспекты, применимые к контексту вызова.
         /// </summary>
         /// <param name="context"></param>
         /// <returns>Коллекция аспектов.</returns>
-        public MethodBoundaryAspect[] GetMethodBoundaryAspects(InvocationContext context)
+        public MethodBoundaryAspect[] CreateMethodBoundaryAspects(InvocationContext context)
         {
             var declaredTypeAspects = context.InstanceDeclaringType
                 .GetCustomAttributes<MethodBoundaryAspect>(inherit: false);
@@ -48,9 +40,18 @@ namespace IvorySharp.Aspects
                 .ToArray();
 
             for (var i = 0; i < allAspects.Length; i++)
+            {
                 allAspects[i].Order = allAspects[i].Order + i;
+                allAspects[i].HasDependencies = MethodAspectHasDependencies(allAspects[i]);
+            }
 
             return allAspects;
+        }
+
+        private bool MethodAspectHasDependencies(MethodAspect aspect)
+        {
+            return aspect.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Any(p => p.CanWrite && p.GetCustomAttribute<InjectDependencyAttribute>() != null);
         }
     }
 }

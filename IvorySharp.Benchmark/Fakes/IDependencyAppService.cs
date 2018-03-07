@@ -2,14 +2,14 @@
 
 namespace IvorySharp.Benchmark.Fakes
 {
-    
-    public interface IAppService
-    {
-        [BypassAspect]
+
+    public interface IDependencyAppService
+    {       
+        [DependencyAspect]
         int Identity(int argument);
     }
-
-    public class AppService : IAppService
+    
+    public class DependencyAppService : IDependencyAppService
     {
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public int Identity(int argument)

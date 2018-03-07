@@ -30,8 +30,8 @@ namespace IvorySharp.Aspects.Configuration
         public void Initialize(Action<AspectsConfiguration> configurator)
         {
             configurator(_aspectsConfiguration);
-            _container.BindAspects(_aspectsConfiguration.AspectsWeavingSettings);
             _aspectsWeavingSettings.ServiceProvider = _container.GetServiceProvider();
+            _container.BindAspects(_aspectsConfiguration.AspectsWeavingSettings);
         }
 
         /// <summary>

@@ -25,14 +25,30 @@ namespace IvorySharp.Reflection
             return creatorExpression.Compile();
         }
 
-        public static Func<object, object[], object> CreateMethodInvoker(MethodInfo pMethodInfo)
+        public static Action<object, object> CreatePropertySetter(PropertyInfo property)
+        {
+            var instance = Expression.Parameter(typeof(object), "instance");
+            var value = Expression.Parameter(typeof(object), "value");
+
+            var expression = Expression.Lambda<Action<object, object>>(
+                Expression.Call(
+                    Expression.Convert(instance, property.DeclaringType),
+                    property.SetMethod,
+                    Expression.Convert(value, property.PropertyType)
+                ), 
+                instance, value);
+
+            return expression.Compile();
+        }
+        
+        public static Func<object, object[], object> CreateMethodInvoker(MethodInfo method)
         {
             var instanceParameterExpression = Expression.Parameter(typeof(object), "instance");
             var argumentsParameterExpression = Expression.Parameter(typeof(object[]), "args");
 
             var index = 0;
             var argumentExtractionExpressions =
-                pMethodInfo
+                method
                     .GetParameters()
                     .Select(parameter =>
                         Expression.Convert(
@@ -44,19 +60,19 @@ namespace IvorySharp.Reflection
                         )
                     ).ToList();
 
-            var callExpression = pMethodInfo.IsStatic
-                ? Expression.Call(pMethodInfo, argumentExtractionExpressions)
+            var callExpression = method.IsStatic
+                ? Expression.Call(method, argumentExtractionExpressions)
                 : Expression.Call(
                     Expression.Convert(
                         instanceParameterExpression,
-                        pMethodInfo.DeclaringType
+                        method.DeclaringType
                     ),
-                    pMethodInfo,
+                    method,
                     argumentExtractionExpressions
                 );
 
             var endLabel = Expression.Label(typeof(object));
-            var finalExpression = pMethodInfo.ReturnType == typeof(void)
+            var finalExpression = method.ReturnType == typeof(void)
                 ? (Expression) Expression.Block(
                     callExpression,
                     Expression.Return(endLabel, Expression.Constant(null)),

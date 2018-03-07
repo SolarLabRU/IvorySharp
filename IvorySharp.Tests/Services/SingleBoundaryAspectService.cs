@@ -57,5 +57,10 @@ namespace IvorySharp.Tests.Services
         {
             throw new Exception();
         }
+
+        public int DependencyIdentity(int argument)
+        {
+            return argument;
+        }
     }
 }
