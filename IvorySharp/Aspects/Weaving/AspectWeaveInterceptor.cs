@@ -12,8 +12,6 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     public class AspectWeaveInterceptor : IInterceptor
     {
-        private IAspectsWeavingSettings _settings;
-        
         private MethodBoundaryAspectsInjector _aspectsInjector;
         private MethodAspectDependencyInjector _aspectDependencyInjector;
         
@@ -26,8 +24,6 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="settings">Конфигурация аспектов.</param>
         public AspectWeaveInterceptor(IAspectsWeavingSettings settings)
         {
-            _settings = settings;
-            
             _aspectsInjector = new MethodBoundaryAspectsInjector(settings);
             _aspectDependencyInjector = new MethodAspectDependencyInjector(settings.ServiceProvider);
 

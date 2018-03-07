@@ -1,6 +1,8 @@
 ﻿using System;
+using Castle.DynamicProxy;
 using Castle.MicroKernel;
 using IvorySharp.Exceptions;
+using Microsoft.CSharp.RuntimeBinder;
 using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.CastleWindsor.Aspects.Dependency
@@ -21,33 +23,27 @@ namespace IvorySharp.CastleWindsor.Aspects.Dependency
         }
 
         /// <inheritdoc />
-        public TService GetService<TService>() where TService : class 
+        public TService GetService<TService>() where TService : class
         {
-            try
-            {
-                return _kernel.Resolve<TService>();
-            }
-            catch (Exception e)
-            {
-                throw new IvorySharpException(
-                    $"Возникло исключение при получении сервиса '{typeof(TService)}': {e.Message}", e);
-            }
+            return (TService) GetService(typeof(TService));
         }
 
         /// <inheritdoc />
-        public TService GetNamedService<TService>(string key) where TService : class 
+        public TService GetTransparentService<TService>() where TService : class
         {
-            try
-            {
-                return key == null
-                    ? _kernel.Resolve<TService>()
-                    : _kernel.Resolve<TService>(key);
-            } 
-            catch (Exception e)
-            {
-                throw new IvorySharpException(
-                    $"Возникло исключение при получении сервиса '{typeof(TService)}': {e.Message}", e);
-            }
+            return (TService) GetTransparentService(typeof(TService));
+        }
+
+        /// <inheritdoc />
+        public TService GetNamedService<TService>(string key) where TService : class
+        {
+            return (TService) GetNamedService(typeof(TService), key);
+        }
+
+        /// <inheritdoc />
+        public TService GetTransparentNamedService<TService>(string key) where TService : class
+        {
+            return (TService) GetTransparentNamedService(typeof(TService), key);
         }
 
         /// <inheritdoc />
@@ -65,6 +61,13 @@ namespace IvorySharp.CastleWindsor.Aspects.Dependency
         }
 
         /// <inheritdoc />
+        public object GetTransparentService(Type serviceType)
+        {
+            var service = GetService(serviceType);
+            return UnwrapProxy(service);
+        }
+
+        /// <inheritdoc />
         public object GetNamedService(Type serviceType, string key)
         {
             try
@@ -77,6 +80,28 @@ namespace IvorySharp.CastleWindsor.Aspects.Dependency
             {
                 throw new IvorySharpException(
                     $"Возникло исключение при получении сервиса '{serviceType?.FullName}': {e.Message}", e);
+            }
+        }
+
+        /// <inheritdoc />
+        public object GetTransparentNamedService(Type serviceType, string key)
+        {
+            var service = GetNamedService(serviceType, key);
+            return UnwrapProxy(service);
+        }
+
+        internal static object UnwrapProxy(object proxy)
+        {
+            if (!ProxyUtil.IsProxy(proxy))
+                return proxy;
+
+            try
+            {
+                return ProxyUtil.GetUnproxiedInstance(proxy);
+            }
+            catch (RuntimeBinderException)
+            {
+                return proxy;
             }
         }
     }

@@ -31,9 +31,22 @@ namespace IvorySharp.Aspects.Dependency
             
             foreach (var propertyDependency in _aspectDependencyProvider(aspect.GetType()))
             {
-                var service = propertyDependency.Dependency.ServiceKey == null
-                    ? _serviceProvider.GetService(propertyDependency.Property.PropertyType)
-                    : _serviceProvider.GetNamedService(propertyDependency.Property.PropertyType, propertyDependency.Dependency.ServiceKey);
+                object service;
+                
+                if (propertyDependency.Dependency.Transparent)
+                {
+                    service = propertyDependency.Dependency.ServiceKey == null
+                        ? _serviceProvider.GetTransparentService(propertyDependency.Property.PropertyType)
+                        : _serviceProvider.GetTransparentNamedService(
+                            propertyDependency.Property.PropertyType, propertyDependency.Dependency.ServiceKey);
+                }
+                else
+                {
+                    service = propertyDependency.Dependency.ServiceKey == null
+                        ? _serviceProvider.GetService(propertyDependency.Property.PropertyType)
+                        : _serviceProvider.GetNamedService(
+                            propertyDependency.Property.PropertyType, propertyDependency.Dependency.ServiceKey);
+                }
                 
                 propertyDependency.PropertySetter(aspect, service);
             }
@@ -67,7 +80,7 @@ namespace IvorySharp.Aspects.Dependency
         /// <summary>
         /// Информация о зависимости аспекта.
         /// </summary>
-        internal struct AspectPropertyDependency
+        private struct AspectPropertyDependency
         {
             /// <summary>
             /// Атрибут зависимости.

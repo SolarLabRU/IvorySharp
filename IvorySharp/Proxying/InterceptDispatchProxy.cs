@@ -14,35 +14,43 @@ namespace IvorySharp.Proxying
     public class InterceptDispatchProxy : DispatchProxy
     {
         private IInterceptor _interceptor;
-        private object _target;
-        private Type _targetDeclaredType;
 
         private Func<MethodInfo, Func<object, object[], object>> _methodInvokerFactory;
-        
+
         /// <summary>
-        /// Создает экземпляр прокси объекта типа <paramref name="targetDeclaredType"/>.
+        /// Исходный объект, вызовы которого будут перехватываться.
+        /// </summary>
+        public object Instance { get; private set; }
+
+        /// <summary>
+        /// Исходный тип экземпляра (обычно - интерфейс, от которого строится прокси).
+        /// </summary>
+        public Type InstanceDeclaringType { get; private set; }
+
+        /// <summary>
+        /// Создает экземпляр прокси объекта типа <paramref name="instanceDeclaringType"/>.
         /// При этом тип обязательно должен быть интерфейсом.
-        /// Все обращения к методам объекта <paramref name="target"/>, которые реализуются от интерфейса
-        /// <paramref name="targetDeclaredType"/> будут проксированы через метод <see cref="Invoke(MethodInfo, object[])"/>
+        /// Все обращения к методам объекта <paramref name="instance"/>, которые реализуются от интерфейса
+        /// <paramref name="instanceDeclaringType"/> будут проксированы через метод <see cref="Invoke(MethodInfo, object[])"/>
         /// и перехвачены обработчиком <paramref name="interceptor"/>.
         /// </summary>
-        /// <param name="target">Экземпляр объекта для создания прокси.</param>
-        /// <param name="targetDeclaredType">Тип прокси. Задается как интерфейс, который реализуется типом объекта <paramref name="target"/>.</param>
+        /// <param name="instance">Экземпляр объекта для создания прокси.</param>
+        /// <param name="instanceDeclaringType">Тип прокси. Задается как интерфейс, который реализуется типом объекта <paramref name="instance"/>.</param>
         /// <param name="interceptor">Компонент для перехвата вызовов методов.</param>
-        /// <returns>Экземляр прокси типа <paramref name="targetDeclaredType"/>.</returns>
-        public static object CreateTransparentProxy(object target, Type targetDeclaredType, IInterceptor interceptor)
+        /// <returns>Экземляр прокси типа <paramref name="instanceDeclaringType"/>.</returns>
+        public static object CreateTransparentProxy(object instance, Type instanceDeclaringType, IInterceptor interceptor)
         {
-            if (!targetDeclaredType.IsInterface)
+            if (!instanceDeclaringType.IsInterface)
             {
                 throw new InvalidOperationException(
                     "Проксирование допускается только для интерфейсов. " +
-                    $"Параметр '{nameof(targetDeclaredType)}': {targetDeclaredType.FullName}");
+                    $"Параметр '{nameof(instanceDeclaringType)}': {instanceDeclaringType.FullName}");
             }
             
-            var transparentProxy = CreateTrasparentProxy<InterceptDispatchProxy>(targetDeclaredType);
+            var transparentProxy = CreateTrasparentProxy<InterceptDispatchProxy>(instanceDeclaringType);
             var interceptProxy = (InterceptDispatchProxy) transparentProxy;
             
-            interceptProxy.Initialize(target, targetDeclaredType, interceptor);
+            interceptProxy.Initialize(instance, instanceDeclaringType, interceptor);
 
             return transparentProxy;
         }
@@ -72,7 +80,7 @@ namespace IvorySharp.Proxying
         /// <returns>Результат выполнения метода (null, если тип void).</returns>
         private object Bypass(MethodInfo targetMethod, object[] args)
         {
-            return targetMethod.Invoke(_target, args);
+            return targetMethod.Invoke(Instance, args);
         }
 
         /// <summary>
@@ -83,7 +91,7 @@ namespace IvorySharp.Proxying
         /// <returns>Результат выполнения метода (null, если тип void).</returns>
         private object Intercept(MethodInfo targetMethod, object[] args)
         {
-            var context = new InvocationContext(args, targetMethod, _target, _targetDeclaredType);
+            var context = new InvocationContext(args, targetMethod, Instance, InstanceDeclaringType);
             var invoker = _methodInvokerFactory(targetMethod);
             
             var invocation = new Invocation(context, invoker);
@@ -98,13 +106,13 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// Выполняет инициализацию прокси.
         /// </summary>
-        /// <param name="target">Экземпляр объекта для создания прокси.</param>
-        /// <param name="targetDeclaredType">Тип прокси. Задается как интерфейс, который реализуется типом объекта <paramref name="target"/>.</param>
+        /// <param name="instance">Экземпляр объекта для создания прокси.</param>
+        /// <param name="instanceDeclaringType">Тип прокси. Задается как интерфейс, который реализуется типом объекта <paramref name="instance"/>.</param>
         /// <param name="interceptor">Компонент для перехвата вызовов методов.</param>
-        private void Initialize(object target, Type targetDeclaredType, IInterceptor interceptor)
+        private void Initialize(object instance, Type instanceDeclaringType, IInterceptor interceptor)
         {
-            _target = target;
-            _targetDeclaredType = targetDeclaredType;
+            Instance = instance;
+            InstanceDeclaringType = instanceDeclaringType;
             _interceptor = interceptor;
 
             _methodInvokerFactory = Memoizer.Memoize<MethodInfo, Func<object, object[], object>>(

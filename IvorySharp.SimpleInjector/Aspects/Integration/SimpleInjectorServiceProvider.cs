@@ -1,5 +1,6 @@
 ﻿using System;
 using IvorySharp.Exceptions;
+using IvorySharp.Proxying;
 using SimpleInjector;
 using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
@@ -24,35 +25,25 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         /// <inheritdoc />
         public TService GetService<TService>() where TService : class
         {
-            try
-            {
-                return _container.GetInstance<TService>();
-            }
-            catch (Exception e)
-            {
-                throw new IvorySharpException(
-                    $"Возникло исключение при получении сервиса '{typeof(TService)}': {e.Message}", e);
-            }
+            return (TService) GetService(typeof(TService));
+        }
+
+        /// <inheritdoc />
+        public TService GetTransparentService<TService>() where TService : class
+        {
+            return (TService) GetTransparentService(typeof(TService));
         }
 
         /// <inheritdoc />
         public TService GetNamedService<TService>(string key) where TService : class
         {
-            if (key != null)
-            {
-                throw new NotSupportedException(
-                    $"Получение именованных зависимостей не поддерживается SimpleInjector'om. {nameof(key)}:{key}");
-            }
+            return (TService) GetNamedService(typeof(TService), key);
+        }
 
-            try
-            {
-                return _container.GetInstance<TService>();
-            }
-            catch (Exception e)
-            {
-                throw new IvorySharpException(
-                    $"Возникло исключение при получении сервиса '{typeof(TService)}': {e.Message}", e);
-            }
+        /// <inheritdoc />
+        public TService GetTransparentNamedService<TService>(string key) where TService : class
+        {
+            return (TService) GetTransparentNamedService(typeof(TService), key);
         }
 
         /// <inheritdoc />
@@ -70,6 +61,16 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         }
 
         /// <inheritdoc />
+        public object GetTransparentService(Type serviceType)
+        {
+            var service = GetService(serviceType);
+            
+            return serviceType.IsInterface 
+                ? UnwrapProxy(service) 
+                : service;
+        }
+
+        /// <inheritdoc />
         public object GetNamedService(Type serviceType, string key)
         {
             if (key != null)
@@ -78,14 +79,31 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
                     $"Получение именованных зависимостей не поддерживается SimpleInjector'om. {nameof(key)}:{key}");
             }
 
+            return GetService(serviceType);
+        }
+
+        /// <inheritdoc />
+        public object GetTransparentNamedService(Type serviceType, string key)
+        {
+            if (key != null)
+            {
+                throw new NotSupportedException(
+                    $"Получение именованных зависимостей не поддерживается SimpleInjector'om. {nameof(key)}:{key}");
+            }
+
+            return GetTransparentService(serviceType);
+        }
+
+        internal static object UnwrapProxy(object service)
+        {
             try
             {
-                return _container.GetInstance(serviceType);
+                var proxy = (InterceptDispatchProxy) service;
+                return proxy.Instance;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw new IvorySharpException(
-                    $"Возникло исключение при получении сервиса '{serviceType?.FullName}': {e.Message}", e);
+                return service;
             }
         }
     }

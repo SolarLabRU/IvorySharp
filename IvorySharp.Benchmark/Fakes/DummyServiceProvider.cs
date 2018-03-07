@@ -19,7 +19,17 @@ namespace IvorySharp.Benchmark.Fakes
             return _container.FirstOrDefault(p => p.Key == typeof(TService)).Value as TService;
         }
 
+        public TService GetTransparentService<TService>() where TService : class
+        {
+            return _container.FirstOrDefault(p => p.Key == typeof(TService)).Value as TService;
+        }
+
         public TService GetNamedService<TService>(string key) where TService : class
+        {
+            return _container.FirstOrDefault(p => p.Key == typeof(TService)).Value as TService;
+        }
+
+        public TService GetTransparentNamedService<TService>(string key) where TService : class
         {
             return _container.FirstOrDefault(p => p.Key == typeof(TService)).Value as TService;
         }
@@ -29,7 +39,17 @@ namespace IvorySharp.Benchmark.Fakes
             return _container.FirstOrDefault(p => p.Key == serviceType).Value;
         }
 
+        public object GetTransparentService(Type serviceType)
+        {
+            return _container.FirstOrDefault(p => p.Key == serviceType).Value;
+        }
+
         public object GetNamedService(Type serviceType, string key)
+        {
+            return _container.FirstOrDefault(p => p.Key == serviceType).Value;
+        }
+
+        public object GetTransparentNamedService(Type serviceType, string key)
         {
             return _container.FirstOrDefault(p => p.Key == serviceType).Value;
         }
