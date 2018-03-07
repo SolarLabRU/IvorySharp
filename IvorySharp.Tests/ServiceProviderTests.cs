@@ -1,4 +1,5 @@
-﻿using Castle.MicroKernel.Registration;
+﻿using Castle.DynamicProxy;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Dependency;
@@ -22,17 +23,18 @@ namespace IvorySharp.Tests
         public ServiceProviderTests()
         {
             var simpleInjectorContainer = new Container();
-            
+
             AspectsConfigurator
                 .UseContainer(new SimpleInjectorAspectContainer(simpleInjectorContainer))
                 .Initialize();
-            
+
             simpleInjectorContainer.Register<ISingleBoundaryAspectService, SingleBoundaryAspectService>();
-            
+            simpleInjectorContainer.Register<IDependencyService, DependencyService>();
+
             _simpleInjectorServiceProvider = new SimpleInjectorServiceProvider(simpleInjectorContainer);
 
             var windsorContainer = new WindsorContainer();
-            
+
             AspectsConfigurator
                 .UseContainer(new WindsorAspectsContainer(windsorContainer))
                 .Initialize();
@@ -41,16 +43,24 @@ namespace IvorySharp.Tests
                 Component
                     .For<ISingleBoundaryAspectService>()
                     .ImplementedBy<SingleBoundaryAspectService>());
+
+            windsorContainer.Register(
+                Component
+                    .For<IDependencyService>()
+                    .ImplementedBy<DependencyService>());
+
+            _windsorServiceProvider =
+                new IvorySharp.CastleWindsor.Aspects.Dependency.WindsorServiceProvider(windsorContainer.Kernel);
             
-            _windsorServiceProvider = new IvorySharp.CastleWindsor.Aspects.Dependency.WindsorServiceProvider(windsorContainer.Kernel);
+            ObservableBoundaryAspect.ClearCallings();
         }
-        
+
         [Fact]
         public void SimpleInjector_GetService_Weaved_ReturnsProxy()
         {
             // Arrange
             var service = _simpleInjectorServiceProvider.GetService<ISingleBoundaryAspectService>();
-            
+
             // Act
             service.BypassEmptyMethod();
 
@@ -67,7 +77,7 @@ namespace IvorySharp.Tests
         {
             // Arrange
             var service = _simpleInjectorServiceProvider.GetTransparentService<ISingleBoundaryAspectService>();
-            
+
             // Act
             service.BypassEmptyMethod();
 
@@ -78,17 +88,29 @@ namespace IvorySharp.Tests
             AspectAssert.OnSuccessNotCalled(typeof(BypassAspect));
             AspectAssert.OnExceptionNotCalled(typeof(BypassAspect));
         }
-        
+
+        [Fact]
+        public void SimpleInjector_GetTransparentService_NotWeaved_ReturnsInstance()
+        {
+            // Arrange
+            var service = _simpleInjectorServiceProvider.GetTransparentService<IDependencyService>();
+
+            // Act & Assert
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            Assert.Null(service as InterceptDispatchProxy);
+        }
+
         [Fact]
         public void CastleWindsor_GetService_Weaved_ReturnsProxy()
         {
             // Arrange
             var service = _windsorServiceProvider.GetService<ISingleBoundaryAspectService>();
-            
+
             // Act
             service.BypassEmptyMethod();
 
             // Assert
+            Assert.True(ProxyUtil.IsProxy(service));
             AspectAssert.OnEntryCalled(typeof(BypassAspect));
             AspectAssert.OnSuccessCalled(typeof(BypassAspect));
             AspectAssert.OnExitCalled(typeof(BypassAspect));
@@ -99,14 +121,25 @@ namespace IvorySharp.Tests
         {
             // Arrange
             var service = _windsorServiceProvider.GetTransparentService<ISingleBoundaryAspectService>();
-            
+
             // Act
             service.BypassEmptyMethod();
 
             // Assert
+            Assert.False(ProxyUtil.IsProxy(service));
             AspectAssert.OnEntryNotCalled(typeof(BypassAspect));
             AspectAssert.OnSuccessNotCalled(typeof(BypassAspect));
             AspectAssert.OnExceptionNotCalled(typeof(BypassAspect));
+        }
+
+        [Fact]
+        public void CastleWindsor_GetTransparentService_Noteaved_ReturnsInstance()
+        {
+            // Arrange
+            var service = _windsorServiceProvider.GetTransparentService<IDependencyService>();
+
+            // Act & Assert
+            Assert.False(ProxyUtil.IsProxy(service));
         }
     }
 }
