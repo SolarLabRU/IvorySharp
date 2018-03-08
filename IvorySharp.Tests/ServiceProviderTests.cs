@@ -50,7 +50,7 @@ namespace IvorySharp.Tests
                     .ImplementedBy<DependencyService>());
 
             _windsorServiceProvider =
-                new IvorySharp.CastleWindsor.Aspects.Dependency.WindsorServiceProvider(windsorContainer.Kernel);
+                new CastleWindsor.Aspects.Dependency.WindsorServiceProvider(windsorContainer.Kernel);
             
             ObservableBoundaryAspect.ClearCallings();
         }

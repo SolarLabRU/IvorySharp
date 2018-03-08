@@ -1,6 +1,4 @@
-﻿using IvorySharp.Aspects.Configuration;
-
-namespace IvorySharp.Aspects
+﻿namespace IvorySharp.Aspects
 {
     /// <summary>
     /// Базовый класс для аспектов, применяемых на уровне метода.
@@ -11,22 +9,14 @@ namespace IvorySharp.Aspects
         /// Признак наличия зависимостей.
         /// </summary>
         internal bool HasDependencies { get; set; }
-        
-        /// <summary>
-        /// Описание аспекта.
-        /// </summary>
+
+        /// <inheritdoc />
         public string Description { get; set; }
-        
-        /// <summary>
-        /// Порядок атрибута. Меньшее значение порядка значит более высокий приоритет аспекта.
-        /// То есть, аспект с <see cref="Order"/> = 0 будет выполнен раньше,
-        /// чем аспект с <see cref="Order"/> = 1.
-        /// </summary>
+
+        /// <inheritdoc />
         public int Order { get; set; }
-        
-        /// <summary>
-        /// Выполняет инициализацию аспекта. Должен переопределяться в наследниках.
-        /// </summary>
+
+        /// <inheritdoc />
         public virtual void Initialize() { }
     }
 }
