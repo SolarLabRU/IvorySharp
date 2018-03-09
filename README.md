@@ -2,6 +2,7 @@
 
 [![Build status](https://travis-ci.org/rex-core/IvorySharp.svg?branch=master)](https://travis-ci.org/rex-core/IvorySharp)
 [![Build status](https://ci.appveyor.com/api/projects/status/1ojaoq8ew6y2jvpn/branch/master?svg=true)](https://ci.appveyor.com/project/rex-core/ivorysharp/branch/master)
+[![NuGet version](https://img.shields.io/nuget/v/IvorySharp.svg)](https://www.nuget.org/packages/IvorySharp/)
 
 > Поддерживаемые платформы: .NET Framework 4.6.1, .NET Core 2.0
 
