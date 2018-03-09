@@ -51,8 +51,6 @@ namespace IvorySharp.Tests
 
             _windsorServiceProvider =
                 new CastleWindsor.Aspects.Dependency.WindsorServiceProvider(windsorContainer.Kernel);
-            
-            ObservableBoundaryAspect.ClearCallings();
         }
 
         [Fact]
@@ -61,15 +59,9 @@ namespace IvorySharp.Tests
             // Arrange
             var service = _simpleInjectorServiceProvider.GetService<ISingleBoundaryAspectService>();
 
-            // Act
-            service.BypassEmptyMethod();
-
             // Assert
             // ReSharper disable once SuspiciousTypeConversion.Global
             Assert.NotNull(service as InterceptDispatchProxy);
-            AspectAssert.OnEntryCalled(typeof(BypassAspect));
-            AspectAssert.OnSuccessCalled(typeof(BypassAspect));
-            AspectAssert.OnExitCalled(typeof(BypassAspect));
         }
 
         [Fact]
@@ -78,15 +70,9 @@ namespace IvorySharp.Tests
             // Arrange
             var service = _simpleInjectorServiceProvider.GetTransparentService<ISingleBoundaryAspectService>();
 
-            // Act
-            service.BypassEmptyMethod();
-
             // Assert
             // ReSharper disable once SuspiciousTypeConversion.Global
             Assert.Null(service as InterceptDispatchProxy);
-            AspectAssert.OnEntryNotCalled(typeof(BypassAspect));
-            AspectAssert.OnSuccessNotCalled(typeof(BypassAspect));
-            AspectAssert.OnExceptionNotCalled(typeof(BypassAspect));
         }
 
         [Fact]
@@ -106,14 +92,8 @@ namespace IvorySharp.Tests
             // Arrange
             var service = _windsorServiceProvider.GetService<ISingleBoundaryAspectService>();
 
-            // Act
-            service.BypassEmptyMethod();
-
             // Assert
             Assert.True(ProxyUtil.IsProxy(service));
-            AspectAssert.OnEntryCalled(typeof(BypassAspect));
-            AspectAssert.OnSuccessCalled(typeof(BypassAspect));
-            AspectAssert.OnExitCalled(typeof(BypassAspect));
         }
 
         [Fact]
@@ -127,9 +107,6 @@ namespace IvorySharp.Tests
 
             // Assert
             Assert.False(ProxyUtil.IsProxy(service));
-            AspectAssert.OnEntryNotCalled(typeof(BypassAspect));
-            AspectAssert.OnSuccessNotCalled(typeof(BypassAspect));
-            AspectAssert.OnExceptionNotCalled(typeof(BypassAspect));
         }
 
         [Fact]

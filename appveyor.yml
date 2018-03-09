@@ -12,4 +12,4 @@ build:
   parallel: true
   verbosity: minimal
 before_test:
-  - ps: dotnet test "IvorySharp.Tests\IvorySharp.Tests.csproj"
+  - ps: dotnet xunit "IvorySharp.Tests\IvorySharp.Tests.csproj"
