@@ -2,7 +2,6 @@
 using Castle.DynamicProxy;
 using Castle.MicroKernel;
 using IvorySharp.Exceptions;
-using Microsoft.CSharp.RuntimeBinder;
 using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.CastleWindsor.Aspects.Dependency
@@ -99,7 +98,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Dependency
             {
                 return ProxyUtil.GetUnproxiedInstance(proxy);
             }
-            catch (RuntimeBinderException)
+            catch (Exception)
             {
                 return proxy;
             }
