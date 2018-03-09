@@ -4,8 +4,9 @@ pull_requests:
 skip_tags: true
 image: Visual Studio 2017
 configuration: Release
-before_build:
-  - ps: dotnet restore
+before_build: >-
+  ./build/install-dotnet.ps1 -Version 2.0.0
+   dotnet restore
 build:
   parallel: true
   verbosity: minimal
