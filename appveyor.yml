@@ -5,9 +5,9 @@ skip_tags: true
 image: Visual Studio 2017
 configuration: Release
 before_build: 
-  - ps: >-
-  ./build/install-dotnet.ps1 -Version 2.0.0
-   dotnet restore
+  - ps: ./build/install-dotnet.ps1 -Version 2.0.0
+  - ps: dotnet --version
+  - ps: dotnet restore
 build:
   parallel: true
   verbosity: minimal
