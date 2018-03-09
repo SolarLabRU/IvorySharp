@@ -1,0 +1,11 @@
+language: csharp
+mono: none
+dotnet: 2.0.0
+
+install:
+  - dotnet restore
+
+script:
+  - dotnet build
+  - cd IvorySharp.Tests
+  - dotnet xunit
