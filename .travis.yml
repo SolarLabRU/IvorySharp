@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: latest
+dotnet: 2.1.4
 
 install:
   - dotnet restore
