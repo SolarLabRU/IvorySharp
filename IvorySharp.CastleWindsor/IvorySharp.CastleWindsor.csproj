@@ -17,4 +17,18 @@
     <ItemGroup>
         <ProjectReference Include="..\IvorySharp\IvorySharp.csproj"/>
     </ItemGroup>
+
+    <PropertyGroup>
+        <Version>0.1.0</Version>
+        <LangVersion>latest</LangVersion>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <Title>IvorySharp.CastleWindsor</Title>
+        <Description>Integration plugin for CastleWindsor framework.</Description>
+        <Authors>bitshift.it@icloud.com</Authors>
+        <Copyright>Copyright © Igor Polyakov 2018</Copyright>
+        <PackageProjectUrl>https://github.com/rex-core/IvorySharp</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/rex-core/IvorySharp/blob/master/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/rex-core/IvorySharp.git</RepositoryUrl>
+    </PropertyGroup>
 </Project>
