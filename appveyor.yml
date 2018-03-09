@@ -12,4 +12,5 @@ build:
   parallel: true
   verbosity: minimal
 before_test:
-  - ps: cd IvorySharp.Tests dotnet xunit
+  - ps: cd IvorySharp.Tests 
+  - ps: dotnet xunit
