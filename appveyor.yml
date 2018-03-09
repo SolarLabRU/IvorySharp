@@ -4,7 +4,8 @@ pull_requests:
 skip_tags: true
 image: Visual Studio 2017
 configuration: Release
-before_build: >-
+before_build: 
+  - ps: >-
   ./build/install-dotnet.ps1 -Version 2.0.0
    dotnet restore
 build:
