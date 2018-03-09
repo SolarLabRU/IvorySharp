@@ -20,7 +20,6 @@
     <PropertyGroup>
         <Version>0.1.0</Version>
         <LangVersion>latest</LangVersion>
-        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <Title>IvorySharp.SimpleInjector</Title>
         <Description>Integration plugin for SimpleInjector framework.</Description>

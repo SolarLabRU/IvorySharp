@@ -13,7 +13,6 @@
   <PropertyGroup>
     <Version>0.1.0</Version>
     <LangVersion>latest</LangVersion>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Title>IvorySharp</Title>
     <Description>Allow to intercept method calls via attributes decoration (AOP like).</Description>
