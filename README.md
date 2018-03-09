@@ -1,6 +1,9 @@
 # IvorySharp
-> Поддерживаемые платформы: .NET Framework 4.6.1, .NET Core 2.0
 
+[![Build status](https://travis-ci.org/rex-core/IvorySharp.svg?branch=master)](https://travis-ci.org/rex-core/IvorySharp)
+[![Build status](https://ci.appveyor.com/api/projects/status/1ojaoq8ew6y2jvpn/branch/master?svg=true)](https://ci.appveyor.com/project/rex-core/ivorysharp/branch/master)
+
+> Поддерживаемые платформы: .NET Framework 4.6.1, .NET Core 2.0
 
 Библиотека предоставляет набор компонентов, реализующих некоторые возможности парадигмы [АОП](https://ru.wikipedia.org/wiki/Аспектно-ориентированное_программирование) в языке C#. Если точнее, то библиотека позволяет вынести сквозную функциональность в отдельные компоненты и декларативно применять их к методам бизнес логики, используя атрибуты.
 
