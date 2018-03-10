@@ -3,6 +3,7 @@ mono: none
 dotnet: 2.1.4
 
 install:
+  - cd src
   - dotnet restore
 
 script:
