@@ -82,12 +82,12 @@ class HandleExceptionAspect : MethodBoundaryAspect
     Logger.Error(exception.Message, exception);
     
     // Выбросит исключение, сохранив стек-трейс
-    pipeline.Throw(new WrapperException(exception);
+    pipeline.Throw(new WrapperException(exception));
   }
 }
 
 ```   
-При этом возможно применение нескольких аспектов, в том числе аспектов верхнего уровня на интерфейсах без потери читаемости и поддерживаемости бизнес логики. Детализированные примеры аспектов и их использования представлены [тут](https://github.com/rex-core/IvorySharp/tree/master/IvorySharp.Examples).
+При этом возможно применение нескольких аспектов, в том числе аспектов верхнего уровня на интерфейсах без потери читаемости и поддерживаемости бизнес логики. Детализированные примеры аспектов и их использования представлены [тут](https://github.com/rex-core/IvorySharp/tree/master/src/IvorySharp.Examples).
 
 ## И никто раньше такого не делал?
 Делали само собой. Наиболее популярная библиотека реализующая АОП  - это [PostSharp](https://www.postsharp.net). Его функциональность гораздо шире этой библиотеки, однако есть один минус - он платный. Есть и бесплатные альтернативы, например [Fody](https://github.com/Fody/Fody) и [Mr.Advice](https://github.com/ArxOne/MrAdvice), однако у них другой принцип работы. Данная библиотека выполняет динамическое проксирование вызовов через стандартные механизмы платформы ([DispatchProxy](https://github.com/dotnet/corefx/blob/master/src/System.Reflection.DispatchProxy/src/System/Reflection/DispatchProxy.cs)), в то время как PostSharp и Fody выполняют [инъекцию IL кода](http://www.mono-project.com/docs/tools+libraries/libraries/Mono.Cecil/) во время компиляции, что улучшает общую производительность, однако модифицирует код сборки. Наиболее близкое по принципу работы к представленной библиотеке - механизм динамического перехвата вызова в [Castle.DynamicProxy](https://github.com/castleproject/Core/blob/master/docs/dynamicproxy-introduction.md).
