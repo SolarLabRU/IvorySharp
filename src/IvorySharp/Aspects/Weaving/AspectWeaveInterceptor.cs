@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
-using IvorySharp.Extensions;
+
+// ReSharper disable FieldCanBeMadeReadOnly.Local (Reason: readonly access slower)
 
 namespace IvorySharp.Aspects.Weaving
 {
@@ -12,10 +14,10 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     public class AspectWeaveInterceptor : IInterceptor
     {
-        private MethodBoundaryAspectsInjector _aspectsInjector;
         private MethodAspectDependencyInjector _aspectDependencyInjector;
         
-        private Func<InvocationContext, MethodBoundaryAspect[]> _methodBoundariesMemoizedProvider;
+        private Func<InvocationContext, List<MethodBoundaryAspect>> _methodBoundariesAspectsMemoizedProvider;
+        private Func<InvocationContext, MethodInterceptionAspect> _methodInterceptionAspectMemoizedProvider;
         private Func<InvocationContext, bool> _isWeavableMemoizedProvider;
 
         /// <summary>
@@ -24,13 +26,16 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="settings">Конфигурация аспектов.</param>
         public AspectWeaveInterceptor(IAspectsWeavingSettings settings)
         {
-            _aspectsInjector = new MethodBoundaryAspectsInjector(settings);
             _aspectDependencyInjector = new MethodAspectDependencyInjector(settings.ServiceProvider);
 
-            _methodBoundariesMemoizedProvider = Memoizer.Memoize(
+            _methodBoundariesAspectsMemoizedProvider = Memoizer.Memoize(
                 MethodAspectFactory.Instance.CreateMethodBoundaryAspects,
                 InvocationContext.MethodComparer);
 
+            _methodInterceptionAspectMemoizedProvider = Memoizer.Memoize(
+                MethodAspectFactory.Instance.CreateMethodInterceptionAspect,
+                InvocationContext.MethodComparer);
+            
             _isWeavableMemoizedProvider = Memoizer.Memoize(
                 ctx=> AspectWeaver.IsWeavable(ctx, settings),
                 InvocationContext.MethodComparer);
@@ -45,20 +50,19 @@ namespace IvorySharp.Aspects.Weaving
                 return;
             }
 
-            var methodBoundaryAspects = _methodBoundariesMemoizedProvider(invocation.Context);
-            if (methodBoundaryAspects.IsEmpty())
-            {
-                invocation.Proceed();
-                return;
-            }
+            var methodInterceptAspect = _methodInterceptionAspectMemoizedProvider(invocation.Context);
+            var methodBoundaryAspects = _methodBoundariesAspectsMemoizedProvider(invocation.Context);
 
+            _aspectDependencyInjector.InjectDependencies(methodInterceptAspect);
+            methodInterceptAspect.Initialize();
+            
             foreach (var aspect in methodBoundaryAspects)
             {
                 _aspectDependencyInjector.InjectDependencies(aspect);
                 aspect.Initialize();
             }
             
-            _aspectsInjector.InjectAspects(invocation, methodBoundaryAspects);
+            MethodAspectsInjector.Instance.InjectAspects(invocation, methodBoundaryAspects, methodInterceptAspect);
         }   
     }
 }

@@ -20,7 +20,7 @@ namespace IvorySharp.Aspects.Configuration
         {
             _container = aspectsContainer;
             _aspectsWeavingSettings = new AspectsWeavingSettings();
-            _aspectsConfiguration = new AspectsConfiguration(_container, _aspectsWeavingSettings);
+            _aspectsConfiguration = new AspectsConfiguration(_aspectsWeavingSettings);
         }
 
         /// <summary>

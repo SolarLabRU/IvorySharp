@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
-using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -21,6 +20,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// </summary>
         internal IMethodAspect CurrentExecutingAspect { get; set; }
 
+        /// <summary>
+        /// Модель вызова метода.
+        /// </summary>
+        internal IInvocation Invocation { get; set; }
+        
         /// <inheritdoc />
         public InvocationContext Context { get; }
 
@@ -42,12 +46,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Инициализирует экземпляр <see cref="InvocationPipeline"/>.
         /// </summary>
-        /// <param name="invocationContext">Контекст выполнения.</param>
-        /// <param name="serviceProvider">Провайдер сервисов.</param>
-        internal InvocationPipeline(InvocationContext invocationContext, IServiceProvider serviceProvider)
+        /// <param name="invocation">Модель выполнения метода.</param>
+        internal InvocationPipeline(IInvocation invocation)
         {
             _pipelineData = new ConcurrentDictionary<Type, object>();
-            Context = invocationContext;
+            Context = invocation.Context;
             CanReturnResult = !Context.Method.IsVoidReturn();
         }
 
@@ -111,7 +114,7 @@ namespace IvorySharp.Aspects.Pipeline
             FlowBehaviour = FlowBehaviour.ThrowException;
         }
 
-        internal object GetAspectState()
+        private object GetAspectState()
         {
             lock (SyncRoot)
             {
@@ -124,7 +127,7 @@ namespace IvorySharp.Aspects.Pipeline
             }
         }
 
-        internal void SetAspectState(object newState)
+        private void SetAspectState(object newState)
         {
             lock (SyncRoot)
             {

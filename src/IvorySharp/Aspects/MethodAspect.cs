@@ -14,9 +14,6 @@
         public string Description { get; set; }
 
         /// <inheritdoc />
-        public int Order { get; set; }
-
-        /// <inheritdoc />
         public virtual void Initialize() { }
     }
 }

@@ -6,7 +6,7 @@ using IvorySharp.Extensions;
 
 namespace IvorySharp.Reflection
 {
-    public class Expressions
+    internal static class Expressions
     {
         public static Func<TConvert> CreateFactoryMethod<TConvert>(Type type)
         {

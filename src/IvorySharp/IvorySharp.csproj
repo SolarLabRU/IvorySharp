@@ -9,7 +9,6 @@
   <PropertyGroup Condition="'$(IsWindows)' == 'true'">
     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
   </PropertyGroup>
-
   <PropertyGroup>
     <Version>0.1.0</Version>
     <LangVersion>latest</LangVersion>
@@ -22,5 +21,4 @@
     <PackageLicenseUrl>https://github.com/rex-core/IvorySharp/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/rex-core/IvorySharp.git</RepositoryUrl>
   </PropertyGroup>
-  
 </Project>

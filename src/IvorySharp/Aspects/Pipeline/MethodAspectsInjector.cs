@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using IvorySharp.Aspects.Configuration;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 
@@ -10,28 +9,25 @@ namespace IvorySharp.Aspects.Pipeline
     /// <summary>
     /// Компонент для внедрения аспектов в пайплайн выполнения метода.
     /// </summary>
-    internal class MethodBoundaryAspectsInjector
+    internal class MethodAspectsInjector
     {
-        private readonly IAspectsWeavingSettings _settings;
-
         /// <summary>
-        /// Инициализирует экземпляр <see cref="MethodBoundaryAspectsInjector"/>.
+        /// Инициализированный экземпляр компонента.
         /// </summary>
-        /// <param name="settings">Конфигурация обвязки аспектов.</param>
-        internal MethodBoundaryAspectsInjector(IAspectsWeavingSettings settings)
-        {
-            _settings = settings;
-        }
+        public static MethodAspectsInjector Instance { get; } = new MethodAspectsInjector();
 
+        private MethodAspectsInjector() { }
+        
         /// <summary>
         /// Выполняет внедрение аспектов в выполнение метода.
         /// </summary>
         /// <param name="invocation">Модель выполнения метода.</param>
-        /// <param name="aspects">Коллекция аспектов.</param>
-        public void InjectAspects(IInvocation invocation, IReadOnlyCollection<IMethodBoundaryAspect> aspects)
+        /// <param name="boundaryAspects">Коллекция аспектов.</param>
+        /// <param name="interceptionAspect">Аспект перехвата выполнения метода.</param>
+        public void InjectAspects(IInvocation invocation, IReadOnlyCollection<IMethodBoundaryAspect> boundaryAspects, IMethodInterceptionAspect interceptionAspect)
         {
-            var aggregateAspect = new AggregatedMethodBoundaryAspect(aspects);
-            var pipeline = new InvocationPipeline(invocation.Context, _settings.ServiceProvider);
+            var aggregateAspect = new AggregatedMethodBoundaryAspect(boundaryAspects);
+            var pipeline = new InvocationPipeline(invocation);
 
             try
             {
@@ -45,7 +41,7 @@ namespace IvorySharp.Aspects.Pipeline
                     // Выполнение вызова в случае, если какой-то из
                     // обработчиков не решил преждевременно покинуть выполнение 
                     // и вернуть результат
-                    invocation.Proceed();
+                    interceptionAspect.OnInvoke(invocation);
                 }
 
                 aggregateAspect.OnSuccess(pipeline);

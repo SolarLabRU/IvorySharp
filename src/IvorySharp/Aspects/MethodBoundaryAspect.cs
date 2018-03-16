@@ -1,4 +1,5 @@
-﻿using IvorySharp.Aspects.Pipeline;
+﻿using System.Collections.Generic;
+using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Aspects
 {
@@ -7,6 +8,9 @@ namespace IvorySharp.Aspects
     /// </summary>
     public abstract class MethodBoundaryAspect : MethodAspect, IMethodBoundaryAspect
     {
+        /// <inheritdoc />
+        public int Order { get; set; }
+        
         /// <inheritdoc />
         public virtual void OnEntry(IInvocationPipeline pipeline)
         { }

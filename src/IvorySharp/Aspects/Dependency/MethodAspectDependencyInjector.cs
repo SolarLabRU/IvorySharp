@@ -24,7 +24,7 @@ namespace IvorySharp.Aspects.Dependency
         /// Выполняет внедрение зависимостей в аспект.
         /// </summary>
         /// <param name="aspect">Модель аспекта.</param>
-        public void InjectDependencies(MethodBoundaryAspect aspect)
+        public void InjectDependencies(MethodAspect aspect)
         {
             if (!aspect.HasDependencies)
                 return;

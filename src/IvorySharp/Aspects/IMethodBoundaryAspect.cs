@@ -8,6 +8,13 @@ namespace IvorySharp.Aspects
     public interface IMethodBoundaryAspect : IMethodAspect
     {
         /// <summary>
+        /// Порядок атрибута. Меньшее значение порядка значит более высокий приоритет аспекта.
+        /// То есть, аспект с <see cref="Order"/> = 0 будет выполнен раньше,
+        /// чем аспект с <see cref="Order"/> = 1.
+        /// </summary>
+        int Order { get; set; }
+        
+        /// <summary>
         /// Выполняется перед началом выполнения метода.
         /// </summary>
         /// <param name="pipeline">Пайплайн выполнения.</param>

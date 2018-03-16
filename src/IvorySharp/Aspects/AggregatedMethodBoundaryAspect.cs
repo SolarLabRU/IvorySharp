@@ -14,7 +14,7 @@ namespace IvorySharp.Aspects
     {
         private readonly IReadOnlyCollection<IMethodBoundaryAspect> _boundaryAspects;
         private IMethodBoundaryAspect _currentExecutingBoundary;
-        private int? _triggeredStopPipelineAspectOrder = null;
+        private int? _triggeredStopPipelineAspectOrder;
         
         /// <summary>
         /// Инициализирует экземпляр класса <see cref="AggregatedMethodBoundaryAspect"/>.

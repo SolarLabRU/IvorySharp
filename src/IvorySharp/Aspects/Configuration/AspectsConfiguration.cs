@@ -1,5 +1,4 @@
 ﻿using System;
-using IvorySharp.Aspects.Integration;
 
 namespace IvorySharp.Aspects.Configuration
 {
@@ -8,8 +7,6 @@ namespace IvorySharp.Aspects.Configuration
     /// </summary>
     public class AspectsConfiguration
     {
-        private readonly AspectsContainer _aspectsContainer;
-        
         /// <summary>
         /// Набор настроек для аспектов.
         /// </summary>
@@ -18,11 +15,9 @@ namespace IvorySharp.Aspects.Configuration
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectsConfiguration"/>.
         /// </summary>
-        /// <param name="aspectsContainer">Контейнер аспектов.</param>
         /// <param name="aspectsWeavingSettings">Конфигурация обвязки аспектов.</param>
-        internal AspectsConfiguration(AspectsContainer aspectsContainer, AspectsWeavingSettings aspectsWeavingSettings)
+        internal AspectsConfiguration(AspectsWeavingSettings aspectsWeavingSettings)
         {
-            _aspectsContainer = aspectsContainer;
             AspectsWeavingSettings = aspectsWeavingSettings;
         }
 
