@@ -1,17 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <IsWindows Condition="'$(OS)' == 'Windows_NT'">true</IsWindows>
-    <IsUnix Condition="'$(OS)' == 'Unix'">true</IsUnix>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(IsUnix)'=='true'">
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(IsWindows)' == 'true'">
-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup>
     <Version>0.1.0</Version>
     <LangVersion>latest</LangVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Title>IvorySharp</Title>
     <Description>Allow to intercept method calls via attributes decoration (AOP like).</Description>
@@ -21,4 +12,8 @@
     <PackageLicenseUrl>https://github.com/rex-core/IvorySharp/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/rex-core/IvorySharp.git</RepositoryUrl>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.3.0" />
+  </ItemGroup>
 </Project>
