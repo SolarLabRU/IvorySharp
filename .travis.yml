@@ -23,6 +23,6 @@ matrix:
       install:
         - dotnet restore src/IvorySharp.sln
       script:
-        - dotnet build src/IvorySharp.sln
+        - msbuild /p:Configuration=Release src/IvorySharp.sln
         - cd src/IvorySharp.Tests
         - dotnet xunit
