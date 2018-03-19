@@ -1,12 +1,22 @@
 language: csharp
-mono: none
-dotnet: 2.1.4
 
-install:
-  - cd src
-  - dotnet restore
-
-script:
-  - dotnet build
-  - cd IvorySharp.Tests
-  - dotnet xunit
+matrix:
+  include:
+    - dotnet: 2.1.4
+      mono: none
+      install:
+        - cd src
+        - dotnet restore
+      script: 
+        - dotnet build
+        - cd IvorySharp.Tests
+        - dotnet xunit
+    - mono: 5.4.0
+      before_install:
+        - mkdir -p .nuget
+        - wget -O .nuget/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+        - mono .nuget/nuget.exe
+      install:
+        - mono .nuget/nuget.exe restore src/IvorySharp.sln -Verbosity detailed
+      script:
+        - msbuild /p:Configuration=Release src/IvorySharp.sln
