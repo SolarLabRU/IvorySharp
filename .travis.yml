@@ -12,8 +12,11 @@ matrix:
         - cd IvorySharp.Tests
         - dotnet xunit
     - mono: 5.4.0
+      before_install:
+        - mkdir -p .nuget
+        - wget -O .nuget/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+        - mono .nuget/nuget.exe
       install:
-        - cd src
-        - nuget restore IvorySharp.sln
+        - mono .nuget/nuget.exe restore src/IvorySharp.sln -Verbosity detailed
       script:
-        - msbuild /p:Configuration=Release IvorySharp.sln
+        - msbuild /p:Configuration=Release src/IvorySharp.sln
