@@ -1,12 +1,19 @@
 language: csharp
-mono: none
-dotnet: 2.1.4
 
-install:
-  - cd src
-  - dotnet restore
-
-script:
-  - dotnet build
-  - cd IvorySharp.Tests
-  - dotnet xunit
+matrix:
+  include:
+    - dotnet: 2.1.4
+      mono: none
+      install:
+        - cd src
+        - dotnet restore
+      script: 
+        - dotnet build
+        - cd IvorySharp.Tests
+        - dotnet xunit
+    - mono: 5.4
+      install:
+        - cd src
+        - dotnet restore
+      script:
+        - xbuild /p:Configuration=Release IvorySharp.sln
