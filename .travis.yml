@@ -15,7 +15,7 @@ matrix:
       install:
         - cd src
         - nuget restore IvorySharp.sln
-        - nuget install xunit.runners -Version 2.3.1 -OutputDirectory testrunner
+        - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
       script:
         - xbuild /p:Configuration=Release IvorySharp.sln
-        - mono ./testrunner/xunit.runners.2.3.1/tools/xunit.console.clr4.exe ./IvorySharp.Tests/bin/Release/netcoreapp2.0/IvorySharp.Tests.dll
+        - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./IvorySharp.Tests/bin/Release/netcoreapp2.0/IvorySharp.Tests.dll
