@@ -11,7 +11,7 @@ matrix:
         - dotnet build
         - cd IvorySharp.Tests
         - dotnet xunit
-    - mono: 5.4
+    - mono: 5.4.0
       install:
         - cd src
         - dotnet restore
