@@ -28,11 +28,8 @@ namespace IvorySharp.Aspects
         /// <returns>Коллекция аспектов.</returns>
         public List<MethodBoundaryAspect> CreateMethodBoundaryAspects(InvocationContext context)
         {
-            var declaredTypeAspects = context.InstanceDeclaringType
-                .GetCustomAttributes<MethodBoundaryAspect>(inherit: false);
-
-            var methodAspects = context.Method
-                .GetCustomAttributes<MethodBoundaryAspect>(inherit: false);
+            var declaredTypeAspects = MethodAspect.GetTypeHierarchyAspects<MethodBoundaryAspect>(context.InstanceDeclaringType);
+            var methodAspects = MethodAspect.GetMethodAspects<MethodBoundaryAspect>(context.Method);
             
             var allAspects = declaredTypeAspects
                 .Union(methodAspects)
@@ -57,7 +54,7 @@ namespace IvorySharp.Aspects
         /// <returns>Аспект перехвата вызова метода.</returns>
         public MethodInterceptionAspect CreateMethodInterceptionAspect(InvocationContext context)
         {
-            var methodAspects = context.Method.GetCustomAttributes<MethodInterceptionAspect>(inherit: false).ToList();
+            var methodAspects = MethodAspect.GetMethodAspects<MethodInterceptionAspect>(context.Method).ToList();
             if (methodAspects.Count > 1)
             {
                 throw new IvorySharpException(

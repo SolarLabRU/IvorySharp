@@ -18,19 +18,25 @@ namespace IvorySharp.Tests
         private readonly WeavedServiceProvider<ITopLevelBoundaryService, TopLevelBoundaryService> _tAspectServiceProvider;
         private readonly WeavedServiceProvider<INotMarkedExplicitBoundaryService, ExplicitBoundaryService> _tnmExplicitServiceProvider;
         private readonly WeavedServiceProvider<IMarkedExplicitBoundaryService, ExplicitBoundaryService> _tmExplicitServiceProvider;
-        
+        private readonly WeavedServiceProvider<IInterfaceExtensionService, InterfaceExtensionService> _sInterfaceExtensionServiceProvider;
+        private readonly WeavedServiceProvider<IInterfaceExtensionService2, InterfaceExtensionService2> _sInterfaceExtensionService2Provider;
+
         public MethodBoundaryAspectsTests()
         {
-            _sAspectServiceProvider = new WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService>(new ImpliticAspectsWeavingSettings());
+            _sAspectServiceProvider = new WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService>(new ImplicitAspectsWeavingSettings());
             
-            _mAspectServiceProvider = new WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService>(new ImpliticAspectsWeavingSettings());
+            _mAspectServiceProvider = new WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService>(new ImplicitAspectsWeavingSettings());
             
-            _tAspectServiceProvider = new WeavedServiceProvider<ITopLevelBoundaryService, TopLevelBoundaryService>(new ImpliticAspectsWeavingSettings());
+            _tAspectServiceProvider = new WeavedServiceProvider<ITopLevelBoundaryService, TopLevelBoundaryService>(new ImplicitAspectsWeavingSettings());
             
             _tnmExplicitServiceProvider = new WeavedServiceProvider<INotMarkedExplicitBoundaryService, ExplicitBoundaryService>(new ExplicitAspectWeavingSettings());
             
             _tmExplicitServiceProvider = new WeavedServiceProvider<IMarkedExplicitBoundaryService, ExplicitBoundaryService>(new ExplicitAspectWeavingSettings());
-            
+
+            _sInterfaceExtensionServiceProvider = new WeavedServiceProvider<IInterfaceExtensionService, InterfaceExtensionService>(new ImplicitAspectsWeavingSettings());
+
+            _sInterfaceExtensionService2Provider = new WeavedServiceProvider<IInterfaceExtensionService2, InterfaceExtensionService2>(new ImplicitAspectsWeavingSettings());
+
             ObservableBoundaryAspect.ClearCallings();
         }
 
@@ -233,6 +239,41 @@ namespace IvorySharp.Tests
             Assert.Throws<ArgumentException>(() => service.ExceptionalEmptyMethod3());
             
             AspectAssert.OnExceptionCalled(typeof(ReplaceExceptionAspect));
+        }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void SingleAspectTypeLevel_InterfaceExtend_BaseInterfaceMethods_TriggerOnException(WeavedServiceStoreType storeType)
+        {
+            // Arrange 
+            var service = _sInterfaceExtensionServiceProvider.GetService(storeType);
+
+            // Act & Assert
+            service.DoSomethingBase();
+
+            AspectAssert.OnExceptionCalled(typeof(SwallowExceptionAspectDefaultReturn));
+        }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void SingleAspectMethodLevel_InterfaceExtend_BaseInterfaceMethods_TriggerOnException(WeavedServiceStoreType storeType)
+        {
+            // Arrange 
+            var service = _sInterfaceExtensionService2Provider.GetService(storeType);
+
+            // Act & Assert
+            Assert.Throws<Exception>(() => service.SuppressedMethod());
+
+            var result = service.DoSomethingChild();
+            service.DoSomethingBase();
+
+            Assert.Equal(42, result);
+            AspectAssert.OnExceptionCalled(typeof(SwallowExceptionAspectDefaultReturn));
+            AspectAssert.OnExceptionCalled(typeof(SwallowExceptionAspect42Result));
         }
 
         /// <summary>
@@ -535,6 +576,7 @@ namespace IvorySharp.Tests
             AspectAssert.OnExitCalled(typeof(DependencyAspect));
         }
         
+
         #endregion
     }
 }

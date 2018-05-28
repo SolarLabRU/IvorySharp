@@ -10,7 +10,7 @@ namespace IvorySharp.Tests.Services
         [Pow2ValueAspect(Order = 2)]
         int Identity(int arg);
         
-        [SuppressWeaving]
+        [SuppressAspectsWeaving]
         int Identity2(int arg);
         
         [Pow2ValueAspect(Order = 0)]

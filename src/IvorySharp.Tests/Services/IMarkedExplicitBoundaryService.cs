@@ -11,7 +11,7 @@ namespace IvorySharp.Tests.Services
         [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnExit))]
         int Identity(int arg);
 
-        [SuppressWeaving]
+        [SuppressAspectsWeaving]
         int Identity2(int arg);
     }
 
@@ -20,7 +20,7 @@ namespace IvorySharp.Tests.Services
         [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnExit))]
         int Identity(int arg);
 
-        [SuppressWeaving]
+        [SuppressAspectsWeaving]
         int Identity2(int arg);
     }
 

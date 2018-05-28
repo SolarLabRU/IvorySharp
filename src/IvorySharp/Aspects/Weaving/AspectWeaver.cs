@@ -85,17 +85,18 @@ namespace IvorySharp.Aspects.Weaving
                     return false;
             }
             
-            var suppressWeavingAttribute = invocationContext.InstanceDeclaringType.GetCustomAttributes<SuppressWeaving>(inherit: false);
+            var suppressWeavingAttribute = invocationContext.InstanceDeclaringType.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())
                 return false;
 
-            suppressWeavingAttribute = invocationContext.Method.GetCustomAttributes<SuppressWeaving>(inherit: false);
+            suppressWeavingAttribute = invocationContext.Method.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())
                 return false;
 
-            var hasAttribute = 
-                invocationContext.Method.GetCustomAttributes<MethodAspect>(inherit: false).IsNotEmpty() || 
-                invocationContext.InstanceDeclaringType.GetCustomAttributes<MethodAspect>(inherit: false).IsNotEmpty();
+            var hasAttribute =
+                MethodAspect.GetMethodAspects<MethodAspect>(invocationContext.Method).IsNotEmpty() ||
+                MethodAspect.GetTypeHierarchyAspects<MethodAspect>(invocationContext.InstanceDeclaringType).IsNotEmpty() ||
+                MethodAspect.GetTypeHierarchyMethodAspects<MethodAspect>(invocationContext.InstanceDeclaringType).IsNotEmpty();
 
             return hasAttribute;
         }
@@ -123,20 +124,17 @@ namespace IvorySharp.Aspects.Weaving
             }
 
             // Если тип помечен атрибутом, который запрещает применение аспектов
-            var suppressWeavingAttribute = type.GetCustomAttributes<SuppressWeaving>(inherit: false);
+            var suppressWeavingAttribute = type.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())
                 return false;
-            
-            var aspectAttribute = type.GetCustomAttributes<MethodAspect>(inherit: false);
+
+            var aspectAttribute = MethodAspect.GetTypeHierarchyAspects<MethodAspect>(type);
             if (aspectAttribute.IsNotEmpty())
                 return true;
 
-            foreach (var method in type.GetMethods())
-            {
-                var methodAspectAttributes = method.GetCustomAttributes<MethodAspect>(inherit: false);
-                if (methodAspectAttributes.IsNotEmpty())
-                    return true;
-            }
+            var methodAspectAttributes = MethodAspect.GetTypeHierarchyMethodAspects<MethodAspect>(type);
+            if (methodAspectAttributes.IsNotEmpty())
+                return true;
 
             return false;
         }

@@ -6,7 +6,7 @@ namespace IvorySharp.Aspects.Weaving
     /// Атрибут запрещает применение аспектов на установленный метод или интерфейс.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Interface)]
-    public sealed class SuppressWeaving : Attribute
+    public sealed class SuppressAspectsWeavingAttribute : Attribute
     {     
     }
 }
