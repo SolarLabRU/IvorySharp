@@ -39,7 +39,7 @@ namespace IvorySharp.Aspects.Configuration
         /// </summary>
         public void Initialize()
         {
-            _container.BindAspects(_aspectsConfiguration.AspectsWeavingSettings);
+            Initialize(_ => { });
         }
     }
 }
