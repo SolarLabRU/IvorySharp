@@ -4,10 +4,10 @@
     <IsUnix Condition="'$(OS)' == 'Unix'">true</IsUnix>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsUnix)'=='true'">
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsWindows)' == 'true'">
-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
   </PropertyGroup>
   <PropertyGroup>
     <IsPackable>false</IsPackable>
