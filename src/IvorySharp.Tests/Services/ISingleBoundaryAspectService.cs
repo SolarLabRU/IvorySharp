@@ -1,4 +1,5 @@
-﻿using IvorySharp.Aspects;
+﻿using System;
+using IvorySharp.Aspects;
 using IvorySharp.Tests.Aspects;
 
 namespace IvorySharp.Tests.Services
@@ -25,7 +26,7 @@ namespace IvorySharp.Tests.Services
         [BypassAspect]
         void ExceptionalEmptyMethod2();
 
-        [ReplaceExceptionAspect]
+        [ThrowExceptionAspect(typeof(ArgumentException))]
         void ExceptionalEmptyMethod3();
         
         [SwallowExceptionAspectDefaultReturn]

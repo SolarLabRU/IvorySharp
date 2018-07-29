@@ -13,7 +13,7 @@ namespace IvorySharp.Tests.Aspects
             {
                 invocation.Proceed();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 invocation.Context.ReturnValue = default(object);
             }

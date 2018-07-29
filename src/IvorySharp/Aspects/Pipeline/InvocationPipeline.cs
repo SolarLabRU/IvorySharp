@@ -110,8 +110,21 @@ namespace IvorySharp.Aspects.Pipeline
         /// <inheritdoc />
         public void ThrowException(Exception exception)
         {
+            if (exception == null)
+                throw new ArgumentNullException(nameof(exception));
+            
             CurrentException = exception;
             FlowBehaviour = FlowBehaviour.ThrowException;
+        }
+
+        /// <inheritdoc />
+        public void RethrowException(Exception exception)
+        {
+            if (exception == null)
+                throw new ArgumentNullException(nameof(exception));
+
+            CurrentException = exception;
+            FlowBehaviour = FlowBehaviour.RethrowException;
         }
 
         private object GetAspectState()

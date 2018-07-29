@@ -23,6 +23,6 @@
     <Folder Include="BenchmarkDotNet.Artifacts\results" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.10.14" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.0" />
   </ItemGroup>
 </Project>

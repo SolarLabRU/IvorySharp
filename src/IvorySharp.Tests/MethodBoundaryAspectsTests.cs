@@ -20,6 +20,7 @@ namespace IvorySharp.Tests
         private readonly WeavedServiceProvider<IMarkedExplicitBoundaryService, ExplicitBoundaryService> _tmExplicitServiceProvider;
         private readonly WeavedServiceProvider<IInterfaceExtensionService, InterfaceExtensionService> _sInterfaceExtensionServiceProvider;
         private readonly WeavedServiceProvider<IInterfaceExtensionService2, InterfaceExtensionService2> _sInterfaceExtensionService2Provider;
+        private readonly WeavedServiceProvider<IRethrowExceptionService, RethrowExceptionService> _sRethrowServiceProvider;
 
         public MethodBoundaryAspectsTests()
         {
@@ -37,10 +38,10 @@ namespace IvorySharp.Tests
 
             _sInterfaceExtensionService2Provider = new WeavedServiceProvider<IInterfaceExtensionService2, InterfaceExtensionService2>(new ImplicitAspectsWeavingSettings());
 
+            _sRethrowServiceProvider = new WeavedServiceProvider<IRethrowExceptionService, RethrowExceptionService>(new ImplicitAspectsWeavingSettings());
+            
             ObservableBoundaryAspect.ClearCallings();
         }
-
-        #region Single Aspect
 
         /// <summary>
         /// Выполняет проверку, что при нормальном выполнении метода
@@ -238,7 +239,7 @@ namespace IvorySharp.Tests
             // Act & Assert
             Assert.Throws<ArgumentException>(() => service.ExceptionalEmptyMethod3());
             
-            AspectAssert.OnExceptionCalled(typeof(ReplaceExceptionAspect));
+            AspectAssert.OnExceptionCalled(typeof(ThrowExceptionAspect));
         }
 
         [Theory]
@@ -276,6 +277,21 @@ namespace IvorySharp.Tests
             AspectAssert.OnExceptionCalled(typeof(SwallowExceptionAspect42Result));
         }
 
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void SingleAspect_RethrowException_ThrowsCorrectException(WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _sRethrowServiceProvider.GetService(storeType);
+            
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => service.RethrowArgumentException());
+            
+            AspectAssert.OnExceptionCalled(typeof(RethrowExceptionAspect));
+        }
+        
         /// <summary>
         /// Выполняет проверку, что несколько обработчиков выполняются в порядке убывания приоритета.
         /// </summary>
@@ -479,6 +495,24 @@ namespace IvorySharp.Tests
             AspectAssert.OnSuccessNotCalled(typeof(BypassAspect));
             AspectAssert.OnExceptionNotCalled(typeof(BypassAspect));
         }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_RethrowFlow_RethrowedException_Handled_In_HigherOrder_Aspect(
+            WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _sRethrowServiceProvider.GetService(storeType);
+            
+            // Act
+            service.RethrowArgumentExceptionThenSwallow();
+            
+            // Assert
+            AspectAssert.OnExceptionCalled(typeof(RethrowExceptionAspect));
+            AspectAssert.OnExceptionCalled(typeof(SwallowExceptionIfTypeMatchAspect));
+        }
         
         [Theory]
         [InlineData(WeavedServiceStoreType.TransientWeaving)]
@@ -575,8 +609,5 @@ namespace IvorySharp.Tests
             AspectAssert.OnSuccessCalled(typeof(DependencyAspect));
             AspectAssert.OnExitCalled(typeof(DependencyAspect));
         }
-        
-
-        #endregion
     }
 }

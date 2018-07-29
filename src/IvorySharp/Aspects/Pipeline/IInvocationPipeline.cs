@@ -63,5 +63,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// </summary>
         /// <param name="exception">Исключение.</param>
         void ThrowException(Exception exception);
+
+        /// <summary>
+        /// Прокидывает исключение дальше по пайплайну, не прерывая выполнение.
+        /// </summary>
+        /// <param name="exception">Исключение,</param>
+        void RethrowException(Exception exception);
     }
 }
