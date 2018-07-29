@@ -8,10 +8,14 @@ using IvorySharp.CastleWindsor.Aspects.Weaving;
 
 namespace IvorySharp.CastleWindsor.Aspects.Integration
 {
-    public class WindsorAspectFacility : AbstractFacility
+    internal class WindsorAspectFacility : AbstractFacility
     {
         private readonly IAspectsWeavingSettings _settings;
 
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="WindsorAspectFacility"/>
+        /// </summary>
+        /// <param name="settings">Настройки аспектов.</param>
         public WindsorAspectFacility(IAspectsWeavingSettings settings)
         {
             _settings = settings;

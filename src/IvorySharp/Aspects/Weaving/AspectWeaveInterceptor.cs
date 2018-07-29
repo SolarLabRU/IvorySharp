@@ -62,7 +62,7 @@ namespace IvorySharp.Aspects.Weaving
                 aspect.Initialize();
             }
             
-            MethodAspectsInjector.Instance.InjectAspects(invocation, methodBoundaryAspects, methodInterceptAspect);
+            MethodAspectsExecutor.Instance.ExecuteAspects(invocation, methodBoundaryAspects, methodInterceptAspect);
         }   
     }
 }

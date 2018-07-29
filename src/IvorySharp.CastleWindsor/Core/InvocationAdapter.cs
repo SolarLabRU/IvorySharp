@@ -49,6 +49,10 @@ namespace IvorySharp.CastleWindsor.Core
         /// <inheritdoc />
         public Type TargetType { get; }
 
+        /// <summary>
+        /// Адаптер для модели вызова Castle Windsor.
+        /// </summary>
+        /// <param name="castleInvocation">Модель вызова Castle Windsor.</param>
         public InvocationAdapter(IInvocation castleInvocation)
         {
             _castleInvocation = castleInvocation;

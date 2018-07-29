@@ -10,7 +10,10 @@ namespace IvorySharp.Proxying
     /// </summary>
     public abstract class DispatchProxy
     {
-        protected DispatchProxy() { }
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="DispatchProxy"/>.
+        /// </summary>
+        protected internal DispatchProxy() { }
         
         /// <summary>
         /// Whenever any method on the generated proxy type is called, this method
@@ -19,7 +22,7 @@ namespace IvorySharp.Proxying
         /// <param name="targetMethod">The method the caller invoked</param>
         /// <param name="args">The arguments the caller passed to the method</param>
         /// <returns>The object to return to the caller, or <c>null</c> for void methods</returns>
-        protected abstract object Invoke(MethodInfo targetMethod, object[] args);
+        protected internal abstract object Invoke(MethodInfo targetMethod, object[] args);
         
         /// <summary>
         /// Creates an object instance that derives from class <typeparamref name="TProxy"/>
@@ -30,13 +33,13 @@ namespace IvorySharp.Proxying
         /// <returns>An object instance that implements <typeparamref name="T"/>.</returns>
         /// <exception cref="System.ArgumentException"><typeparamref name="T"/> is a class, 
         /// or <typeparamref name="TProxy"/> is sealed or does not have a parameterless constructor</exception>
-        protected static T CreateTrasparentProxy<T, TProxy>()
+        internal static T CreateTrasparentProxy<T, TProxy>()
             where TProxy : DispatchProxy
         {
             return (T)DispatchProxyGenerator.CreateProxyInstance(typeof(TProxy), typeof(T));
         }
 
-        protected static object CreateTrasparentProxy<TProxy>(Type targetDeclaredType)
+        internal static object CreateTrasparentProxy<TProxy>(Type targetDeclaredType)
             where TProxy : DispatchProxy
         {
             return DispatchProxyGenerator.CreateProxyInstance(typeof(TProxy), targetDeclaredType);

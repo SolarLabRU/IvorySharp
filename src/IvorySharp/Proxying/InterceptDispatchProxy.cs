@@ -56,7 +56,7 @@ namespace IvorySharp.Proxying
         }
 
         /// <inheritdoc />
-        protected override object Invoke(MethodInfo targetMethod, object[] args)
+        protected internal override object Invoke(MethodInfo targetMethod, object[] args)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace IvorySharp.Proxying
                 e.Unwrap().Rethrow();
             }
 
-            return default(object);
+            return default;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace IvorySharp.Proxying
             _interceptor.Intercept(invocation);
 
             return targetMethod.IsVoidReturn()
-                ? default(object)
+                ? default
                 : invocation.Context.ReturnValue;
         }
 

@@ -10,7 +10,7 @@ namespace IvorySharp.Proxying
     {
         /// <summary>
         /// Создает экземпляр прокси интерфейса с типом <typeparamref name="T"/> от объекта
-        /// <see cref="target"/>. При этом все вызовы к исходным методам объекта проксируются через
+        /// <paramref name="target"/>. При этом все вызовы к исходным методам объекта проксируются через
         /// перехватчик <paramref name="interceptor"/>.
         /// </summary>
         /// <param name="target">Экземпляр объекта.</param>
@@ -20,8 +20,8 @@ namespace IvorySharp.Proxying
         T CreateInterceptProxy<T>(T target, IInterceptor interceptor) where  T : class;
 
         /// <summary>
-        /// Создает экземпляр прокси интерфейса с типом <typeparamref name="T"/> от объекта
-        /// <see cref="target"/>. При этом все вызовы к исходным методам объекта проксируются через
+        /// Создает экземпляр прокси интерфейса с типом <paramref name="targetDeclaredType"/> от объекта
+        /// <paramref name="target"/>. При этом все вызовы к исходным методам объекта проксируются через
         /// перехватчик <paramref name="interceptor"/>.
         /// </summary>
         /// <param name="target">Экземпляр объекта.</param>

@@ -16,6 +16,10 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
         private readonly IKernel _kernel;
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="WindsorAspectsContainer"/>.
+        /// </summary>
+        /// <param name="container">Контейнер зависимостей.</param>
         public WindsorAspectsContainer(IWindsorContainer container)
         {
             _kernel = container.Kernel;

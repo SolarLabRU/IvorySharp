@@ -94,7 +94,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
             return GetTransparentService(serviceType);
         }
 
-        internal static object UnwrapProxy(object service)
+        private static object UnwrapProxy(object service)
         {
             try
             {

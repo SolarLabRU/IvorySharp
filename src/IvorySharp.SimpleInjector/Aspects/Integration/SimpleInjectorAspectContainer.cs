@@ -30,13 +30,13 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         public override void BindAspects(IAspectsWeavingSettings settings)
         {  
             var weaver = new AspectWeaver(settings);
-            Func<object, Type, object> proxier = (o, type) => weaver.Weave(o, type);
-            
+            object Proxier(object o, Type type) => weaver.Weave(o, type);
+
             _container.ExpressionBuilt += (sender, args) =>
             { 
                 args.Expression = Expression.Convert(
                     Expression.Invoke(
-                        Expression.Constant(proxier),
+                        Expression.Constant((Func<object, Type, object>) Proxier),
                         args.Expression,
                         Expression.Constant(args.RegisteredServiceType, typeof(Type))
                     ), 

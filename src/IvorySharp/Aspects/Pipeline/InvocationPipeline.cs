@@ -20,11 +20,6 @@ namespace IvorySharp.Aspects.Pipeline
         /// </summary>
         internal IMethodAspect CurrentExecutingAspect { get; set; }
 
-        /// <summary>
-        /// Модель вызова метода.
-        /// </summary>
-        internal IInvocation Invocation { get; set; }
-        
         /// <inheritdoc />
         public InvocationContext Context { get; }
 
@@ -65,7 +60,7 @@ namespace IvorySharp.Aspects.Pipeline
                 throw new IvorySharpException(
                     $"Невозможно вернуть значение '{returnValue}' из аспекта '{CurrentExecutingAspect?.GetType().FullName}'. " +
                     $"Метод '{Context.Method.Name}' типа '{Context.InstanceDeclaringType.FullName}' " +
-                    $"не имеет возвращаемого значения (void). " +
+                    "не имеет возвращаемого значения (void). " +
                     $"Для возврата используйте перегрузку '{nameof(ReturnValue)}' без параметров.");
             }
 
@@ -110,20 +105,14 @@ namespace IvorySharp.Aspects.Pipeline
         /// <inheritdoc />
         public void ThrowException(Exception exception)
         {
-            if (exception == null)
-                throw new ArgumentNullException(nameof(exception));
-            
-            CurrentException = exception;
+            CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
             FlowBehaviour = FlowBehaviour.ThrowException;
         }
 
         /// <inheritdoc />
         public void RethrowException(Exception exception)
         {
-            if (exception == null)
-                throw new ArgumentNullException(nameof(exception));
-
-            CurrentException = exception;
+            CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
             FlowBehaviour = FlowBehaviour.RethrowException;
         }
 

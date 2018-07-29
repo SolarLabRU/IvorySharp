@@ -15,6 +15,10 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
     {
         private readonly AspectWeaveInterceptor _aspectWeaveInterceptor;
         
+        /// <summary>
+        /// Адаптер для обработчика вызовов <see cref=" Castle.DynamicProxy.IInterceptor"/>.
+        /// </summary>
+        /// <param name="configurations">Конфигурация аспектов.</param>
         public AspectWeaverInterceptorAdapter(IAspectsWeavingSettings configurations)
         {
             _aspectWeaveInterceptor = new AspectWeaveInterceptor(configurations);

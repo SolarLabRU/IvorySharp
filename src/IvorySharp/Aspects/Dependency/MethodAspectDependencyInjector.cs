@@ -11,8 +11,8 @@ namespace IvorySharp.Aspects.Dependency
     /// </summary>
     internal class MethodAspectDependencyInjector
     {
-        private IServiceProvider _serviceProvider;
-        private Func<Type, AspectPropertyDependency[]> _aspectDependencyProvider;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly Func<Type, AspectPropertyDependency[]> _aspectDependencyProvider;
 
         public MethodAspectDependencyInjector(IServiceProvider serviceProvider)
         {

@@ -12,7 +12,7 @@
         /// <see cref="IMethodBoundaryAspect.OnSuccess(IInvocationPipeline)"/>,
         /// <see cref="IMethodBoundaryAspect.OnExit(IInvocationPipeline)"/>
         /// равно выполняется продолжение.
-        /// Для хендлера <see cref="IMethodBoundaryAspect.OnEntry(IInvocationPipeline)"/>
+        /// Для хендлера <see cref="IMethodBoundaryAspect.OnException(IInvocationPipeline)"/>
         /// эквивалетно значению <see cref="FlowBehaviour.RethrowException"/>.
         /// </summary>
         Default = 0,

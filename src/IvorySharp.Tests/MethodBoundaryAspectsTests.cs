@@ -500,7 +500,7 @@ namespace IvorySharp.Tests
         [InlineData(WeavedServiceStoreType.TransientWeaving)]
         [InlineData(WeavedServiceStoreType.CastleWindsor)]
         [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void MultipleAspects_RethrowFlow_RethrowedException_Handled_In_HigherOrder_Aspect(
+        public void MultipleAspects_RethrowFlow_RethrowOnException_Handled_InOnException_HigherOrder_Aspect(
             WeavedServiceStoreType storeType)
         {
             // Arrange
@@ -512,6 +512,26 @@ namespace IvorySharp.Tests
             // Assert
             AspectAssert.OnExceptionCalled(typeof(RethrowExceptionAspect));
             AspectAssert.OnExceptionCalled(typeof(SwallowExceptionIfTypeMatchAspect));
+        }
+
+        [Theory]
+        [InlineData(WeavedServiceStoreType.TransientWeaving)]
+        [InlineData(WeavedServiceStoreType.CastleWindsor)]
+        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_RethrowFlow_RethrowOnEntry_Handled_InOnException_HigherOrder_Aspect(
+            WeavedServiceStoreType storeType)
+        {
+            // Arrange
+            var service = _sRethrowServiceProvider.GetService(storeType);
+            
+            // Act
+            var result = service.RehrowOnEntryThenSwallowReturn42();
+            
+            // Assert
+            AspectAssert.OnEntryCalled(typeof(RethrowExceptionAspect));
+            AspectAssert.OnExceptionCalled(typeof(SwallowExceptionAspect42Result));
+            
+            Assert.Equal(42, result);
         }
         
         [Theory]
