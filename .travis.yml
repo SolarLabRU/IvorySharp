@@ -11,4 +11,4 @@ matrix:
       script: 
         - dotnet build src/IvorySharp.sln
         - cd src/IvorySharp.Tests
-        - dotnet xunit
+        - dotnet xunit -fxversion $(ls /usr/share/dotnet/shared/Microsoft.NETCore.App/)
