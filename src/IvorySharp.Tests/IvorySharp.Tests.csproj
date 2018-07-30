@@ -25,4 +25,10 @@
     <ProjectReference Include="..\IvorySharp.SimpleInjector\IvorySharp.SimpleInjector.csproj" />
     <ProjectReference Include="..\IvorySharp\IvorySharp.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="xunit.runner.json" />
+    <Content Include="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
