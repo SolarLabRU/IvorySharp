@@ -30,33 +30,41 @@ namespace IvorySharp.Core
         public MethodInfo Method { get; }
         
         /// <summary>
-        /// Сущность, метод который был перехвачен.
+        /// Экземпляр класса, вызов которого был перехвачен.
         /// </summary>
         public object Instance { get; }
+        
+        /// <summary>
+        /// Прокси экземпляра класса, вызов которого был перехвачен.
+        /// </summary>
+        public object Proxy { get; }
         
         /// <summary>
         /// Объявленный тип сущности, метод которой был вызван.
         /// Может быть интерфейсом, который реализуется экземпляром <see cref="Instance"/>.
         /// </summary>
         public Type InstanceDeclaringType { get; }
-        
+
         /// <summary>
         /// Инициализирует экземпляр модели вызова метода.
         /// </summary>
         /// <param name="arguments">Параметры вызова.</param>
         /// <param name="method">Вызываемый метод.</param>
-        /// <param name="instance">Экземпляр объекта.</param>
+        /// <param name="instance">Экземпляр класса.</param>
+        /// <param name="proxy">Прокси.</param>
         /// <param name="instanceDeclaringType">Объявленный тип объекта.</param>
         public InvocationContext(
             IReadOnlyCollection<object> arguments, 
             MethodInfo method, 
             object instance, 
+            object proxy, 
             Type instanceDeclaringType)
         {
             Arguments = arguments;
             Method = method;
             Instance = instance;
             InstanceDeclaringType = instanceDeclaringType;
+            Proxy = proxy;
         }
         
         private sealed class MethodEqualityComparer : IEqualityComparer<InvocationContext>

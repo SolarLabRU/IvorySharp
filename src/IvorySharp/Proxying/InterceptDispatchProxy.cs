@@ -23,6 +23,11 @@ namespace IvorySharp.Proxying
         public object Instance { get; private set; }
 
         /// <summary>
+        /// Прокси.
+        /// </summary>
+        public object TransparentProxy { get; private set; }
+        
+        /// <summary>
         /// Исходный тип экземпляра (обычно - интерфейс, от которого строится прокси).
         /// </summary>
         public Type InstanceDeclaringType { get; private set; }
@@ -50,7 +55,7 @@ namespace IvorySharp.Proxying
             var transparentProxy = CreateTrasparentProxy<InterceptDispatchProxy>(instanceDeclaringType);
             var interceptProxy = (InterceptDispatchProxy) transparentProxy;
             
-            interceptProxy.Initialize(instance, instanceDeclaringType, interceptor);
+            interceptProxy.Initialize(instance, transparentProxy, instanceDeclaringType, interceptor);
 
             return transparentProxy;
         }
@@ -91,7 +96,7 @@ namespace IvorySharp.Proxying
         /// <returns>Результат выполнения метода (null, если тип void).</returns>
         private object Intercept(MethodInfo targetMethod, object[] args)
         {
-            var context = new InvocationContext(args, targetMethod, Instance, InstanceDeclaringType);
+            var context = new InvocationContext(args, targetMethod, Instance, TransparentProxy, InstanceDeclaringType);
             var invoker = _methodInvokerFactory(targetMethod);
             
             var invocation = new Invocation(context, invoker);
@@ -107,12 +112,14 @@ namespace IvorySharp.Proxying
         /// Выполняет инициализацию прокси.
         /// </summary>
         /// <param name="instance">Экземпляр объекта для создания прокси.</param>
+        /// <param name="transparentProxy">Прокси.</param>
         /// <param name="instanceDeclaringType">Тип прокси. Задается как интерфейс, который реализуется типом объекта <paramref name="instance"/>.</param>
         /// <param name="interceptor">Компонент для перехвата вызовов методов.</param>
-        private void Initialize(object instance, Type instanceDeclaringType, IInterceptor interceptor)
+        private void Initialize(object instance, object transparentProxy, Type instanceDeclaringType, IInterceptor interceptor)
         {
             Instance = instance;
             InstanceDeclaringType = instanceDeclaringType;
+            TransparentProxy = transparentProxy;
             _interceptor = interceptor;
 
             _methodInvokerFactory = Memoizer.Memoize<MethodInfo, Func<object, object[], object>>(
