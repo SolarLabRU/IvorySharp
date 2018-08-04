@@ -16,29 +16,23 @@ namespace IvorySharp.Tests
         private readonly WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService> _sAspectServiceProvider;
         private readonly WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService> _mAspectServiceProvider;
         private readonly WeavedServiceProvider<ITopLevelBoundaryService, TopLevelBoundaryService> _tAspectServiceProvider;
-        private readonly WeavedServiceProvider<INotMarkedExplicitBoundaryService, ExplicitBoundaryService> _tnmExplicitServiceProvider;
-        private readonly WeavedServiceProvider<IMarkedExplicitBoundaryService, ExplicitBoundaryService> _tmExplicitServiceProvider;
         private readonly WeavedServiceProvider<IInterfaceExtensionService, InterfaceExtensionService> _sInterfaceExtensionServiceProvider;
         private readonly WeavedServiceProvider<IInterfaceExtensionService2, InterfaceExtensionService2> _sInterfaceExtensionService2Provider;
         private readonly WeavedServiceProvider<IRethrowExceptionService, RethrowExceptionService> _sRethrowServiceProvider;
 
         public MethodBoundaryAspectsTests()
         {
-            _sAspectServiceProvider = new WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService>(new ImplicitAspectsWeavingSettings());
+            _sAspectServiceProvider = new WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService>(new NullComponentsStore());
             
-            _mAspectServiceProvider = new WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService>(new ImplicitAspectsWeavingSettings());
+            _mAspectServiceProvider = new WeavedServiceProvider<IMultipleBoundaryAspectsService, MultipleBoundaryAspectsService>(new NullComponentsStore());
             
-            _tAspectServiceProvider = new WeavedServiceProvider<ITopLevelBoundaryService, TopLevelBoundaryService>(new ImplicitAspectsWeavingSettings());
+            _tAspectServiceProvider = new WeavedServiceProvider<ITopLevelBoundaryService, TopLevelBoundaryService>(new NullComponentsStore());
             
-            _tnmExplicitServiceProvider = new WeavedServiceProvider<INotMarkedExplicitBoundaryService, ExplicitBoundaryService>(new ExplicitAspectWeavingSettings());
-            
-            _tmExplicitServiceProvider = new WeavedServiceProvider<IMarkedExplicitBoundaryService, ExplicitBoundaryService>(new ExplicitAspectWeavingSettings());
+            _sInterfaceExtensionServiceProvider = new WeavedServiceProvider<IInterfaceExtensionService, InterfaceExtensionService>(new NullComponentsStore());
 
-            _sInterfaceExtensionServiceProvider = new WeavedServiceProvider<IInterfaceExtensionService, InterfaceExtensionService>(new ImplicitAspectsWeavingSettings());
+            _sInterfaceExtensionService2Provider = new WeavedServiceProvider<IInterfaceExtensionService2, InterfaceExtensionService2>(new NullComponentsStore());
 
-            _sInterfaceExtensionService2Provider = new WeavedServiceProvider<IInterfaceExtensionService2, InterfaceExtensionService2>(new ImplicitAspectsWeavingSettings());
-
-            _sRethrowServiceProvider = new WeavedServiceProvider<IRethrowExceptionService, RethrowExceptionService>(new ImplicitAspectsWeavingSettings());
+            _sRethrowServiceProvider = new WeavedServiceProvider<IRethrowExceptionService, RethrowExceptionService>(new NullComponentsStore());
             
             ObservableBoundaryAspect.ClearCallings();
         }
@@ -532,70 +526,6 @@ namespace IvorySharp.Tests
             AspectAssert.OnExceptionCalled(typeof(SwallowExceptionAspect42Result));
             
             Assert.Equal(42, result);
-        }
-        
-        [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void ExplicitMarkers_AspectsNotApplied_If_Service_NotMarked(WeavedServiceStoreType storeType)
-        {
-            // Arrange
-            var service = _tnmExplicitServiceProvider.GetService(storeType);
-
-            // Act
-            var result = service.Identity(2);
-
-            // Assert           
-            Assert.Equal(2, result);
-        }
-        
-        [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void ExplicitMarkers_AspectsApplied_If_Service_Marked(WeavedServiceStoreType storeType)
-        {
-            // Arrange
-            var service = _tmExplicitServiceProvider.GetService(storeType);
-
-            // Act
-            var result = service.Identity(2);
-
-            // Assert           
-            Assert.Equal(3, result);
-        }
-        
-        [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void ExplicitMarkers_SuppressedAspect_NotApplied_If_Service_NotMarker(WeavedServiceStoreType storeType)
-        {
-            // Arrange
-            var service = _tnmExplicitServiceProvider.GetService(storeType);
-
-            // Act
-            var result = service.Identity2(2);
-
-            // Assert           
-            Assert.Equal(2, result);
-        }
-                
-        [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void ExplicitMarkers_SuppressedAspect_NotApplied_If_Service_Marker(WeavedServiceStoreType storeType)
-        {
-            // Arrange
-            var service = _tmExplicitServiceProvider.GetService(storeType);
-
-            // Act
-            var result = service.Identity2(2);
-
-            // Assert           
-            Assert.Equal(2, result);
         }
 
         [Theory]

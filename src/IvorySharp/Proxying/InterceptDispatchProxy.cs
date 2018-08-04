@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Weaving;
+using IvorySharp.Aspects.Components.Weaving;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 using IvorySharp.Reflection;

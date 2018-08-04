@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IvorySharp.Aspects.Weaving
+namespace IvorySharp.Aspects
 {
     /// <summary>
     /// Атрибут запрещает применение аспектов на установленный метод или интерфейс.

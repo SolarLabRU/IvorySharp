@@ -1,6 +1,6 @@
-﻿using IvorySharp.Integration;
+﻿using IvorySharp.Aspects.Integration;
 
-namespace IvorySharp.Configuration
+namespace IvorySharp.Aspects.Configuration
 {
     /// <summary>
     /// Стартовая точка конфигурации аспектов.

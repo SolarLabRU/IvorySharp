@@ -2,14 +2,14 @@
 using IvorySharp.Exceptions;
 using IvorySharp.Proxying;
 using SimpleInjector;
-using IServiceProvider = IvorySharp.Components.Dependency.IServiceProvider;
+using IServiceProvider = IvorySharp.Aspects.Components.Dependency.IServiceProvider;
 
 namespace IvorySharp.SimpleInjector.Aspects.Integration
 {
     /// <summary>
     /// Провайдер сервисов.
     /// </summary>
-    public class SimpleInjectorServiceProvider : Components.Dependency.IServiceProvider
+    public class SimpleInjectorServiceProvider : IvorySharp.Aspects.Components.Dependency.IServiceProvider
     {
         private readonly Container _container;
 

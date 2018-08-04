@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using System.Runtime.ExceptionServices;
 using Castle.DynamicProxy;
-using IvorySharp.Aspects.Weaving;
+using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.CastleWindsor.Core;
-using IvorySharp.Configuration;
 
 namespace IvorySharp.CastleWindsor.Aspects.Weaving
 {
@@ -19,7 +19,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
         /// Адаптер для обработчика вызовов <see cref=" Castle.DynamicProxy.IInterceptor"/>.
         /// </summary>
         /// <param name="configurations">Конфигурация аспектов.</param>
-        public AspectWeaverInterceptorAdapter(IAspectsWeavingSettings configurations)
+        public AspectWeaverInterceptorAdapter(IComponentsStore configurations)
         {
             _aspectWeaveInterceptor = new AspectWeaveInterceptor(configurations);
         }

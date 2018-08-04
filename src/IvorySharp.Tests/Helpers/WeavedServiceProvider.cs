@@ -1,9 +1,9 @@
 ﻿using System;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using IvorySharp.Aspects.Weaving;
+using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.CastleWindsor.Aspects.Integration;
-using IvorySharp.Configuration;
 using IvorySharp.SimpleInjector.Aspects.Integration;
 using IvorySharp.Tests.Services;
 using SimpleInjector;
@@ -18,26 +18,18 @@ namespace IvorySharp.Tests.Helpers
         private Container _simpleInjectorContainer;
         private AspectWeaver _aspectWeaver;
 
-        public WeavedServiceProvider(IAspectsWeavingSettings configuration)
+        public WeavedServiceProvider(IComponentsStore configuration)
         {
             _windsorContainer = new WindsorContainer();
             _simpleInjectorContainer = new Container();
 
             AspectsConfigurator
                 .UseContainer(new WindsorAspectsContainer(_windsorContainer))
-                .Initialize(c =>
-                {
-                    if (configuration.ExplicitWeavingAttributeType != null)
-                        c.UseExplicitWeavingAttribute<EnableWeavingAttribute>();
-                });
+                .Initialize();
             
             AspectsConfigurator
                 .UseContainer(new SimpleInjectorAspectContainer(_simpleInjectorContainer))
-                .Initialize(c =>
-                {
-                    if (configuration.ExplicitWeavingAttributeType != null)
-                        c.UseExplicitWeavingAttribute<EnableWeavingAttribute>();
-                });
+                .Initialize();
 
             _windsorContainer.Register(
                 Component

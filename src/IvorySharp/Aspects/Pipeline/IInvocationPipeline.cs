@@ -1,6 +1,6 @@
 ﻿using System;
 using IvorySharp.Core;
-using IServiceProvider = IvorySharp.Components.Dependency.IServiceProvider;
+using IServiceProvider = IvorySharp.Aspects.Components.Dependency.IServiceProvider;
 
 namespace IvorySharp.Aspects.Pipeline
 {

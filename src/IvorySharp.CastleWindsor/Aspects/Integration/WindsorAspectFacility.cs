@@ -2,21 +2,21 @@
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
-using IvorySharp.Aspects.Weaving;
+using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.CastleWindsor.Aspects.Weaving;
-using IvorySharp.Configuration;
 
 namespace IvorySharp.CastleWindsor.Aspects.Integration
 {
     internal class WindsorAspectFacility : AbstractFacility
     {
-        private readonly IAspectsWeavingSettings _settings;
+        private readonly IComponentsStore _settings;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="WindsorAspectFacility"/>
         /// </summary>
         /// <param name="settings">Настройки аспектов.</param>
-        public WindsorAspectFacility(IAspectsWeavingSettings settings)
+        public WindsorAspectFacility(IComponentsStore settings)
         {
             _settings = settings;
         }

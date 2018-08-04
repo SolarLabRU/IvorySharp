@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Weaving;
+using IvorySharp.Aspects.Components.Weaving;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects

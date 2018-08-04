@@ -1,14 +1,14 @@
 ﻿using System;
-using IvorySharp.Integration;
+using IvorySharp.Aspects.Integration;
 
-namespace IvorySharp.Configuration
+namespace IvorySharp.Aspects.Configuration
 {
     /// <summary>
     /// Синтаксис конфигурации аспектов.
     /// </summary>
     public class AspectsFluentConfigurationSyntax
     {
-        private readonly AspectsWeavingSettings _aspectsWeavingSettings;
+        private readonly MutableComponentsStore _componentsStore;
         private readonly AspectsConfiguration _aspectsConfiguration;
         private readonly AspectsContainer _container;
 
@@ -19,8 +19,8 @@ namespace IvorySharp.Configuration
         internal AspectsFluentConfigurationSyntax(AspectsContainer aspectsContainer)
         {
             _container = aspectsContainer;
-            _aspectsWeavingSettings = new AspectsWeavingSettings();
-            _aspectsConfiguration = new AspectsConfiguration(_aspectsWeavingSettings);
+            _componentsStore = new MutableComponentsStore();
+            _aspectsConfiguration = new AspectsConfiguration(_componentsStore);
         }
 
         /// <summary>
@@ -30,8 +30,8 @@ namespace IvorySharp.Configuration
         public void Initialize(Action<AspectsConfiguration> configurator)
         {
             configurator(_aspectsConfiguration);
-            _aspectsWeavingSettings.ServiceProvider = _container.GetServiceProvider();
-            _container.BindAspects(_aspectsConfiguration.AspectsWeavingSettings);
+            _componentsStore.ServiceProvider = _container.GetServiceProvider();
+            _container.BindAspects(_aspectsConfiguration.ComponentsStore);
         }
 
         /// <summary>

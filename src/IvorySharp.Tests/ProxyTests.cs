@@ -13,7 +13,7 @@ namespace IvorySharp.Tests
         public ProxyTests()
         {
             _serviceProvider = new WeavedServiceProvider<IReturnThisService, ReturnThisService>(
-                new ImplicitAspectsWeavingSettings());
+                new NullComponentsStore());
             
             ObservableBoundaryAspect.ClearCallings();
         }

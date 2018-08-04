@@ -1,10 +1,10 @@
 ﻿using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using IvorySharp.Aspects.Components.Dependency;
+using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Integration;
 using IvorySharp.CastleWindsor.Aspects.Weaving;
-using IvorySharp.Components.Dependency;
-using IvorySharp.Configuration;
-using IvorySharp.Integration;
 
 namespace IvorySharp.CastleWindsor.Aspects.Integration
 {
@@ -27,7 +27,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
         }
 
         /// <inheritdoc />
-        public override void BindAspects(IAspectsWeavingSettings settings)
+        public override void BindAspects(IComponentsStore settings)
         {
             var interceptor = new AspectWeaverInterceptorAdapter(settings);
 

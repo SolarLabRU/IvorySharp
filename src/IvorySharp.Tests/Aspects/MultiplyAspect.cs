@@ -1,5 +1,5 @@
-﻿using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Components.Dependency;
+﻿using IvorySharp.Aspects.Components.Dependency;
+using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Tests.Services;
 
 namespace IvorySharp.Tests.Aspects

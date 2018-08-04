@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq.Expressions;
-using IvorySharp.Aspects.Weaving;
-using IvorySharp.Configuration;
-using IvorySharp.Integration;
+using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Integration;
 using SimpleInjector;
-using IServiceProvider = IvorySharp.Components.Dependency.IServiceProvider;
+using IServiceProvider = IvorySharp.Aspects.Components.Dependency.IServiceProvider;
 
 namespace IvorySharp.SimpleInjector.Aspects.Integration
 {
@@ -27,7 +27,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         }
 
         /// <inheritdoc />
-        public override void BindAspects(IAspectsWeavingSettings settings)
+        public override void BindAspects(IComponentsStore settings)
         {  
             var weaver = new AspectWeaver(settings);
             object Proxier(object o, Type type) => weaver.Weave(o, type);

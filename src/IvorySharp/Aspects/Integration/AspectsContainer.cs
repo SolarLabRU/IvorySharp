@@ -1,7 +1,7 @@
-﻿using IvorySharp.Components.Dependency;
-using IvorySharp.Configuration;
+﻿using IvorySharp.Aspects.Components.Dependency;
+using IvorySharp.Aspects.Configuration;
 
-namespace IvorySharp.Integration
+namespace IvorySharp.Aspects.Integration
 {
     /// <summary>
     /// Базовый класс контейнера аспектов.
@@ -12,7 +12,7 @@ namespace IvorySharp.Integration
         /// Выполняет привязку аспектов к зарегистрированным в контейнере компонентам.
         /// </summary>
         /// <param name="settings">Конфигурация.</param>
-        public abstract void BindAspects(IAspectsWeavingSettings settings);
+        public abstract void BindAspects(IComponentsStore settings);
 
         /// <summary>
         /// Возвращает сервис провайдер.

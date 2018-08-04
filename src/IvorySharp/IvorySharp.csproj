@@ -15,9 +15,4 @@
   <ItemGroup>
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\Initialization" />
-    <Folder Include="Components\Selection" />
-    <Folder Include="Components\Weaving" />
-  </ItemGroup>
 </Project>

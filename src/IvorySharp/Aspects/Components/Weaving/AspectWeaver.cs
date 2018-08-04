@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Configuration;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 using IvorySharp.Proxying;
 
-namespace IvorySharp.Aspects.Weaving
+namespace IvorySharp.Aspects.Components.Weaving
 {
     /// <summary>
     /// Компонент для выполнения связывания исходного объекта с аспектами.
@@ -33,13 +33,13 @@ namespace IvorySharp.Aspects.Weaving
             typeof(object).GetMethod(nameof(ReferenceEquals))
         };
         
-        private readonly IAspectsWeavingSettings _configuration;
+        private readonly IComponentsStore _configuration;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectWeaver"/>.
         /// </summary>
         /// <param name="configuration">Конфигурация аспектов.</param>
-        public AspectWeaver(IAspectsWeavingSettings configuration)
+        public AspectWeaver(IComponentsStore configuration)
         {
             _configuration = configuration;
         }
@@ -65,23 +65,13 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="invocationContext">Контекст вызова.</param>
         /// <param name="settings">Настройки.</param>
         /// <returns>Признак возможности применения обвязки для указанного типа.</returns>
-        public static bool IsWeavable(InvocationContext invocationContext, IAspectsWeavingSettings settings)
+        public static bool IsWeavable(InvocationContext invocationContext, IComponentsStore settings)
         {
             if (!invocationContext.InstanceDeclaringType.IsInterface)
                 return false;
 
             if (NotWeavableTypes.Contains(invocationContext.InstanceDeclaringType))
                 return false;
-            
-            // Если включена настройка явного указания атрибута для обвязки
-            if (settings.ExplicitWeavingAttributeType != null)
-            {
-                var explicitMarkers = invocationContext.InstanceDeclaringType.GetCustomAttributes(
-                    settings.ExplicitWeavingAttributeType, inherit: false);
-                
-                if (explicitMarkers.IsEmpty())
-                    return false;
-            }
             
             var suppressWeavingAttribute = invocationContext.InstanceDeclaringType.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())
@@ -105,7 +95,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="type">Тип для применения аспектов.</param>
         /// <param name="settings">Настройки.</param>
         /// <returns>Признак возможности применения обвязки для указанного типа.</returns>
-        public static bool IsWeavable(Type type, IAspectsWeavingSettings settings)
+        public static bool IsWeavable(Type type, IComponentsStore settings)
         {
             if (!type.IsInterface)
                 return false;
@@ -113,14 +103,6 @@ namespace IvorySharp.Aspects.Weaving
             if (NotWeavableTypes.Contains(type))
                 return false;
             
-            // Если включена настройка явного указания атрибута для обвязки
-            if (settings.ExplicitWeavingAttributeType != null)
-            {
-                var explicitMarkers = type.GetCustomAttributes(settings.ExplicitWeavingAttributeType, inherit: false);
-                if (explicitMarkers.IsEmpty())
-                    return false;
-            }
-
             // Если тип помечен атрибутом, который запрещает применение аспектов
             var suppressWeavingAttribute = type.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false);
             if (suppressWeavingAttribute.IsNotEmpty())

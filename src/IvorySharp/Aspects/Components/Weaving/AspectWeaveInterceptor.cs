@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using IvorySharp.Aspects.Components.Dependency;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Components.Dependency;
-using IvorySharp.Configuration;
 using IvorySharp.Core;
 
 // ReSharper disable FieldCanBeMadeReadOnly.Local (Reason: readonly access slower)
 
-namespace IvorySharp.Aspects.Weaving
+namespace IvorySharp.Aspects.Components.Weaving
 {
     /// <summary>
     /// Перехватчик для применения аспектов.
@@ -24,7 +24,7 @@ namespace IvorySharp.Aspects.Weaving
         /// Инициализирует новый экземпляр класса <see cref="AspectWeaveInterceptor"/>.
         /// </summary>
         /// <param name="settings">Конфигурация аспектов.</param>
-        public AspectWeaveInterceptor(IAspectsWeavingSettings settings)
+        public AspectWeaveInterceptor(IComponentsStore settings)
         {
             _aspectDependencyInjector = new MethodAspectDependencyInjector(settings.ServiceProvider);
 

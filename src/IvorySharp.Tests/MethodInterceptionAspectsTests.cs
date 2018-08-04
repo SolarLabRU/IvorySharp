@@ -16,7 +16,7 @@ namespace IvorySharp.Tests
         public MethodInterceptionAspectsTests()
         {
             _serviceProvider = new WeavedServiceProvider<IInterceptAspectService, InterceptAspectService>(
-                new ImplicitAspectsWeavingSettings());
+                new NullComponentsStore());
         }
 
         [Theory]

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using IvorySharp.Aspects;
 using IvorySharp.Core;
 using IvorySharp.Reflection;
 
-namespace IvorySharp.Components.Dependency
+namespace IvorySharp.Aspects.Components.Dependency
 {
     /// <summary>
     /// Компонент для внедрения зависимостей в аспекты.
