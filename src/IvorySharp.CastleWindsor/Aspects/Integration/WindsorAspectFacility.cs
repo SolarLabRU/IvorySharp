@@ -2,9 +2,9 @@
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
-using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.CastleWindsor.Aspects.Weaving;
+using IvorySharp.Configuration;
 
 namespace IvorySharp.CastleWindsor.Aspects.Integration
 {

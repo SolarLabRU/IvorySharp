@@ -1,7 +1,7 @@
 ﻿using System;
-using IvorySharp.Aspects.Configuration;
+using IvorySharp.Configuration;
 using IvorySharp.Tests.Helpers;
-using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
+using IServiceProvider = IvorySharp.Components.Dependency.IServiceProvider;
 
 namespace IvorySharp.Tests.WeavingSettings
 {

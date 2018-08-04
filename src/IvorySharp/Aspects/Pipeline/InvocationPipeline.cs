@@ -18,7 +18,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Текущий выполняемый аспект.
         /// </summary>
-        internal IMethodAspect CurrentExecutingAspect { get; set; }
+        internal MethodAspect CurrentExecutingAspect { get; set; }
 
         /// <inheritdoc />
         public InvocationContext Context { get; }

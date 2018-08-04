@@ -10,17 +10,21 @@ namespace IvorySharp.Aspects
     /// <summary>
     /// Базовый класс для аспектов, применяемых на уровне метода.
     /// </summary>
-    public abstract class MethodAspect : AspectAttribute, IMethodAspect
+    public abstract class MethodAspect : AspectAttribute
     {
         /// <summary>
         /// Признак наличия зависимостей.
         /// </summary>
         internal bool HasDependencies { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Описание аспекта.
+        /// </summary>
         public string Description { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Выполняет инициализацию аспекта.
+        /// </summary>
         public virtual void Initialize() { }
 
         /// <summary>

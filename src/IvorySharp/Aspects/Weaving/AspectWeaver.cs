@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Configuration;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 using IvorySharp.Proxying;
@@ -18,8 +18,6 @@ namespace IvorySharp.Aspects.Weaving
         /// Массив типов для которых нельзя применять обвязку.
         /// </summary>
         public static readonly Type[] NotWeavableTypes = {
-            typeof(IMethodAspect),
-            typeof(IMethodBoundaryAspect),
             typeof(IInterceptor),
             typeof(IInvocation),
             typeof(IServiceProvider),

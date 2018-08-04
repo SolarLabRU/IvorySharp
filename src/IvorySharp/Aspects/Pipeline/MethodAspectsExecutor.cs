@@ -104,11 +104,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// </summary>
         private class StateAwareIteratorWrapper
         {
-            private IMethodBoundaryAspect _currentBreaker;
+            private MethodBoundaryAspect _currentBreaker;
 
             public MethodBoundaryIterator.BoundaryIterationResult Iterate(
                 MethodBoundaryIterator iterator,
-                IReadOnlyCollection<IMethodBoundaryAspect> aspects,
+                IReadOnlyCollection<MethodBoundaryAspect> aspects,
                 bool throwIfPipelineFaulted = true)
             {
                 var result = _currentBreaker == null

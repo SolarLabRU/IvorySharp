@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq.Expressions;
-using IvorySharp.Aspects.Configuration;
-using IvorySharp.Aspects.Integration;
 using IvorySharp.Aspects.Weaving;
+using IvorySharp.Configuration;
+using IvorySharp.Integration;
 using SimpleInjector;
-using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
+using IServiceProvider = IvorySharp.Components.Dependency.IServiceProvider;
 
 namespace IvorySharp.SimpleInjector.Aspects.Integration
 {

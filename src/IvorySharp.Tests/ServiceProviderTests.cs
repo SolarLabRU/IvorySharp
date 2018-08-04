@@ -1,10 +1,10 @@
 ﻿using Castle.DynamicProxy;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using IvorySharp.Aspects.Configuration;
-using IvorySharp.Aspects.Dependency;
 using IvorySharp.CastleWindsor.Aspects.Dependency;
 using IvorySharp.CastleWindsor.Aspects.Integration;
+using IvorySharp.Components.Dependency;
+using IvorySharp.Configuration;
 using IvorySharp.Proxying;
 using IvorySharp.SimpleInjector.Aspects.Integration;
 using IvorySharp.Tests.Aspects;

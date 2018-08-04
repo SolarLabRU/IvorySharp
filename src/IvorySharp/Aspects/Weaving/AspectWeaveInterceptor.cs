@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using IvorySharp.Aspects.Configuration;
-using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Components.Dependency;
+using IvorySharp.Configuration;
 using IvorySharp.Core;
 
 // ReSharper disable FieldCanBeMadeReadOnly.Local (Reason: readonly access slower)

@@ -10,11 +10,11 @@ namespace IvorySharp.Tests.Services
         void BypassEmptyMethod();
 
         [IncrementValueAspect(
-            nameof(IMethodBoundaryAspect.OnExit), 
-            nameof(IMethodBoundaryAspect.OnSuccess))]
+            nameof(MethodBoundaryAspect.OnExit), 
+            nameof(MethodBoundaryAspect.OnSuccess))]
         int Identity(int argument);
 
-        [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnEntry))]
+        [IncrementValueAspect(nameof(MethodBoundaryAspect.OnEntry))]
         int Identity2(int argument);
 
         [MultiplyAspect]

@@ -1,7 +1,7 @@
-﻿using IvorySharp.Aspects.Configuration;
-using IvorySharp.Aspects.Dependency;
+﻿using IvorySharp.Components.Dependency;
+using IvorySharp.Configuration;
 
-namespace IvorySharp.Aspects.Integration
+namespace IvorySharp.Integration
 {
     /// <summary>
     /// Базовый класс контейнера аспектов.

@@ -1,9 +1,9 @@
 ﻿using System;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.CastleWindsor.Aspects.Integration;
+using IvorySharp.Configuration;
 using IvorySharp.SimpleInjector.Aspects.Integration;
 using IvorySharp.Tests.Services;
 using SimpleInjector;

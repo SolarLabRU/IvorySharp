@@ -1,6 +1,6 @@
 ﻿using IvorySharp.Aspects;
-using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Components.Dependency;
 
 namespace IvorySharp.Benchmark.Fakes
 {

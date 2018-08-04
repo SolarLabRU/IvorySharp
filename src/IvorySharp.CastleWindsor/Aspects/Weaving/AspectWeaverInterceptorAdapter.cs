@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using System.Runtime.ExceptionServices;
 using Castle.DynamicProxy;
-using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.CastleWindsor.Core;
+using IvorySharp.Configuration;
 
 namespace IvorySharp.CastleWindsor.Aspects.Weaving
 {

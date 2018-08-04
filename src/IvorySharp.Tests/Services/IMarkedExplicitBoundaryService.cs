@@ -8,7 +8,7 @@ namespace IvorySharp.Tests.Services
     [EnableWeaving]
     public interface IMarkedExplicitBoundaryService
     {
-        [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnExit))]
+        [IncrementValueAspect(nameof(MethodBoundaryAspect.OnExit))]
         int Identity(int arg);
 
         [SuppressAspectsWeaving]
@@ -17,7 +17,7 @@ namespace IvorySharp.Tests.Services
 
     public interface INotMarkedExplicitBoundaryService
     {
-        [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnExit))]
+        [IncrementValueAspect(nameof(MethodBoundaryAspect.OnExit))]
         int Identity(int arg);
 
         [SuppressAspectsWeaving]

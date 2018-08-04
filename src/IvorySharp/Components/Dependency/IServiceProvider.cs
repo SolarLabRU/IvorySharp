@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IvorySharp.Aspects.Dependency
+namespace IvorySharp.Components.Dependency
 {
     /// <summary>
     /// Провайдер сервисов (сервис локатор).

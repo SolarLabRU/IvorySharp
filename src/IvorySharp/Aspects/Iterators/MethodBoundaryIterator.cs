@@ -31,7 +31,7 @@ namespace IvorySharp.Aspects.Iterators
         /// <param name="orderInclusiveWall">Барьер приоритета аспекта. Если задан, то все аспекты с приоритетом выше выполнены не будут.</param>
         /// <returns>Результат обхода.</returns>
         internal BoundaryIterationResult Iterate(
-            IReadOnlyCollection<IMethodBoundaryAspect> aspects, 
+            IReadOnlyCollection<MethodBoundaryAspect> aspects, 
             int? orderInclusiveWall = null)
         {
             for (var i = 0; i < aspects.Count; i++)
@@ -84,20 +84,20 @@ namespace IvorySharp.Aspects.Iterators
         /// </summary>
         /// <param name="aspect">Модель аспекта.</param>
         /// <param name="pipeline">Пайплайн вызова.</param>
-        protected abstract void ExecuteAspect(IMethodBoundaryAspect aspect, IInvocationPipeline pipeline);
+        protected abstract void ExecuteAspect(MethodBoundaryAspect aspect, IInvocationPipeline pipeline);
         
         /// <summary>
         /// Результат итерации аспектов.
         /// </summary>
         internal struct BoundaryIterationResult
         {
-            public readonly IMethodBoundaryAspect Breaker;
+            public readonly MethodBoundaryAspect Breaker;
             
             /// <summary>
             /// Инициализирует экземпляр <see cref="BoundaryIterationResult"/>.
             /// </summary>
             /// <param name="breaker">Аспект, который прервал выполнение метода.</param>
-            private BoundaryIterationResult(IMethodBoundaryAspect breaker)
+            private BoundaryIterationResult(MethodBoundaryAspect breaker)
             {
                 Breaker = breaker;
             }
@@ -116,7 +116,7 @@ namespace IvorySharp.Aspects.Iterators
             /// </summary>
             /// <param name="breaker">Аспект, который прервал выполнение метода.</param>
             /// <returns>Результат обхода.</returns>
-            public static BoundaryIterationResult BreakedBy(IMethodBoundaryAspect breaker)
+            public static BoundaryIterationResult BreakedBy(MethodBoundaryAspect breaker)
             {
                 return new BoundaryIterationResult(breaker);
             }

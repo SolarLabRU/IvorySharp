@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IvorySharp.Aspects.Configuration
+namespace IvorySharp.Configuration
 {
     /// <summary>
     /// Модель настройки аспектов.

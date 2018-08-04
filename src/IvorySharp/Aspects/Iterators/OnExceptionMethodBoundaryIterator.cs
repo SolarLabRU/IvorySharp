@@ -3,7 +3,7 @@
 namespace IvorySharp.Aspects.Iterators
 {
     /// <summary>
-    /// Итератор для точки прикрепления <see cref="IMethodBoundaryAspect.OnException(IInvocationPipeline)"/>.
+    /// Итератор для точки прикрепления <see cref="MethodBoundaryAspect.OnException(IInvocationPipeline)"/>.
     /// </summary>
     internal class OnExceptionMethodBoundaryIterator : MethodBoundaryIterator
     {
@@ -27,7 +27,7 @@ namespace IvorySharp.Aspects.Iterators
         }
 
         /// <inheritdoc />
-        protected override void ExecuteAspect(IMethodBoundaryAspect aspect, IInvocationPipeline pipeline)
+        protected override void ExecuteAspect(MethodBoundaryAspect aspect, IInvocationPipeline pipeline)
         {
             aspect.OnException(pipeline);
         }

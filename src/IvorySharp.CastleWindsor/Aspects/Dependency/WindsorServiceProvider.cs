@@ -2,14 +2,14 @@
 using Castle.DynamicProxy;
 using Castle.MicroKernel;
 using IvorySharp.Exceptions;
-using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
+using IServiceProvider = IvorySharp.Components.Dependency.IServiceProvider;
 
 namespace IvorySharp.CastleWindsor.Aspects.Dependency
 {
     /// <summary>
     /// Сервис провайдер.
     /// </summary>
-    public class WindsorServiceProvider : IServiceProvider
+    public class WindsorServiceProvider : Components.Dependency.IServiceProvider
     {
         private readonly IKernel _kernel;
 

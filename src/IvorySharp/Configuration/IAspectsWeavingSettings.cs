@@ -1,7 +1,7 @@
 ﻿using System;
-using IServiceProvider = IvorySharp.Aspects.Dependency.IServiceProvider;
+using IServiceProvider = IvorySharp.Components.Dependency.IServiceProvider;
 
-namespace IvorySharp.Aspects.Configuration
+namespace IvorySharp.Configuration
 {
     /// <summary>
     /// Настройки по внедрению аспектов.

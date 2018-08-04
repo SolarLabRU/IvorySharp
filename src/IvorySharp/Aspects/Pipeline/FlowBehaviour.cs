@@ -8,11 +8,11 @@
         /// <summary>
         /// Значение по умолчанию.
         /// Для хендлеров
-        /// <see cref="IMethodBoundaryAspect.OnEntry(IInvocationPipeline)"/>,
-        /// <see cref="IMethodBoundaryAspect.OnSuccess(IInvocationPipeline)"/>,
-        /// <see cref="IMethodBoundaryAspect.OnExit(IInvocationPipeline)"/>
+        /// <see cref="MethodBoundaryAspect.OnEntry(IInvocationPipeline)"/>,
+        /// <see cref="MethodBoundaryAspect.OnSuccess(IInvocationPipeline)"/>,
+        /// <see cref="MethodBoundaryAspect.OnExit(IInvocationPipeline)"/>
         /// равно выполняется продолжение.
-        /// Для хендлера <see cref="IMethodBoundaryAspect.OnException(IInvocationPipeline)"/>
+        /// Для хендлера <see cref="MethodBoundaryAspect.OnException(IInvocationPipeline)"/>
         /// эквивалетно значению <see cref="FlowBehaviour.RethrowException"/>.
         /// </summary>
         Default = 0,

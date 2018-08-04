@@ -1,7 +1,7 @@
 ﻿using System;
-using IvorySharp.Aspects.Integration;
+using IvorySharp.Integration;
 
-namespace IvorySharp.Aspects.Configuration
+namespace IvorySharp.Configuration
 {
     /// <summary>
     /// Синтаксис конфигурации аспектов.

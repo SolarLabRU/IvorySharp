@@ -4,7 +4,7 @@ using IvorySharp.Tests.Aspects;
 
 namespace IvorySharp.Tests.Services
 {
-    [IncrementValueAspect(nameof(IMethodBoundaryAspect.OnExit), Order = 1)]
+    [IncrementValueAspect(nameof(MethodBoundaryAspect.OnExit), Order = 1)]
     public interface ITopLevelBoundaryService
     {
         [Pow2ValueAspect(Order = 2)]

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Dependency;
+using IvorySharp.Components.Dependency;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
 
