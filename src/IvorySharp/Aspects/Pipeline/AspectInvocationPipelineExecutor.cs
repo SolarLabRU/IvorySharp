@@ -8,26 +8,26 @@ using IvorySharp.Extensions;
 namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
-    /// Выполняет пайплайн <see cref="MethodAspectInvocationPipeline"/>.
+    /// Выполняет пайплайн <see cref="AspectInvocationPipeline"/>.
     /// </summary>
-    internal class MethodAspectInvocationPipelineExecutor : IMethodAspectPipelineExecutor
+    internal class AspectInvocationPipelineExecutor : IPipelineExecutor
     {
         /// <summary>
-        /// Инициаилизированный экземпляр <see cref="MethodAspectInvocationPipeline"/>.
+        /// Инициаилизированный экземпляр <see cref="AspectInvocationPipeline"/>.
         /// </summary>
-        public static readonly MethodAspectInvocationPipelineExecutor Instance = new MethodAspectInvocationPipelineExecutor();
+        public static readonly AspectInvocationPipelineExecutor Instance = new AspectInvocationPipelineExecutor();
 
-        private MethodAspectInvocationPipelineExecutor() { }
+        private AspectInvocationPipelineExecutor() { }
 
         /// <inheritdoc />
         public void ExecutePipeline(IInvocationPipeline basePipeline)
         {
             // Это нарушает soLid, но позволяет не выставлять кучу классов наружу библиотеки.
-            var pipeline = (MethodAspectInvocationPipeline) basePipeline;
+            var pipeline = (AspectInvocationPipeline) basePipeline;
 
-            var onEntryIterator = new OnEntryMethodBoundaryIterator(pipeline);
-            var onExitIterator = new OnExitMethodBoundaryIterator(pipeline);
-            var onSuccessIterator = new OnSuccessMethodBoundaryIterator(pipeline);
+            var onEntryIterator = new OnEntryBoundaryIterator(pipeline);
+            var onExitIterator = new OnExitBoundaryIterator(pipeline);
+            var onSuccessIterator = new OnSuccessBoundaryIterator(pipeline);
             var stateAwareMetaIterator = new PipelineStateAwareMetaIterator();
 
             try
@@ -57,7 +57,7 @@ namespace IvorySharp.Aspects.Pipeline
                 pipeline.FlowBehavior = FlowBehavior.RethrowException;
 
                 var onExceptionResult = stateAwareMetaIterator.Iterate(
-                    new OnExceptionMethodBoundaryIterator(pipeline),
+                    new OnExceptionBoundaryIterator(pipeline),
                     pipeline.BoundaryAspects, throwIfPipelineFaulted: false);
 
                 var isPipelineFaulted = InvocationPipelineFlow.IsFaulted(pipeline);

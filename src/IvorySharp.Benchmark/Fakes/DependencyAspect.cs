@@ -6,7 +6,7 @@ namespace IvorySharp.Benchmark.Fakes
 {
     public class DependencyAspect : MethodBoundaryAspect
     {
-        [InjectDependency]
+        [Dependency]
         public IDependencyService Dependency { get; set; }
     }
 }

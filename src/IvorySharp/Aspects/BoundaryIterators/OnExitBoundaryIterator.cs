@@ -3,11 +3,11 @@
 namespace IvorySharp.Aspects.BoundaryIterators
 {
     /// <summary>
-    /// Итератор для точки прикрепления <see cref="MethodBoundaryAspect.OnException(IInvocationPipeline)"/>.
+    /// Итератор для точки прикрепления <see cref="MethodBoundaryAspect.OnExit(IInvocationPipeline)"/>.
     /// </summary>
-    internal class OnExceptionMethodBoundaryIterator : MethodBoundaryIterator
+    internal class OnExitBoundaryIterator : MethodBoundaryIterator
     {
-        public OnExceptionMethodBoundaryIterator(InvocationPipeline pipeline)
+        public OnExitBoundaryIterator(InvocationPipeline pipeline)
             : base(pipeline)
         {
         }
@@ -15,21 +15,21 @@ namespace IvorySharp.Aspects.BoundaryIterators
         /// <inheritdoc />
         protected override bool CanContinue(FlowBehavior flowBehavior)
         {
-            return flowBehavior == FlowBehavior.ThrowException ||
-                   flowBehavior == FlowBehavior.RethrowException;
+            return true;
         }
 
         /// <inheritdoc />
         protected override bool ShouldBreak(FlowBehavior flowBehavior)
         {
-            return flowBehavior == FlowBehavior.Return ||
+            return flowBehavior == FlowBehavior.RethrowException ||
+                   flowBehavior == FlowBehavior.Return ||
                    flowBehavior == FlowBehavior.ThrowException;
         }
 
         /// <inheritdoc />
         protected override void ExecuteAspect(MethodBoundaryAspect aspect, IInvocationPipeline pipeline)
         {
-            aspect.OnException(pipeline);
+            aspect.OnExit(pipeline);
         }
     }
 }

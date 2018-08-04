@@ -8,7 +8,7 @@ namespace IvorySharp.Aspects.Components.Selection
     /// Сначала аспекты упорядочиваются по возрастанию <see cref="OrderableMethodAspect.Order"/>, затем по
     /// <see cref="MethodAspect.JoinPointType"/>.
     /// </summary>
-    internal class DefaultMethodAspectOrderStrategy : IMethodAspectOrderStrategy
+    internal class DefaultAspectOrderStrategy : IAspectOrderStrategy
     {
         /// <inheritdoc />
         public IOrderedEnumerable<TAspect> Order<TAspect>(IEnumerable<TAspect> aspects) where TAspect : OrderableMethodAspect

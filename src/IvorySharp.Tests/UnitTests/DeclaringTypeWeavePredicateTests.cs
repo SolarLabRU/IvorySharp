@@ -12,7 +12,7 @@ namespace IvorySharp.Tests.UnitTests
     /// <summary>
     /// Набор тестов для <see cref="DeclaringTypeWeavePredicate"/>.
     /// </summary>
-    public class DeclaringTypeMethodAspectWeavePredicateTests
+    public class DeclaringTypeWeavePredicateTests
     {
         /// <summary>
         /// Сценарий: На интерфейсе и методах нет аспектов
@@ -23,7 +23,7 @@ namespace IvorySharp.Tests.UnitTests
         public void ZeroAspects_IsWeaveable_TypeOverload_Returns_False()
         {
             // Arrange
-            var selectionStategyMock = new Mock<IMethodAspectSelectionStrategy>();
+            var selectionStategyMock = new Mock<IAspectSelector>();
 
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(false);
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(false);
@@ -46,7 +46,7 @@ namespace IvorySharp.Tests.UnitTests
         public void DeclaringTypeNotInterface_IsWeveable_TypeOverload_Returns_False()
         {
             // Arrange
-            var selectionStategyMock = new Mock<IMethodAspectSelectionStrategy>();
+            var selectionStategyMock = new Mock<IAspectSelector>();
             var predicate = new DeclaringTypeWeavePredicate(selectionStategyMock.Object);
 
             // Act
@@ -64,7 +64,7 @@ namespace IvorySharp.Tests.UnitTests
         public void SuppressedInterface_IsWeaveable_TypeOverload_ReturnsFalse()
         {
             // Arrange
-            var selectionStategyMock = new Mock<IMethodAspectSelectionStrategy>();
+            var selectionStategyMock = new Mock<IAspectSelector>();
 
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(true);
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(true);
@@ -86,7 +86,7 @@ namespace IvorySharp.Tests.UnitTests
         public void HasTypeAspects_IsWeaveable_TypeOverload_ReturnsTrue()
         {
             // Arrange
-            var selectionStategyMock = new Mock<IMethodAspectSelectionStrategy>();
+            var selectionStategyMock = new Mock<IAspectSelector>();
 
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(false);
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(true);
@@ -108,7 +108,7 @@ namespace IvorySharp.Tests.UnitTests
         public void HasMethodAspects_IsWeaveable_TypeOverload_ReturnsTrue()
         {
             // Arrange
-            var selectionStategyMock = new Mock<IMethodAspectSelectionStrategy>();
+            var selectionStategyMock = new Mock<IAspectSelector>();
 
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(true);
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(false);
@@ -130,7 +130,7 @@ namespace IvorySharp.Tests.UnitTests
         public void HasMethodAspects_InBaseInterface_IsWeaveable_TypeOverload_ReturnsTrue()
         {
             // Arrange
-            var selectionStategyMock = new Mock<IMethodAspectSelectionStrategy>();
+            var selectionStategyMock = new Mock<IAspectSelector>();
 
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(true);
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<Type>(t => t.GetInterfaces().Contains(typeof(IService))), It.IsAny<bool>()))
@@ -153,7 +153,7 @@ namespace IvorySharp.Tests.UnitTests
         public void HasTypeAspects_InBaseInterface_IsWeaveable_TypeOverload_ReturnsTrue()
         {
             // Arrange
-            var selectionStategyMock = new Mock<IMethodAspectSelectionStrategy>();
+            var selectionStategyMock = new Mock<IAspectSelector>();
 
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m.DeclaringType == typeof(IService)), It.IsAny<bool>())).Returns(true);
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(false);
@@ -175,7 +175,7 @@ namespace IvorySharp.Tests.UnitTests
         public void HasAnyAspect_MethodSupressed_IsWeaveable_MethodOverload_ReturnsFalse()
         {
             // Arrange
-            var selectionStategyMock = new Mock<IMethodAspectSelectionStrategy>();
+            var selectionStategyMock = new Mock<IAspectSelector>();
             var method = typeof(IService).GetMethod(nameof(IService.SupressedMethod));
 
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m == method), It.IsAny<bool>())).Returns(true);
@@ -197,7 +197,7 @@ namespace IvorySharp.Tests.UnitTests
         public void HasAnyAspect_MethodHasAspect_IsWeaveable_MethodOverload_ReturnsTrue()
         {
             // Arrange
-            var selectionStategyMock = new Mock<IMethodAspectSelectionStrategy>();
+            var selectionStategyMock = new Mock<IAspectSelector>();
             var method = typeof(IService).GetMethod(nameof(IService.Method));
 
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m == method), It.IsAny<bool>())).Returns(true);

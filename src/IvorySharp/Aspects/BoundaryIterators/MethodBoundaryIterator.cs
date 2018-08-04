@@ -6,7 +6,7 @@ using IvorySharp.Aspects.Pipeline;
 namespace IvorySharp.Aspects.BoundaryIterators
 {
     /// <summary>
-    /// Базовый класс итератора точек аспектов.
+    /// Базовый класс итератора аспектов типа <see cref="MethodBoundaryAspect"/>.
     /// </summary>
     internal abstract class MethodBoundaryIterator
     {

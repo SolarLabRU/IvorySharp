@@ -5,7 +5,7 @@ namespace IvorySharp.Aspects.Components.Selection
     /// <summary>
     /// Компонент, агрегирующий получение аспектов вызова.
     /// </summary>
-    public interface IMethodAspectDeclarationCollector
+    public interface IAspectDeclarationCollector
     {
         /// <summary>
         /// Собирает аспекты, которые необходимо внедрить в вызов.

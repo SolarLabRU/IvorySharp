@@ -3,7 +3,7 @@
     /// <summary>
     /// Компонент, выполняющий пайплан вызова.
     /// </summary>
-    public interface IMethodAspectPipelineExecutor
+    public interface IPipelineExecutor
     {
         /// <summary>
         /// Выполняет пайплайн.

@@ -12,9 +12,9 @@ namespace IvorySharp.Aspects.Components.Weaving
     /// </summary>
     public class AspectWeaver
     {
-        private readonly IMethodAspectPipelineExecutor _aspectPipelineExecutor;
-        private readonly IMethodAspectInitializer _aspectInitializer;
-        private readonly IMethodAspectWeavePredicate _aspectWeavePredicate;
+        private readonly IPipelineExecutor _aspectPipelineExecutor;
+        private readonly IAspectFactory _aspectFactory;
+        private readonly IAspectWeavePredicate _aspectWeavePredicate;
 
         private readonly Func<TypePair, bool> _cachedWeaveable;
 
@@ -22,16 +22,16 @@ namespace IvorySharp.Aspects.Components.Weaving
         /// Инициализирует экземпляр <see cref="AspectWeaver"/>.
         /// </summary>
         public AspectWeaver(
-            IMethodAspectWeavePredicate aspectWeavePredicate, 
-            IMethodAspectPipelineExecutor aspectPipelineExecutor, 
-            IMethodAspectInitializer aspectInitializer)
+            IAspectWeavePredicate aspectWeavePredicate, 
+            IPipelineExecutor aspectPipelineExecutor, 
+            IAspectFactory aspectFactory)
         {
             _cachedWeaveable = Cache.CreateProducer(tp => aspectWeavePredicate
                     .IsWeaveable(tp.DeclaringType, tp.TargetType),
                 TypePair.EqualityComparer.Instance);
 
             _aspectPipelineExecutor = aspectPipelineExecutor;
-            _aspectInitializer = aspectInitializer;
+            _aspectFactory = aspectFactory;
             _aspectWeavePredicate = aspectWeavePredicate;
         }
 
@@ -47,7 +47,7 @@ namespace IvorySharp.Aspects.Components.Weaving
             if (!_cachedWeaveable(new TypePair(declaringType, targetType)))
                 return target;
             
-            var interceptor = new AspectWeaveInterceptor(_aspectWeavePredicate, _aspectPipelineExecutor, _aspectInitializer);
+            var interceptor = new AspectInterceptor(_aspectWeavePredicate, _aspectPipelineExecutor, _aspectFactory);
             return InterceptProxyGenerator.Default.CreateInterceptProxy(target, declaringType, targetType, interceptor);
         }
     }

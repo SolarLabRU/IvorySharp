@@ -11,25 +11,25 @@ namespace IvorySharp.Aspects.Components.Weaving
     /// <summary>
     /// Перехватчик для применения аспектов.
     /// </summary>
-    internal class AspectWeaveInterceptor : IInterceptor
+    internal class AspectInterceptor : IInterceptor
     {
         private readonly Func<InvocationContext, bool> _cachedWeavePredicate;
-        private readonly IMethodAspectPipelineExecutor _aspectPipelineExecutor;
-        private readonly IMethodAspectInitializer _aspectInitializer;
+        private readonly IPipelineExecutor _aspectPipelineExecutor;
+        private readonly IAspectFactory _aspectFactory;
 
         /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="AspectWeaveInterceptor"/>.
+        /// Инициализирует новый экземпляр класса <see cref="AspectInterceptor"/>.
         /// </summary>
         /// <param name="weaveablePredicate">Предикат применения аспектов.</param>
         /// <param name="aspectPipelineExecutor">Компонент выполнения пайплайна.</param>
-        /// <param name="aspectInitializer"></param>
-        public AspectWeaveInterceptor(
-            IMethodAspectWeavePredicate weaveablePredicate,
-            IMethodAspectPipelineExecutor aspectPipelineExecutor, 
-            IMethodAspectInitializer aspectInitializer)
+        /// <param name="aspectFactory">Фабрика аспектов.</param>
+        public AspectInterceptor(
+            IAspectWeavePredicate weaveablePredicate,
+            IPipelineExecutor aspectPipelineExecutor, 
+            IAspectFactory aspectFactory)
         {
             _aspectPipelineExecutor = aspectPipelineExecutor;
-            _aspectInitializer = aspectInitializer;
+            _aspectFactory = aspectFactory;
             _cachedWeavePredicate = Cache.CreateProducer(
                 ctx => weaveablePredicate.IsWeaveable(ctx.Method, ctx.DeclaringType, ctx.TargetType), 
                 InvocationContext.ByMethodEqualityComparer.Instance);
@@ -44,11 +44,11 @@ namespace IvorySharp.Aspects.Components.Weaving
                 return;
             }
 
-            var boundaryAspects = _aspectInitializer.InitializeBoundaryAspects(invocation.Context);
-            var interceptAspect = _aspectInitializer.InitializeInterceptionAspect(invocation.Context);
+            var boundaryAspects = _aspectFactory.CreateBoundaryAspects(invocation.Context);
+            var interceptAspect = _aspectFactory.CreateInterceptionAspect(invocation.Context);
 
             _aspectPipelineExecutor.ExecutePipeline(
-                new MethodAspectInvocationPipeline(invocation, boundaryAspects, interceptAspect));
+                new AspectInvocationPipeline(invocation, boundaryAspects, interceptAspect));
 
             foreach (var aspect in boundaryAspects)
             {

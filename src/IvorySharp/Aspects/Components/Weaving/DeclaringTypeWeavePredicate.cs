@@ -13,9 +13,9 @@ namespace IvorySharp.Aspects.Components.Weaving
         /// <summary>
         /// Инициализирует экземпляр <see cref="DeclaringTypeWeavePredicate"/>.
         /// </summary>
-        /// <param name="selectionStrategy">Стратегия выбора аспектов.</param>
-        public DeclaringTypeWeavePredicate(IMethodAspectSelectionStrategy selectionStrategy)
-            : base(selectionStrategy)
+        /// <param name="selector">Стратегия выбора аспектов.</param>
+        public DeclaringTypeWeavePredicate(IAspectSelector selector)
+            : base(selector)
         {
         }
 
@@ -29,21 +29,21 @@ namespace IvorySharp.Aspects.Components.Weaving
                 return false;
 
             // На интерфейсе есть аспект
-            if (AspectSelectionStrategy.HasAnyAspect(declaringType, includeAbstract: false))
+            if (AspectSelector.HasAnyAspect(declaringType, includeAbstract: false))
                 return true;
 
             // На методах интерфейсва есть аспекты
-            if (declaringType.GetMethods().Any(m => !IsWeavingSuppressed(m) && AspectSelectionStrategy.HasAnyAspect(m, includeAbstract: false)))
+            if (declaringType.GetMethods().Any(m => !IsWeavingSuppressed(m) && AspectSelector.HasAnyAspect(m, includeAbstract: false)))
                 return true;
 
             var interaces = declaringType.GetInterfaces().Where(i => !IsWeavingSuppressed(i)).ToArray();
 
             // На базовом интерфейсе есть аспект
-            if (interaces.Any(i => AspectSelectionStrategy.HasAnyAspect(i, includeAbstract: false)))
+            if (interaces.Any(i => AspectSelector.HasAnyAspect(i, includeAbstract: false)))
                 return true;
 
             // На методах базового интерфейса есть аспекты
-            if (interaces.SelectMany(i => i.GetMethods()).Any(m => !IsWeavingSuppressed(m) && AspectSelectionStrategy.HasAnyAspect(m, includeAbstract: false)))
+            if (interaces.SelectMany(i => i.GetMethods()).Any(m => !IsWeavingSuppressed(m) && AspectSelector.HasAnyAspect(m, includeAbstract: false)))
                 return true;
 
             return false;
@@ -58,7 +58,7 @@ namespace IvorySharp.Aspects.Components.Weaving
             if (IsWeavingSuppressed(method))
                 return false;
 
-            if (AspectSelectionStrategy.HasAnyAspect(method, includeAbstract: false))
+            if (AspectSelector.HasAnyAspect(method, includeAbstract: false))
                 return true;
 
             return IsWeaveable(declaringType, targetType);

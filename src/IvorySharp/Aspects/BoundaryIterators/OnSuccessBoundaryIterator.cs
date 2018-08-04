@@ -5,9 +5,9 @@ namespace IvorySharp.Aspects.BoundaryIterators
     /// <summary>
     /// Итератор для точки прикрепления <see cref="MethodBoundaryAspect.OnSuccess(IInvocationPipeline)"/>.
     /// </summary>
-    internal class OnSuccessMethodBoundaryIterator : MethodBoundaryIterator
+    internal class OnSuccessBoundaryIterator : MethodBoundaryIterator
     {
-        public OnSuccessMethodBoundaryIterator(InvocationPipeline pipeline)
+        public OnSuccessBoundaryIterator(InvocationPipeline pipeline)
             : base(pipeline)
         {
         }

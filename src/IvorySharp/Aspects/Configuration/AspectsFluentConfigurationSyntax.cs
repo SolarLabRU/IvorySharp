@@ -36,31 +36,31 @@ namespace IvorySharp.Aspects.Configuration
         {
             configurator(_aspectsConfiguration);
 
-            if (_componentsStore.AspectSelectionStrategy == null)
-                _componentsStore.AspectSelectionStrategy = new DefaultMethodAspectSelectionStrategy();
+            if (_componentsStore.AspectSelector == null)
+                _componentsStore.AspectSelector = new DefaultAspectSelector();
 
             if (_componentsStore.AspectWeavePredicate == null)
                 _componentsStore.AspectWeavePredicate = new DeclaringTypeWeavePredicate(
-                    _componentsStore.AspectSelectionStrategy);
+                    _componentsStore.AspectSelector);
 
             if (_componentsStore.AspectDeclarationCollector == null)
                 _componentsStore.AspectDeclarationCollector = new DeclaringTypeAspectDeclarationCollector(
-                    _componentsStore.AspectSelectionStrategy);
+                    _componentsStore.AspectSelector);
 
             if (_componentsStore.AspectPipelineExecutor == null)
-                _componentsStore.AspectPipelineExecutor = MethodAspectInvocationPipelineExecutor.Instance;
+                _componentsStore.AspectPipelineExecutor = AspectInvocationPipelineExecutor.Instance;
 
             _componentsStore.DependencyProvider = _container.GetDependencyProvider();
 
             if (_componentsStore.AspectDependencyInjector == null)
-                _componentsStore.AspectDependencyInjector = new MethodAspectDependencyInjector(
+                _componentsStore.AspectDependencyInjector = new AspectDependencyInjector(
                     _componentsStore.DependencyProvider);
 
             if (_componentsStore.AspectOrderStrategy == null)
-                _componentsStore.AspectOrderStrategy = new DefaultMethodAspectOrderStrategy();
+                _componentsStore.AspectOrderStrategy = new DefaultAspectOrderStrategy();
 
-            if (_componentsStore.AspectInitializer == null)
-                _componentsStore.AspectInitializer = new MethodAspectInitializer(
+            if (_componentsStore.AspectFactory == null)
+                _componentsStore.AspectFactory = new AspectFactory(
                     _componentsStore.AspectDeclarationCollector,
                     _componentsStore.AspectDependencyInjector,
                     _componentsStore.AspectOrderStrategy);

@@ -4,9 +4,9 @@ using System.Reflection;
 namespace IvorySharp.Aspects.Components.Selection
 {
     /// <summary>
-    /// Стратегия выбора аспектов с элементов.
+    /// Компонент выбора аспектов с элементов.
     /// </summary>
-    public interface IMethodAspectSelectionStrategy
+    public interface IAspectSelector
     {
         /// <summary>
         /// Возвращает коллекцию аспектов определенного типа.
@@ -14,7 +14,7 @@ namespace IvorySharp.Aspects.Components.Selection
         /// <param name="type">Тип.</param>
         /// <param name="includeAbstract">Признак необходимости включить в выборку абстрактные аспекты.</param>
         /// <returns>Коллекция аспектов.</returns>
-        MethodAspectDeclaration<TAspect>[] GetDeclarations<TAspect>(Type type, bool includeAbstract)
+        MethodAspectDeclaration<TAspect>[] SelectAspectDeclarations<TAspect>(Type type, bool includeAbstract)
             where TAspect : MethodAspect;
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace IvorySharp.Aspects.Components.Selection
         /// <param name="method">Метод.</param>
         /// <param name="includeAbstract">Признак необходимости включить в выборку абстрактные аспекты.</param>
         /// <returns>Коллекция аспектов.</returns>
-        MethodAspectDeclaration<TAspect>[] GetDeclarations<TAspect>(MethodInfo method, bool includeAbstract)
+        MethodAspectDeclaration<TAspect>[] SelectAspectDeclarations<TAspect>(MethodInfo method, bool includeAbstract)
             where TAspect : MethodAspect;
 
         /// <summary>

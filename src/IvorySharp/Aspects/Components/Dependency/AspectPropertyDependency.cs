@@ -12,7 +12,7 @@ namespace IvorySharp.Aspects.Components.Dependency
         /// <summary>
         /// Атрибут зависимости.
         /// </summary>
-        public InjectDependencyAttribute Dependency { get; }
+        public DependencyAttribute Dependency { get; }
 
         /// <summary>
         /// Информация о свойстве, на котором задан атрибут зависимости.
@@ -29,7 +29,7 @@ namespace IvorySharp.Aspects.Components.Dependency
         /// </summary>
         /// <param name="dependency">Атрибут зависимости аспекта.</param>
         /// <param name="property">Свойство, на котором размещен атрибут.</param>
-        public AspectPropertyDependency(InjectDependencyAttribute dependency, PropertyInfo property)
+        public AspectPropertyDependency(DependencyAttribute dependency, PropertyInfo property)
         {
             Dependency = dependency;
             Property = property;

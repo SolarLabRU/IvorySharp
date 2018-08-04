@@ -8,9 +8,9 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для <see cref="MethodAspectDependencyInjector"/>
+    /// Набор тестов для <see cref="AspectDependencyInjector"/>
     /// </summary>
-    public class MethodAspectDependencyInjectorTests
+    public class AspectDependencyInjectorTests
     {
         [Fact]
         public void SinglePropertyDependency_InjectPropertyDependencies_Should_Inject_Service()
@@ -21,7 +21,7 @@ namespace IvorySharp.Tests.UnitTests
 
             dependencyProvider.Setup(c => c.GetService(typeof(object))).Returns(dependencyService);
 
-            var injector = new MethodAspectDependencyInjector(dependencyProvider.Object);
+            var injector = new AspectDependencyInjector(dependencyProvider.Object);
             var aspect = new SinglePublicPropertyDependencyAspect();
 
             // Act
@@ -35,7 +35,7 @@ namespace IvorySharp.Tests.UnitTests
         public void NoPropertyDependencies_GetPropertyDependencies_Returns_EmptyArray()
         {
             // Arrange
-            var injector = new MethodAspectDependencyInjector(null);
+            var injector = new AspectDependencyInjector(null);
 
             // Act
             var deps = injector.GetPropertyDependencies(typeof(ZeroPropertyDependenciesAspect));
@@ -48,7 +48,7 @@ namespace IvorySharp.Tests.UnitTests
         public void SinglePropertyDependency_GetPropertyDependencies_Returns_CorrectDependency()
         {
             // Arrange
-            var injector = new MethodAspectDependencyInjector(null);
+            var injector = new AspectDependencyInjector(null);
 
             // Act
             var deps = injector.GetPropertyDependencies(typeof(SinglePublicPropertyDependencyAspect));
@@ -62,7 +62,7 @@ namespace IvorySharp.Tests.UnitTests
         public void MultiplePropertyDependencies_GetPropertyDependencies_Returns_CorrectDependencies()
         {
             // Arrange
-            var injector = new MethodAspectDependencyInjector(null);
+            var injector = new AspectDependencyInjector(null);
 
             // Act
             var deps = injector.GetPropertyDependencies(typeof(MultiplePublicPropertyDependenciesAspect));
@@ -77,7 +77,7 @@ namespace IvorySharp.Tests.UnitTests
         public void NotPublicPropertyDependency_GetPropertyDependencies_Returns_Result_Without_Dependency()
         {
             // Arrange
-            var injector = new MethodAspectDependencyInjector(null);
+            var injector = new AspectDependencyInjector(null);
 
             // Act
             var deps = injector.GetPropertyDependencies(typeof(SinglePrivatePropertyDependencyAspect));
@@ -90,7 +90,7 @@ namespace IvorySharp.Tests.UnitTests
         public void NoSetPropertyDependency_GetPropertyDependencies_Returns_Result_Without_Dependency()
         {
             // Arrange
-            var injector = new MethodAspectDependencyInjector(null);
+            var injector = new AspectDependencyInjector(null);
 
             // Act
             var deps = injector.GetPropertyDependencies(typeof(SinglePublicNoSetPropertyDependencyAspect));
@@ -108,28 +108,28 @@ namespace IvorySharp.Tests.UnitTests
 
         private class SinglePublicPropertyDependencyAspect : MethodBoundaryAspect
         {
-            [InjectDependency]
+            [Dependency]
             public object Dependency { get; set; }
         }
 
         private class MultiplePublicPropertyDependenciesAspect : MethodBoundaryAspect
         {
-            [InjectDependency]
+            [Dependency]
             public object Dependency1 { get; set; }
 
-            [InjectDependency]
+            [Dependency]
             public object Dependency2 { get; set; }
         }
 
         private class SinglePrivatePropertyDependencyAspect : MethodBoundaryAspect
         {
-            [InjectDependency]
+            [Dependency]
             private object Dependency { get; set; }
         }
 
         private class SinglePublicNoSetPropertyDependencyAspect : MethodBoundaryAspect
         {
-            [InjectDependency]
+            [Dependency]
             public object Dependency { get; }
         }
 

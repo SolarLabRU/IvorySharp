@@ -6,7 +6,7 @@ namespace IvorySharp.Aspects.Pipeline
     /// <summary>
     /// Пайплайн выполнения, включающий аспекты.
     /// </summary>
-    internal class MethodAspectInvocationPipeline : InvocationPipeline
+    internal class AspectInvocationPipeline : InvocationPipeline
     {
         /// <summary>
         /// Аспекты закрепленные в точках до и после вызова основного метода.
@@ -19,9 +19,9 @@ namespace IvorySharp.Aspects.Pipeline
         public MethodInterceptionAspect InterceptionAspect { get; }
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="MethodAspectInvocationPipeline"/>.
+        /// Инициализирует экземпляр <see cref="AspectInvocationPipeline"/>.
         /// </summary>
-        internal MethodAspectInvocationPipeline(IInvocation invocation, IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, MethodInterceptionAspect interceptionAspect) : base(invocation)
+        internal AspectInvocationPipeline(IInvocation invocation, IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, MethodInterceptionAspect interceptionAspect) : base(invocation)
         {
             BoundaryAspects = boundaryAspects;
             InterceptionAspect = interceptionAspect;

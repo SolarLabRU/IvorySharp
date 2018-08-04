@@ -11,30 +11,33 @@ namespace IvorySharp.Aspects.Components.Creation
     /// <summary>
     /// Инициализатор аспектов.
     /// </summary>
-    internal class MethodAspectInitializer : IMethodAspectInitializer
+    internal class AspectFactory : IAspectFactory
     {
-        private readonly IMethodAspectDeclarationCollector _aspectDeclarationCollector;
-        private readonly IMethodAspectDependencyInjector _aspectDependencyInjector;
-        private readonly IMethodAspectOrderStrategy _methodAspectOrderStrategy;
+        private readonly IAspectDeclarationCollector _aspectDeclarationCollector;
+        private readonly IAspectDependencyInjector _aspectDependencyInjector;
+        private readonly IAspectOrderStrategy _aspectOrderStrategy;
 
         private readonly Func<InvocationContext, MethodBoundaryAspect[]> _cachedPrepareMethodBoundaryAspect;
         private readonly Func<InvocationContext, MethodInterceptionAspect> _cachedPrepareMethodInterceptionAspect;
 
-        public MethodAspectInitializer(
-            IMethodAspectDeclarationCollector aspectDeclarationCollector,
-            IMethodAspectDependencyInjector aspectDependencyInjector, 
-            IMethodAspectOrderStrategy methodAspectOrderStrategy)
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="AspectFactory"/>.
+        /// </summary>
+        public AspectFactory(
+            IAspectDeclarationCollector aspectDeclarationCollector,
+            IAspectDependencyInjector aspectDependencyInjector, 
+            IAspectOrderStrategy aspectOrderStrategy)
         {
             _aspectDeclarationCollector = aspectDeclarationCollector;
             _aspectDependencyInjector = aspectDependencyInjector;
-            _methodAspectOrderStrategy = methodAspectOrderStrategy;
+            _aspectOrderStrategy = aspectOrderStrategy;
 
             _cachedPrepareMethodBoundaryAspect = Cache.CreateProducer(PrepareBoundaryAspects, InvocationContext.ByMethodEqualityComparer.Instance);
             _cachedPrepareMethodInterceptionAspect = Cache.CreateProducer(PrepareInterceptAspect, InvocationContext.ByMethodEqualityComparer.Instance);
         }
 
         /// <inheritdoc />
-        public MethodBoundaryAspect[] InitializeBoundaryAspects(InvocationContext context)
+        public MethodBoundaryAspect[] CreateBoundaryAspects(InvocationContext context)
         {
             var aspects = _cachedPrepareMethodBoundaryAspect(context);
 
@@ -48,7 +51,7 @@ namespace IvorySharp.Aspects.Components.Creation
         }
 
         /// <inheritdoc />
-        public MethodInterceptionAspect InitializeInterceptionAspect(InvocationContext context)
+        public MethodInterceptionAspect CreateInterceptionAspect(InvocationContext context)
         {
             var aspect = _cachedPrepareMethodInterceptionAspect(context);
 
@@ -67,7 +70,7 @@ namespace IvorySharp.Aspects.Components.Creation
                 declaration.MethodAspect.JoinPointType = declaration.JoinPointType;
             }
 
-            var orderedAspects = _methodAspectOrderStrategy
+            var orderedAspects = _aspectOrderStrategy
                 .Order(aspectDeclarations
                 .Select(a => a.MethodAspect))
                 .ToArray();
@@ -92,7 +95,7 @@ namespace IvorySharp.Aspects.Components.Creation
             }
 
             if (aspectDeclarations.Length == 0)
-                return NullMethodInterceptionAspect.Instance;
+                return BypassMethodAspect.Instance;
 
             var declaration = aspectDeclarations.Single();
 

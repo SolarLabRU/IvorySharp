@@ -20,36 +20,36 @@ namespace IvorySharp.Aspects.Configuration
         /// <summary>
         /// Стратегия получения аспектов.
         /// </summary>
-        IMethodAspectSelectionStrategy AspectSelectionStrategy { get; }
+        IAspectSelector AspectSelector { get; }
 
         /// <summary>
         /// Предикат, определяющий возможность применения аспекта.
         /// </summary>
-        IMethodAspectWeavePredicate AspectWeavePredicate { get; }
+        IAspectWeavePredicate AspectWeavePredicate { get; }
 
         /// <summary>
         /// Компонент, агрегирующий аспекты вызова.
         /// </summary>
-        IMethodAspectDeclarationCollector AspectDeclarationCollector { get; }
+        IAspectDeclarationCollector AspectDeclarationCollector { get; }
 
         /// <summary>
         /// Компонент выполнения пайплайна.
         /// </summary>
-        IMethodAspectPipelineExecutor AspectPipelineExecutor { get; }
+        IPipelineExecutor AspectPipelineExecutor { get; }
 
         /// <summary>
         /// Компонент, выпонялющий инициализацию аспектов.
         /// </summary>
-        IMethodAspectInitializer AspectInitializer { get; }
+        IAspectFactory AspectFactory { get; }
 
         /// <summary>
         /// Компонент, для внедрения зависимостей в аспекты.
         /// </summary>
-        IMethodAspectDependencyInjector AspectDependencyInjector { get; }
+        IAspectDependencyInjector AspectDependencyInjector { get; }
 
         /// <summary>
         /// Стратегия упорядочивания аспектов.
         /// </summary>
-        IMethodAspectOrderStrategy AspectOrderStrategy { get; }
+        IAspectOrderStrategy AspectOrderStrategy { get; }
     }
 }

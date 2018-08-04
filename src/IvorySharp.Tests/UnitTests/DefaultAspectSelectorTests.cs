@@ -6,15 +6,15 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для <see cref="DefaultMethodAspectSelectionStrategy"/>
+    /// Набор тестов для <see cref="DefaultAspectSelector"/>
     /// </summary>
-    public class DefaultMethodAspectSelectionStrategyTests
+    public class DefaultAspectSelectorTests
     {
-        private readonly DefaultMethodAspectSelectionStrategy _selectionStrategy;
+        private readonly DefaultAspectSelector _selector;
 
-        public DefaultMethodAspectSelectionStrategyTests()
+        public DefaultAspectSelectorTests()
         {
-            _selectionStrategy = new DefaultMethodAspectSelectionStrategy();
+            _selector = new DefaultAspectSelector();
         }
 
         #region Tests
@@ -23,63 +23,63 @@ namespace IvorySharp.Tests.UnitTests
         public void Interface_ZeroTypeAspects_HasAnyAspect_Returns_False()
         {
             // Arrange
-            var result = _selectionStrategy.HasAnyAspect(typeof(IZeroTypeAspectsService), includeAbstract: false);
+            var result = _selector.HasAnyAspect(typeof(IZeroTypeAspectsService), includeAbstract: false);
 
             // Assert
-            Assert.False(result, $"Expected: False | Method ({nameof(IMethodAspectSelectionStrategy.HasAnyAspect)})");
+            Assert.False(result, $"Expected: False | Method ({nameof(IAspectSelector.HasAnyAspect)})");
         }
 
         [Fact]
         public void Interface_SingleTypeAspect_HasAnyAspect_Returns_True()
         {
             // Arrange
-            var result = _selectionStrategy.HasAnyAspect(typeof(ISingleTypeAspectService), includeAbstract: false);
+            var result = _selector.HasAnyAspect(typeof(ISingleTypeAspectService), includeAbstract: false);
 
             // Assert
-            Assert.True(result, $"Expected: True | Method ({nameof(IMethodAspectSelectionStrategy.HasAnyAspect)})");
+            Assert.True(result, $"Expected: True | Method ({nameof(IAspectSelector.HasAnyAspect)})");
         }
 
         [Fact]
         public void Interface_MultipleTypeAspects_HasAnyAspect_Returns_True()
         {
             // Arrange
-            var result = _selectionStrategy.HasAnyAspect(typeof(ISingleTypeAspectService), includeAbstract: false);
+            var result = _selector.HasAnyAspect(typeof(ISingleTypeAspectService), includeAbstract: false);
 
             // Assert
-            Assert.True(result, $"Expected: True | Method ({nameof(IMethodAspectSelectionStrategy.HasAnyAspect)})");
+            Assert.True(result, $"Expected: True | Method ({nameof(IAspectSelector.HasAnyAspect)})");
         }
 
         [Fact]
         public void Interface_ZeroMethodAspects_HasAnyAspect_Returns_False()
         {
             // Arrange
-            var result = _selectionStrategy.HasAnyAspect(typeof(IHasMethodAspects)
+            var result = _selector.HasAnyAspect(typeof(IHasMethodAspects)
                 .GetMethod(nameof(IHasMethodAspects.ZeroMethodAspects)), includeAbstract: false);
 
             // Assert
-            Assert.False(result, $"Expected: False | Method ({nameof(IMethodAspectSelectionStrategy.HasAnyAspect)})");
+            Assert.False(result, $"Expected: False | Method ({nameof(IAspectSelector.HasAnyAspect)})");
         }
 
         [Fact]
         public void Interface_SingleMethodAspect_HasAnyAspect_Returns_True()
         {
             // Arrange
-            var result = _selectionStrategy.HasAnyAspect(typeof(IHasMethodAspects)
+            var result = _selector.HasAnyAspect(typeof(IHasMethodAspects)
                 .GetMethod(nameof(IHasMethodAspects.SingleMethodAspect)), includeAbstract: false);
 
             // Assert
-            Assert.True(result, $"Expected: True | Method ({nameof(IMethodAspectSelectionStrategy.HasAnyAspect)})");
+            Assert.True(result, $"Expected: True | Method ({nameof(IAspectSelector.HasAnyAspect)})");
         }
 
         [Fact]
         public void Interface_MultipleMethodAspects_HasAnyAspect_Returns_True()
         {
             // Arrange
-            var result = _selectionStrategy.HasAnyAspect(typeof(IHasMethodAspects)
+            var result = _selector.HasAnyAspect(typeof(IHasMethodAspects)
                 .GetMethod(nameof(IHasMethodAspects.TwoMethodAspects)), includeAbstract: false);
 
             // Assert
-            Assert.True(result, $"Expected: True | Method ({nameof(IMethodAspectSelectionStrategy.HasAnyAspect)})");
+            Assert.True(result, $"Expected: True | Method ({nameof(IAspectSelector.HasAnyAspect)})");
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspects =
-                _selectionStrategy.GetDeclarations<MethodAspect>(
+                _selector.SelectAspectDeclarations<MethodAspect>(
                     typeof(IHasMethodAspects).GetMethod(nameof(IHasMethodAspects.ZeroMethodAspects)), includeAbstract: false);
 
             // Assert
@@ -99,7 +99,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspects =
-                _selectionStrategy.GetDeclarations<MethodAspect>(
+                _selector.SelectAspectDeclarations<MethodAspect>(
                     typeof(IHasMethodAspects).GetMethod(nameof(IHasMethodAspects.SingleMethodAspect)), includeAbstract: false);
 
             // Assert
@@ -111,7 +111,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspects =
-                _selectionStrategy.GetDeclarations<MethodAspect>(
+                _selector.SelectAspectDeclarations<MethodAspect>(
                     typeof(IHasMethodAspects).GetMethod(nameof(IHasMethodAspects.TwoMethodAspects)), includeAbstract: false);
 
             // Assert
@@ -123,11 +123,11 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var bypassAspects =
-                _selectionStrategy.GetDeclarations<BypassAspect>(
+                _selector.SelectAspectDeclarations<BypassAspect>(
                     typeof(IHasMethodAspects).GetMethod(nameof(IHasMethodAspects.TwoMethodAspects)), includeAbstract: false);
 
             var anotherBypassAspects =
-                _selectionStrategy.GetDeclarations<AnotherBypassAspects>(
+                _selector.SelectAspectDeclarations<AnotherBypassAspects>(
                     typeof(IHasMethodAspects).GetMethod(nameof(IHasMethodAspects.TwoMethodAspects)), includeAbstract: false);
 
             Assert.Single(bypassAspects);
@@ -142,7 +142,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspects =
-                _selectionStrategy.GetDeclarations<MethodAspect>(typeof(IZeroTypeAspectsService), includeAbstract: false);
+                _selector.SelectAspectDeclarations<MethodAspect>(typeof(IZeroTypeAspectsService), includeAbstract: false);
 
             // Assert
             Assert.Empty(aspects);
@@ -153,7 +153,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspects =
-                _selectionStrategy.GetDeclarations<MethodAspect>(typeof(ISingleTypeAspectService), includeAbstract: false);
+                _selector.SelectAspectDeclarations<MethodAspect>(typeof(ISingleTypeAspectService), includeAbstract: false);
 
             // Assert
             Assert.Single(aspects);
@@ -164,7 +164,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspects =
-                _selectionStrategy.GetDeclarations<MethodAspect>(typeof(ITwoTypeAspectsService), includeAbstract: false);
+                _selector.SelectAspectDeclarations<MethodAspect>(typeof(ITwoTypeAspectsService), includeAbstract: false);
 
             // Assert
             Assert.Equal(2, aspects.Length);
@@ -175,10 +175,10 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var bypassAspects =
-                _selectionStrategy.GetDeclarations<BypassAspect>(typeof(ITwoTypeAspectsService), includeAbstract: false);
+                _selector.SelectAspectDeclarations<BypassAspect>(typeof(ITwoTypeAspectsService), includeAbstract: false);
 
             var anotherBypassAspects =
-                _selectionStrategy.GetDeclarations<AnotherBypassAspects>(typeof(ITwoTypeAspectsService), includeAbstract: false);
+                _selector.SelectAspectDeclarations<AnotherBypassAspects>(typeof(ITwoTypeAspectsService), includeAbstract: false);
 
             Assert.Single(bypassAspects);
             Assert.IsType<BypassAspect>(bypassAspects.ElementAt(0).MethodAspect);

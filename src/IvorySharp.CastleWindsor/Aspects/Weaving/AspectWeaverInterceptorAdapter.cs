@@ -13,7 +13,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
     /// </summary>
     public class AspectWeaverInterceptorAdapter : IInterceptor
     {
-        private readonly AspectWeaveInterceptor _aspectWeaveInterceptor;
+        private readonly AspectInterceptor _aspectInterceptor;
 
         /// <summary>
         /// Адаптер для обработчика вызовов <see cref="IInterceptor"/>.
@@ -21,8 +21,8 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
         /// <param name="components">Конфигурация аспектов.</param>
         public AspectWeaverInterceptorAdapter(IComponentsStore components)
         {
-            _aspectWeaveInterceptor = new AspectWeaveInterceptor(
-                components.AspectWeavePredicate, components.AspectPipelineExecutor, components.AspectInitializer);
+            _aspectInterceptor = new AspectInterceptor(
+                components.AspectWeavePredicate, components.AspectPipelineExecutor, components.AspectFactory);
         }
 
         /// <inheritdoc />
@@ -32,7 +32,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
             {
                 var adaptedInvocation = new InvocationAdapter(invocation);
 
-                _aspectWeaveInterceptor.Intercept(adaptedInvocation);
+                _aspectInterceptor.Intercept(adaptedInvocation);
 
                 if (adaptedInvocation.ReturnValue != null)
                     invocation.ReturnValue = adaptedInvocation.ReturnValue;

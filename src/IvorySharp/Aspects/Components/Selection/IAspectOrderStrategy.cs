@@ -6,7 +6,7 @@ namespace IvorySharp.Aspects.Components.Selection
     /// <summary>
     /// Стратегия упорядочивания аспектов.
     /// </summary>
-    public interface IMethodAspectOrderStrategy
+    public interface IAspectOrderStrategy
     {
         /// <summary>
         /// Выполняет упорядочивание аспектов.
@@ -14,6 +14,7 @@ namespace IvorySharp.Aspects.Components.Selection
         /// <typeparam name="TAspect">Тип аспекта.</typeparam>
         /// <param name="aspects">Перечень аспектов для упорядочивания.</param>
         /// <returns>Упорядоченный набор аспектов.</returns>
-        IOrderedEnumerable<TAspect> Order<TAspect>(IEnumerable<TAspect> aspects) where TAspect : OrderableMethodAspect;
+        IOrderedEnumerable<TAspect> Order<TAspect>(IEnumerable<TAspect> aspects) 
+            where TAspect : OrderableMethodAspect;
     }
 }

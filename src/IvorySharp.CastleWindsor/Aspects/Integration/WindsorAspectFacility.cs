@@ -18,7 +18,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
         /// <summary>
         /// Инициализирует экземпляр <see cref="WindsorAspectFacility"/>
         /// </summary>
-        /// <param name="components">Настройки аспектов.</param>
+        /// <param name="components">Компоненты библиотеки.</param>
         public WindsorAspectFacility(IComponentsStore components)
         {
             _components = components;

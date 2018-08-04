@@ -6,24 +6,24 @@ using System.Reflection;
 namespace IvorySharp.Aspects.Components.Selection
 {
     /// <summary>
-    /// Стратегия выбора аспектов по умолчанию.
+    /// Компонент выбора аспектов по умолчанию.
     /// </summary>
-    internal class DefaultMethodAspectSelectionStrategy : IMethodAspectSelectionStrategy
+    internal class DefaultAspectSelector : IAspectSelector
     {
         /// <inheritdoc />
         public bool HasAnyAspect(Type type, bool includeAbstract)
         {
-            return GetDeclarations<MethodAspect>(type, includeAbstract).Any();
+            return SelectAspectDeclarations<MethodAspect>(type, includeAbstract).Any();
         }
 
         /// <inheritdoc />
         public bool HasAnyAspect(MethodInfo method, bool includeAbstract)
         {
-            return GetDeclarations<MethodAspect>(method, includeAbstract).Any();
+            return SelectAspectDeclarations<MethodAspect>(method, includeAbstract).Any();
         }
 
         /// <inheritdoc />
-        public MethodAspectDeclaration<TAspect>[] GetDeclarations<TAspect>(Type type, bool includeAbstract)
+        public MethodAspectDeclaration<TAspect>[] SelectAspectDeclarations<TAspect>(Type type, bool includeAbstract)
             where TAspect : MethodAspect
         {
             var declarations = new List<MethodAspectDeclaration<TAspect>>();
@@ -39,7 +39,7 @@ namespace IvorySharp.Aspects.Components.Selection
         }
 
         /// <inheritdoc />
-        public MethodAspectDeclaration<TAspect>[] GetDeclarations<TAspect>(MethodInfo method, bool includeAbstract)
+        public MethodAspectDeclaration<TAspect>[] SelectAspectDeclarations<TAspect>(MethodInfo method, bool includeAbstract)
             where TAspect : MethodAspect
         {
             var declarations = new List<MethodAspectDeclaration<TAspect>>();

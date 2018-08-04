@@ -9,20 +9,20 @@ namespace IvorySharp.Aspects.Components.Weaving
     /// <summary>
     /// Базовый класс предиката возможности применения аспектов.
     /// </summary>
-    internal abstract class BaseWeavePredicate : IMethodAspectWeavePredicate
+    internal abstract class BaseWeavePredicate : IAspectWeavePredicate
     {
         /// <summary>
         /// Стратегия выбора аспектов.
         /// </summary>
-        protected IMethodAspectSelectionStrategy AspectSelectionStrategy { get; }
+        protected IAspectSelector AspectSelector { get; }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="BaseWeavePredicate"/>.
         /// </summary>
-        /// <param name="selectionStrategy">Страгетия выбора аспектов.</param>
-        protected BaseWeavePredicate(IMethodAspectSelectionStrategy selectionStrategy)
+        /// <param name="selector">Страгетия выбора аспектов.</param>
+        protected BaseWeavePredicate(IAspectSelector selector)
         {
-            AspectSelectionStrategy = selectionStrategy;
+            AspectSelector = selector;
         }
 
         /// <inheritdoc />

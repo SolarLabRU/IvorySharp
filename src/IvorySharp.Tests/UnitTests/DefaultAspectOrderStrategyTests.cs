@@ -8,20 +8,20 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для <see cref="DefaultMethodAspectOrderStrategy"/>
+    /// Набор тестов для <see cref="DefaultAspectOrderStrategy"/>
     /// </summary>
-    public class DefaultMethodAspectOrderStrategyTests
+    public class DefaultAspectOrderStrategyTests
     {
-        private readonly DefaultMethodAspectOrderStrategy _orderStrategy;
+        private readonly DefaultAspectOrderStrategy _orderStrategy;
 
         private readonly MethodBoundaryAspect[] _methodAspects;
         private readonly MethodBoundaryAspect[] _typeAspects;
 
         private IEnumerable<MethodBoundaryAspect> AggregateAspects => _methodAspects.Concat(_typeAspects).Shuffle();
 
-        public DefaultMethodAspectOrderStrategyTests()
+        public DefaultAspectOrderStrategyTests()
         {
-            _orderStrategy = new DefaultMethodAspectOrderStrategy();
+            _orderStrategy = new DefaultAspectOrderStrategy();
 
             _methodAspects = new[] {
                 new EmptyAspect{ JoinPointType = MethodAspectJoinPointType.Method }, 

@@ -3,10 +3,10 @@
 namespace IvorySharp.Aspects.Components.Dependency
 {
     /// <summary>
-    /// Атрибут для обозначения свойст, которые должны быть внедрены как зависимости аспекта.
+    /// Атрибут для обозначения свойств, которые должны быть внедрены как зависимости аспекта.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-    public sealed class InjectDependencyAttribute : Attribute
+    public sealed class DependencyAttribute : Attribute
     {    
         /// <summary>
         /// Ключ именованного сервиса.

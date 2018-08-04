@@ -15,24 +15,24 @@ namespace IvorySharp.Aspects.Configuration
         public IDependencyProvider DependencyProvider { get; set; }
 
         /// <inheritdoc />
-        public IMethodAspectSelectionStrategy AspectSelectionStrategy { get; set; }
+        public IAspectSelector AspectSelector { get; set; }
 
         /// <inheritdoc />
-        public IMethodAspectWeavePredicate AspectWeavePredicate { get; set; }
+        public IAspectWeavePredicate AspectWeavePredicate { get; set; }
 
         /// <inheritdoc />
-        public IMethodAspectDeclarationCollector AspectDeclarationCollector { get; set; }
+        public IAspectDeclarationCollector AspectDeclarationCollector { get; set; }
 
         /// <inheritdoc />
-        public IMethodAspectPipelineExecutor AspectPipelineExecutor { get; set; }
+        public IPipelineExecutor AspectPipelineExecutor { get; set; }
 
         /// <inheritdoc />
-        public IMethodAspectInitializer AspectInitializer { get; set; }
+        public IAspectFactory AspectFactory { get; set; }
 
         /// <inheritdoc />
-        public IMethodAspectDependencyInjector AspectDependencyInjector { get; set; }
+        public IAspectDependencyInjector AspectDependencyInjector { get; set; }
 
         /// <inheritdoc />
-        public IMethodAspectOrderStrategy AspectOrderStrategy { get; set; }
+        public IAspectOrderStrategy AspectOrderStrategy { get; set; }
     }
 }

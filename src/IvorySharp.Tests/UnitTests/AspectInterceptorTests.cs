@@ -12,20 +12,20 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для компонента <see cref="AspectWeaveInterceptor"/>.
+    /// Набор тестов для компонента <see cref="AspectInterceptor"/>.
     /// </summary>
-    public class AspectWeaveInterceptorTests
+    public class AspectInterceptorTests
     {
         private MethodBoundaryAspect[] _boundaryAspects;
         private MethodInterceptionAspect _interceptionAspect;
 
-        private readonly IMethodAspectWeavePredicate _weavePredicateAlwaysTrue;
-        private readonly IMethodAspectPipelineExecutor _doNothingPipelineExecutor;
-        private readonly IMethodAspectInitializer _predefinedAspectsInitializer;
+        private readonly IAspectWeavePredicate _weavePredicateAlwaysTrue;
+        private readonly IPipelineExecutor _doNothingPipelineExecutor;
+        private readonly IAspectFactory _predefinedAspectsFactory;
 
-        public AspectWeaveInterceptorTests()
+        public AspectInterceptorTests()
         {
-            var truePredicateMock = new Mock<IMethodAspectWeavePredicate>();
+            var truePredicateMock = new Mock<IAspectWeavePredicate>();
 
             truePredicateMock.Setup(p => p.IsWeaveable(It.IsAny<MethodInfo>(), It.IsAny<Type>(), It.IsAny<Type>()))
                 .Returns(true);
@@ -35,18 +35,18 @@ namespace IvorySharp.Tests.UnitTests
 
             _weavePredicateAlwaysTrue = truePredicateMock.Object;
 
-            var pipelineExecutorMock = new Mock<IMethodAspectPipelineExecutor>();
+            var pipelineExecutorMock = new Mock<IPipelineExecutor>();
             _doNothingPipelineExecutor = pipelineExecutorMock.Object;
 
-            var aspectInitializerMock = new Mock<IMethodAspectInitializer>();
+            var aspectInitializerMock = new Mock<IAspectFactory>();
 
-            aspectInitializerMock.Setup(m => m.InitializeBoundaryAspects(It.IsAny<InvocationContext>()))
+            aspectInitializerMock.Setup(m => m.CreateBoundaryAspects(It.IsAny<InvocationContext>()))
                 .Returns(() => _boundaryAspects);
 
-            aspectInitializerMock.Setup(m => m.InitializeInterceptionAspect(It.IsAny<InvocationContext>()))
+            aspectInitializerMock.Setup(m => m.CreateInterceptionAspect(It.IsAny<InvocationContext>()))
                 .Returns(() => _interceptionAspect);
 
-            _predefinedAspectsInitializer = aspectInitializerMock.Object;
+            _predefinedAspectsFactory = aspectInitializerMock.Object;
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspect = new DisposableAspect();
-            var interceptor = new AspectWeaveInterceptor(_weavePredicateAlwaysTrue, _doNothingPipelineExecutor, _predefinedAspectsInitializer);
+            var interceptor = new AspectInterceptor(_weavePredicateAlwaysTrue, _doNothingPipelineExecutor, _predefinedAspectsFactory);
 
             _boundaryAspects = new MethodBoundaryAspect[] { aspect };
 

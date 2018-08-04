@@ -27,7 +27,7 @@ namespace IvorySharp.Benchmark
             var dependencyProvider = new DummyDependencyProvider(serviceContainer);
             _dummyComponents = new DummyComponents {DependencyProvider = dependencyProvider};
 
-            var weaver = new AspectWeaver(_dummyComponents.AspectWeavePredicate, _dummyComponents.AspectPipelineExecutor, _dummyComponents.AspectInitializer);
+            var weaver = new AspectWeaver(_dummyComponents.AspectWeavePredicate, _dummyComponents.AspectPipelineExecutor, _dummyComponents.AspectFactory);
 
             _serviceInstance = new AppService();
             _bypassProxyInstance = proxyGenerator.CreateInterceptProxy<IAppService, AppService>(new AppService(), new BypassInterceptor());

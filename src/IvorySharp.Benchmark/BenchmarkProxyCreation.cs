@@ -20,7 +20,7 @@ namespace IvorySharp.Benchmark
             _generator = InterceptProxyGenerator.Default;
             _interceptor = new BypassInterceptor();
             _dummyComponents = new DummyComponents();
-            _aspectWeaver = new AspectWeaver(_dummyComponents.AspectWeavePredicate, _dummyComponents.AspectPipelineExecutor, _dummyComponents.AspectInitializer);
+            _aspectWeaver = new AspectWeaver(_dummyComponents.AspectWeavePredicate, _dummyComponents.AspectPipelineExecutor, _dummyComponents.AspectFactory);
         }
 
 

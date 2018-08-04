@@ -5,7 +5,7 @@ namespace IvorySharp.Aspects.Components.Dependency
     /// <summary>
     /// Компонент для внедрения зависимостей в аспекты.
     /// </summary>
-    public interface IMethodAspectDependencyInjector
+    public interface IAspectDependencyInjector
     {
         /// <summary>
         /// Выполняет внедрение зависимостей в аспект.

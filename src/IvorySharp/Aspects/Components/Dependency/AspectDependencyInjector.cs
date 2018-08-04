@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using System.Reflection;
 using IvorySharp.Aspects.Components.Caching;
 
-// ReSharper disable FieldCanBeMadeReadOnly.Local
-
 namespace IvorySharp.Aspects.Components.Dependency
 {
     /// <summary>
     /// Компонент для внедрения зависимостей в аспекты.
     /// </summary>
-    internal class MethodAspectDependencyInjector : IMethodAspectDependencyInjector
+    internal class AspectDependencyInjector : IAspectDependencyInjector
     {
-        private IDependencyProvider _dependencyProvider;
-        private Func<Type, AspectPropertyDependency[]> _cachedPropertyDependencyProvider;
+        private readonly IDependencyProvider _dependencyProvider;
+        private readonly Func<Type, AspectPropertyDependency[]> _cachedPropertyDependencyProvider;
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="MethodAspectDependencyInjector"/>.
+        /// Инициализирует экземпляр <see cref="AspectDependencyInjector"/>.
         /// </summary>
-        /// <param name="dependencyProvider">Провайдер сервисов.</param>
-        public MethodAspectDependencyInjector(IDependencyProvider dependencyProvider)
+        /// <param name="dependencyProvider">Провайдер зависимостей.</param>
+        public AspectDependencyInjector(IDependencyProvider dependencyProvider)
         {
             _dependencyProvider = dependencyProvider;
             _cachedPropertyDependencyProvider = Cache.CreateProducer<Type, AspectPropertyDependency[]>(GetPropertyDependencies);
@@ -62,7 +60,7 @@ namespace IvorySharp.Aspects.Components.Dependency
                 if (!property.CanWrite || property.GetSetMethod(nonPublic: false) == null)
                     continue;
 
-                var aspectDependency = property.GetCustomAttribute<InjectDependencyAttribute>(inherit: false);
+                var aspectDependency = property.GetCustomAttribute<DependencyAttribute>(inherit: false);
                 if (aspectDependency == null)
                     continue;
 

@@ -6,7 +6,7 @@ namespace IvorySharp.Aspects.Components.Weaving
     /// <summary>
     /// Предикат для определения возможности применения аспектов.
     /// </summary>
-    public interface IMethodAspectWeavePredicate
+    public interface IAspectWeavePredicate
     {
         /// <summary>
         /// Возвращает признак возможности применения аспектов.

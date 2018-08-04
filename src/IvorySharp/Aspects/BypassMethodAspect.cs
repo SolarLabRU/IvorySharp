@@ -5,14 +5,14 @@ namespace IvorySharp.Aspects
     /// <summary>
     /// Реализация аспекта для перехвата метода, которая ничего не делает (просто вызывает метод).
     /// </summary>
-    internal class NullMethodInterceptionAspect : MethodInterceptionAspect
+    internal class BypassMethodAspect : MethodInterceptionAspect
     {
         /// <summary>
         /// Экземпляр аспекта.
         /// </summary>
-        public static NullMethodInterceptionAspect Instance { get; } = new NullMethodInterceptionAspect();
+        public static BypassMethodAspect Instance { get; } = new BypassMethodAspect();
         
-        private NullMethodInterceptionAspect() { }
+        private BypassMethodAspect() { }
         
         /// <inheritdoc />
         public override void OnInvoke(IInvocation invocation)
