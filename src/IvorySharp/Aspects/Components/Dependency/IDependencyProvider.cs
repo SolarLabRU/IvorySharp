@@ -5,7 +5,7 @@ namespace IvorySharp.Aspects.Components.Dependency
     /// <summary>
     /// Провайдер сервисов (сервис локатор).
     /// </summary>
-    public interface IServiceProvider
+    public interface IDependencyProvider
     {
         /// <summary>
         /// Получает экземпляр сервиса по типу.

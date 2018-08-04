@@ -2,23 +2,26 @@
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
-using IvorySharp.Aspects.Components.Weaving;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.CastleWindsor.Aspects.Weaving;
+using IvorySharp.Extensions;
 
 namespace IvorySharp.CastleWindsor.Aspects.Integration
 {
+    /// <summary>
+    /// Объект настройки контейнера <see cref="IKernel"/>.
+    /// </summary>
     internal class WindsorAspectFacility : AbstractFacility
     {
-        private readonly IComponentsStore _settings;
+        private readonly IComponentsStore _components;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="WindsorAspectFacility"/>
         /// </summary>
-        /// <param name="settings">Настройки аспектов.</param>
-        public WindsorAspectFacility(IComponentsStore settings)
+        /// <param name="components">Настройки аспектов.</param>
+        public WindsorAspectFacility(IComponentsStore components)
         {
-            _settings = settings;
+            _components = components;
         }
 
         /// <inheritdoc />
@@ -30,12 +33,12 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
         private void OnComponentRegistered(string key, IHandler handler)
         {
             var componentInterfaces = handler.ComponentModel.Implementation.GetInterfaces();
-            if (componentInterfaces.Any(i => AspectWeaver.NotWeavableTypes.Contains(i)))
+            if (componentInterfaces.Any(i => !i.IsInterceptable()))
                 return;
 
             foreach (var serviceType in handler.ComponentModel.Services)
             {
-                if (!AspectWeaver.IsWeavable(serviceType, _settings))
+                if (!_components.AspectWeavePredicate.IsWeaveable(serviceType, handler.ComponentModel.Implementation))
                     continue;
                 
                 handler.ComponentModel.Interceptors.AddIfNotInCollection(

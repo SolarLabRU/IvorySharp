@@ -1,29 +1,29 @@
 ﻿using IvorySharp.Aspects.Pipeline;
 
-namespace IvorySharp.Aspects.Iterators
+namespace IvorySharp.Aspects.BoundaryIterators
 {
     /// <summary>
     /// Итератор для точки прикрепления <see cref="MethodBoundaryAspect.OnSuccess(IInvocationPipeline)"/>.
     /// </summary>
     internal class OnSuccessMethodBoundaryIterator : MethodBoundaryIterator
     {
-        public OnSuccessMethodBoundaryIterator(InvocationPipeline pipeline) 
+        public OnSuccessMethodBoundaryIterator(InvocationPipeline pipeline)
             : base(pipeline)
         {
         }
 
         /// <inheritdoc />
-        protected override bool CanContinue(FlowBehaviour flowBehaviour)
+        protected override bool CanContinue(FlowBehavior flowBehavior)
         {
-            return flowBehaviour == FlowBehaviour.Default ||
-                   flowBehaviour == FlowBehaviour.Return;
+            return flowBehavior == FlowBehavior.Default ||
+                   flowBehavior == FlowBehavior.Return;
         }
 
         /// <inheritdoc />
-        protected override bool ShouldBreak(FlowBehaviour flowBehaviour)
+        protected override bool ShouldBreak(FlowBehavior flowBehavior)
         {
-            return flowBehaviour == FlowBehaviour.ThrowException ||
-                   flowBehaviour == FlowBehaviour.RethrowException;
+            return flowBehavior == FlowBehavior.ThrowException ||
+                   flowBehavior == FlowBehavior.RethrowException;
         }
 
         /// <inheritdoc />

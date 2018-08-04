@@ -12,20 +12,22 @@ namespace IvorySharp.Benchmark
         private IInterceptor _interceptor;
         private AspectWeaver _aspectWeaver;
         private InterceptProxyGenerator _generator;
+        private DummyComponents _dummyComponents;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
             _generator = InterceptProxyGenerator.Default;
             _interceptor = new BypassInterceptor();
-            _aspectWeaver = new AspectWeaver(new DummyConfigurations());
+            _dummyComponents = new DummyComponents();
+            _aspectWeaver = new AspectWeaver(_dummyComponents.AspectWeavePredicate, _dummyComponents.AspectPipelineExecutor, _dummyComponents.AspectInitializer);
         }
 
 
         [Benchmark]
         public void Create_Class_Weaved()
         {
-            IAppService service = (IAppService) _aspectWeaver.Weave(new AppService(), typeof(IAppService));
+            IAppService service = (IAppService) _aspectWeaver.Weave(new AppService(), typeof(IAppService), typeof(AppService));
 
             GC.KeepAlive(service);
         }
@@ -41,7 +43,7 @@ namespace IvorySharp.Benchmark
         [Benchmark]
         public void Create_NetCoreInvocationProxy()
         {
-            var service = _generator.CreateInterceptProxy<IAppService>(new AppService(), _interceptor);
+            var service = _generator.CreateInterceptProxy<IAppService, AppService>(new AppService(), _interceptor);
 
             GC.KeepAlive(service);
         }

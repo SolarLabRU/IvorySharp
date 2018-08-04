@@ -18,6 +18,6 @@ namespace IvorySharp.Aspects.Integration
         /// Возвращает сервис провайдер.
         /// </summary>
         /// <returns>Экземпляр провайдера.</returns>
-        public abstract IServiceProvider GetServiceProvider();
+        public abstract IDependencyProvider GetDependencyProvider();
     }
 }

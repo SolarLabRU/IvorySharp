@@ -1,20 +1,12 @@
-﻿using System.Collections.Generic;
-using IvorySharp.Aspects.Pipeline;
+﻿using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Aspects
 {
     /// <summary>
     /// Базовая модель аспекта, выполняющего внедрение кода перед и после фактического выполнения метода.
     /// </summary>
-    public abstract class MethodBoundaryAspect : MethodAspect
+    public abstract class MethodBoundaryAspect : OrderableMethodAspect
     {
-        /// <summary>
-        /// Порядок атрибута. Меньшее значение порядка значит более высокий приоритет аспекта.
-        /// То есть, аспект с <see cref="Order"/> = 0 будет выполнен раньше,
-        /// чем аспект с <see cref="Order"/> = 1.
-        /// </summary>
-        public int Order { get; set; }
-
         /// <summary>
         /// Выполняется перед началом выполнения метода.
         /// </summary>

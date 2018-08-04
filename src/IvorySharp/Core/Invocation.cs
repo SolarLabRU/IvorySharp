@@ -38,8 +38,7 @@ namespace IvorySharp.Core
                 Context.ReturnValue = MethodInvoker(Context.Instance, (object[]) Context.Arguments);
 
                 if (ReferenceEquals(Context.ReturnValue, Context.Instance))
-                    Context.ReturnValue = Context.Proxy;
-
+                    Context.ReturnValue = Context.TransparentProxy;
             }
             catch (TargetInvocationException e)
             {

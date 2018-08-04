@@ -1,5 +1,10 @@
 ﻿using System;
+using IvorySharp.Aspects.Components.Creation;
+using IvorySharp.Aspects.Components.Dependency;
+using IvorySharp.Aspects.Components.Selection;
+using IvorySharp.Aspects.Components.Weaving;
 using IvorySharp.Aspects.Integration;
+using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Aspects.Configuration
 {
@@ -30,7 +35,37 @@ namespace IvorySharp.Aspects.Configuration
         public void Initialize(Action<AspectsConfiguration> configurator)
         {
             configurator(_aspectsConfiguration);
-            _componentsStore.ServiceProvider = _container.GetServiceProvider();
+
+            if (_componentsStore.AspectSelectionStrategy == null)
+                _componentsStore.AspectSelectionStrategy = new DefaultMethodAspectSelectionStrategy();
+
+            if (_componentsStore.AspectWeavePredicate == null)
+                _componentsStore.AspectWeavePredicate = new DeclaringTypeWeavePredicate(
+                    _componentsStore.AspectSelectionStrategy);
+
+            if (_componentsStore.AspectDeclarationCollector == null)
+                _componentsStore.AspectDeclarationCollector = new DeclaringTypeAspectDeclarationCollector(
+                    _componentsStore.AspectSelectionStrategy);
+
+            if (_componentsStore.AspectPipelineExecutor == null)
+                _componentsStore.AspectPipelineExecutor = MethodAspectInvocationPipelineExecutor.Instance;
+
+            _componentsStore.DependencyProvider = _container.GetDependencyProvider();
+
+            if (_componentsStore.AspectDependencyInjector == null)
+                _componentsStore.AspectDependencyInjector = new MethodAspectDependencyInjector(
+                    _componentsStore.DependencyProvider);
+
+            if (_componentsStore.AspectOrderStrategy == null)
+                _componentsStore.AspectOrderStrategy = new DefaultMethodAspectOrderStrategy();
+
+            if (_componentsStore.AspectInitializer == null)
+                _componentsStore.AspectInitializer = new MethodAspectInitializer(
+                    _componentsStore.AspectDeclarationCollector,
+                    _componentsStore.AspectDependencyInjector,
+                    _componentsStore.AspectOrderStrategy);
+
+
             _container.BindAspects(_aspectsConfiguration.ComponentsStore);
         }
 

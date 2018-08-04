@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using IvorySharp.Aspects.Components.Weaving;
-using IvorySharp.Extensions;
+﻿using System.Collections.Generic;
 
 namespace IvorySharp.Aspects
 {
@@ -12,11 +7,6 @@ namespace IvorySharp.Aspects
     /// </summary>
     public abstract class MethodAspect : AspectAttribute
     {
-        /// <summary>
-        /// Признак наличия зависимостей.
-        /// </summary>
-        internal bool HasDependencies { get; set; }
-
         /// <summary>
         /// Описание аспекта.
         /// </summary>
@@ -28,49 +18,36 @@ namespace IvorySharp.Aspects
         public virtual void Initialize() { }
 
         /// <summary>
-        /// Возвращает аспекты уровня метода.
+        /// Точка прикрепления аспекта.
         /// </summary>
-        /// <typeparam name="TAspect">Тип аспекта.</typeparam>
-        /// <param name="method">Ссылка на метод.</param>
-        /// <returns>Перечень аспектов.</returns>
-        internal static IEnumerable<TAspect> GetMethodAspects<TAspect>(MethodInfo method) 
-            where TAspect : MethodAspect
-        {
-            return method.GetCustomAttributes<TAspect>(inherit: false);
-        }
+        public MethodAspectJoinPointType JoinPointType { get; internal set; }
 
         /// <summary>
-        /// Возвращает аспекты уровня метода типов, входящих в иерархию наследования от типа <paramref name="type"/>.
+        /// Сравнение аспектов на основе типов.
         /// </summary>
-        /// <typeparam name="TAspect">Тип аспекта.</typeparam>
-        /// <param name="type">Ссылка на тип.</param>
-        /// <returns>Перечень аспектов.</returns>
-        internal static IEnumerable<TAspect> GetTypeHierarchyMethodAspects<TAspect>(Type type)
-            where TAspect : MethodAspect
+        internal class ByTypeEqualityComparer : EqualityComparer<MethodAspect>
         {
-            return new[] { type }.Concat(type.GetInterfaces()) 
-                .Where(t => !AspectWeaver.NotWeavableTypes.Contains(t) && 
-                            t.GetCustomAttributes<SuppressAspectsWeavingAttribute>().IsEmpty())
-                .SelectMany(t => t.GetMethods())
-                .Where(m => m.GetCustomAttributes<SuppressAspectsWeavingAttribute>().IsEmpty())
-                .SelectMany(m => m.GetCustomAttributes<TAspect>(inherit: false));
-        }
+            public static readonly ByTypeEqualityComparer Instance = new ByTypeEqualityComparer();
 
-        /// <summary>
-        /// Возвращает аспекты уровня типа всей иерархии от типа <paramref name="type"/>.
-        /// </summary>
-        /// <typeparam name="TAspect">Тип аспекта.</typeparam>
-        /// <param name="type">Ссылка на тип.</param>
-        /// <returns>Перечень аспектов.</returns>
-        internal static IEnumerable<TAspect> GetTypeHierarchyAspects<TAspect>(Type type)
-            where TAspect : MethodAspect
-        {
-            return type.GetCustomAttributes<TAspect>(inherit: false)
-                .Concat(type
-                        .GetInterfaces()
-                        .Where(t => !AspectWeaver.NotWeavableTypes.Contains(t) && 
-                                    t.GetCustomAttributes<SuppressAspectsWeavingAttribute>().IsEmpty())
-                        .SelectMany(t => t.GetCustomAttributes<TAspect>(inherit: false)));
+            private ByTypeEqualityComparer() { }
+
+            /// <inheritdoc />
+            public override bool Equals(MethodAspect x, MethodAspect y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                return x.GetType() == y.GetType();
+            }
+
+            /// <inheritdoc />
+            public override int GetHashCode(MethodAspect obj)
+            {
+                if (obj == null)
+                    return 0;
+
+                return obj.GetType().GetHashCode();
+            }
         }
     }
 }

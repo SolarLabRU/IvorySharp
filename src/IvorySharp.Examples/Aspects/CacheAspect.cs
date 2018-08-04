@@ -41,7 +41,7 @@ namespace IvorySharp.Examples.Aspects
         {
             var sb = new StringBuilder();
 
-            sb.Append(context.InstanceDeclaringType.FullName);
+            sb.Append(context.DeclaringType.FullName);
             sb.Append(".");
             sb.Append(context.Method.Name);
             sb.Append("(");

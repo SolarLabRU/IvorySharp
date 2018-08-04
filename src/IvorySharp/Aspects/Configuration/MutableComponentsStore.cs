@@ -1,5 +1,8 @@
-﻿using System;
-using IServiceProvider = IvorySharp.Aspects.Components.Dependency.IServiceProvider;
+﻿using IvorySharp.Aspects.Components.Creation;
+using IvorySharp.Aspects.Components.Dependency;
+using IvorySharp.Aspects.Components.Selection;
+using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Aspects.Configuration
 {
@@ -9,9 +12,27 @@ namespace IvorySharp.Aspects.Configuration
     internal class MutableComponentsStore : IComponentsStore
     {
         /// <inheritdoc />
-        public Type ExplicitWeavingAttributeType { get; set; }
+        public IDependencyProvider DependencyProvider { get; set; }
 
         /// <inheritdoc />
-        public IServiceProvider ServiceProvider { get; set; }
+        public IMethodAspectSelectionStrategy AspectSelectionStrategy { get; set; }
+
+        /// <inheritdoc />
+        public IMethodAspectWeavePredicate AspectWeavePredicate { get; set; }
+
+        /// <inheritdoc />
+        public IMethodAspectDeclarationCollector AspectDeclarationCollector { get; set; }
+
+        /// <inheritdoc />
+        public IMethodAspectPipelineExecutor AspectPipelineExecutor { get; set; }
+
+        /// <inheritdoc />
+        public IMethodAspectInitializer AspectInitializer { get; set; }
+
+        /// <inheritdoc />
+        public IMethodAspectDependencyInjector AspectDependencyInjector { get; set; }
+
+        /// <inheritdoc />
+        public IMethodAspectOrderStrategy AspectOrderStrategy { get; set; }
     }
 }

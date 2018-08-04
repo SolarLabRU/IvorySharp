@@ -3,7 +3,7 @@
     /// <summary>
     /// Возможные состояния выполнения потока программы.
     /// </summary>
-    public enum FlowBehaviour
+    public enum FlowBehavior
     {
         /// <summary>
         /// Значение по умолчанию.
@@ -13,7 +13,7 @@
         /// <see cref="MethodBoundaryAspect.OnExit(IInvocationPipeline)"/>
         /// равно выполняется продолжение.
         /// Для хендлера <see cref="MethodBoundaryAspect.OnException(IInvocationPipeline)"/>
-        /// эквивалетно значению <see cref="FlowBehaviour.RethrowException"/>.
+        /// эквивалетно значению <see cref="FlowBehavior.RethrowException"/>.
         /// </summary>
         Default = 0,
         

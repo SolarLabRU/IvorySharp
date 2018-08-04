@@ -1,25 +1,23 @@
 ﻿using System;
+using Castle.DynamicProxy;
+using Castle.MicroKernel;
 using IvorySharp.Exceptions;
-using IvorySharp.Proxying;
-using SimpleInjector;
-using IServiceProvider = IvorySharp.Aspects.Components.Dependency.IServiceProvider;
 
-namespace IvorySharp.SimpleInjector.Aspects.Integration
+namespace IvorySharp.CastleWindsor.Aspects.Dependency
 {
     /// <summary>
-    /// Провайдер сервисов.
+    /// Сервис провайдер.
     /// </summary>
-    public class SimpleInjectorServiceProvider : IvorySharp.Aspects.Components.Dependency.IServiceProvider
+    public class WindsorDependencyProvider : IvorySharp.Aspects.Components.Dependency.IDependencyProvider
     {
-        private readonly Container _container;
+        private readonly IKernel _kernel;
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="SimpleInjectorServiceProvider"/>.
+        /// Инициализирует экземпляр <see cref="WindsorDependencyProvider"/>.
         /// </summary>
-        /// <param name="container">Контейнер зависимостей.</param>
-        public SimpleInjectorServiceProvider(Container container)
+        public WindsorDependencyProvider(IKernel kernel)
         {
-            _container = container;
+            _kernel = kernel;
         }
 
         /// <inheritdoc />
@@ -51,7 +49,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         {
             try
             {
-                return _container.GetInstance(serviceType);
+                return _kernel.Resolve(serviceType);
             }
             catch (Exception e)
             {
@@ -64,46 +62,44 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         public object GetTransparentService(Type serviceType)
         {
             var service = GetService(serviceType);
-            
-            return serviceType.IsInterface 
-                ? UnwrapProxy(service) 
-                : service;
+            return UnwrapProxy(service);
         }
 
         /// <inheritdoc />
         public object GetNamedService(Type serviceType, string key)
         {
-            if (key != null)
+            try
             {
-                throw new NotSupportedException(
-                    $"Получение именованных зависимостей не поддерживается SimpleInjector'om. {nameof(key)}:{key}");
+                return key == null
+                    ? _kernel.Resolve(serviceType)
+                    : _kernel.Resolve(key, serviceType);
             }
-
-            return GetService(serviceType);
+            catch (Exception e)
+            {
+                throw new IvorySharpException(
+                    $"Возникло исключение при получении сервиса '{serviceType?.FullName}': {e.Message}", e);
+            }
         }
 
         /// <inheritdoc />
         public object GetTransparentNamedService(Type serviceType, string key)
         {
-            if (key != null)
-            {
-                throw new NotSupportedException(
-                    $"Получение именованных зависимостей не поддерживается SimpleInjector'om. {nameof(key)}:{key}");
-            }
-
-            return GetTransparentService(serviceType);
+            var service = GetNamedService(serviceType, key);
+            return UnwrapProxy(service);
         }
 
-        private static object UnwrapProxy(object service)
+        internal static object UnwrapProxy(object proxy)
         {
+            if (!ProxyUtil.IsProxy(proxy))
+                return proxy;
+
             try
             {
-                var proxy = (InterceptDispatchProxy) service;
-                return proxy.Instance;
+                return ProxyUtil.GetUnproxiedInstance(proxy);
             }
             catch (Exception)
             {
-                return service;
+                return proxy;
             }
         }
     }

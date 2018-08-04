@@ -14,7 +14,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
     public class WindsorAspectsContainer : AspectsContainer
     {
         private readonly IKernel _kernel;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IDependencyProvider _dependencyProvider;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="WindsorAspectsContainer"/>.
@@ -23,7 +23,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
         public WindsorAspectsContainer(IWindsorContainer container)
         {
             _kernel = container.Kernel;
-            _serviceProvider = new Dependency.WindsorServiceProvider(_kernel);
+            _dependencyProvider = new Dependency.WindsorDependencyProvider(_kernel);
         }
 
         /// <inheritdoc />
@@ -40,9 +40,9 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
         }
 
         /// <inheritdoc />
-        public override IServiceProvider GetServiceProvider()
+        public override IDependencyProvider GetDependencyProvider()
         {
-            return _serviceProvider;
+            return _dependencyProvider;
         }
     }
 }

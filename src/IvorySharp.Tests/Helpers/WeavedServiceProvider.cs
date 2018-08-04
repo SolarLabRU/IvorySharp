@@ -18,7 +18,7 @@ namespace IvorySharp.Tests.Helpers
         private Container _simpleInjectorContainer;
         private AspectWeaver _aspectWeaver;
 
-        public WeavedServiceProvider(IComponentsStore configuration)
+        public WeavedServiceProvider(IComponentsStore components)
         {
             _windsorContainer = new WindsorContainer();
             _simpleInjectorContainer = new Container();
@@ -53,18 +53,18 @@ namespace IvorySharp.Tests.Helpers
             _simpleInjectorContainer.Register<IMultiplyService, MultiplyService>();
             _simpleInjectorContainer.Register<IDependencyService, DependencyService>();
 
-            _aspectWeaver = new AspectWeaver(configuration);
+            _aspectWeaver = new AspectWeaver(components.AspectWeavePredicate, components.AspectPipelineExecutor, components.AspectInitializer);
         }
 
-        public TService GetService(WeavedServiceStoreType storeType)
+        public TService GetService(ServiceStoreType storeType)
         {
             switch (storeType)
             {
-                case WeavedServiceStoreType.TransientWeaving:
-                    return (TService) _aspectWeaver.Weave(new TImplementation(), typeof(TService));
-                case WeavedServiceStoreType.CastleWindsor:
+                case ServiceStoreType.TransientWeaving:
+                    return (TService) _aspectWeaver.Weave(new TImplementation(), typeof(TService), typeof(TImplementation));
+                case ServiceStoreType.CastleWindsor:
                     return _windsorContainer.Resolve<TService>();
-                case WeavedServiceStoreType.SimpleInjector:
+                case ServiceStoreType.SimpleInjector:
                     return _simpleInjectorContainer.GetInstance<TService>();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(storeType), storeType, null);

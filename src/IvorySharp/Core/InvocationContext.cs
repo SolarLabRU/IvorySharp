@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using IvorySharp.Comparers;
 
 namespace IvorySharp.Core
 {
@@ -8,12 +9,7 @@ namespace IvorySharp.Core
     /// Параметры вызова метода.
     /// </summary>
     public class InvocationContext
-    {
-        /// <summary>
-        /// Сравнивает два контекста на основе методов.
-        /// </summary>
-        public static IEqualityComparer<InvocationContext> MethodComparer { get; } = new MethodEqualityComparer();
-
+    {        
         /// <summary>
         /// Возвращаемое значение метода.
         /// </summary>
@@ -30,45 +26,60 @@ namespace IvorySharp.Core
         public MethodInfo Method { get; }
         
         /// <summary>
-        /// Экземпляр класса, вызов которого был перехвачен.
+        /// Экземпляр класса, в котором содержится вызываемый метод.
         /// </summary>
         public object Instance { get; }
         
         /// <summary>
-        /// Прокси экземпляра класса, вызов которого был перехвачен.
+        /// Экземпляр прокси.
         /// </summary>
-        public object Proxy { get; }
+        public object TransparentProxy { get; }
+
+        /// <summary>
+        /// Тип в котором определен вызываемый метод (интерфейс).
+        /// </summary>
+        public Type DeclaringType { get; }
         
         /// <summary>
-        /// Объявленный тип сущности, метод которой был вызван.
-        /// Может быть интерфейсом, который реализуется экземпляром <see cref="Instance"/>.
+        /// Тип в котором содержится реализация вызываемого метода.
         /// </summary>
-        public Type InstanceDeclaringType { get; }
+        public Type TargetType { get; }
 
         /// <summary>
         /// Инициализирует экземпляр модели вызова метода.
         /// </summary>
         /// <param name="arguments">Параметры вызова.</param>
         /// <param name="method">Вызываемый метод.</param>
-        /// <param name="instance">Экземпляр класса.</param>
-        /// <param name="proxy">Прокси.</param>
-        /// <param name="instanceDeclaringType">Объявленный тип объекта.</param>
+        /// <param name="instance">Экземпляр объекта.</param>
+        /// <param name="transparentProxy">Прокси.</param>
+        /// <param name="declaringType">Тип в котором определен вызываемый метод (интерфейс).</param>
+        /// <param name="targetType">Тип в котором содержится реализация вызываемого метода.</param>
         public InvocationContext(
             IReadOnlyCollection<object> arguments, 
             MethodInfo method, 
             object instance, 
-            object proxy, 
-            Type instanceDeclaringType)
+            object transparentProxy, 
+            Type declaringType, 
+            Type targetType)
         {
             Arguments = arguments;
             Method = method;
             Instance = instance;
-            InstanceDeclaringType = instanceDeclaringType;
-            Proxy = proxy;
+            DeclaringType = declaringType;
+            TargetType = targetType;
+            TransparentProxy = transparentProxy;
         }
-        
-        private sealed class MethodEqualityComparer : IEqualityComparer<InvocationContext>
+
+        /// <summary>
+        /// Выполняет сравнение контекстов на основе метода.
+        /// </summary>
+        internal sealed class ByMethodEqualityComparer : IEqualityComparer<InvocationContext>
         {
+            /// <summary>
+            /// Инициализированный экземпляр <see cref="ByMethodEqualityComparer"/>.
+            /// </summary>
+            public static readonly ByMethodEqualityComparer Instance = new ByMethodEqualityComparer();
+            
             /// <inheritdoc />
             public bool Equals(InvocationContext x, InvocationContext y)
             {
@@ -76,7 +87,7 @@ namespace IvorySharp.Core
                 if (ReferenceEquals(x, null)) return false;
                 if (ReferenceEquals(y, null)) return false;
                 if (x.GetType() != y.GetType()) return false;
-                return x.Method.Equals(y.Method);
+                return MethodEqualityComparer.Instance.Equals(x.Method, y.Method);
             }
 
             /// <inheritdoc />

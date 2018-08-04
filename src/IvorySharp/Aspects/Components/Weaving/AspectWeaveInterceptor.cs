@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using IvorySharp.Aspects.Components.Dependency;
-using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Components.Caching;
+using IvorySharp.Aspects.Components.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
 
@@ -12,57 +11,55 @@ namespace IvorySharp.Aspects.Components.Weaving
     /// <summary>
     /// Перехватчик для применения аспектов.
     /// </summary>
-    public class AspectWeaveInterceptor : IInterceptor
+    internal class AspectWeaveInterceptor : IInterceptor
     {
-        private MethodAspectDependencyInjector _aspectDependencyInjector;
-        
-        private Func<InvocationContext, List<MethodBoundaryAspect>> _methodBoundariesAspectsMemoizedProvider;
-        private Func<InvocationContext, MethodInterceptionAspect> _methodInterceptionAspectMemoizedProvider;
-        private Func<InvocationContext, bool> _isWeavableMemoizedProvider;
+        private readonly Func<InvocationContext, bool> _cachedWeavePredicate;
+        private readonly IMethodAspectPipelineExecutor _aspectPipelineExecutor;
+        private readonly IMethodAspectInitializer _aspectInitializer;
 
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="AspectWeaveInterceptor"/>.
         /// </summary>
-        /// <param name="settings">Конфигурация аспектов.</param>
-        public AspectWeaveInterceptor(IComponentsStore settings)
+        /// <param name="weaveablePredicate">Предикат применения аспектов.</param>
+        /// <param name="aspectPipelineExecutor">Компонент выполнения пайплайна.</param>
+        /// <param name="aspectInitializer"></param>
+        public AspectWeaveInterceptor(
+            IMethodAspectWeavePredicate weaveablePredicate,
+            IMethodAspectPipelineExecutor aspectPipelineExecutor, 
+            IMethodAspectInitializer aspectInitializer)
         {
-            _aspectDependencyInjector = new MethodAspectDependencyInjector(settings.ServiceProvider);
-
-            _methodBoundariesAspectsMemoizedProvider = Memoizer.Memoize(
-                MethodAspectFactory.Instance.CreateMethodBoundaryAspects,
-                InvocationContext.MethodComparer);
-
-            _methodInterceptionAspectMemoizedProvider = Memoizer.Memoize(
-                MethodAspectFactory.Instance.CreateMethodInterceptionAspect,
-                InvocationContext.MethodComparer);
-            
-            _isWeavableMemoizedProvider = Memoizer.Memoize(
-                ctx=> AspectWeaver.IsWeavable(ctx, settings),
-                InvocationContext.MethodComparer);
+            _aspectPipelineExecutor = aspectPipelineExecutor;
+            _aspectInitializer = aspectInitializer;
+            _cachedWeavePredicate = Cache.CreateProducer(
+                ctx => weaveablePredicate.IsWeaveable(ctx.Method, ctx.DeclaringType, ctx.TargetType), 
+                InvocationContext.ByMethodEqualityComparer.Instance);
         }
 
         /// <inheritdoc />
         public void Intercept(IInvocation invocation)
         {
-            if (!_isWeavableMemoizedProvider(invocation.Context))
+            if (!_cachedWeavePredicate(invocation.Context))
             {
                 invocation.Proceed();
                 return;
             }
 
-            var methodInterceptAspect = _methodInterceptionAspectMemoizedProvider(invocation.Context);
-            var methodBoundaryAspects = _methodBoundariesAspectsMemoizedProvider(invocation.Context);
+            var boundaryAspects = _aspectInitializer.InitializeBoundaryAspects(invocation.Context);
+            var interceptAspect = _aspectInitializer.InitializeInterceptionAspect(invocation.Context);
 
-            _aspectDependencyInjector.InjectDependencies(methodInterceptAspect);
-            methodInterceptAspect.Initialize();
-            
-            foreach (var aspect in methodBoundaryAspects)
+            _aspectPipelineExecutor.ExecutePipeline(
+                new MethodAspectInvocationPipeline(invocation, boundaryAspects, interceptAspect));
+
+            foreach (var aspect in boundaryAspects)
             {
-                _aspectDependencyInjector.InjectDependencies(aspect);
-                aspect.Initialize();
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                if (aspect is IDisposable ds1) 
+                    ds1.Dispose();
             }
-            
-            MethodAspectsExecutor.Instance.ExecuteAspects(invocation, methodBoundaryAspects, methodInterceptAspect);
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (interceptAspect is IDisposable ds2)
+                ds2.Dispose();
         }   
     }
 }

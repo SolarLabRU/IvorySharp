@@ -20,10 +20,10 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void InterceptMethod_SwallowException_ReturnsDefault(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void InterceptMethod_SwallowException_ReturnsDefault(ServiceStoreType storeType)
         {
             // Arrange
             var service = _serviceProvider.GetService(storeType);

@@ -1,6 +1,6 @@
 ﻿namespace IvorySharp.Tests.Helpers
 {
-    public enum WeavedServiceStoreType
+    public enum ServiceStoreType
     {
         TransientWeaving = 1,
         CastleWindsor = 2,

@@ -11,17 +11,18 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
     /// Адаптирует механизм перехвата под внутренний механизм библиотеки Dynamic.Proxy.
     /// И прокси использоваться тоже будут кастловские.
     /// </summary>
-    public class AspectWeaverInterceptorAdapter : Castle.DynamicProxy.IInterceptor
+    public class AspectWeaverInterceptorAdapter : IInterceptor
     {
         private readonly AspectWeaveInterceptor _aspectWeaveInterceptor;
-        
+
         /// <summary>
-        /// Адаптер для обработчика вызовов <see cref=" Castle.DynamicProxy.IInterceptor"/>.
+        /// Адаптер для обработчика вызовов <see cref="IInterceptor"/>.
         /// </summary>
-        /// <param name="configurations">Конфигурация аспектов.</param>
-        public AspectWeaverInterceptorAdapter(IComponentsStore configurations)
+        /// <param name="components">Конфигурация аспектов.</param>
+        public AspectWeaverInterceptorAdapter(IComponentsStore components)
         {
-            _aspectWeaveInterceptor = new AspectWeaveInterceptor(configurations);
+            _aspectWeaveInterceptor = new AspectWeaveInterceptor(
+                components.AspectWeavePredicate, components.AspectPipelineExecutor, components.AspectInitializer);
         }
 
         /// <inheritdoc />

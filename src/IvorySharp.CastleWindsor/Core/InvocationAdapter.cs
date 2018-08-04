@@ -58,15 +58,14 @@ namespace IvorySharp.CastleWindsor.Core
             MethodInvocationTarget = castleInvocation.MethodInvocationTarget;
             Proxy = castleInvocation.Proxy;
             TargetType = castleInvocation.TargetType;
-                
+
             Context = new InvocationContext(
                 castleInvocation.Arguments,
-                castleInvocation.Method, 
-                InvocationTarget, 
-                _castleInvocation.Proxy,
-                // TargetType не подходит, так как там - тип класса,
-                // а не интерфейса
-                Method.DeclaringType);
+                castleInvocation.Method,
+                InvocationTarget,
+                castleInvocation.Proxy,
+                Method.DeclaringType,
+                castleInvocation.TargetType);
         }
             
         /// <inheritdoc />
@@ -97,9 +96,9 @@ namespace IvorySharp.CastleWindsor.Core
         void IInvocation.Proceed()
         {
             _castleInvocation.Proceed();
-            
+
             ReturnValue = _castleInvocation.ReturnValue;
-            
+
             if (ReferenceEquals(ReturnValue, Context.Instance))
                 ReturnValue = Proxy;
         }

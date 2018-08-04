@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IServiceProvider = IvorySharp.Aspects.Components.Dependency.IServiceProvider;
 
 namespace IvorySharp.Benchmark.Fakes
 {
-    public class DummyServiceProvider : Aspects.Components.Dependency.IServiceProvider
+    public class DummyDependencyProvider : Aspects.Components.Dependency.IDependencyProvider
     {
         private Dictionary<Type, object> _container;
 
-        public DummyServiceProvider(Dictionary<Type, object> container)
+        public DummyDependencyProvider(Dictionary<Type, object> container)
         {
             _container = container;
         }

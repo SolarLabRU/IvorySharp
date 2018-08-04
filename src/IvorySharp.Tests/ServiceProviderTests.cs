@@ -17,8 +17,8 @@ namespace IvorySharp.Tests
 {
     public class ServiceProviderTests
     {
-        private readonly IServiceProvider _simpleInjectorServiceProvider;
-        private readonly IServiceProvider _windsorServiceProvider;
+        private readonly IDependencyProvider _simpleInjectorDependencyProvider;
+        private readonly IDependencyProvider _windsorDependencyProvider;
 
         public ServiceProviderTests()
         {
@@ -31,7 +31,7 @@ namespace IvorySharp.Tests
             simpleInjectorContainer.Register<ISingleBoundaryAspectService, SingleBoundaryAspectService>();
             simpleInjectorContainer.Register<IDependencyService, DependencyService>();
 
-            _simpleInjectorServiceProvider = new SimpleInjectorServiceProvider(simpleInjectorContainer);
+            _simpleInjectorDependencyProvider = new SimpleInjectorDependencyProvider(simpleInjectorContainer);
 
             var windsorContainer = new WindsorContainer();
 
@@ -49,15 +49,15 @@ namespace IvorySharp.Tests
                     .For<IDependencyService>()
                     .ImplementedBy<DependencyService>());
 
-            _windsorServiceProvider =
-                new CastleWindsor.Aspects.Dependency.WindsorServiceProvider(windsorContainer.Kernel);
+            _windsorDependencyProvider =
+                new CastleWindsor.Aspects.Dependency.WindsorDependencyProvider(windsorContainer.Kernel);
         }
 
         [Fact]
         public void SimpleInjector_GetService_Weaved_ReturnsProxy()
         {
             // Arrange
-            var service = _simpleInjectorServiceProvider.GetService<ISingleBoundaryAspectService>();
+            var service = _simpleInjectorDependencyProvider.GetService<ISingleBoundaryAspectService>();
 
             // Assert
             // ReSharper disable once SuspiciousTypeConversion.Global
@@ -68,7 +68,7 @@ namespace IvorySharp.Tests
         public void SimpleInjector_GetTransparentService_Weaved_ReturnsTransparentInstance()
         {
             // Arrange
-            var service = _simpleInjectorServiceProvider.GetTransparentService<ISingleBoundaryAspectService>();
+            var service = _simpleInjectorDependencyProvider.GetTransparentService<ISingleBoundaryAspectService>();
 
             // Assert
             // ReSharper disable once SuspiciousTypeConversion.Global
@@ -79,7 +79,7 @@ namespace IvorySharp.Tests
         public void SimpleInjector_GetTransparentService_NotWeaved_ReturnsInstance()
         {
             // Arrange
-            var service = _simpleInjectorServiceProvider.GetTransparentService<IDependencyService>();
+            var service = _simpleInjectorDependencyProvider.GetTransparentService<IDependencyService>();
 
             // Act & Assert
             // ReSharper disable once SuspiciousTypeConversion.Global
@@ -90,7 +90,7 @@ namespace IvorySharp.Tests
         public void CastleWindsor_GetService_Weaved_ReturnsProxy()
         {
             // Arrange
-            var service = _windsorServiceProvider.GetService<ISingleBoundaryAspectService>();
+            var service = _windsorDependencyProvider.GetService<ISingleBoundaryAspectService>();
 
             // Assert
             Assert.True(ProxyUtil.IsProxy(service));
@@ -100,7 +100,7 @@ namespace IvorySharp.Tests
         public void CastleWindsor_GetTransparentService_Weaved_ReturnsTransparentInstance()
         {
             // Arrange
-            var service = _windsorServiceProvider.GetTransparentService<ISingleBoundaryAspectService>();
+            var service = _windsorDependencyProvider.GetTransparentService<ISingleBoundaryAspectService>();
 
             // Act
             service.BypassEmptyMethod();
@@ -113,7 +113,7 @@ namespace IvorySharp.Tests
         public void CastleWindsor_GetTransparentService_Noteaved_ReturnsInstance()
         {
             // Arrange
-            var service = _windsorServiceProvider.GetTransparentService<IDependencyService>();
+            var service = _windsorDependencyProvider.GetTransparentService<IDependencyService>();
 
             // Act & Assert
             Assert.False(ProxyUtil.IsProxy(service));

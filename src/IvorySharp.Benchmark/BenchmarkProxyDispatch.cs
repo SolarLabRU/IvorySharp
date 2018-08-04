@@ -13,6 +13,7 @@ namespace IvorySharp.Benchmark
         private IAppService _bypassProxyInstance;
         private IAppService _bypassWeavedInstance;
         private IDependencyAppService _dependencyAppService;
+        private DummyComponents _dummyComponents;
      
         [GlobalSetup]
         public void GlobalSetup()
@@ -23,14 +24,15 @@ namespace IvorySharp.Benchmark
                 [typeof(IDependencyService)] = new DependencyService()
             };
             
-            var serviceProvider = new DummyServiceProvider(serviceContainer);
-            var aspectsConfig = new DummyConfigurations {ServiceProvider = serviceProvider};
-            var weaver = new AspectWeaver(aspectsConfig);
-            
+            var dependencyProvider = new DummyDependencyProvider(serviceContainer);
+            _dummyComponents = new DummyComponents {DependencyProvider = dependencyProvider};
+
+            var weaver = new AspectWeaver(_dummyComponents.AspectWeavePredicate, _dummyComponents.AspectPipelineExecutor, _dummyComponents.AspectInitializer);
+
             _serviceInstance = new AppService();
-            _bypassProxyInstance = proxyGenerator.CreateInterceptProxy<IAppService>(new AppService(), new BypassInterceptor());
-            _bypassWeavedInstance = (IAppService) weaver.Weave(new AppService(), typeof(IAppService));
-            _dependencyAppService = (IDependencyAppService) weaver.Weave(new DependencyAppService(), typeof(IDependencyAppService));
+            _bypassProxyInstance = proxyGenerator.CreateInterceptProxy<IAppService, AppService>(new AppService(), new BypassInterceptor());
+            _bypassWeavedInstance = (IAppService) weaver.Weave(new AppService(), typeof(IAppService), typeof(AppService));
+            _dependencyAppService = (IDependencyAppService) weaver.Weave(new DependencyAppService(), typeof(IDependencyAppService), typeof(DependencyAppService));
          }
 
 

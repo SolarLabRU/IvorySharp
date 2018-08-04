@@ -13,8 +13,8 @@
         internal static bool IsFaulted(IInvocationPipeline pipeline)
         {
             return pipeline.CurrentException != null && (
-                       pipeline.FlowBehaviour == FlowBehaviour.ThrowException ||
-                       pipeline.FlowBehaviour == FlowBehaviour.RethrowException);
+                       pipeline.FlowBehavior == FlowBehavior.ThrowException ||
+                       pipeline.FlowBehavior == FlowBehavior.RethrowException);
         }
     }
 }

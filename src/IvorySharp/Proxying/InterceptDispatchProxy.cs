@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Components.Caching;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 using IvorySharp.Reflection;
@@ -15,7 +14,7 @@ namespace IvorySharp.Proxying
     {
         private IInterceptor _interceptor;
 
-        private Func<MethodInfo, Func<object, object[], object>> _methodInvokerFactory;
+        private Func<MethodInfo, Func<object, object[], object>> _cachedMethodInvokerFactory;
 
         /// <summary>
         /// Исходный объект, вызовы которого будут перехватываться.
@@ -23,39 +22,45 @@ namespace IvorySharp.Proxying
         public object Instance { get; private set; }
 
         /// <summary>
-        /// Прокси.
+        /// Экземпляр прокси.
         /// </summary>
         public object TransparentProxy { get; private set; }
-        
-        /// <summary>
-        /// Исходный тип экземпляра (обычно - интерфейс, от которого строится прокси).
-        /// </summary>
-        public Type InstanceDeclaringType { get; private set; }
 
         /// <summary>
-        /// Создает экземпляр прокси объекта типа <paramref name="instanceDeclaringType"/>.
+        /// Тип, в котором объявлен целевой метод (интерфейс).
+        /// </summary>
+        public Type DeclaringType { get; private set; }
+
+        /// <summary>
+        /// Тип, в котором содержится реализация целевого метода.
+        /// </summary>
+        public Type TargetType { get; private set; }
+
+        /// <summary>
+        /// Создает экземпляр прокси объекта типа <paramref name="declaringType"/>.
         /// При этом тип обязательно должен быть интерфейсом.
         /// Все обращения к методам объекта <paramref name="instance"/>, которые реализуются от интерфейса
-        /// <paramref name="instanceDeclaringType"/> будут проксированы через метод <see cref="Invoke(MethodInfo, object[])"/>
+        /// <paramref name="declaringType"/> будут проксированы через метод <see cref="Invoke(MethodInfo, object[])"/>
         /// и перехвачены обработчиком <paramref name="interceptor"/>.
         /// </summary>
         /// <param name="instance">Экземпляр объекта для создания прокси.</param>
-        /// <param name="instanceDeclaringType">Тип прокси. Задается как интерфейс, который реализуется типом объекта <paramref name="instance"/>.</param>
+        /// <param name="declaringType">Объявленный тип экземпляра (интерфейс).</param>
+        /// <param name="targetType">Фактический тип экземпляра.</param>
         /// <param name="interceptor">Компонент для перехвата вызовов методов.</param>
-        /// <returns>Экземляр прокси типа <paramref name="instanceDeclaringType"/>.</returns>
-        public static object CreateTransparentProxy(object instance, Type instanceDeclaringType, IInterceptor interceptor)
+        /// <returns>Экземляр прокси типа <paramref name="declaringType"/>.</returns>
+        public static object CreateTransparentProxy(object instance, Type declaringType, Type targetType, IInterceptor interceptor)
         {
-            if (!instanceDeclaringType.IsInterface)
+            if (!declaringType.IsInterface)
             {
                 throw new InvalidOperationException(
                     "Проксирование допускается только для интерфейсов. " +
-                    $"Параметр '{nameof(instanceDeclaringType)}': {instanceDeclaringType.FullName}");
+                    $"Параметр '{nameof(declaringType)}': {declaringType.FullName}");
             }
             
-            var transparentProxy = CreateTrasparentProxy<InterceptDispatchProxy>(instanceDeclaringType);
+            var transparentProxy = CreateTrasparentProxy<InterceptDispatchProxy>(declaringType);
             var interceptProxy = (InterceptDispatchProxy) transparentProxy;
             
-            interceptProxy.Initialize(instance, transparentProxy, instanceDeclaringType, interceptor);
+            interceptProxy.Initialize(instance, transparentProxy, declaringType, targetType, interceptor);
 
             return transparentProxy;
         }
@@ -65,9 +70,9 @@ namespace IvorySharp.Proxying
         {
             try
             {
-                return AspectWeaver.NotInterceptableMethods.Any(m => ReferenceEquals(m, targetMethod)) 
-                    ? Bypass(targetMethod, args)
-                    : Intercept(targetMethod, args);
+                return targetMethod.IsInterceptable()
+                    ? Intercept(targetMethod, args) 
+                    : Bypass(targetMethod, args);
             }
             catch (TargetInvocationException e)
             {
@@ -96,33 +101,34 @@ namespace IvorySharp.Proxying
         /// <returns>Результат выполнения метода (null, если тип void).</returns>
         private object Intercept(MethodInfo targetMethod, object[] args)
         {
-            var context = new InvocationContext(args, targetMethod, Instance, TransparentProxy, InstanceDeclaringType);
-            var invoker = _methodInvokerFactory(targetMethod);
+            var context = new InvocationContext(args, targetMethod, Instance, TransparentProxy, DeclaringType, TargetType);
+            var invoker = _cachedMethodInvokerFactory(targetMethod);
             
             var invocation = new Invocation(context, invoker);
             
             _interceptor.Intercept(invocation);
 
-            return targetMethod.IsVoidReturn()
-                ? default
-                : invocation.Context.ReturnValue;
+            return targetMethod.IsVoidReturn() ? default : invocation.Context.ReturnValue;
         }
 
         /// <summary>
         /// Выполняет инициализацию прокси.
         /// </summary>
-        /// <param name="instance">Экземпляр объекта для создания прокси.</param>
-        /// <param name="transparentProxy">Прокси.</param>
-        /// <param name="instanceDeclaringType">Тип прокси. Задается как интерфейс, который реализуется типом объекта <paramref name="instance"/>.</param>
+        /// <param name="instance">Экземпляр класса для перехвата вызовов.</param>
+        /// <param name="transparentProxy">Экземпляр прокси.</param>
+        /// <param name="declaringType">Тип, в котором объявлен метод.</param>
+        /// <param name="targetType">Тип, в котором содержится реализация метода.</param>
         /// <param name="interceptor">Компонент для перехвата вызовов методов.</param>
-        private void Initialize(object instance, object transparentProxy, Type instanceDeclaringType, IInterceptor interceptor)
+        private void Initialize(object instance, object transparentProxy, Type declaringType, Type targetType, IInterceptor interceptor)
         {
             Instance = instance;
-            InstanceDeclaringType = instanceDeclaringType;
             TransparentProxy = transparentProxy;
+            DeclaringType = declaringType;
+            TargetType = targetType;
+
             _interceptor = interceptor;
 
-            _methodInvokerFactory = Memoizer.Memoize<MethodInfo, Func<object, object[], object>>(
+            _cachedMethodInvokerFactory = Cache.CreateProducer<MethodInfo, Func<object, object[], object>>(
                 Expressions.CreateMethodInvoker);
         }
     }

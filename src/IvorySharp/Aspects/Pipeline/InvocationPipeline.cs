@@ -8,9 +8,9 @@ using IvorySharp.Extensions;
 namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
-    /// Реализация пайплайна выполнения метода.
+    /// Базовый пайплайн выполнения метода.
     /// </summary>
-    internal class InvocationPipeline : IInvocationPipeline
+    internal abstract class InvocationPipeline : IInvocationPipeline
     {
         private static readonly object SyncRoot = new object();
         private readonly IDictionary<Type, object> _pipelineData;
@@ -20,6 +20,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// </summary>
         internal MethodAspect CurrentExecutingAspect { get; set; }
 
+        /// <summary>
+        /// Модель вызова.
+        /// </summary>
+        internal IInvocation Invocation { get; }
+
         /// <inheritdoc />
         public InvocationContext Context { get; }
 
@@ -27,7 +32,7 @@ namespace IvorySharp.Aspects.Pipeline
         public Exception CurrentException { get; set; }
 
         /// <inheritdoc />
-        public FlowBehaviour FlowBehaviour { get; set; }
+        public FlowBehavior FlowBehavior { get; set; }
 
         /// <inheritdoc />
         public bool CanReturnResult { get; }
@@ -45,22 +50,24 @@ namespace IvorySharp.Aspects.Pipeline
         internal InvocationPipeline(IInvocation invocation)
         {
             _pipelineData = new ConcurrentDictionary<Type, object>();
+
             Context = invocation.Context;
             CanReturnResult = !Context.Method.IsVoidReturn();
+            Invocation = invocation;
         }
 
         /// <inheritdoc />
         public void ReturnValue(object returnValue)
         {
             CurrentException = null;
-            FlowBehaviour = FlowBehaviour.Return;
+            FlowBehavior = FlowBehavior.Return;
             
             if (Context.Method.IsVoidReturn())
             {
                 throw new IvorySharpException(
                     $"Невозможно вернуть значение '{returnValue}' из аспекта '{CurrentExecutingAspect?.GetType().FullName}'. " +
-                    $"Метод '{Context.Method.Name}' типа '{Context.InstanceDeclaringType.FullName}' " +
-                    "не имеет возвращаемого значения (void). " +
+                    $"Метод '{Context.Method.Name}' типа '{Context.DeclaringType.FullName}' " +
+                    $"не имеет возвращаемого значения (void). " +
                     $"Для возврата используйте перегрузку '{nameof(ReturnValue)}' без параметров.");
             }
 
@@ -75,7 +82,7 @@ namespace IvorySharp.Aspects.Pipeline
                     throw new IvorySharpException(
                         $"Невозможно вернуть значение '{returnValue}' из аспекта '{CurrentExecutingAspect?.GetType().FullName}'. " +
                         $"Тип результата '{returnValue.GetType().FullName}' невозможно привести к возвращаемому типу '{Context.Method.ReturnType.FullName}' " +
-                        $"метода '{Context.Method.Name}' сервиса 'InvocationContext.InstanceDeclaringType.FullName'.");
+                        $"метода '{Context.Method.Name}' сервиса '{Context.DeclaringType.FullName}'.");
                 }
 
                 Context.ReturnValue = returnValue;
@@ -85,14 +92,14 @@ namespace IvorySharp.Aspects.Pipeline
         /// <inheritdoc />
         public void ReturnDefault()
         {
-            FlowBehaviour = FlowBehaviour.Return;
+            FlowBehavior = FlowBehavior.Return;
             Context.ReturnValue = Context.Method.ReturnType.GetDefaultValue();
         }
 
         /// <inheritdoc />
         public void Return()
         {
-            FlowBehaviour = FlowBehaviour.Return;
+            FlowBehavior = FlowBehavior.Return;
 
             // Если забыли указать результат, то ставим результат по умолчанию
             // Возможно лучше отдельно проверять этот кейс и кидать исключение
@@ -106,14 +113,14 @@ namespace IvorySharp.Aspects.Pipeline
         public void ThrowException(Exception exception)
         {
             CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
-            FlowBehaviour = FlowBehaviour.ThrowException;
+            FlowBehavior = FlowBehavior.ThrowException;
         }
 
         /// <inheritdoc />
         public void RethrowException(Exception exception)
         {
             CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
-            FlowBehaviour = FlowBehaviour.RethrowException;
+            FlowBehavior = FlowBehavior.RethrowException;
         }
 
         private object GetAspectState()

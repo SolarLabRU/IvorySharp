@@ -11,6 +11,7 @@ namespace IvorySharp.Tests
     /// <summary>
     /// Набор тестов для аспектов типа <see cref="MethodBoundaryAspect"/>.
     /// </summary>
+    /// TODO: Переписать на нормальные Юнит тесты + Интеграционные
     public class MethodBoundaryAspectsTests
     {
         private readonly WeavedServiceProvider<ISingleBoundaryAspectService, SingleBoundaryAspectService> _sAspectServiceProvider;
@@ -33,7 +34,7 @@ namespace IvorySharp.Tests
             _sInterfaceExtensionService2Provider = new WeavedServiceProvider<IInterfaceExtensionService2, InterfaceExtensionService2>(new NullComponentsStore());
 
             _sRethrowServiceProvider = new WeavedServiceProvider<IRethrowExceptionService, RethrowExceptionService>(new NullComponentsStore());
-            
+
             ObservableBoundaryAspect.ClearCallings();
         }
 
@@ -42,10 +43,10 @@ namespace IvorySharp.Tests
         /// вызываются обработчиет OnEntry, OnSuccess, OnExit.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_NormalFlow_BoundariesCalled(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_NormalFlow_BoundariesCalled(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -64,10 +65,10 @@ namespace IvorySharp.Tests
         /// OnSuccess и OnExit могут изменять результат выполнения метода.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_NormalFlow_ReturnValueChangesBy_Exit_And_Success_Boundaries(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_NormalFlow_ReturnValueChangesBy_Exit_And_Success_Boundaries(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -85,10 +86,10 @@ namespace IvorySharp.Tests
         /// Выполняет проверку, что обработчик Entry не может изменить результат метода при обычном выполнении.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_NormalFlow_ReturnValueNotChanged_By_Entry_Boundary(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_NormalFlow_ReturnValueNotChanged_By_Entry_Boundary(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -105,10 +106,10 @@ namespace IvorySharp.Tests
         /// при этом исключение не будет выброшено наверх.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_ExceptionFlow_EmptyMethod_SwallowException_NotThrowed(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_ExceptionFlow_EmptyMethod_SwallowException_NotThrowed(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -124,10 +125,10 @@ namespace IvorySharp.Tests
         /// при этом исключение не будет выброшено наверх.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_ExceptionFlow_ValueReturnMethod_SwallowException_DefaultResult(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_ExceptionFlow_ValueReturnMethod_SwallowException_DefaultResult(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -144,10 +145,10 @@ namespace IvorySharp.Tests
         /// при этом исключение не будет выброшено наверх.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_ExceptionFlow_RefReturnMethod_SwallowException_NullResult(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_ExceptionFlow_RefReturnMethod_SwallowException_NullResult(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -164,10 +165,10 @@ namespace IvorySharp.Tests
         /// при этом исключение не будет выброшено наверх.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_ExceptionFlow_ValueReturnMethod_SwallowException_SetResult(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_ExceptionFlow_ValueReturnMethod_SwallowException_SetResult(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -184,10 +185,10 @@ namespace IvorySharp.Tests
         /// при этом исключение не будет выброшено наверх.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_ExceptionFlow_RefReturnMethod_SwallowException_SetResult(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_ExceptionFlow_RefReturnMethod_SwallowException_SetResult(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -203,10 +204,10 @@ namespace IvorySharp.Tests
         /// Выполняет проверку, что пустой обработчик ошибок не предотвращает прокидывание исключения.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_ExceptionFlow_BypassAspect_NotSwallowException(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_ExceptionFlow_BypassAspect_NotSwallowException(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -221,11 +222,11 @@ namespace IvorySharp.Tests
         /// Выполняет проверку, что обработчик ошибок может заменить исключение на свое.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
         public void SingleAspect_ExceptionFlow_ReplaceExceptionAspect_NewExceptionThrowed(
-            WeavedServiceStoreType storeType)
+            ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -237,10 +238,10 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspectTypeLevel_InterfaceExtend_BaseInterfaceMethods_TriggerOnException(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspectTypeLevel_InterfaceExtend_BaseInterfaceMethods_TriggerOnException(ServiceStoreType storeType)
         {
             // Arrange 
             var service = _sInterfaceExtensionServiceProvider.GetService(storeType);
@@ -252,10 +253,10 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspectMethodLevel_InterfaceExtend_BaseInterfaceMethods_TriggerOnException(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspectMethodLevel_InterfaceExtend_BaseInterfaceMethods_TriggerOnException(ServiceStoreType storeType)
         {
             // Arrange 
             var service = _sInterfaceExtensionService2Provider.GetService(storeType);
@@ -272,28 +273,28 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_RethrowException_ThrowsCorrectException(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_RethrowException_ThrowsCorrectException(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sRethrowServiceProvider.GetService(storeType);
-            
+
             // Act & Assert
             Assert.Throws<ArgumentException>(() => service.RethrowArgumentException());
-            
+
             AspectAssert.OnExceptionCalled(typeof(RethrowExceptionAspect));
         }
-        
+
         /// <summary>
         /// Выполняет проверку, что несколько обработчиков выполняются в порядке убывания приоритета.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void MultipleAspects_NormalFlow_AspectsExecutedInAscOrder(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_AspectsExecutedInAscOrder(ServiceStoreType storeType)
         {
             // Arrange
             var service = _mAspectServiceProvider.GetService(storeType);
@@ -306,10 +307,10 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void MultipleAspects_NormalFlow_RootLevelAspectsApplied(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_RootLevelAspectsApplied(ServiceStoreType storeType)
         {
             // Arrange
             var service = _tAspectServiceProvider.GetService(storeType);
@@ -322,10 +323,10 @@ namespace IvorySharp.Tests
         }
         
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void MultipleAspects_NormalFlow_SuppressWeaveAttribute_PreventsRootBoundaryExecuting(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_SuppressWeaveAttribute_PreventsRootBoundaryExecuting(ServiceStoreType storeType)
         {
             // Arrange
             var service = _tAspectServiceProvider.GetService(storeType);
@@ -338,10 +339,10 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void MultipleAspects_NormalFlow_RootLevelAspect_With_SingleMethodAspect(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_RootLevelAspect_With_SingleMethodAspect(ServiceStoreType storeType)
         {
             // Arrange
             var service = _tAspectServiceProvider.GetService(storeType);
@@ -354,10 +355,10 @@ namespace IvorySharp.Tests
         }
         
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void MultipleAspects_NormalFlow_RootLevelAspect_With_MultipleMethodAspect(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_NormalFlow_RootLevelAspect_With_MultipleMethodAspect(ServiceStoreType storeType)
         {
             // Arrange
             var service = _tAspectServiceProvider.GetService(storeType);
@@ -370,10 +371,10 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void MultipleAspects_ExceptionFlow_If_ExceptionThrowedOnSuccess_It_Will_NotHandled_BySelf_Or_Outer_Aspect(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_ExceptionFlow_If_ExceptionThrowedOnSuccess_It_Will_NotHandled_BySelf_Or_Outer_Aspect(ServiceStoreType storeType)
         {
             // Arrange
             var service = _mAspectServiceProvider.GetService(storeType);
@@ -383,10 +384,10 @@ namespace IvorySharp.Tests
         }
         
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void MultipleAspects_ExceptionFlow_If_ExceptionThrowedOnEntry_It_Will_NotHandled_BySelf_Or_Outer_Aspect(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void MultipleAspects_ExceptionFlow_If_ExceptionThrowedOnEntry_It_Will_NotHandled_BySelf_Or_Outer_Aspect(ServiceStoreType storeType)
         {
             // Arrange
             var service = _mAspectServiceProvider.GetService(storeType);
@@ -396,11 +397,11 @@ namespace IvorySharp.Tests
         }
         
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
         public void MultipleAspects_ExceptionFlow_If_ExceptionThrowedOnExit_It_Will_NotHandled_BySelf_Or_Outer_Aspect(
-            WeavedServiceStoreType storeType)
+            ServiceStoreType storeType)
         {
             // Arrange
             var service = _mAspectServiceProvider.GetService(storeType);
@@ -410,11 +411,11 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
         public void MultipleAspects_ExceptionFlow_If_ExceptionSwallowed_ByInnerHandler_OuterOnSuccess_Called(
-            WeavedServiceStoreType storeType)
+            ServiceStoreType storeType)
         {
             // Arrange
             var service = _mAspectServiceProvider.GetService(storeType);
@@ -432,11 +433,11 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
         public void MultipleAspects_NormalFlow_If_BoundaryCallsReturn_Inner_OnSuccess_NotCalled_ButOuter_Does(
-            WeavedServiceStoreType storeType)
+            ServiceStoreType storeType)
         {
             // Arrange
             var service = _mAspectServiceProvider.GetService(storeType);
@@ -461,11 +462,11 @@ namespace IvorySharp.Tests
         }
         
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
         public void MultipleAspects_ExceptionFlow_If_BoundaryThrowPipeline_NextAspect_NotInvoked_ButPrevious_CallsOnExit(
-                WeavedServiceStoreType storeType)
+                ServiceStoreType storeType)
         {
             // Arrange
             var service = _mAspectServiceProvider.GetService(storeType);
@@ -491,47 +492,47 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
         public void MultipleAspects_RethrowFlow_RethrowOnException_Handled_InOnException_HigherOrder_Aspect(
-            WeavedServiceStoreType storeType)
+            ServiceStoreType storeType)
         {
             // Arrange
             var service = _sRethrowServiceProvider.GetService(storeType);
-            
+
             // Act
             service.RethrowArgumentExceptionThenSwallow();
-            
+
             // Assert
             AspectAssert.OnExceptionCalled(typeof(RethrowExceptionAspect));
             AspectAssert.OnExceptionCalled(typeof(SwallowExceptionIfTypeMatchAspect));
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
         public void MultipleAspects_RethrowFlow_RethrowOnEntry_Handled_InOnException_HigherOrder_Aspect(
-            WeavedServiceStoreType storeType)
+            ServiceStoreType storeType)
         {
             // Arrange
             var service = _sRethrowServiceProvider.GetService(storeType);
-            
+
             // Act
             var result = service.RehrowOnEntryThenSwallowReturn42();
-            
+
             // Assert
             AspectAssert.OnEntryCalled(typeof(RethrowExceptionAspect));
             AspectAssert.OnExceptionCalled(typeof(SwallowExceptionAspect42Result));
-            
+
             Assert.Equal(42, result);
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void SingleAspect_NormalFlow_ServiceProvider_InjectInstance_Correct(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void SingleAspect_NormalFlow_ServiceProvider_InjectInstance_Correct(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);
@@ -544,9 +545,9 @@ namespace IvorySharp.Tests
         }
 
         [Theory]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void AspectDependency_WithPublicGetSet_Works_ServiceInjected(WeavedServiceStoreType storeType)
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void AspectDependency_WithPublicGetSet_Works_ServiceInjected(ServiceStoreType storeType)
         {
             // Arrange
             var service = _sAspectServiceProvider.GetService(storeType);

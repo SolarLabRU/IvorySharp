@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
-using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Components.Caching;
+using IvorySharp.Aspects.Components.Creation;
 using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Core;
-using IvorySharp.Extensions;
+using IvorySharp.Helpers;
 using IvorySharp.Proxying;
 
 namespace IvorySharp.Aspects.Components.Weaving
@@ -14,109 +12,43 @@ namespace IvorySharp.Aspects.Components.Weaving
     /// </summary>
     public class AspectWeaver
     {
-        /// <summary>
-        /// Массив типов для которых нельзя применять обвязку.
-        /// </summary>
-        public static readonly Type[] NotWeavableTypes = {
-            typeof(IInterceptor),
-            typeof(IInvocation),
-            typeof(IServiceProvider),
-            typeof(IInvocationPipeline)
-        };
+        private readonly IMethodAspectPipelineExecutor _aspectPipelineExecutor;
+        private readonly IMethodAspectInitializer _aspectInitializer;
+        private readonly IMethodAspectWeavePredicate _aspectWeavePredicate;
 
-        /// <summary>
-        /// Массив методов, которые нельзя перехватывать.
-        /// </summary>
-        public static readonly MethodInfo[] NotInterceptableMethods =
-        {
-            typeof(object).GetMethod(nameof(GetType)),
-            typeof(object).GetMethod(nameof(ReferenceEquals))
-        };
-        
-        private readonly IComponentsStore _configuration;
+        private readonly Func<TypePair, bool> _cachedWeaveable;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectWeaver"/>.
         /// </summary>
-        /// <param name="configuration">Конфигурация аспектов.</param>
-        public AspectWeaver(IComponentsStore configuration)
+        public AspectWeaver(
+            IMethodAspectWeavePredicate aspectWeavePredicate, 
+            IMethodAspectPipelineExecutor aspectPipelineExecutor, 
+            IMethodAspectInitializer aspectInitializer)
         {
-            _configuration = configuration;
+            _cachedWeaveable = Cache.CreateProducer(tp => aspectWeavePredicate
+                    .IsWeaveable(tp.DeclaringType, tp.TargetType),
+                TypePair.EqualityComparer.Instance);
+
+            _aspectPipelineExecutor = aspectPipelineExecutor;
+            _aspectInitializer = aspectInitializer;
+            _aspectWeavePredicate = aspectWeavePredicate;
         }
 
         /// <summary>
         /// Выполняет связывание исходного объекта с заданными для него аспектами.
         /// </summary>
         /// <param name="target">Экземпляр исходного объекта.</param>
-        /// <param name="targetDeclaredType">Объявленный тип исходного объекта.</param>
-        /// <returns>Экземпляр связанного с аспектами исходного объекта типа <paramref name="targetDeclaredType"/>.</returns>
-        public object Weave(object target, Type targetDeclaredType)
+        /// <param name="declaringType">Объявленный тип исходного объекта.</param>
+        /// <param name="targetType">Фактический тип исходного объекта.</param>
+        /// <returns>Экземпляр связанного с аспектами исходного объекта типа <paramref name="declaringType"/>.</returns>
+        public object Weave(object target, Type declaringType, Type targetType)
         {
-            if (!IsWeavable(targetDeclaredType, _configuration))
+            if (!_cachedWeaveable(new TypePair(declaringType, targetType)))
                 return target;
             
-            var interceptor = new AspectWeaveInterceptor(_configuration);
-            return InterceptProxyGenerator.Default.CreateInterceptProxy(target, targetDeclaredType, interceptor);
-        }
-
-        /// <summary>
-        /// Возвращает признак возможности применения обвязки для указанного типа.
-        /// </summary>
-        /// <param name="invocationContext">Контекст вызова.</param>
-        /// <param name="settings">Настройки.</param>
-        /// <returns>Признак возможности применения обвязки для указанного типа.</returns>
-        public static bool IsWeavable(InvocationContext invocationContext, IComponentsStore settings)
-        {
-            if (!invocationContext.InstanceDeclaringType.IsInterface)
-                return false;
-
-            if (NotWeavableTypes.Contains(invocationContext.InstanceDeclaringType))
-                return false;
-            
-            var suppressWeavingAttribute = invocationContext.InstanceDeclaringType.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false);
-            if (suppressWeavingAttribute.IsNotEmpty())
-                return false;
-
-            suppressWeavingAttribute = invocationContext.Method.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false);
-            if (suppressWeavingAttribute.IsNotEmpty())
-                return false;
-
-            var hasAttribute =
-                MethodAspect.GetMethodAspects<MethodAspect>(invocationContext.Method).IsNotEmpty() ||
-                MethodAspect.GetTypeHierarchyAspects<MethodAspect>(invocationContext.InstanceDeclaringType).IsNotEmpty() ||
-                MethodAspect.GetTypeHierarchyMethodAspects<MethodAspect>(invocationContext.InstanceDeclaringType).IsNotEmpty();
-
-            return hasAttribute;
-        }
-        
-        /// <summary>
-        /// Возвращает признак возможности применения обвязки для указанного типа.
-        /// </summary>
-        /// <param name="type">Тип для применения аспектов.</param>
-        /// <param name="settings">Настройки.</param>
-        /// <returns>Признак возможности применения обвязки для указанного типа.</returns>
-        public static bool IsWeavable(Type type, IComponentsStore settings)
-        {
-            if (!type.IsInterface)
-                return false;
-
-            if (NotWeavableTypes.Contains(type))
-                return false;
-            
-            // Если тип помечен атрибутом, который запрещает применение аспектов
-            var suppressWeavingAttribute = type.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false);
-            if (suppressWeavingAttribute.IsNotEmpty())
-                return false;
-
-            var aspectAttribute = MethodAspect.GetTypeHierarchyAspects<MethodAspect>(type);
-            if (aspectAttribute.IsNotEmpty())
-                return true;
-
-            var methodAspectAttributes = MethodAspect.GetTypeHierarchyMethodAspects<MethodAspect>(type);
-            if (methodAspectAttributes.IsNotEmpty())
-                return true;
-
-            return false;
+            var interceptor = new AspectWeaveInterceptor(_aspectWeavePredicate, _aspectPipelineExecutor, _aspectInitializer);
+            return InterceptProxyGenerator.Default.CreateInterceptProxy(target, declaringType, targetType, interceptor);
         }
     }
 }

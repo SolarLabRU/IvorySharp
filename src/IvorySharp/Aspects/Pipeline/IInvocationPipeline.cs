@@ -1,6 +1,5 @@
 ﻿using System;
 using IvorySharp.Core;
-using IServiceProvider = IvorySharp.Aspects.Components.Dependency.IServiceProvider;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -22,7 +21,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Текущее состояние потока.
         /// </summary>
-        FlowBehaviour FlowBehaviour { get; }
+        FlowBehavior FlowBehavior { get; }
         
         /// <summary>
         /// Признак возможности вернуть результат из метода.

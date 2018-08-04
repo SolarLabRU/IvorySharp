@@ -1,6 +1,6 @@
 ﻿using IvorySharp.Aspects.Pipeline;
 
-namespace IvorySharp.Aspects.Iterators
+namespace IvorySharp.Aspects.BoundaryIterators
 {
     /// <summary>
     /// Итератор для точки прикрепления <see cref="MethodBoundaryAspect.OnExit(IInvocationPipeline)"/>.
@@ -13,18 +13,18 @@ namespace IvorySharp.Aspects.Iterators
         }
 
         /// <inheritdoc />
-        protected override bool CanContinue(FlowBehaviour flowBehaviour)
+        protected override bool CanContinue(FlowBehavior flowBehavior)
         {
             return true;
         }
 
         /// <inheritdoc />
-        protected override bool ShouldBreak(FlowBehaviour flowBehaviour)
+        protected override bool ShouldBreak(FlowBehavior flowBehavior)
         {
-            return flowBehaviour == FlowBehaviour.RethrowException ||
-                   flowBehaviour == FlowBehaviour.Return ||
-                   flowBehaviour == FlowBehaviour.ThrowException;
-        }  
+            return flowBehavior == FlowBehavior.RethrowException ||
+                   flowBehavior == FlowBehavior.Return ||
+                   flowBehavior == FlowBehavior.ThrowException;
+        }
 
         /// <inheritdoc />
         protected override void ExecuteAspect(MethodBoundaryAspect aspect, IInvocationPipeline pipeline)

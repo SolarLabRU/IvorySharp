@@ -2,110 +2,110 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Iterators;
-using IvorySharp.Core;
+using IvorySharp.Aspects.BoundaryIterators;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
-    /// Компонент, выполняющий прикрепленные аспекты во время вызова метода.
+    /// Выполняет пайплайн <see cref="MethodAspectInvocationPipeline"/>.
     /// </summary>
-    internal class MethodAspectsExecutor
+    internal class MethodAspectInvocationPipelineExecutor : IMethodAspectPipelineExecutor
     {
         /// <summary>
-        /// Инициализированный экземпляр компонента.
+        /// Инициаилизированный экземпляр <see cref="MethodAspectInvocationPipeline"/>.
         /// </summary>
-        public static MethodAspectsExecutor Instance { get; } = new MethodAspectsExecutor();
+        public static readonly MethodAspectInvocationPipelineExecutor Instance = new MethodAspectInvocationPipelineExecutor();
 
-        private MethodAspectsExecutor() { }
-        
-        /// <summary>
-        /// Выполняет аспекты и вызов метода.
-        /// </summary>
-        /// <param name="invocation">Модель вызова метода.</param>
-        /// <param name="boundaryAspects">Аспекты, которые должны выполняться в точках прикрепления.</param>
-        /// <param name="interceptionAspect">Аспект, который должен перехватывать вызов основного метода.</param>
-        public void ExecuteAspects(
-            IInvocation invocation, 
-            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, 
-            MethodInterceptionAspect interceptionAspect)
+        private MethodAspectInvocationPipelineExecutor() { }
+
+        /// <inheritdoc />
+        public void ExecutePipeline(IInvocationPipeline basePipeline)
         {
-            var pipeline = new InvocationPipeline(invocation);
-            
+            // Это нарушает soLid, но позволяет не выставлять кучу классов наружу библиотеки.
+            var pipeline = (MethodAspectInvocationPipeline) basePipeline;
+
             var onEntryIterator = new OnEntryMethodBoundaryIterator(pipeline);
             var onExitIterator = new OnExitMethodBoundaryIterator(pipeline);
             var onSuccessIterator = new OnSuccessMethodBoundaryIterator(pipeline);
-            var stateAwareIteratorWrapper = new StateAwareIteratorWrapper();
+            var stateAwareMetaIterator = new PipelineStateAwareMetaIterator();
 
             try
             {
-                stateAwareIteratorWrapper.Iterate(onEntryIterator, boundaryAspects);
-                
+                stateAwareMetaIterator.Iterate(onEntryIterator, pipeline.BoundaryAspects);
+
                 // Перехватываем метод только при нормальном выполнении
                 // пайплайна
-                if (pipeline.FlowBehaviour == FlowBehaviour.Default)
+                if (pipeline.FlowBehavior == FlowBehavior.Default)
                 {
-                    interceptionAspect.OnInvoke(invocation);
+                    pipeline.InterceptionAspect.OnInvoke(pipeline.Invocation);
                 }
 
-                stateAwareIteratorWrapper.Iterate(onSuccessIterator, boundaryAspects); 
+                stateAwareMetaIterator.Iterate(onSuccessIterator, pipeline.BoundaryAspects);
             }
             catch (Exception e)
             {
                 // Если это исключение, сгенерированное каким-то из обработчиков -
                 // прокидываем его без изменений
-                if (pipeline.FlowBehaviour == FlowBehaviour.ThrowException)
+                if (pipeline.FlowBehavior == FlowBehavior.ThrowException)
                     throw;
 
                 // Устанавливаем исключение в пайплайн (распаковываем - если оно связано с рефлексией).
                 pipeline.CurrentException = e.UnwrapIf(e is TargetInvocationException && e.InnerException != null);
 
                 // Устанавливаем состояние пайплайна, при котором для каждого из обработчиков вызовется OnException
-                pipeline.FlowBehaviour = FlowBehaviour.RethrowException;
+                pipeline.FlowBehavior = FlowBehavior.RethrowException;
 
-                var onExceptionResult = stateAwareIteratorWrapper.Iterate(
-                    new OnExceptionMethodBoundaryIterator(pipeline), boundaryAspects, throwIfPipelineFaulted: false);
-                
+                var onExceptionResult = stateAwareMetaIterator.Iterate(
+                    new OnExceptionMethodBoundaryIterator(pipeline),
+                    pipeline.BoundaryAspects, throwIfPipelineFaulted: false);
+
                 var isPipelineFaulted = InvocationPipelineFlow.IsFaulted(pipeline);
                 var breaker = onExceptionResult.Breaker;
-                
+
                 // Если никто не смог обработать исключение или в процессе обработки
                 // появилось новое исключение - выбрасываем его наружу.
                 if (isPipelineFaulted)
                     pipeline.CurrentException.Rethrow();
-                
+
                 // Если один из обработчиков решил вернуть результат вместо исключения
                 // то мы должны позвать обработчики OnSuccess у всех родительских аспектов    
                 if (breaker != null && !isPipelineFaulted)
                 {
-                    var onSuccessAspects = boundaryAspects.Reverse()
+                    var onSuccessAspects = pipeline.BoundaryAspects.Reverse()
                         .TakeWhile(a => !Equals(a, breaker))
                         .ToArray();
-
-                    onSuccessIterator.Iterate(onSuccessAspects);
                     
+                    onSuccessIterator.Iterate(onSuccessAspects);
+
                     if (InvocationPipelineFlow.IsFaulted(pipeline))
                         pipeline.CurrentException.Rethrow();
                 }
             }
             finally
             {
-                stateAwareIteratorWrapper.Iterate(onExitIterator, boundaryAspects);
-                
+                stateAwareMetaIterator.Iterate(onExitIterator, pipeline.BoundaryAspects);
+
                 // В самом конце устанавливаем значение, если оно поддерживается исходным методом
-                if (!invocation.Context.Method.IsVoidReturn())
-                    pipeline.Context.ReturnValue = invocation.Context.ReturnValue;
+                if (!pipeline.Invocation.Context.Method.IsVoidReturn())
+                    pipeline.Context.ReturnValue = pipeline.Invocation.Context.ReturnValue;
             }
         }
-        
+
         /// <summary>
         /// Класс-обертка для вызова итератора аспектов.
         /// </summary>
-        private class StateAwareIteratorWrapper
+        private class PipelineStateAwareMetaIterator
         {
             private MethodBoundaryAspect _currentBreaker;
 
+            /// <summary>
+            /// Выполняет обход аспектов, запоминая состояние того, кто прервал цепочку вызовов.
+            /// </summary>
+            /// <param name="iterator">Итератор аспектов.</param>
+            /// <param name="aspects">Коллекция аспектов.</param>
+            /// <param name="throwIfPipelineFaulted">Признак необходимости выбросить исключение, если при выполнении пайплайна случилась или была сгенерирована ошибка.</param>
+            /// <returns>Результат обхода аспектов.</returns>
             public MethodBoundaryIterator.BoundaryIterationResult Iterate(
                 MethodBoundaryIterator iterator,
                 IReadOnlyCollection<MethodBoundaryAspect> aspects,
@@ -113,7 +113,7 @@ namespace IvorySharp.Aspects.Pipeline
             {
                 var result = _currentBreaker == null
                     ? iterator.Iterate(aspects)
-                    : iterator.Iterate(aspects, _currentBreaker.Order);
+                    : iterator.Iterate(aspects, _currentBreaker.InternalOrder);
 
                 if (throwIfPipelineFaulted)
                 {
@@ -123,7 +123,6 @@ namespace IvorySharp.Aspects.Pipeline
                 }
 
                 _currentBreaker = result.Breaker;
-            
                 return result;
             }
         }

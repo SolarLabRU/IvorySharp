@@ -6,7 +6,7 @@ namespace IvorySharp.Proxying
     /// <summary>
     /// Генератор прокси для перехватов вызова методов объекта.
     /// </summary>
-    public sealed class InterceptProxyGenerator : IInterceptProxyGenerator
+    internal sealed class InterceptProxyGenerator : IInterceptProxyGenerator
     {
         /// <summary>
         /// Экземпляр генератора по умолчанию.
@@ -16,15 +16,17 @@ namespace IvorySharp.Proxying
         private InterceptProxyGenerator() { }
 
         /// <inheritdoc />
-        public T CreateInterceptProxy<T>(T target, IInterceptor interceptor) where T : class
+        public TInterface CreateInterceptProxy<TInterface, TClass>(TClass target, IInterceptor interceptor) 
+            where TInterface : class 
+            where TClass : TInterface
         {
-            return (T)InterceptDispatchProxy.CreateTransparentProxy(target, typeof(T), interceptor);
+            return (TInterface) InterceptDispatchProxy.CreateTransparentProxy(target, typeof(TInterface), typeof(TClass), interceptor);
         }
 
         /// <inheritdoc />
-        public object CreateInterceptProxy(object target, Type targetDeclaredType, IInterceptor interceptor)
+        public object CreateInterceptProxy(object target, Type declaredType, Type targetType, IInterceptor interceptor)
         {
-            return InterceptDispatchProxy.CreateTransparentProxy(target, targetDeclaredType, interceptor);
+            return InterceptDispatchProxy.CreateTransparentProxy(target, declaredType, targetType, interceptor);
         }
     }
 }

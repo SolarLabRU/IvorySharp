@@ -23,10 +23,10 @@ namespace IvorySharp.Tests
         /// а не внутренний тип прокси.
         /// </summary>
         [Theory]
-        [InlineData(WeavedServiceStoreType.TransientWeaving)]
-        [InlineData(WeavedServiceStoreType.CastleWindsor)]
-        [InlineData(WeavedServiceStoreType.SimpleInjector)]
-        public void Return_This_From_Proxied_Method_Returns_Proxy(WeavedServiceStoreType serviceStoreType)
+        [InlineData(ServiceStoreType.TransientWeaving)]
+        [InlineData(ServiceStoreType.CastleWindsor)]
+        [InlineData(ServiceStoreType.SimpleInjector)]
+        public void Return_This_From_Proxied_Method_Returns_Proxy(ServiceStoreType serviceStoreType)
         {
             // Arrange
             var proxy = _serviceProvider.GetService(serviceStoreType);

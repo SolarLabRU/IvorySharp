@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq.Expressions;
+using IvorySharp.Aspects.Components.Dependency;
 using IvorySharp.Aspects.Components.Weaving;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Integration;
 using SimpleInjector;
-using IServiceProvider = IvorySharp.Aspects.Components.Dependency.IServiceProvider;
 
 namespace IvorySharp.SimpleInjector.Aspects.Integration
 {
@@ -14,7 +14,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
     public class SimpleInjectorAspectContainer : AspectsContainer
     {       
         private readonly Container _container;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IDependencyProvider _dependencyProvider;
         
         /// <summary>
         /// Инициализирует экземпляр <see cref="SimpleInjectorAspectContainer"/>.
@@ -23,22 +23,27 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         public SimpleInjectorAspectContainer(Container container)
         {
             _container = container;        
-            _serviceProvider = new SimpleInjectorServiceProvider(container);
+            _dependencyProvider = new SimpleInjectorDependencyProvider(container);
         }
 
         /// <inheritdoc />
-        public override void BindAspects(IComponentsStore settings)
+        public override void BindAspects(IComponentsStore components)
         {  
-            var weaver = new AspectWeaver(settings);
-            object Proxier(object o, Type type) => weaver.Weave(o, type);
+            var weaver = new AspectWeaver(components.AspectWeavePredicate, components.AspectPipelineExecutor, components.AspectInitializer);
+
+            object Proxier(object o, Type declaredType, Type targetType) => weaver.Weave(o, declaredType, targetType);
 
             _container.ExpressionBuilt += (sender, args) =>
-            { 
+            {
+                var producer = _container.GetRegistration(args.RegisteredServiceType);
+                var implementationType = producer?.Registration.ImplementationType;
+
                 args.Expression = Expression.Convert(
                     Expression.Invoke(
-                        Expression.Constant((Func<object, Type, object>) Proxier),
+                        Expression.Constant((Func<object, Type, Type, object>) Proxier),
                         args.Expression,
-                        Expression.Constant(args.RegisteredServiceType, typeof(Type))
+                        Expression.Constant(args.RegisteredServiceType, typeof(Type)),
+                        Expression.Constant(implementationType, typeof(Type))
                     ), 
                     args.RegisteredServiceType
                 );
@@ -46,9 +51,9 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         }
 
         /// <inheritdoc />
-        public override IServiceProvider GetServiceProvider()
+        public override IDependencyProvider GetDependencyProvider()
         {
-            return _serviceProvider;
+            return _dependencyProvider;
         }
     }
 }
