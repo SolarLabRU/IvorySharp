@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using IvorySharp.Aspects.Caching;
+using IvorySharp.Caching;
 
 namespace IvorySharp.Aspects.Dependency
 {
@@ -20,7 +20,7 @@ namespace IvorySharp.Aspects.Dependency
         public AspectDependencyInjector(IDependencyProvider dependencyProvider)
         {
             _dependencyProvider = dependencyProvider;
-            _cachedPropertyDependencyProvider = Cache.CreateProducer<Type, AspectPropertyDependency[]>(GetPropertyDependencies);
+            _cachedPropertyDependencyProvider = Memoizer.CreateProducer<Type, AspectPropertyDependency[]>(GetPropertyDependencies);
         }
 
         /// <inheritdoc />

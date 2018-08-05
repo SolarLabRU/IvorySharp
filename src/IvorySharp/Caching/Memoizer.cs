@@ -2,19 +2,19 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace IvorySharp.Aspects.Caching
+namespace IvorySharp.Caching
 {
     /// <summary>
     /// Вспомогательный класс для работы с кешем.
     /// </summary>
-    internal static class Cache
+    internal static class Memoizer
     {
         /// <summary>
         /// Признак активности компонента.
         /// </summary>
         internal static bool Enabled { get; }
 
-        static Cache()
+        static Memoizer()
         {
 #if DISABLE_CACHE
             Enabled = false;

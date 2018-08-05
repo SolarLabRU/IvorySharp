@@ -1,7 +1,4 @@
-﻿using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Aspects.Pipeline.BoundaryIterators;
-
-namespace IvorySharp.Aspects.BoundaryIterators
+﻿namespace IvorySharp.Aspects.Pipeline.BoundaryIterators
 {
     /// <summary>
     /// Итератор для точки прикрепления <see cref="MethodBoundaryAspect.OnEntry(IInvocationPipeline)"/>.

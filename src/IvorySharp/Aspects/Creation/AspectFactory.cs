@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using IvorySharp.Aspects.Caching;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Selection;
+using IvorySharp.Caching;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
 
@@ -32,8 +32,11 @@ namespace IvorySharp.Aspects.Creation
             _aspectDependencyInjector = aspectDependencyInjector;
             _aspectOrderStrategy = aspectOrderStrategy;
 
-            _cachedPrepareMethodBoundaryAspect = Cache.CreateProducer(PrepareBoundaryAspects, InvocationContext.ByMethodEqualityComparer.Instance);
-            _cachedPrepareMethodInterceptionAspect = Cache.CreateProducer(PrepareInterceptAspect, InvocationContext.ByMethodEqualityComparer.Instance);
+            _cachedPrepareMethodBoundaryAspect = Memoizer.CreateProducer(PrepareBoundaryAspects,
+                InvocationContext.ByMethodEqualityComparer.Instance);
+            
+            _cachedPrepareMethodInterceptionAspect = Memoizer.CreateProducer(PrepareInterceptAspect,
+                InvocationContext.ByMethodEqualityComparer.Instance);
         }
 
         /// <inheritdoc />

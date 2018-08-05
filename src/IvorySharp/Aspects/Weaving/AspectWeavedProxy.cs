@@ -1,24 +1,22 @@
 ﻿using System;
 using System.Reflection;
-using IvorySharp.Aspects.Caching;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Caching;
 using IvorySharp.Core;
 using IvorySharp.Proxying;
-using IvorySharp.Reflection;
 
 namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Прокси, связанное с аспектами.
     /// </summary>
-    public class AspectWeavedProxy : DispatchProxy
+    public class AspectWeavedProxy : IvoryProxy
     {
         private IAspectFactory _aspectFactory;
         private IPipelineExecutor _pipelineExecutor;
         private IAspectWeavePredicate _weavePredicate;
-        private Func<MethodInfo, Func<object, object[], object>> _methodInvokerFactory;
-
+        
         /// <summary>
         /// Исходный объект, вызовы которого будут перехватываться.
         /// </summary>
@@ -57,7 +55,9 @@ namespace IvorySharp.Aspects.Weaving
             IPipelineExecutor pipelineExecutor,
             IAspectWeavePredicate weavePredicate)
         {
-            var transparentProxy = CreateTrasparentProxy<AspectWeavedProxy>(declaringType);
+            var transparentProxy = ProxyGenerator.Instance.CreateTransparentProxy(
+                typeof(AspectWeavedProxy), declaringType);
+            
             var weavedProxy = (AspectWeavedProxy) transparentProxy;
 
             weavedProxy.Initialize(target, transparentProxy, targetType, declaringType, aspectFactory, pipelineExecutor, weavePredicate);
@@ -68,8 +68,9 @@ namespace IvorySharp.Aspects.Weaving
         /// <inheritdoc />
         protected internal override object Invoke(MethodInfo targetMethod, object[] args)
         {
+            var invoker = MethodCache.Instance.GetOrAdd(targetMethod);
             var context = new InvocationContext(args, targetMethod, Target, Proxy, DeclaringType, TargetType);
-            var invocation = new Invocation(context, _methodInvokerFactory(targetMethod));
+            var invocation = new Invocation(context, invoker);         
             var facade = new WeavedInvocationInterceptor(_aspectFactory, _pipelineExecutor, _weavePredicate);
 
             return facade.InterceptInvocation(invocation);
@@ -85,7 +86,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="aspectFactory">Фабрика аспектов.</param>
         /// <param name="pipelineExecutor">Компонент выполнения пайплайна.</param>
         /// <param name="weavePredicate">Предикат определения возможности применения аспектов.</param>
-        protected void Initialize(
+        private void Initialize(
             object target,
             object proxy,
             Type targetType,
@@ -94,9 +95,6 @@ namespace IvorySharp.Aspects.Weaving
             IPipelineExecutor pipelineExecutor,
             IAspectWeavePredicate weavePredicate)
         {
-            _methodInvokerFactory = Cache.CreateProducer<MethodInfo, Func<object, object[], object>>(
-                Expressions.CreateMethodInvoker);
-            
             _aspectFactory = aspectFactory;
             _pipelineExecutor = pipelineExecutor;
             _weavePredicate = weavePredicate;

@@ -40,8 +40,10 @@ namespace IvorySharp.Aspects.Configuration
                 _componentsStore.AspectSelector = new DefaultAspectSelector();
 
             if (_componentsStore.AspectWeavePredicate == null)
-                _componentsStore.AspectWeavePredicate = new DeclaringTypeWeavePredicate(
-                    _componentsStore.AspectSelector);
+            {
+                var basePredicate = new DeclaringTypeWeavePredicate(_componentsStore.AspectSelector);
+                _componentsStore.AspectWeavePredicate = new CachedWeavePredicate(basePredicate);
+            }
 
             if (_componentsStore.AspectDeclarationCollector == null)
                 _componentsStore.AspectDeclarationCollector = new DeclaringTypeAspectDeclarationCollector(

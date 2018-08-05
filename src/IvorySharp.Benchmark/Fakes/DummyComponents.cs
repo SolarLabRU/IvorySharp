@@ -11,7 +11,7 @@ namespace IvorySharp.Benchmark.Fakes
     {
         public IDependencyProvider DependencyProvider { get; set; }
         public IAspectSelector AspectSelector => new DefaultAspectSelector();
-        public IAspectWeavePredicate AspectWeavePredicate => new DeclaringTypeWeavePredicate(AspectSelector);
+        public IAspectWeavePredicate AspectWeavePredicate => new CachedWeavePredicate(new DeclaringTypeWeavePredicate(AspectSelector));
         public IAspectDeclarationCollector AspectDeclarationCollector => new DeclaringTypeAspectDeclarationCollector(AspectSelector);
         public IPipelineExecutor AspectPipelineExecutor => AspectInvocationPipelineExecutor.Instance;
         public IAspectFactory AspectFactory => new AspectFactory(AspectDeclarationCollector, AspectDependencyInjector, AspectOrderStrategy);

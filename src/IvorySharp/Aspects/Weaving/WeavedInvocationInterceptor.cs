@@ -1,5 +1,4 @@
 ﻿using System;
-using IvorySharp.Aspects.Caching;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
@@ -13,16 +12,13 @@ namespace IvorySharp.Aspects.Weaving
     {
         private readonly IAspectFactory _aspectFactory;
         private readonly IPipelineExecutor _aspectPipelineExecutor;
-        private readonly Func<InvocationContext, bool> _isWeavedCached;
-
+        private readonly IAspectWeavePredicate _aspectWeavePredicate;
+        
         public WeavedInvocationInterceptor(IAspectFactory aspectFactory, IPipelineExecutor aspectPipelineExecutor, IAspectWeavePredicate aspectWeavePredicate)
         {
             _aspectFactory = aspectFactory;
             _aspectPipelineExecutor = aspectPipelineExecutor;
-
-            _isWeavedCached = Cache.CreateProducer(
-                ctx => aspectWeavePredicate.IsWeaveable(ctx.Method, ctx.DeclaringType, ctx.TargetType),
-                InvocationContext.ByMethodEqualityComparer.Instance);
+            _aspectWeavePredicate = aspectWeavePredicate;
         }
 
         /// <summary>
@@ -32,8 +28,13 @@ namespace IvorySharp.Aspects.Weaving
         /// <returns>Результат вызова метода.</returns>
         internal object InterceptInvocation(IInvocation invocation)
         {
-            if (!_isWeavedCached(invocation.Context))
+            if (!_aspectWeavePredicate.IsWeaveable(
+                invocation.Context.Method,
+                invocation.Context.DeclaringType,
+                invocation.Context.TargetType))
+            {
                 return invocation.Proceed();
+            }
 
             var boundaryAspects = _aspectFactory.CreateBoundaryAspects(invocation.Context);
             var interceptAspect = _aspectFactory.CreateInterceptionAspect(invocation.Context);
