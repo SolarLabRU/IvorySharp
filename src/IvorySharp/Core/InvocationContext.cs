@@ -13,7 +13,7 @@ namespace IvorySharp.Core
         /// <summary>
         /// Возвращаемое значение метода.
         /// </summary>
-        public object ReturnValue { get; set; }
+        public object ReturnValue { get; internal set; }
         
         /// <summary>
         /// Параметры вызова метода.

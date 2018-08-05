@@ -90,13 +90,6 @@ namespace IvorySharp.Aspects.Pipeline
         }
 
         /// <inheritdoc />
-        public void ReturnDefault()
-        {
-            FlowBehavior = FlowBehavior.Return;
-            Context.ReturnValue = Context.Method.ReturnType.GetDefaultValue();
-        }
-
-        /// <inheritdoc />
         public void Return()
         {
             FlowBehavior = FlowBehavior.Return;

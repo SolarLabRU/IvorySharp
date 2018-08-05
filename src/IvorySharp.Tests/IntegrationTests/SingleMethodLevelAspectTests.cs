@@ -101,7 +101,7 @@ namespace IvorySharp.Tests.IntegrationTests
         {
             public override void OnException(IInvocationPipeline pipeline)
             {
-                pipeline.ReturnDefault();
+                pipeline.Return();
             }
         }
         
@@ -115,7 +115,7 @@ namespace IvorySharp.Tests.IntegrationTests
             public override void OnSuccess(IInvocationPipeline pipeline)
             {
                 var value = (int) pipeline.Context.ReturnValue;
-                pipeline.Context.ReturnValue = value + 1;
+                pipeline.ReturnValue(value + 1);
             }
         }
         
