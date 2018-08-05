@@ -208,7 +208,7 @@ namespace IvorySharp.Proxying.Generators
                 }
             }
 
-            packedArgsEmitter.EmitRerurnValue(method.ReturnType);
+            packedArgsEmitter.EmitReturnValue(method.ReturnType);
 
             DynamicTypeBuilder.DefineMethodOverride(proxiedMethod, method);
             return proxiedMethod;
@@ -300,7 +300,7 @@ namespace IvorySharp.Proxying.Generators
                 _internalEmitter.EmitEndSet(typeof(Type[]));
             }
 
-            public void EmitRerurnValue(Type returnType)
+            public void EmitReturnValue(Type returnType)
             {
                 if (returnType != typeof(void))
                 {
