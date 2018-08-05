@@ -1,8 +1,6 @@
 ﻿using System;
-using IvorySharp.Aspects.Components.Caching;
 using IvorySharp.Aspects.Components.Creation;
 using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Helpers;
 
 namespace IvorySharp.Aspects.Components.Weaving
 {
@@ -15,8 +13,6 @@ namespace IvorySharp.Aspects.Components.Weaving
         private readonly IAspectFactory _aspectFactory;
         private readonly IAspectWeavePredicate _aspectWeavePredicate;
 
-        private readonly Func<TypePair, bool> _cachedWeaveable;
-
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectWeaver"/>.
         /// </summary>
@@ -25,10 +21,6 @@ namespace IvorySharp.Aspects.Components.Weaving
             IPipelineExecutor aspectPipelineExecutor, 
             IAspectFactory aspectFactory)
         {
-            _cachedWeaveable = Cache.CreateProducer(tp => aspectWeavePredicate
-                    .IsWeaveable(tp.DeclaringType, tp.TargetType),
-                TypePair.EqualityComparer.Instance);
-
             _aspectPipelineExecutor = aspectPipelineExecutor;
             _aspectFactory = aspectFactory;
             _aspectWeavePredicate = aspectWeavePredicate;
@@ -43,10 +35,8 @@ namespace IvorySharp.Aspects.Components.Weaving
         /// <returns>Экземпляр связанного с аспектами исходного объекта типа <paramref name="declaringType"/>.</returns>
         public object Weave(object target, Type declaringType, Type targetType)
         {
-            if (!_cachedWeaveable(new TypePair(declaringType, targetType)))
-                return target;
-
-            return AspectWeavedProxy.Create(target, targetType, declaringType, _aspectFactory, _aspectPipelineExecutor, _aspectWeavePredicate);
+            return AspectWeavedProxy.Create(
+                target, targetType, declaringType, _aspectFactory, _aspectPipelineExecutor, _aspectWeavePredicate);
         }
     }
 }

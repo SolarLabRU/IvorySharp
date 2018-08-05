@@ -8,17 +8,17 @@ namespace IvorySharp.Extensions
     /// </summary>
     internal static class ExceptionExtensions
     {
-        internal static Exception Unwrap(this Exception exception)
+        internal static Exception GetInner(this Exception exception)
         {
             return exception.InnerException ?? exception;
         }
 
-        internal static Exception UnwrapIf(this Exception exception, bool condition)
+        internal static Exception GetInnerIf(this Exception exception, bool condition)
         {
-            return condition ? exception.Unwrap() : exception;
+            return condition ? exception.GetInner() : exception;
         }
 
-        internal static void Rethrow(this Exception exception)
+        internal static void Throw(this Exception exception)
         {
             ExceptionDispatchInfo.Capture(exception).Throw();
         }

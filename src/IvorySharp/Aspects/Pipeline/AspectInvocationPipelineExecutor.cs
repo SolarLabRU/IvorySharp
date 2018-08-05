@@ -51,7 +51,7 @@ namespace IvorySharp.Aspects.Pipeline
                     throw;
 
                 // Устанавливаем исключение в пайплайн (распаковываем - если оно связано с рефлексией).
-                pipeline.CurrentException = e.UnwrapIf(e is TargetInvocationException && e.InnerException != null);
+                pipeline.CurrentException = e.GetInnerIf(e is TargetInvocationException && e.InnerException != null);
 
                 // Устанавливаем состояние пайплайна, при котором для каждого из обработчиков вызовется OnException
                 pipeline.FlowBehavior = FlowBehavior.RethrowException;
@@ -66,7 +66,7 @@ namespace IvorySharp.Aspects.Pipeline
                 // Если никто не смог обработать исключение или в процессе обработки
                 // появилось новое исключение - выбрасываем его наружу.
                 if (isPipelineFaulted)
-                    pipeline.CurrentException.Rethrow();
+                    pipeline.CurrentException.Throw();
 
                 // Если один из обработчиков решил вернуть результат вместо исключения
                 // то мы должны позвать обработчики OnSuccess у всех родительских аспектов    
@@ -79,7 +79,7 @@ namespace IvorySharp.Aspects.Pipeline
                     onSuccessIterator.Iterate(onSuccessAspects);
 
                     if (InvocationPipelineFlow.IsFaulted(pipeline))
-                        pipeline.CurrentException.Rethrow();
+                        pipeline.CurrentException.Throw();
                 }
             }
             finally
@@ -119,7 +119,7 @@ namespace IvorySharp.Aspects.Pipeline
                 {
                     var isExceptionalState = InvocationPipelineFlow.IsFaulted(iterator.Pipeline);
                     if (isExceptionalState)
-                        iterator.Pipeline.CurrentException.Rethrow();
+                        iterator.Pipeline.CurrentException.Throw();
                 }
 
                 _currentBreaker = result.Breaker;

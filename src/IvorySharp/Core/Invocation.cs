@@ -44,7 +44,7 @@ namespace IvorySharp.Core
             }
             catch (TargetInvocationException e)
             {
-                e.Unwrap().Rethrow();
+                e.GetInner().Throw();
                 throw;
             }
         }
