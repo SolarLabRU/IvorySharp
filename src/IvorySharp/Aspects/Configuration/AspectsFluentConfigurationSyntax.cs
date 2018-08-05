@@ -1,10 +1,5 @@
 ﻿using System;
-using IvorySharp.Aspects.Creation;
-using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Integration;
-using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Aspects.Selection;
-using IvorySharp.Aspects.Weaving;
 
 namespace IvorySharp.Aspects.Configuration
 {
@@ -34,40 +29,34 @@ namespace IvorySharp.Aspects.Configuration
         /// <param name="configurator">Конфигуратор настроек.</param>
         public void Initialize(Action<AspectsConfiguration> configurator)
         {
-            configurator(_aspectsConfiguration);
+            var dependencyProvider = _container.GetDependencyProvider();
+            var defaultComponents = new DefaultComponentsStore(dependencyProvider);
 
+            _componentsStore.DependencyProvider = dependencyProvider;
+            
             if (_componentsStore.AspectSelector == null)
-                _componentsStore.AspectSelector = new DefaultAspectSelector();
+                _componentsStore.AspectSelector = defaultComponents.AspectSelector;
 
             if (_componentsStore.AspectWeavePredicate == null)
-            {
-                var basePredicate = new DeclaringTypeWeavePredicate(_componentsStore.AspectSelector);
-                _componentsStore.AspectWeavePredicate = new CachedWeavePredicate(basePredicate);
-            }
+                _componentsStore.AspectWeavePredicate = defaultComponents.AspectWeavePredicate;
 
             if (_componentsStore.AspectDeclarationCollector == null)
-                _componentsStore.AspectDeclarationCollector = new DeclaringTypeAspectDeclarationCollector(
-                    _componentsStore.AspectSelector);
-
+                _componentsStore.AspectDeclarationCollector = defaultComponents.AspectDeclarationCollector;
+                
             if (_componentsStore.AspectPipelineExecutor == null)
-                _componentsStore.AspectPipelineExecutor = AspectInvocationPipelineExecutor.Instance;
-
-            _componentsStore.DependencyProvider = _container.GetDependencyProvider();
+                _componentsStore.AspectPipelineExecutor = defaultComponents.AspectPipelineExecutor;
 
             if (_componentsStore.AspectDependencyInjector == null)
-                _componentsStore.AspectDependencyInjector = new AspectDependencyInjector(
-                    _componentsStore.DependencyProvider);
+                _componentsStore.AspectDependencyInjector = defaultComponents.AspectDependencyInjector;
 
             if (_componentsStore.AspectOrderStrategy == null)
-                _componentsStore.AspectOrderStrategy = new DefaultAspectOrderStrategy();
+                _componentsStore.AspectOrderStrategy = defaultComponents.AspectOrderStrategy;
 
             if (_componentsStore.AspectFactory == null)
-                _componentsStore.AspectFactory = new AspectFactory(
-                    _componentsStore.AspectDeclarationCollector,
-                    _componentsStore.AspectDependencyInjector,
-                    _componentsStore.AspectOrderStrategy);
+                _componentsStore.AspectFactory = defaultComponents.AspectFactory;
 
-
+            configurator(_aspectsConfiguration);
+            
             _container.BindAspects(_aspectsConfiguration.ComponentsStore);
         }
 
