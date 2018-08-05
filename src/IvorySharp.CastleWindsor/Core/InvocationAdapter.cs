@@ -104,9 +104,11 @@ namespace IvorySharp.CastleWindsor.Core
         }
 
         /// <inheritdoc />
-        void IvorySharp.Core.IInvocation.Proceed()
+        object IvorySharp.Core.IInvocation.Proceed()
         {
-            ((IInvocation)this).Proceed();
+            var castleInvocation = ((Castle.DynamicProxy.IInvocation) this);
+            castleInvocation.Proceed();
+            return castleInvocation.ReturnValue;
         }
     }
 }

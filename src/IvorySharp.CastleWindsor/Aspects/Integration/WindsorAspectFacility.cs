@@ -42,7 +42,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
                     continue;
                 
                 handler.ComponentModel.Interceptors.AddIfNotInCollection(
-                    new InterceptorReference(typeof(AspectWeaverInterceptorAdapter)));
+                    new InterceptorReference(typeof(WeavedInterceptor)));
             }
         }
     }

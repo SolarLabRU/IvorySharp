@@ -14,7 +14,7 @@ namespace IvorySharp.Aspects.Components.Selection
         /// <summary>
         /// Инициализирует экземпляр <see cref="DeclaringTypeAspectDeclarationCollector"/>.
         /// </summary>
-        /// <param name="selector">Стратегия выбора аспектов.</param>
+        /// <param name="selector">Компонент выбора аспектов.</param>
 
         public DeclaringTypeAspectDeclarationCollector(IAspectSelector selector)
         {

@@ -10,14 +10,14 @@ namespace IvorySharp.Core
     internal class Invocation : IInvocation
     {
         /// <summary>
+        /// Делегат для быстрого вызова метода.
+        /// </summary>
+        private readonly Func<object, object[], object> _methodInvoker;
+        
+        /// <summary>
         /// Контекст выполнения метода.
         /// </summary>
         public InvocationContext Context { get; }
-
-        /// <summary>
-        /// Делегат для быстрого вызова метода.
-        /// </summary>
-        public Func<object, object[], object> MethodInvoker { get; }
 
         /// <summary>
         /// Инициализирует экземпляр класса <see cref="Invocation"/>.
@@ -27,22 +27,25 @@ namespace IvorySharp.Core
         internal Invocation(InvocationContext context, Func<object, object[], object> methodInvoker)
         {
             Context = context;
-            MethodInvoker = methodInvoker;
+            _methodInvoker = methodInvoker;
         }
 
         /// <inheritdoc />
-        public void Proceed()
+        public object Proceed()
         {
             try
             {
-                Context.ReturnValue = MethodInvoker(Context.Instance, (object[]) Context.Arguments);
+                Context.ReturnValue = _methodInvoker(Context.Instance, (object[]) Context.Arguments);
 
                 if (ReferenceEquals(Context.ReturnValue, Context.Instance))
                     Context.ReturnValue = Context.TransparentProxy;
+
+                return Context.ReturnValue;
             }
             catch (TargetInvocationException e)
             {
                 e.Unwrap().Rethrow();
+                throw;
             }
         }
     }

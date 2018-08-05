@@ -13,6 +13,7 @@
         /// <summary>
         /// Выполняет оригинальный метод.
         /// </summary>
-        void Proceed();
+        /// <returns>Результат вызова метода (void -> null).</returns>
+        object Proceed();
     }
 }

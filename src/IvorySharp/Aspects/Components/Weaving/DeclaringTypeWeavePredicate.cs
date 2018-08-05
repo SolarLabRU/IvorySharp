@@ -13,7 +13,7 @@ namespace IvorySharp.Aspects.Components.Weaving
         /// <summary>
         /// Инициализирует экземпляр <see cref="DeclaringTypeWeavePredicate"/>.
         /// </summary>
-        /// <param name="selector">Стратегия выбора аспектов.</param>
+        /// <param name="selector">Компонент выбора аспектов.</param>
         public DeclaringTypeWeavePredicate(IAspectSelector selector)
             : base(selector)
         {

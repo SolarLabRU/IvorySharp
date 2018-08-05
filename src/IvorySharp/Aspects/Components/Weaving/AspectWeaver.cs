@@ -3,7 +3,6 @@ using IvorySharp.Aspects.Components.Caching;
 using IvorySharp.Aspects.Components.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Helpers;
-using IvorySharp.Proxying;
 
 namespace IvorySharp.Aspects.Components.Weaving
 {
@@ -46,9 +45,8 @@ namespace IvorySharp.Aspects.Components.Weaving
         {
             if (!_cachedWeaveable(new TypePair(declaringType, targetType)))
                 return target;
-            
-            var interceptor = new AspectInterceptor(_aspectWeavePredicate, _aspectPipelineExecutor, _aspectFactory);
-            return InterceptProxyGenerator.Default.CreateInterceptProxy(target, declaringType, targetType, interceptor);
+
+            return AspectWeavedProxy.Create(target, targetType, declaringType, _aspectFactory, _aspectPipelineExecutor, _aspectWeavePredicate);
         }
     }
 }

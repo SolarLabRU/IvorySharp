@@ -70,10 +70,7 @@ namespace IvorySharp.Aspects.Components.Creation
                 declaration.MethodAspect.JoinPointType = declaration.JoinPointType;
             }
 
-            var orderedAspects = _aspectOrderStrategy
-                .Order(aspectDeclarations
-                .Select(a => a.MethodAspect))
-                .ToArray();
+            var orderedAspects = _aspectOrderStrategy.Order(aspectDeclarations.Select(a => a.MethodAspect)).ToArray();
             
             for (var i = 0; i < orderedAspects.Length; i++)
             {

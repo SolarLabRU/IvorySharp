@@ -1,4 +1,5 @@
 ﻿using System;
+using IvorySharp.Aspects.Components.Weaving;
 using IvorySharp.Exceptions;
 using IvorySharp.Proxying;
 using SimpleInjector;
@@ -97,8 +98,8 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         {
             try
             {
-                var proxy = (InterceptDispatchProxy) service;
-                return proxy.Instance;
+                var proxy = (AspectWeavedProxy) service;
+                return proxy.Target;
             }
             catch (Exception)
             {

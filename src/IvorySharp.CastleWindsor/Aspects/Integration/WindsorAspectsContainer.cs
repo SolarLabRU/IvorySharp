@@ -29,11 +29,11 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
         /// <inheritdoc />
         public override void BindAspects(IComponentsStore settings)
         {
-            var interceptor = new AspectWeaverInterceptorAdapter(settings);
+            var interceptor = new WeavedInterceptor(settings);
 
             _kernel.Register(
                 Component
-                    .For<AspectWeaverInterceptorAdapter>()
+                    .For<WeavedInterceptor>()
                     .Instance(interceptor));
 
             _kernel.AddFacility(new WindsorAspectFacility(settings));

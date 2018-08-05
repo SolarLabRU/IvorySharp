@@ -12,9 +12,9 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для компонента <see cref="AspectInterceptor"/>.
+    /// Набор тестов для компонента <see cref="WeavedInvocationInterceptor"/>.
     /// </summary>
-    public class AspectInterceptorTests
+    public class WeavedInvocationInterceptorTests
     {
         private MethodBoundaryAspect[] _boundaryAspects;
         private MethodInterceptionAspect _interceptionAspect;
@@ -23,7 +23,7 @@ namespace IvorySharp.Tests.UnitTests
         private readonly IPipelineExecutor _doNothingPipelineExecutor;
         private readonly IAspectFactory _predefinedAspectsFactory;
 
-        public AspectInterceptorTests()
+        public WeavedInvocationInterceptorTests()
         {
             var truePredicateMock = new Mock<IAspectWeavePredicate>();
 
@@ -54,14 +54,14 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspect = new DisposableAspect();
-            var interceptor = new AspectInterceptor(_weavePredicateAlwaysTrue, _doNothingPipelineExecutor, _predefinedAspectsFactory);
+            var interceptor = new WeavedInvocationInterceptor(_predefinedAspectsFactory, _doNothingPipelineExecutor, _weavePredicateAlwaysTrue);
 
             _boundaryAspects = new MethodBoundaryAspect[] { aspect };
 
             // Act
 
             Assert.False(aspect.IsDisposed);
-            interceptor.Intercept(new BypassInvocation(typeof(IService), new Service(), nameof(IService.Method)));
+            interceptor.InterceptInvocation(new BypassInvocation(typeof(IService), new Service(), nameof(IService.Method)));
 
             // Assert
             Assert.True(aspect.IsDisposed);

@@ -12,9 +12,9 @@ namespace IvorySharp.Tests.Assets
             Context = new InvocationContext(Array.Empty<object>(), declaringType.GetMethod(methodName), instance, instance, declaringType, instance.GetType());
         }
 
-        public void Proceed()
+        public object Proceed()
         {
-            Context.Method.Invoke(Context.Instance, (object[])Context.Arguments);
+            return Context.Method.Invoke(Context.Instance, (object[])Context.Arguments);
         }
     }
 }
