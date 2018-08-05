@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Components.Selection;
+using IvorySharp.Aspects.Selection;
 
-namespace IvorySharp.Aspects.Components.Weaving
+namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Предикат определяющий возможность применения аспектов на основе типа, в котором объявлен перехватываемый метод.

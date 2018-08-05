@@ -1,5 +1,5 @@
-﻿using IvorySharp.Aspects.Components.Dependency;
-using IvorySharp.Aspects.Configuration;
+﻿using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Dependency;
 
 namespace IvorySharp.Aspects.Integration
 {

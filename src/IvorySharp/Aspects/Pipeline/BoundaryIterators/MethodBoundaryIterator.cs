@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IvorySharp.Aspects.Pipeline;
 
-namespace IvorySharp.Aspects.BoundaryIterators
+namespace IvorySharp.Aspects.Pipeline.BoundaryIterators
 {
     /// <summary>
     /// Базовый класс итератора аспектов типа <see cref="MethodBoundaryAspect"/>.

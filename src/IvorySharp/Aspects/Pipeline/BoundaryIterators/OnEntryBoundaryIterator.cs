@@ -1,4 +1,5 @@
 ﻿using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Aspects.Pipeline.BoundaryIterators;
 
 namespace IvorySharp.Aspects.BoundaryIterators
 {

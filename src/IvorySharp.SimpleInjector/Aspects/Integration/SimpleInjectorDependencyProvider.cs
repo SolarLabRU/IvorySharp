@@ -1,7 +1,7 @@
 ﻿using System;
-using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Weaving;
 using IvorySharp.Exceptions;
-using IvorySharp.Proxying;
 using SimpleInjector;
 
 namespace IvorySharp.SimpleInjector.Aspects.Integration
@@ -9,7 +9,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
     /// <summary>
     /// Провайдер сервисов.
     /// </summary>
-    public class SimpleInjectorDependencyProvider : IvorySharp.Aspects.Components.Dependency.IDependencyProvider
+    public class SimpleInjectorDependencyProvider : IDependencyProvider
     {
         private readonly Container _container;
 

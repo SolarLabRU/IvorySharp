@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Components.Selection;
-using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Selection;
+using IvorySharp.Aspects.Weaving;
 using Moq;
 using Xunit;
 

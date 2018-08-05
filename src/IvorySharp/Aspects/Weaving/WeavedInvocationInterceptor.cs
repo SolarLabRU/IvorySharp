@@ -1,10 +1,10 @@
 ﻿using System;
-using IvorySharp.Aspects.Components.Caching;
-using IvorySharp.Aspects.Components.Creation;
+using IvorySharp.Aspects.Caching;
+using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
 
-namespace IvorySharp.Aspects.Components.Weaving
+namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Класс, содержащий логику перехвата вызываемого метода.

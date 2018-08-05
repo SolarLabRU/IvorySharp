@@ -1,8 +1,8 @@
 ﻿using System;
-using IvorySharp.Aspects.Components.Creation;
+using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 
-namespace IvorySharp.Aspects.Components.Weaving
+namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Компонент для выполнения связывания исходного объекта с аспектами.

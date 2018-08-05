@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Components.Selection;
+using IvorySharp.Aspects.Selection;
 using IvorySharp.Tests.Extensions;
 using Xunit;
 

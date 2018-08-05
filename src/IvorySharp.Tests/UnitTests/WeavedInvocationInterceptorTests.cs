@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Components.Creation;
-using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Aspects.Weaving;
 using IvorySharp.Core;
 using IvorySharp.Tests.Assets;
 using Moq;

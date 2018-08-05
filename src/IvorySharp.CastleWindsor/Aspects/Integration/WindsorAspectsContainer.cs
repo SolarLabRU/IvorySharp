@@ -1,8 +1,8 @@
 ﻿using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using IvorySharp.Aspects.Components.Dependency;
 using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Integration;
 using IvorySharp.CastleWindsor.Aspects.Weaving;
 

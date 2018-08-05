@@ -1,6 +1,6 @@
 ﻿using IvorySharp.Core;
 
-namespace IvorySharp.Aspects.Components.Selection
+namespace IvorySharp.Aspects.Selection
 {
     /// <summary>
     /// Компонент, агрегирующий получение аспектов вызова.

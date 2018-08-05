@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IvorySharp.Aspects.Components.Dependency
+namespace IvorySharp.Aspects.Dependency
 {
     /// <summary>
     /// Атрибут для обозначения свойств, которые должны быть внедрены как зависимости аспекта.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace IvorySharp.Aspects.Components.Selection
+namespace IvorySharp.Aspects.Selection
 {
     /// <summary>
     /// Компонент выбора аспектов по умолчанию.

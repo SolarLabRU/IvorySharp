@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Components.Dependency;
+using IvorySharp.Aspects.Dependency;
 using Moq;
 using Xunit;
 

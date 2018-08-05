@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Components.Selection;
+using IvorySharp.Aspects.Selection;
 using IvorySharp.Extensions;
 
-namespace IvorySharp.Aspects.Components.Weaving
+namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Базовый класс предиката возможности применения аспектов.

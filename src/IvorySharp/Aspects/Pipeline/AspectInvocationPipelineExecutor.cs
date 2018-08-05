@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using IvorySharp.Aspects.BoundaryIterators;
+using IvorySharp.Aspects.Pipeline.BoundaryIterators;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline

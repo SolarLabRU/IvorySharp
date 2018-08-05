@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using IvorySharp.Aspects.Components.Caching;
+using IvorySharp.Aspects.Caching;
 
-namespace IvorySharp.Aspects.Components.Dependency
+namespace IvorySharp.Aspects.Dependency
 {
     /// <summary>
     /// Компонент для внедрения зависимостей в аспекты.

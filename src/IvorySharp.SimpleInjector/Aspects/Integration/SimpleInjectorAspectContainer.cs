@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
-using IvorySharp.Aspects.Components.Dependency;
-using IvorySharp.Aspects.Components.Weaving;
 using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Integration;
+using IvorySharp.Aspects.Weaving;
 using SimpleInjector;
 
 namespace IvorySharp.SimpleInjector.Aspects.Integration

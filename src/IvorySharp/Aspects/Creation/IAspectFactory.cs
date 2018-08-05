@@ -1,6 +1,6 @@
 ﻿using IvorySharp.Core;
 
-namespace IvorySharp.Aspects.Components.Creation
+namespace IvorySharp.Aspects.Creation
 {
     /// <summary>
     /// Компонент, выполняющий создание аспектов.

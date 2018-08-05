@@ -2,7 +2,7 @@
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 
-namespace IvorySharp.Aspects.Components.Selection
+namespace IvorySharp.Aspects.Selection
 {
     /// <summary>
     /// Собирает аспекты с типа, в котором объявлен перехватываемый метод.

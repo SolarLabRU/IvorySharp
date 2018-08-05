@@ -1,6 +1,7 @@
 ﻿using System;
 using Castle.DynamicProxy;
 using Castle.MicroKernel;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Exceptions;
 
 namespace IvorySharp.CastleWindsor.Aspects.Dependency
@@ -8,7 +9,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Dependency
     /// <summary>
     /// Сервис провайдер.
     /// </summary>
-    public class WindsorDependencyProvider : IvorySharp.Aspects.Components.Dependency.IDependencyProvider
+    public class WindsorDependencyProvider : IDependencyProvider
     {
         private readonly IKernel _kernel;
 

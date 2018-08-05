@@ -1,10 +1,10 @@
 ﻿using System;
-using IvorySharp.Aspects.Components.Creation;
-using IvorySharp.Aspects.Components.Dependency;
-using IvorySharp.Aspects.Components.Selection;
-using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Creation;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Integration;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Aspects.Selection;
+using IvorySharp.Aspects.Weaving;
 
 namespace IvorySharp.Aspects.Configuration
 {

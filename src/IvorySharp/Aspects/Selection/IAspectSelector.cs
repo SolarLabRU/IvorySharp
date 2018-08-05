@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace IvorySharp.Aspects.Components.Selection
+namespace IvorySharp.Aspects.Selection
 {
     /// <summary>
     /// Компонент выбора аспектов с элементов.

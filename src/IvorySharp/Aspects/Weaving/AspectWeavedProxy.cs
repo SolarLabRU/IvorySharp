@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Reflection;
-using IvorySharp.Aspects.Components.Caching;
-using IvorySharp.Aspects.Components.Creation;
+using IvorySharp.Aspects.Caching;
+using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
 using IvorySharp.Proxying;
 using IvorySharp.Reflection;
 
-namespace IvorySharp.Aspects.Components.Weaving
+namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Прокси, связанное с аспектами.

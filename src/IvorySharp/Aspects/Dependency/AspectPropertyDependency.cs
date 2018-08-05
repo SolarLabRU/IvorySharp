@@ -2,7 +2,7 @@
 using System.Reflection;
 using IvorySharp.Reflection;
 
-namespace IvorySharp.Aspects.Components.Dependency
+namespace IvorySharp.Aspects.Dependency
 {
     /// <summary>
     /// Информация о зависимости аспекта.

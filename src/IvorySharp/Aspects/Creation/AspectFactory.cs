@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
-using IvorySharp.Aspects.Components.Caching;
-using IvorySharp.Aspects.Components.Dependency;
-using IvorySharp.Aspects.Components.Selection;
+using IvorySharp.Aspects.Caching;
+using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Selection;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
 
-namespace IvorySharp.Aspects.Components.Creation
+namespace IvorySharp.Aspects.Creation
 {
     /// <summary>
     /// Инициализатор аспектов.

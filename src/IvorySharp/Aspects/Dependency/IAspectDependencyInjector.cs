@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IvorySharp.Aspects.Components.Dependency
+namespace IvorySharp.Aspects.Dependency
 {
     /// <summary>
     /// Компонент для внедрения зависимостей в аспекты.

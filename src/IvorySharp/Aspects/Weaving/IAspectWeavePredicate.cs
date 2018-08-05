@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace IvorySharp.Aspects.Components.Weaving
+namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Предикат для определения возможности применения аспектов.

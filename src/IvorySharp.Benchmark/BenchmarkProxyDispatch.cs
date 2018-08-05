@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
-using IvorySharp.Aspects.Components.Weaving;
+using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Fakes;
 
 namespace IvorySharp.Benchmark

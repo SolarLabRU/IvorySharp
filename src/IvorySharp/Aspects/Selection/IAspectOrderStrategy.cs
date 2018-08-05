@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace IvorySharp.Aspects.Components.Selection
+namespace IvorySharp.Aspects.Selection
 {
     /// <summary>
     /// Стратегия упорядочивания аспектов.

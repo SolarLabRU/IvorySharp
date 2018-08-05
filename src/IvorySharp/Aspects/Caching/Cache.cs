@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace IvorySharp.Aspects.Components.Caching
+namespace IvorySharp.Aspects.Caching
 {
     /// <summary>
     /// Вспомогательный класс для работы с кешем.

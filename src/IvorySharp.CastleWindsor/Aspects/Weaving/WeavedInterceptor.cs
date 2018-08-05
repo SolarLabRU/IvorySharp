@@ -1,6 +1,6 @@
 ﻿using Castle.DynamicProxy;
-using IvorySharp.Aspects.Components.Weaving;
 using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Weaving;
 using IvorySharp.CastleWindsor.Core;
 
 namespace IvorySharp.CastleWindsor.Aspects.Weaving
