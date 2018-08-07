@@ -16,7 +16,7 @@ namespace IvorySharp.Examples.Aspects
         public static readonly MemoryCache MemoryCache = new MemoryCache(new MemoryCacheOptions());
 
         /// <inheritdoc />
-        public override void OnInvoke(IInterceptableInvocation invocation)
+        public override void OnInvoke(IInvocation invocation)
         {         
             var cacheKey = GetCacheKey(invocation.Context);
             if (MemoryCache.TryGetValue(cacheKey, out var cached))

@@ -26,7 +26,7 @@ namespace IvorySharp.Aspects.Weaving
         /// </summary>
         /// <param name="invocation">Модель исходного вызова.</param>
         /// <returns>Результат вызова метода.</returns>
-        internal object InterceptInvocation(IInterceptableInvocation invocation)
+        internal object InterceptInvocation(IInvocation invocation)
         {
             if (!_aspectWeavePredicate.IsWeaveable(
                 invocation.Context.Method,

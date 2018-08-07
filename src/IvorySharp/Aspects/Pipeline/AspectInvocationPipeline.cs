@@ -21,7 +21,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectInvocationPipeline"/>.
         /// </summary>
-        internal AspectInvocationPipeline(IInterceptableInvocation invocation, IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, MethodInterceptionAspect interceptionAspect) 
+        internal AspectInvocationPipeline(IInvocation invocation, IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, MethodInterceptionAspect interceptionAspect) 
             : base(invocation)
         {
             BoundaryAspects = boundaryAspects;

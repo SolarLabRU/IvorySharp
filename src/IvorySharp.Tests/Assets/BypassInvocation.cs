@@ -3,38 +3,29 @@ using IvorySharp.Core;
 
 namespace IvorySharp.Tests.Assets
 {
-    public class BypassInvocation : IInterceptableInvocation
+    public class BypassInvocation : Invocation
     {
-        private readonly Invocation _baseInvocation;
-        
-        public InvocationContext Context { get; }
-
         public BypassInvocation(Type declaringType, object instance, string methodName)
+            : base(CreateContext(declaringType, instance, methodName, Array.Empty<object>()))
         {
-            Context = new InvocationContext(
-                Array.Empty<object>(), 
-                declaringType.GetMethod(methodName), 
-                instance, instance, declaringType, instance.GetType());
-            
-            _baseInvocation = new Invocation(Context);
         }
         
         public BypassInvocation(Type declaringType, object instance, string methodName, object[] arguments)
+            : base(CreateContext(declaringType, instance, methodName, arguments))
         {
-            Context = new InvocationContext(
-                arguments, 
-                declaringType.GetMethod(methodName), 
-                instance, instance, declaringType, instance.GetType());
         }
 
-        public virtual object Proceed()
+        public override object Proceed()
         {
             return Context.Method.Invoke(Context.Instance, (object[])Context.Arguments);
         }
 
-        public void SetReturnValue(object returnValue)
+        private static InvocationContext CreateContext(Type declaringType, object instance, string methodName, object[] arguments)
         {
-            _baseInvocation.SetReturnValue(returnValue);
+            return new InvocationContext(
+                arguments, 
+                declaringType.GetMethod(methodName), 
+                instance, instance, declaringType, instance.GetType());
         }
     }
 }

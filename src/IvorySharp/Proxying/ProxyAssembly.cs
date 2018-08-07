@@ -118,12 +118,7 @@ namespace IvorySharp.Proxying
         /// <returns>Тип сгенерированного атрибута.</returns>
         private TypeInfo GenerateIgnoreAccessCheckAttribute()
         {
-            var typeBuilder = _dynamicModuleBuilder.DefineType(
-                "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute",
-                TypeAttributes.Public | TypeAttributes.Class,
-                typeof(Attribute));
-
-            return new IgnoresAccessChecksToAttributeTypeGenerator(typeBuilder).Generate();
+            return new IgnoresAccessChecksToAttributeTypeGenerator(_dynamicModuleBuilder).Generate();
         }
     }
 }

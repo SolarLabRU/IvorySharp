@@ -11,10 +11,11 @@ namespace IvorySharp.Proxying.Generators
     /// </summary>
     internal class IgnoresAccessChecksToAttributeTypeGenerator : AbstractTypeGenerator
     {
-        public IgnoresAccessChecksToAttributeTypeGenerator(TypeBuilder dynamicTypeBuilder) : base(dynamicTypeBuilder)
+        public IgnoresAccessChecksToAttributeTypeGenerator(ModuleBuilder moduleBuilder)
+            : base(CreateTypeBuilder(moduleBuilder))
         {
         }
-
+        
         /// <inheritdoc />
         public override TypeInfo Generate()
         {
@@ -92,6 +93,14 @@ namespace IvorySharp.Proxying.Generators
 
             // Make the TypeInfo real so the constructor can be used.
             return DynamicTypeBuilder.CreateTypeInfo();
+        }
+        
+        private static TypeBuilder CreateTypeBuilder(ModuleBuilder moduleBuilder)
+        {
+            return moduleBuilder.DefineType(
+                "System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute",
+                TypeAttributes.Public | TypeAttributes.Class,
+                typeof(Attribute));
         }
     }
 }

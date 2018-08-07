@@ -15,5 +15,11 @@
         /// </summary>
         /// <returns>Результат вызова метода (void -> null).</returns>
         object Proceed();
+        
+        /// <summary>
+        /// Устанавливает возвращаемое значение вызова.
+        /// </summary>
+        /// <param name="returnValue">Возвращаемое значение.</param>
+        void SetReturnValue(object returnValue);
     }
 }

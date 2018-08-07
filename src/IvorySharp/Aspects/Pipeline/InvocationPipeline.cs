@@ -22,7 +22,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Модель вызова.
         /// </summary>
-        internal IInterceptableInvocation Invocation { get; }
+        internal IInvocation Invocation { get; }
 
         /// <inheritdoc />
         public InvocationContext Context { get; }
@@ -43,7 +43,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// Инициализирует экземпляр <see cref="InvocationPipeline"/>.
         /// </summary>
         /// <param name="invocation">Модель выполнения метода.</param>
-        internal InvocationPipeline(IInterceptableInvocation invocation)
+        internal InvocationPipeline(IInvocation invocation)
         {
             _pipelineData = new ConcurrentDictionary<Type, object>();
 

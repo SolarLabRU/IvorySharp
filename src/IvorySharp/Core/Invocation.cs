@@ -9,7 +9,7 @@ namespace IvorySharp.Core
     /// <summary>
     /// Модель выполнения метода.
     /// </summary>
-    public class Invocation : IInterceptableInvocation
+    public class Invocation : IInvocation
     {
         /// <summary>
         /// Делегат для быстрого вызова метода.
@@ -42,7 +42,7 @@ namespace IvorySharp.Core
         }
         
         /// <inheritdoc />
-        public object Proceed()
+        public virtual object Proceed()
         {
             try
             {

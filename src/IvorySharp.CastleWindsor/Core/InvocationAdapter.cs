@@ -8,7 +8,7 @@ namespace IvorySharp.CastleWindsor.Core
     /// <summary>
     /// Адаптирует модель вызова под модель вызова Castle.
     /// </summary>
-    public class InvocationAdapter : IInterceptableInvocation, IInvocation
+    public class InvocationAdapter : IvorySharp.Core.IInvocation, IInvocation
     {
         private readonly IInvocation _castleInvocation;
             
