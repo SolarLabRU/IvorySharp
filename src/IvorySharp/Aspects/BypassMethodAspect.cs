@@ -15,7 +15,7 @@ namespace IvorySharp.Aspects
         private BypassMethodAspect() { }
         
         /// <inheritdoc />
-        public override void OnInvoke(IInvocation invocation)
+        public override void OnInvoke(IInterceptableInvocation invocation)
         {
             invocation.Proceed();
         }

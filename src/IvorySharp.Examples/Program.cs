@@ -21,9 +21,9 @@ namespace IvorySharp.Examples
             service.CreateCustomer(new Customer {Id = 2, Name = "John", LastName = "Doe"});
             service.CreateCustomer(new Customer {Id = 3, Name = "John", LastName = "Doe"});
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 1; i < 4; i++)
             {
-                var customer = service.GetCustomer(1);
+                var customer = service.GetCustomer(i);
             }
 
             Console.ReadLine();

@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using IvorySharp.Core;
-using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline
@@ -23,7 +22,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Модель вызова.
         /// </summary>
-        internal IInvocation Invocation { get; }
+        internal IInterceptableInvocation Invocation { get; }
 
         /// <inheritdoc />
         public InvocationContext Context { get; }
@@ -35,9 +34,6 @@ namespace IvorySharp.Aspects.Pipeline
         public FlowBehavior FlowBehavior { get; set; }
 
         /// <inheritdoc />
-        public bool CanReturnResult { get; }
-
-        /// <inheritdoc />
         public object AspectExecutionState {
             get => GetAspectState();
             set => SetAspectState(value);
@@ -47,12 +43,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// Инициализирует экземпляр <see cref="InvocationPipeline"/>.
         /// </summary>
         /// <param name="invocation">Модель выполнения метода.</param>
-        internal InvocationPipeline(IInvocation invocation)
+        internal InvocationPipeline(IInterceptableInvocation invocation)
         {
             _pipelineData = new ConcurrentDictionary<Type, object>();
 
             Context = invocation.Context;
-            CanReturnResult = !Context.Method.IsVoidReturn();
             Invocation = invocation;
         }
 
@@ -60,33 +55,8 @@ namespace IvorySharp.Aspects.Pipeline
         public void ReturnValue(object returnValue)
         {
             CurrentException = null;
-            FlowBehavior = FlowBehavior.Return;
-            
-            if (Context.Method.IsVoidReturn())
-            {
-                throw new IvorySharpException(
-                    $"Невозможно вернуть значение '{returnValue}' из аспекта '{CurrentExecutingAspect?.GetType().FullName}'. " +
-                    $"Метод '{Context.Method.Name}' типа '{Context.DeclaringType.FullName}' " +
-                    $"не имеет возвращаемого значения (void). " +
-                    $"Для возврата используйте перегрузку '{nameof(ReturnValue)}' без параметров.");
-            }
-
-            if (returnValue == null)
-            {
-                Context.ReturnValue = Context.Method.ReturnType.GetDefaultValue();
-            }
-            else
-            {
-                if (!Context.Method.ReturnType.IsInstanceOfType(returnValue))
-                {
-                    throw new IvorySharpException(
-                        $"Невозможно вернуть значение '{returnValue}' из аспекта '{CurrentExecutingAspect?.GetType().FullName}'. " +
-                        $"Тип результата '{returnValue.GetType().FullName}' невозможно привести к возвращаемому типу '{Context.Method.ReturnType.FullName}' " +
-                        $"метода '{Context.Method.Name}' сервиса '{Context.DeclaringType.FullName}'.");
-                }
-
-                Context.ReturnValue = returnValue;
-            }
+            FlowBehavior = FlowBehavior.Return;        
+            Invocation.SetReturnValue(returnValue);
         }
 
         /// <inheritdoc />

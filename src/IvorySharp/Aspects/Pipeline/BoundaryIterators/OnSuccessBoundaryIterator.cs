@@ -20,7 +20,8 @@
         /// <inheritdoc />
         protected override bool ShouldBreak(FlowBehavior flowBehavior)
         {
-            return flowBehavior == FlowBehavior.ThrowException ||
+            return flowBehavior == FlowBehavior.Return ||
+                   flowBehavior == FlowBehavior.ThrowException ||
                    flowBehavior == FlowBehavior.RethrowException;
         }
 

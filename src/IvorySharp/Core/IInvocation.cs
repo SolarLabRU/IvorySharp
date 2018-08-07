@@ -1,7 +1,7 @@
 ﻿namespace IvorySharp.Core
 {
     /// <summary>
-    /// Модель выполнения метода.
+    /// Интерфейс выполнения метода.
     /// </summary>
     public interface IInvocation
     {

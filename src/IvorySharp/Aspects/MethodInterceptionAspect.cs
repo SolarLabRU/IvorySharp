@@ -11,6 +11,6 @@ namespace IvorySharp.Aspects
         /// Выполняет перехват вызова метода.
         /// </summary>
         /// <param name="invocation">Модель вызова метода.</param>
-        public abstract void OnInvoke(IInvocation invocation);
+        public abstract void OnInvoke(IInterceptableInvocation invocation);
     }
 }

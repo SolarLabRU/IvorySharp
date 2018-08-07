@@ -8,7 +8,7 @@ namespace IvorySharp.CastleWindsor.Core
     /// <summary>
     /// Адаптирует модель вызова под модель вызова Castle.
     /// </summary>
-    public class InvocationAdapter : IvorySharp.Core.IInvocation, IInvocation
+    public class InvocationAdapter : IInterceptableInvocation, IInvocation
     {
         private readonly IInvocation _castleInvocation;
             
@@ -104,9 +104,15 @@ namespace IvorySharp.CastleWindsor.Core
         }
 
         /// <inheritdoc />
+        public void SetReturnValue(object returnValue)
+        {
+            ReturnValue = returnValue;
+        }
+
+        /// <inheritdoc />
         object IvorySharp.Core.IInvocation.Proceed()
         {
-            var castleInvocation = ((Castle.DynamicProxy.IInvocation) this);
+            var castleInvocation = ((IInvocation) this);
             castleInvocation.Proceed();
             return castleInvocation.ReturnValue;
         }

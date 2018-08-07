@@ -32,7 +32,7 @@ namespace IvorySharp.Aspects.Pipeline
 
             try
             {
-                stateAwareMetaIterator.Iterate(onEntryIterator, pipeline.BoundaryAspects);
+                var onEntryResult = stateAwareMetaIterator.Iterate(onEntryIterator, pipeline.BoundaryAspects);
 
                 // Перехватываем метод только при нормальном выполнении
                 // пайплайна
@@ -41,6 +41,14 @@ namespace IvorySharp.Aspects.Pipeline
                     pipeline.InterceptionAspect.OnInvoke(pipeline.Invocation);
                 }
 
+                // Если решили вернуть результат в OnEntry, то необходимо выполнить OnSuccess
+                // у аспекта, решившего вернуть результат.
+                if (onEntryResult.Breaker != null && pipeline.FlowBehavior == FlowBehavior.Return)
+                {
+                    onSuccessIterator.Iterate(new[] { onEntryResult.Breaker });
+                }
+                
+                // Выполняем у остальных с большим значением InternalOrder
                 stateAwareMetaIterator.Iterate(onSuccessIterator, pipeline.BoundaryAspects);
             }
             catch (Exception e)
@@ -84,6 +92,11 @@ namespace IvorySharp.Aspects.Pipeline
             }
             finally
             {
+                // Если внутри аспекта произошло исключение - пайплайн поломан 
+                // мы не должны вызывать finally
+                if (pipeline.FlowBehavior == FlowBehavior.ThrowException)
+                    pipeline.CurrentException.Throw();
+                
                 stateAwareMetaIterator.Iterate(onExitIterator, pipeline.BoundaryAspects);
 
                 // В самом конце устанавливаем значение, если оно поддерживается исходным методом

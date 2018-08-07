@@ -70,6 +70,8 @@ namespace IvorySharp.Core
             TransparentProxy = transparentProxy;
         }
 
+        
+        
         /// <summary>
         /// Выполняет сравнение контекстов на основе метода.
         /// </summary>
