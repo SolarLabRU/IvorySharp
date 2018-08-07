@@ -22,10 +22,16 @@ namespace IvorySharp.Tests.Assets
         private bool _isInitialized;
 
         public Weaved(IComponentsStore components, params DependencyPair[] dependency)
+            : this(components, new Container(), new WindsorContainer(), dependency)
+        {
+        }
+
+        public Weaved(IComponentsStore components, Container simpleInjectorContainer,
+            WindsorContainer windsorContainer, params DependencyPair[] dependency)
         {
             _dependency = dependency ?? Array.Empty<DependencyPair>();
-            _windsorContainer = new WindsorContainer();
-            _simpleInjectorContainer = new Container();
+            _windsorContainer = windsorContainer;
+            _simpleInjectorContainer = simpleInjectorContainer;
             _aspectWeaver = new AspectWeaver(
                 components.AspectWeavePredicate, components.AspectPipelineExecutor, components.AspectFactory);
         }

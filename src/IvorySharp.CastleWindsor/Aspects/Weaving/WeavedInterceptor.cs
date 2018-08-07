@@ -9,7 +9,8 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
     /// Адаптирует механизм перехвата под внутренний механизм библиотеки Dynamic.Proxy.
     /// И прокси использоваться тоже будут кастловские.
     /// </summary>
-    public class WeavedInterceptor : IInterceptor
+    /// <typeparam name="TService">Тип сервиса.</typeparam>
+    public class WeavedInterceptor<TService> : IInterceptor
     {
         private readonly WeavedInvocationInterceptor _invocationFacade;
 
@@ -26,7 +27,8 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
         /// <inheritdoc />
         public void Intercept(IInvocation invocation)
         {
-            invocation.ReturnValue = _invocationFacade.InterceptInvocation(new InvocationAdapter(invocation));
+            invocation.ReturnValue = _invocationFacade.InterceptInvocation(
+                new InvocationAdapter(invocation, typeof(TService)));
         }
     }
 }

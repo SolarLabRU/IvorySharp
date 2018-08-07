@@ -47,7 +47,8 @@ namespace IvorySharp.CastleWindsor.Core
         /// Адаптер для модели вызова Castle Windsor.
         /// </summary>
         /// <param name="castleInvocation">Модель вызова Castle Windsor.</param>
-        public InvocationAdapter(IInvocation castleInvocation)
+        /// <param name="declaringType">Объявленный тип сущности.</param>
+        public InvocationAdapter(IInvocation castleInvocation, Type declaringType)
         {
             _castleInvocation = castleInvocation;
                 
@@ -64,7 +65,7 @@ namespace IvorySharp.CastleWindsor.Core
                 castleInvocation.Method,
                 InvocationTarget,
                 castleInvocation.Proxy,
-                Method.DeclaringType,
+                declaringType,
                 castleInvocation.TargetType);
         }
             

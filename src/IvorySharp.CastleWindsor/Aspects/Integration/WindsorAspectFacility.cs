@@ -38,11 +38,15 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
 
             foreach (var serviceType in handler.ComponentModel.Services)
             {
-                if (!_components.AspectWeavePredicate.IsWeaveable(serviceType, handler.ComponentModel.Implementation))
+                if (!_components.AspectWeavePredicate.IsWeaveable(serviceType, 
+                        handler.ComponentModel.Implementation))
                     continue;
-                
+
+                var interceptorType = typeof(WeavedInterceptor<>)
+                    .MakeGenericType(serviceType);
+                   
                 handler.ComponentModel.Interceptors.AddIfNotInCollection(
-                    new InterceptorReference(typeof(WeavedInterceptor)));
+                    new InterceptorReference(interceptorType));
             }
         }
     }
