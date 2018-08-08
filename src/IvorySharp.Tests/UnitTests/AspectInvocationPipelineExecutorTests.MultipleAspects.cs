@@ -1,6 +1,5 @@
 ﻿using System;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Tests.Asserts;
 using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Aspects;
@@ -60,7 +59,7 @@ namespace IvorySharp.Tests.UnitTests
         }
 
         [Fact]
-        public void Multiple_OnException_ThrowException_In_OnEntry_Handled_InnerAspects_OnEntry_OnExit_Called()
+        public void MultipleAspect_OnException_ThrowException_In_OnEntry_Handled_InnerAspects_OnEntry_OnExit_Called()
         {
             // Arrange
             var afterBreaker = new ObservableAspect { InternalOrder = 2 };
@@ -89,7 +88,7 @@ namespace IvorySharp.Tests.UnitTests
         }
         
         [Fact]
-        public void Multiple_OnException_ThrowException_In_OnEntry_Unhandled_BreakesPipeline()
+        public void MultipleAspects_OnException_ThrowException_In_OnEntry_Unhandled_BreakesPipeline()
         {
             // Arrange
             var afterBreaker = new ObservableAspect { InternalOrder = 2 };
@@ -117,26 +116,6 @@ namespace IvorySharp.Tests.UnitTests
             {
                 new BoundaryState(BoundaryType.Entry) 
             }, breaker.ExecutionStack);
-        }
-        
-        private class RethrowAspect : ObservableAspect
-        {
-            private readonly Type _exceptionType;
-
-            public RethrowAspect(Type exceptionType)
-            {
-                _exceptionType = exceptionType;
-            }
-
-            protected override void Exception(IInvocationPipeline pipeline)
-            {
-                pipeline.RethrowException(CreateException(_exceptionType, pipeline.CurrentException));
-            }
-
-            protected static Exception CreateException(Type exceptionType, Exception inner)
-            {
-                return (Exception) Activator.CreateInstance(exceptionType, string.Empty, inner);                       
-            }
         }
     }
 }
