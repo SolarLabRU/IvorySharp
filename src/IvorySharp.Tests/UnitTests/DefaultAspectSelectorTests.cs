@@ -115,7 +115,7 @@ namespace IvorySharp.Tests.UnitTests
                     typeof(IHasMethodAspects).GetMethod(nameof(IHasMethodAspects.TwoMethodAspects)), includeAbstract: false);
 
             // Assert
-            Assert.Equal(2, aspects.Length);
+            Assert.Equal(2, aspects.Count());
         }
 
         [Fact]
@@ -167,7 +167,7 @@ namespace IvorySharp.Tests.UnitTests
                 _selector.SelectAspectDeclarations<MethodAspect>(typeof(ITwoTypeAspectsService), includeAbstract: false);
 
             // Assert
-            Assert.Equal(2, aspects.Length);
+            Assert.Equal(2, aspects.Count());
         }
 
         [Fact]
@@ -178,7 +178,8 @@ namespace IvorySharp.Tests.UnitTests
                 _selector.SelectAspectDeclarations<BypassAspect>(typeof(ITwoTypeAspectsService), includeAbstract: false);
 
             var anotherBypassAspects =
-                _selector.SelectAspectDeclarations<AnotherBypassAspects>(typeof(ITwoTypeAspectsService), includeAbstract: false);
+                _selector.SelectAspectDeclarations<AnotherBypassAspects>(
+                    typeof(ITwoTypeAspectsService), includeAbstract: false);
 
             Assert.Single(bypassAspects);
             Assert.IsType<BypassAspect>(bypassAspects.ElementAt(0).MethodAspect);

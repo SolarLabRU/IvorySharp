@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using IvorySharp.Caching;
 
@@ -65,7 +66,10 @@ namespace IvorySharp.Aspects.Dependency
                 if (!property.CanWrite || property.GetSetMethod(nonPublic: false) == null)
                     continue;
 
-                var aspectDependency = property.GetCustomAttribute<DependencyAttribute>(inherit: false);
+                var aspectDependency = property
+                    .GetCustomAttributes<DependencyAttribute>(inherit: false)
+                    .FirstOrDefault();
+                
                 if (aspectDependency == null)
                     continue;
 

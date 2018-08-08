@@ -1,4 +1,5 @@
-﻿using IvorySharp.Core;
+﻿using System.Collections.Generic;
+using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Selection
 {
@@ -12,8 +13,8 @@ namespace IvorySharp.Aspects.Selection
         /// </summary>
         /// <typeparam name="TAspect">Тип аспекта.</typeparam>
         /// <param name="context">Контекст вызова.</param>
-        /// <returns>Массив деклараций аспектов для применения.</returns>
-        MethodAspectDeclaration<TAspect>[] CollectAspectDeclarations<TAspect>(InvocationContext context)
+        /// <returns>Перечень деклараций аспектов для применения.</returns>
+        IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(InvocationContext context)
             where TAspect : MethodAspect;
     }
 }

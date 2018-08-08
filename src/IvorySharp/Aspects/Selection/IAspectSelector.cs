@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace IvorySharp.Aspects.Selection
@@ -13,8 +14,9 @@ namespace IvorySharp.Aspects.Selection
         /// </summary>
         /// <param name="type">Тип.</param>
         /// <param name="includeAbstract">Признак необходимости включить в выборку абстрактные аспекты.</param>
-        /// <returns>Коллекция аспектов.</returns>
-        MethodAspectDeclaration<TAspect>[] SelectAspectDeclarations<TAspect>(Type type, bool includeAbstract)
+        /// <typeparam name="TAspect">Тип аспекта.</typeparam>
+        /// <returns>Перечень аспектов.</returns>
+        IEnumerable<MethodAspectDeclaration<TAspect>> SelectAspectDeclarations<TAspect>(Type type, bool includeAbstract)
             where TAspect : MethodAspect;
 
         /// <summary>
@@ -22,8 +24,9 @@ namespace IvorySharp.Aspects.Selection
         /// </summary>
         /// <param name="method">Метод.</param>
         /// <param name="includeAbstract">Признак необходимости включить в выборку абстрактные аспекты.</param>
-        /// <returns>Коллекция аспектов.</returns>
-        MethodAspectDeclaration<TAspect>[] SelectAspectDeclarations<TAspect>(MethodInfo method, bool includeAbstract)
+        /// <typeparam name="TAspect">Тип аспекта.</typeparam>
+        /// <returns>Перечень аспектов.</returns>
+        IEnumerable<MethodAspectDeclaration<TAspect>> SelectAspectDeclarations<TAspect>(MethodInfo method, bool includeAbstract)
             where TAspect : MethodAspect;
 
         /// <summary>

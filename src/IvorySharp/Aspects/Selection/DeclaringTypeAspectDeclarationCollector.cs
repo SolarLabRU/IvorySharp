@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 
@@ -22,7 +23,8 @@ namespace IvorySharp.Aspects.Selection
         }
 
         /// <inheritdoc />
-        public MethodAspectDeclaration<TAspect>[] CollectAspectDeclarations<TAspect>(InvocationContext context) where TAspect : MethodAspect
+        public IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(InvocationContext context) 
+            where TAspect : MethodAspect
         {
             var methodAspectDeclarations = _selector.SelectAspectDeclarations<TAspect>(context.Method, includeAbstract: false);
             var typeAspectDeclarations = _selector.SelectAspectDeclarations<TAspect>(context.DeclaringType, includeAbstract: false)
@@ -31,9 +33,8 @@ namespace IvorySharp.Aspects.Selection
 
             var aspectDeclarations = typeAspectDeclarations
                 .Concat(methodAspectDeclarations)
-                .Where(m => m.MethodAspect != null)
-                .Distinct(MethodAspectDeclaration<TAspect>.ByAspectTypeEqualityComparer.Instance)
-                .ToArray();
+                .Where(m => m.MethodAspect != null && 
+                            m.MulticastTarget != MethodAspectMulticastTarget.Undefined);
 
             return aspectDeclarations;
         }

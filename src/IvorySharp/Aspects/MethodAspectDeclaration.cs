@@ -42,6 +42,7 @@ namespace IvorySharp.Aspects
         /// <returns>Декларация аспекта.</returns>
         public static MethodAspectDeclaration<TAspect> FromType(TAspect aspect, Type type)
         {
+            aspect.MulticastTarget = MethodAspectMulticastTarget.Type;
             return new MethodAspectDeclaration<TAspect>(aspect, MethodAspectMulticastTarget.Type, type);
         }
 
@@ -53,36 +54,8 @@ namespace IvorySharp.Aspects
         /// <returns>Декларация аспекта.</returns>
         public static MethodAspectDeclaration<TAspect> FromMethod(TAspect aspect, MethodInfo method)
         {
+            aspect.MulticastTarget = MethodAspectMulticastTarget.Method;
             return new MethodAspectDeclaration<TAspect>(aspect, MethodAspectMulticastTarget.Method, method);
-        }
-
-        /// <summary>
-        /// Сравнивает две декларации аспектов на основе типа аспекта.
-        /// </summary>
-        internal class ByAspectTypeEqualityComparer : EqualityComparer<MethodAspectDeclaration<TAspect>>
-        {
-            /// <summary>
-            /// Инициализированный экземпляр <see cref="ByAspectTypeEqualityComparer"/>.
-            /// </summary>
-            public static readonly ByAspectTypeEqualityComparer Instance = new ByAspectTypeEqualityComparer();
-
-            private ByAspectTypeEqualityComparer() { }
-
-            /// <inheritdoc />
-            public override bool Equals(MethodAspectDeclaration<TAspect> x, MethodAspectDeclaration<TAspect> y)
-            {
-                if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(x, null)) return false;
-                if (ReferenceEquals(y, null)) return false;
-
-                return Aspects.MethodAspect.ByTypeEqualityComparer.Instance.Equals(x.MethodAspect, y.MethodAspect);
-            }
-
-            /// <inheritdoc />
-            public override int GetHashCode(MethodAspectDeclaration<TAspect> obj)
-            {
-                return obj == null ? 0 : Aspects.MethodAspect.ByTypeEqualityComparer.Instance.GetHashCode(obj.MethodAspect);
-            }
         }
     }
 }

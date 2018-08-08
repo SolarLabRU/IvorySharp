@@ -23,35 +23,27 @@ namespace IvorySharp.Aspects.Selection
         }
 
         /// <inheritdoc />
-        public MethodAspectDeclaration<TAspect>[] SelectAspectDeclarations<TAspect>(Type type, bool includeAbstract)
+        public IEnumerable<MethodAspectDeclaration<TAspect>> SelectAspectDeclarations<TAspect>(Type type, bool includeAbstract)
             where TAspect : MethodAspect
         {
-            var declarations = new List<MethodAspectDeclaration<TAspect>>();
             var aspects = type.GetCustomAttributes<TAspect>(inherit: false);
 
             if (!includeAbstract)
                 aspects = aspects.Where(a => !a.GetType().IsAbstract);
 
-            declarations.AddRange(aspects.Select(
-                a => MethodAspectDeclaration<TAspect>.FromType(a, type)));
-
-            return declarations.ToArray();
+            return aspects.Select(a => MethodAspectDeclaration<TAspect>.FromType(a, type));
         }
 
         /// <inheritdoc />
-        public MethodAspectDeclaration<TAspect>[] SelectAspectDeclarations<TAspect>(MethodInfo method, bool includeAbstract)
+        public IEnumerable<MethodAspectDeclaration<TAspect>> SelectAspectDeclarations<TAspect>(MethodInfo method, bool includeAbstract)
             where TAspect : MethodAspect
         {
-            var declarations = new List<MethodAspectDeclaration<TAspect>>();
             var aspects = method.GetCustomAttributes<TAspect>(inherit: false);
                 
             if (!includeAbstract)
                 aspects = aspects.Where(a => !a.GetType().IsAbstract);
 
-            declarations.AddRange(aspects.Select(
-                a => MethodAspectDeclaration<TAspect>.FromMethod(a, method)));
-
-            return declarations.ToArray();
+            return aspects.Select(a => MethodAspectDeclaration<TAspect>.FromMethod(a, method));
         }
     }
 }

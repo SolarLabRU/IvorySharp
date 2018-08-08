@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Selection;
@@ -66,26 +67,33 @@ namespace IvorySharp.Aspects.Creation
 
         private MethodBoundaryAspect[] PrepareBoundaryAspects(InvocationContext context)
         {
-            var aspectDeclarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
+            var methodBoundaryAspects = new List<MethodBoundaryAspect>();
+            var declarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
 
-            foreach (var declaration in aspectDeclarations)
+            foreach (var aspect in _aspectOrderStrategy.Order(declarations.Select(d => d.MethodAspect)))
             {
-                declaration.MethodAspect.MulticastTarget = declaration.MulticastTarget;
+                var existingAspect = methodBoundaryAspects.Find(aspect.Equals);
+                // Если у текущего аспекта приоритет выше, чем равного тому,
+                // что уже есть в коллекции, то заменяем его на новый
+                if (existingAspect != null && aspect.Order < existingAspect.Order)
+                    methodBoundaryAspects.Remove(existingAspect);
+                
+                methodBoundaryAspects.Add(aspect);                
             }
 
-            var orderedAspects = _aspectOrderStrategy.Order(aspectDeclarations.Select(a => a.MethodAspect)).ToArray();
+            for (var i = 0; i < methodBoundaryAspects.Count; i++)
+            {
+                methodBoundaryAspects[i].InternalOrder = methodBoundaryAspects[i].Order + i + 1;
+            }
             
-            for (var i = 0; i < orderedAspects.Length; i++)
-            {
-                aspectDeclarations[i].MethodAspect.InternalOrder = aspectDeclarations[i].MethodAspect.Order + i + 1;
-            }
-
-            return orderedAspects;
+            return methodBoundaryAspects.ToArray();
         }
 
         private MethodInterceptionAspect PrepareInterceptAspect(InvocationContext context)
         {
-            var aspectDeclarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodInterceptionAspect>(context);
+            var aspectDeclarations = _aspectDeclarationCollector
+                .CollectAspectDeclarations<MethodInterceptionAspect>(context)
+                .ToArray();
 
             if (aspectDeclarations.Length > 1)
             {

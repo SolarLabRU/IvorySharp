@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects
 {
@@ -25,29 +24,18 @@ namespace IvorySharp.Aspects
         /// </summary>
         public MethodAspectMulticastTarget MulticastTarget { get; internal set; }
 
-        /// <summary>
-        /// Сравнение аспектов на основе типов.
-        /// </summary>
-        internal class ByTypeEqualityComparer : EqualityComparer<MethodAspect>
+        /// <inheritdoc />
+        public override bool Equals(object obj)
         {
-            public static readonly ByTypeEqualityComparer Instance = new ByTypeEqualityComparer();
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType();
+        }
 
-            private ByTypeEqualityComparer() { }
-
-            /// <inheritdoc />
-            public override bool Equals(MethodAspect x, MethodAspect y)
-            {
-                if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(x, null)) return false;
-                if (ReferenceEquals(y, null)) return false;
-                return x.GetType() == y.GetType();
-            }
-
-            /// <inheritdoc />
-            public override int GetHashCode(MethodAspect obj)
-            {
-                return obj == null ? 0 : obj.GetType().GetHashCode();
-            }
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
         }
     }
 }
