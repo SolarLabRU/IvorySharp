@@ -131,7 +131,7 @@ namespace IvorySharp.Tests.IntegrationTests
         {
             public override void OnSuccess(IInvocationPipeline pipeline)
             {
-                pipeline.ThrowException(new ArgumentNullException());
+                throw new ArgumentNullException();
             }
         }
 

@@ -20,6 +20,19 @@ namespace IvorySharp.Aspects.Pipeline
         internal MethodAspect CurrentExecutingAspect { get; set; }
 
         /// <summary>
+        /// Признак того, что пайплайн в поврежденном состоянии и продолжение выполнения невозможно.
+        /// </summary>
+        internal bool IsFaulted => FlowBehavior == FlowBehavior.Faulted &&
+                                   CurrentException != null;
+
+        /// <summary>
+        /// Признак того, что пайплайн в ошибочном состоянии.
+        /// </summary>
+        internal bool IsExceptional => CurrentException != null && (
+                                           FlowBehavior == FlowBehavior.ThrowException ||
+                                           FlowBehavior == FlowBehavior.RethrowException ||
+                                           FlowBehavior == FlowBehavior.Faulted);   
+        /// <summary>
         /// Модель вызова.
         /// </summary>
         internal IInvocation Invocation { get; }
@@ -86,6 +99,16 @@ namespace IvorySharp.Aspects.Pipeline
             FlowBehavior = FlowBehavior.RethrowException;
         }
 
+        /// <summary>
+        /// Переводит пайплайн в состояние <see cref="Pipeline.FlowBehavior.Faulted"/>.
+        /// </summary>
+        /// <param name="exception">Исключение.</param>
+        internal void Fault(Exception exception)
+        {
+            CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
+            FlowBehavior = FlowBehavior.Faulted;
+        }
+        
         private object GetAspectState()
         {
             lock (SyncRoot)

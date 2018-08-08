@@ -51,10 +51,10 @@ namespace IvorySharp.Tests.UnitTests
         }
 
         [Fact]
-        public void SingleAspect_If_ExceptionOccuring_InBoundary_It_Breakes_Pipeline_And_Throws_Outsite()
+        public void SingleAspect_If_UnhandledException_Occuring_InBoundary_It_Breakes_Pipeline_And_Throws_Outsite()
         {
             // Arrange            
-            var aspect = new ArgumentExceptionThrowAspect(BoundaryType.Entry);
+            var aspect = new ThrowAspect(typeof(ArgumentException), BoundaryType.Entry, throwAsUnhandled: true);
             var pipeline = CreateObservablePipeline<IService>(
                 new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
@@ -63,6 +63,25 @@ namespace IvorySharp.Tests.UnitTests
             
             InvocationAssert.ProceedNotCalled(pipeline.Invocation);
             Assert.Equal(BoundaryType.Entry, aspect.ExecutionStack.Pop().BoundaryType);
+        }
+        
+        [Fact]
+        public void SingleAspect_If_HandledException_Occuring_InBoundary_OnEntry_OnExit_Called()
+        {
+            // Arrange            
+            var aspect = new ThrowAspect(typeof(ArgumentException), BoundaryType.Entry);
+            var pipeline = CreateObservablePipeline<IService>(
+                new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
+            
+            // Act && Assert
+            Assert.Throws<ArgumentException>(() => _executor.ExecutePipeline(pipeline));
+            
+            InvocationAssert.ProceedNotCalled(pipeline.Invocation);
+            Assert.Equal(new[]
+            {
+                new BoundaryState(BoundaryType.Exit),
+                new BoundaryState(BoundaryType.Entry), 
+            }, aspect.ExecutionStack);
         }
 
         [Fact]

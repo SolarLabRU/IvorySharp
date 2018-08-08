@@ -1,4 +1,7 @@
-﻿using IvorySharp.Tests.Asserts;
+﻿using System;
+using IvorySharp.Aspects;
+using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Tests.Asserts;
 using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Aspects;
 using IvorySharp.Tests.Utility;
@@ -36,6 +39,104 @@ namespace IvorySharp.Tests.UnitTests
             // Остальные не выполнились
             Assert.Empty(afterBreaker1.ExecutionStack);
             Assert.Empty(afterBreaker2.ExecutionStack);
+        }
+
+        [Fact]
+        public void MultipleAspects_OnException_RethrowException_Handles_InInnerAspect_ButNot_In_Outer()
+        {
+            // Arrange
+            var afterBreaker = new ObservableAspect { InternalOrder = 2};
+            var breaker = new RethrowAspect(typeof(ApplicationException)) { InternalOrder = 1 };
+            var beforeBreaker = new RethrowAspect(typeof(ArgumentException)) { InternalOrder = 0};
+            
+            var pipeline = CreateObservablePipeline<IService>(
+                new Service(), nameof(IService.ThrowArgumentException), 
+                Args.Pack<MethodBoundaryAspect>(beforeBreaker, breaker, afterBreaker));
+            
+            // Assert
+            Assert.Throws<ApplicationException>(() => _executor.ExecutePipeline(pipeline));        
+            Assert.Equal(_exceptionExecutionStack, breaker.ExecutionStack);     
+            Assert.Equal(_exceptionExecutionStack, beforeBreaker.ExecutionStack);
+        }
+
+        [Fact]
+        public void Multiple_OnException_ThrowException_In_OnEntry_Handled_InnerAspects_OnEntry_OnExit_Called()
+        {
+            // Arrange
+            var afterBreaker = new ObservableAspect { InternalOrder = 2 };
+            var breaker = new ThrowAspect(typeof(ApplicationException), BoundaryType.Entry) { InternalOrder = 1 };
+            var beforeBreaker = new ObservableAspect() { InternalOrder = 0};
+            
+            var pipeline = CreateObservablePipeline<IService>(
+                new Service(), nameof(IService.Identity), 
+                Args.Pack<MethodBoundaryAspect>(beforeBreaker, breaker, afterBreaker),
+                Args.Box(10));
+            
+            // Assert
+            Assert.Throws<ApplicationException>(() => _executor.ExecutePipeline(pipeline)); 
+            Assert.Empty(afterBreaker.ExecutionStack);
+            Assert.Equal(new []
+            {
+                new BoundaryState(BoundaryType.Exit),
+                new BoundaryState(BoundaryType.Entry), 
+            }, beforeBreaker.ExecutionStack);
+            
+            Assert.Equal(new []
+            {
+                new BoundaryState(BoundaryType.Exit),
+                new BoundaryState(BoundaryType.Entry), 
+            }, breaker.ExecutionStack);
+        }
+        
+        [Fact]
+        public void Multiple_OnException_ThrowException_In_OnEntry_Unhandled_BreakesPipeline()
+        {
+            // Arrange
+            var afterBreaker = new ObservableAspect { InternalOrder = 2 };
+            var breaker = new ThrowAspect(typeof(ApplicationException), BoundaryType.Entry, throwAsUnhandled: true)
+            {
+                InternalOrder = 1
+            };
+            
+            var beforeBreaker = new ObservableAspect() { InternalOrder = 0};
+            
+            var pipeline = CreateObservablePipeline<IService>(
+                new Service(), nameof(IService.Identity), 
+                Args.Pack<MethodBoundaryAspect>(beforeBreaker, breaker, afterBreaker),
+                Args.Box(10));
+            
+            // Assert
+            Assert.Throws<ApplicationException>(() => _executor.ExecutePipeline(pipeline)); 
+            Assert.Empty(afterBreaker.ExecutionStack);
+            Assert.Equal(new []
+            {
+                new BoundaryState(BoundaryType.Entry)
+            }, beforeBreaker.ExecutionStack);
+            
+            Assert.Equal(new []
+            {
+                new BoundaryState(BoundaryType.Entry) 
+            }, breaker.ExecutionStack);
+        }
+        
+        private class RethrowAspect : ObservableAspect
+        {
+            private readonly Type _exceptionType;
+
+            public RethrowAspect(Type exceptionType)
+            {
+                _exceptionType = exceptionType;
+            }
+
+            protected override void Exception(IInvocationPipeline pipeline)
+            {
+                pipeline.RethrowException(CreateException(_exceptionType, pipeline.CurrentException));
+            }
+
+            protected static Exception CreateException(Type exceptionType, Exception inner)
+            {
+                return (Exception) Activator.CreateInstance(exceptionType, string.Empty, inner);                       
+            }
         }
     }
 }

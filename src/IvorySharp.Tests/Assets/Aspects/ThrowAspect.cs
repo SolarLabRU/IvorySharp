@@ -7,11 +7,18 @@ namespace IvorySharp.Tests.Assets.Aspects
     {
         private readonly Type _exceptionType;
         private readonly BoundaryType _boundaryType;
+        private readonly bool _throwAsUnhandled;
 
-        public ThrowAspect(Type exceptionType, BoundaryType boundaryType)
+        public ThrowAspect(Type exceptionType, BoundaryType boundaryType, bool throwAsUnhandled)
         {
             _exceptionType = exceptionType;
             _boundaryType = boundaryType;
+            _throwAsUnhandled = throwAsUnhandled;
+        }
+        
+        public ThrowAspect(Type exceptionType, BoundaryType boundaryType)
+            : this(exceptionType, boundaryType, throwAsUnhandled: false)
+        {
         }
 
         protected override void Entry(IInvocationPipeline pipeline)
@@ -19,7 +26,7 @@ namespace IvorySharp.Tests.Assets.Aspects
             base.Entry(pipeline);
             if (_boundaryType == BoundaryType.Entry)
             {
-                throw CreateException(_exceptionType);
+                ThrowException(CreateException(_exceptionType), pipeline);
             }
         }
 
@@ -28,7 +35,7 @@ namespace IvorySharp.Tests.Assets.Aspects
             base.OnSuccess(pipeline);
             if (_boundaryType == BoundaryType.Success)
             {
-                throw CreateException(_exceptionType);
+                ThrowException(CreateException(_exceptionType), pipeline);
             }
         }
 
@@ -37,7 +44,7 @@ namespace IvorySharp.Tests.Assets.Aspects
             base.Exception(pipeline);
             if (_boundaryType == BoundaryType.Exception)
             {
-                throw CreateException(_exceptionType);
+                ThrowException(CreateException(_exceptionType), pipeline);
             }
         }
 
@@ -46,8 +53,16 @@ namespace IvorySharp.Tests.Assets.Aspects
             base.Exit(pipeline);
             if (_boundaryType == BoundaryType.Exit)
             {
-                throw CreateException(_exceptionType);
+                ThrowException(CreateException(_exceptionType), pipeline);
             }      
+        }
+
+        protected void ThrowException(Exception exception, IInvocationPipeline pipeline)
+        {
+            if (_throwAsUnhandled)
+                throw exception;
+            
+            pipeline.ThrowException(exception);
         }
 
         protected static Exception CreateException(Type exceptionType)
