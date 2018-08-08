@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Pipeline.BoundaryIterators;
+using IvorySharp.Aspects.Pipeline.Visitors;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline
@@ -24,15 +23,13 @@ namespace IvorySharp.Aspects.Pipeline
         {
             // Это нарушает soLid, но позволяет не выставлять кучу классов наружу библиотеки.
             var pipeline = (AspectInvocationPipeline) basePipeline;
-
-            var onEntryIterator = new OnEntryBoundaryIterator(pipeline);
-            var onExitIterator = new OnExitBoundaryIterator(pipeline);
-            var onSuccessIterator = new OnSuccessBoundaryIterator(pipeline);
-            var stateAwareMetaIterator = new PipelineStateAwareMetaIterator();
-
+            var visitorAcceptor = new InvocationPipelineVisitorAcceptor(pipeline);       
+            var visitResult = new VisitResult();
+            
             try
             {
-                var onEntryResult = stateAwareMetaIterator.Iterate(onEntryIterator, pipeline.BoundaryAspects);
+                visitResult = visitorAcceptor.Accept(
+                    pipeline.BoundaryAspects, OnEntryVisitor.Instance);
 
                 // Перехватываем метод только при нормальном выполнении
                 // пайплайна
@@ -42,14 +39,13 @@ namespace IvorySharp.Aspects.Pipeline
                 }
 
                 // Если решили вернуть результат в OnEntry, то необходимо выполнить OnSuccess
-                // у аспекта, решившего вернуть результат.
-                if (onEntryResult.Breaker != null && pipeline.FlowBehavior == FlowBehavior.Return)
-                {
-                    onSuccessIterator.Iterate(new[] { onEntryResult.Breaker });
-                }
-                
-                // Выполняем у остальных с большим значением InternalOrder
-                stateAwareMetaIterator.Iterate(onSuccessIterator, pipeline.BoundaryAspects);
+                // так же у аспекта, решившего вернуть результат.
+                var includeBreaker = visitResult.IsExecutionBreaked && 
+                                     pipeline.FlowBehavior == FlowBehavior.Return;
+
+                visitorAcceptor.AcceptBefore(
+                    pipeline.BoundaryAspects, OnSuccessVisitor.Instance, 
+                    visitResult.ExecutionBreaker, includeBreaker);
             }
             catch (Exception e)
             {
@@ -64,12 +60,13 @@ namespace IvorySharp.Aspects.Pipeline
                 // Устанавливаем состояние пайплайна, при котором для каждого из обработчиков вызовется OnException
                 pipeline.FlowBehavior = FlowBehavior.RethrowException;
 
-                var onExceptionResult = stateAwareMetaIterator.Iterate(
-                    new OnExceptionBoundaryIterator(pipeline),
-                    pipeline.BoundaryAspects, throwIfPipelineFaulted: false);
-
+                visitResult = visitorAcceptor.AcceptBefore(
+                    pipeline.BoundaryAspects,
+                    OnExceptionVisitor.Instance, 
+                    visitResult.ExecutionBreaker, inclusive: true);
+                
                 var isPipelineFaulted = InvocationPipelineFlow.IsFaulted(pipeline);
-                var breaker = onExceptionResult.Breaker;
+                var breaker = visitResult.ExecutionBreaker;
 
                 // Если никто не смог обработать исключение или в процессе обработки
                 // появилось новое исключение - выбрасываем его наружу.
@@ -83,9 +80,9 @@ namespace IvorySharp.Aspects.Pipeline
                     var onSuccessAspects = pipeline.BoundaryAspects.Reverse()
                         .TakeWhile(a => !Equals(a, breaker))
                         .ToArray();
-                    
-                    onSuccessIterator.Iterate(onSuccessAspects);
 
+                    visitorAcceptor.Accept(onSuccessAspects, OnSuccessVisitor.Instance);
+   
                     if (InvocationPipelineFlow.IsFaulted(pipeline))
                         pipeline.CurrentException.Throw();
                 }
@@ -93,50 +90,22 @@ namespace IvorySharp.Aspects.Pipeline
             finally
             {
                 // Если внутри аспекта произошло исключение - пайплайн поломан 
-                // мы не должны вызывать finally
+                // мы не должны вызывать OnExit - бросаем исключение во вне
                 if (pipeline.FlowBehavior == FlowBehavior.ThrowException)
                     pipeline.CurrentException.Throw();
                 
-                stateAwareMetaIterator.Iterate(onExitIterator, pipeline.BoundaryAspects);
-
+                // Если решили вернуть результат, то необходимо выполнить OnExit
+                // так же у аспекта, решившего вернуть результат.
+                var includeBreaker = visitResult.ExecutionBreaker != null && 
+                                     pipeline.FlowBehavior == FlowBehavior.Return;
+                        
+                visitorAcceptor.AcceptBefore(
+                    pipeline.BoundaryAspects, OnExitVisitor.Instance, 
+                    visitResult.ExecutionBreaker, includeBreaker);
+                
                 // В самом конце устанавливаем значение, если оно поддерживается исходным методом
                 if (!pipeline.Invocation.Context.Method.IsVoidReturn())
                     pipeline.Context.ReturnValue = pipeline.Invocation.Context.ReturnValue;
-            }
-        }
-
-        /// <summary>
-        /// Класс-обертка для вызова итератора аспектов.
-        /// </summary>
-        private class PipelineStateAwareMetaIterator
-        {
-            private MethodBoundaryAspect _currentBreaker;
-
-            /// <summary>
-            /// Выполняет обход аспектов, запоминая состояние того, кто прервал цепочку вызовов.
-            /// </summary>
-            /// <param name="iterator">Итератор аспектов.</param>
-            /// <param name="aspects">Коллекция аспектов.</param>
-            /// <param name="throwIfPipelineFaulted">Признак необходимости выбросить исключение, если при выполнении пайплайна случилась или была сгенерирована ошибка.</param>
-            /// <returns>Результат обхода аспектов.</returns>
-            public MethodBoundaryIterator.BoundaryIterationResult Iterate(
-                MethodBoundaryIterator iterator,
-                IReadOnlyCollection<MethodBoundaryAspect> aspects,
-                bool throwIfPipelineFaulted = true)
-            {
-                var result = _currentBreaker == null
-                    ? iterator.Iterate(aspects)
-                    : iterator.Iterate(aspects, _currentBreaker.InternalOrder);
-
-                if (throwIfPipelineFaulted)
-                {
-                    var isExceptionalState = InvocationPipelineFlow.IsFaulted(iterator.Pipeline);
-                    if (isExceptionalState)
-                        iterator.Pipeline.CurrentException.Throw();
-                }
-
-                _currentBreaker = result.Breaker;
-                return result;
             }
         }
     }

@@ -17,20 +17,13 @@ namespace IvorySharp.Tests.UnitTests
     /// </summary>
     public partial class AspectInvocationPipelineExecutorTests
     {
-        private readonly AspectInvocationPipelineExecutor _executor;
-        
-        public AspectInvocationPipelineExecutorTests()
-        {
-            _executor = AspectInvocationPipelineExecutor.Instance;
-        }
-
         [Fact]
         public void SingleAspect_NormalFlow_AspectBoundariesCalled()
         {
             // Arrange            
             var aspect = new ObservableAspect();
-            var pipeline = CreatePipeline<ISingleAspectService>(
-                new SingleAspectService(), nameof(ISingleAspectService.Identity), Args.Pack(aspect), Args.Box(10));
+            var pipeline = CreateObservablePipeline<IService>(
+                new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
             // Act
             _executor.ExecutePipeline(pipeline);
@@ -38,9 +31,7 @@ namespace IvorySharp.Tests.UnitTests
             // Assert
             
             InvocationAssert.ProceedCalled(pipeline.Invocation);
-            Assert.Equal(BoundaryType.Exit, aspect.ExecutionStack.Pop().BoundaryType);
-            Assert.Equal(BoundaryType.Success, aspect.ExecutionStack.Pop().BoundaryType);
-            Assert.Equal(BoundaryType.Entry, aspect.ExecutionStack.Pop().BoundaryType);
+            Assert.Equal(_normalExecutionStack, aspect.ExecutionStack);
         }
 
         
@@ -49,16 +40,14 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange            
             var aspect = new ObservableAspect();
-            var pipeline = CreatePipeline<ISingleAspectService>(
-                new SingleAspectService(), nameof(ISingleAspectService.ThrowArgumentException), Args.Pack(aspect));
+            var pipeline = CreateObservablePipeline<IService>(
+                new Service(), nameof(IService.ThrowArgumentException), Args.Pack(aspect));
             
             // Act && Assert
             Assert.Throws<ArgumentException>(() => _executor.ExecutePipeline(pipeline));
             
             InvocationAssert.ProceedCalled(pipeline.Invocation);
-            Assert.Equal(BoundaryType.Exit, aspect.ExecutionStack.Pop().BoundaryType);
-            Assert.Equal(BoundaryType.Exception, aspect.ExecutionStack.Pop().BoundaryType);
-            Assert.Equal(BoundaryType.Entry, aspect.ExecutionStack.Pop().BoundaryType);
+            Assert.Equal(_exceptionExecutionStack, aspect.ExecutionStack);
         }
 
         [Fact]
@@ -66,8 +55,8 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange            
             var aspect = new ArgumentExceptionThrowAspect(BoundaryType.Entry);
-            var pipeline = CreatePipeline<ISingleAspectService>(
-                new SingleAspectService(), nameof(ISingleAspectService.Identity), Args.Pack(aspect), Args.Box(10));
+            var pipeline = CreateObservablePipeline<IService>(
+                new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
             // Act && Assert
             Assert.Throws<ArgumentException>(() => _executor.ExecutePipeline(pipeline));
@@ -81,8 +70,8 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange            
             var aspect = new ReturnDefaultValueAspect(BoundaryType.Entry);
-            var pipeline = CreatePipeline<ISingleAspectService>(
-                new SingleAspectService(), nameof(ISingleAspectService.Identity), Args.Pack(aspect), Args.Box(10));
+            var pipeline = CreateObservablePipeline<IService>(
+                new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
             // Act
             _executor.ExecutePipeline(pipeline);
@@ -90,34 +79,7 @@ namespace IvorySharp.Tests.UnitTests
             // Assert
            
             InvocationAssert.ProceedNotCalled(pipeline.Invocation);
-
-            Assert.Equal(BoundaryType.Exit, aspect.ExecutionStack.Pop().BoundaryType);
-            Assert.Equal(BoundaryType.Success, aspect.ExecutionStack.Pop().BoundaryType);
-            Assert.Equal(BoundaryType.Entry, aspect.ExecutionStack.Pop().BoundaryType);
+            Assert.Equal(_normalExecutionStack, aspect.ExecutionStack);
         }
-       
-        
-        #region Services
-
-        private interface ISingleAspectService
-        {
-            int Identity(int value);
-            void ThrowArgumentException();
-        }
-        
-        private class SingleAspectService : ISingleAspectService
-        {
-            public int Identity(int value)
-            {
-                return value;
-            }
-
-            public void ThrowArgumentException()
-            {
-                throw new ArgumentException();
-            }
-        }
-
-        #endregion
     }
 }
