@@ -18,19 +18,19 @@ namespace IvorySharp.Aspects
         public TAspect MethodAspect { get; }
 
         /// <summary>
-        /// Тип точки прикрепления аспекта.
+        /// Тип элемента, к которому прикрелпен аспект.
         /// </summary>
-        public MethodAspectJoinPointType JoinPointType { get; }
+        public MethodAspectMulticastTarget MulticastTarget { get; }
 
         /// <summary>
         /// Метод, либо тип на котором закреплен аспект.
         /// </summary>
         public MemberInfo AspectDeclaredMember { get; }
 
-        private MethodAspectDeclaration(TAspect methodAspect, MethodAspectJoinPointType joinPointType, MemberInfo aspectDeclaredMember)
+        private MethodAspectDeclaration(TAspect methodAspect, MethodAspectMulticastTarget multicastTarget, MemberInfo aspectDeclaredMember)
         {
             MethodAspect = methodAspect;
-            JoinPointType = joinPointType;
+            MulticastTarget = multicastTarget;
             AspectDeclaredMember = aspectDeclaredMember;
         }
 
@@ -42,7 +42,7 @@ namespace IvorySharp.Aspects
         /// <returns>Декларация аспекта.</returns>
         public static MethodAspectDeclaration<TAspect> FromType(TAspect aspect, Type type)
         {
-            return new MethodAspectDeclaration<TAspect>(aspect, MethodAspectJoinPointType.Type, type);
+            return new MethodAspectDeclaration<TAspect>(aspect, MethodAspectMulticastTarget.Type, type);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace IvorySharp.Aspects
         /// <returns>Декларация аспекта.</returns>
         public static MethodAspectDeclaration<TAspect> FromMethod(TAspect aspect, MethodInfo method)
         {
-            return new MethodAspectDeclaration<TAspect>(aspect, MethodAspectJoinPointType.Method, method);
+            return new MethodAspectDeclaration<TAspect>(aspect, MethodAspectMulticastTarget.Method, method);
         }
 
         /// <summary>

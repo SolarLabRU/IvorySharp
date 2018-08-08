@@ -21,9 +21,9 @@ namespace IvorySharp.Aspects
         public virtual void Initialize() { }
 
         /// <summary>
-        /// Точка прикрепления аспекта.
+        /// Тип элемента, к которому прикреплен аспект.
         /// </summary>
-        public MethodAspectJoinPointType JoinPointType { get; internal set; }
+        public MethodAspectMulticastTarget MulticastTarget { get; internal set; }
 
         /// <summary>
         /// Сравнение аспектов на основе типов.

@@ -24,14 +24,14 @@ namespace IvorySharp.Tests.UnitTests
             _orderStrategy = new DefaultAspectOrderStrategy();
 
             _methodAspects = new[] {
-                new EmptyAspect{ JoinPointType = MethodAspectJoinPointType.Method }, 
-                new EmptyAspect{ JoinPointType = MethodAspectJoinPointType.Method }
+                new EmptyAspect{ MulticastTarget = MethodAspectMulticastTarget.Method }, 
+                new EmptyAspect{ MulticastTarget = MethodAspectMulticastTarget.Method }
             };
 
             _typeAspects = new[]
             {
-                new EmptyAspect{ JoinPointType = MethodAspectJoinPointType.Type }, 
-                new EmptyAspect{ JoinPointType = MethodAspectJoinPointType.Type }
+                new EmptyAspect{ MulticastTarget = MethodAspectMulticastTarget.Type }, 
+                new EmptyAspect{ MulticastTarget = MethodAspectMulticastTarget.Type }
             };
         }
 

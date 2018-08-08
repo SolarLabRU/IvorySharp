@@ -70,7 +70,7 @@ namespace IvorySharp.Aspects.Creation
 
             foreach (var declaration in aspectDeclarations)
             {
-                declaration.MethodAspect.JoinPointType = declaration.JoinPointType;
+                declaration.MethodAspect.MulticastTarget = declaration.MulticastTarget;
             }
 
             var orderedAspects = _aspectOrderStrategy.Order(aspectDeclarations.Select(a => a.MethodAspect)).ToArray();
@@ -99,7 +99,7 @@ namespace IvorySharp.Aspects.Creation
 
             var declaration = aspectDeclarations.Single();
 
-            declaration.MethodAspect.JoinPointType = declaration.JoinPointType;
+            declaration.MethodAspect.MulticastTarget = declaration.MulticastTarget;
 
             return declaration.MethodAspect;
         }

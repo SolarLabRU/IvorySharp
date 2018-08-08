@@ -17,7 +17,7 @@
         /// <inheritdoc />
         public override bool CanApply(IInvocationPipeline pipeline)
         {
-            return pipeline.FlowBehavior == FlowBehavior.Default ||
+            return pipeline.FlowBehavior == FlowBehavior.Continue ||
                    pipeline.FlowBehavior == FlowBehavior.Return;
         }
 

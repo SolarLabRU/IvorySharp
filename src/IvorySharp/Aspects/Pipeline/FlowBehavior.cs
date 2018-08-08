@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using IvorySharp.Core;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -9,23 +10,25 @@ namespace IvorySharp.Aspects.Pipeline
     public enum FlowBehavior
     {
         /// <summary>
-        /// Значение по умолчанию.
-        /// Для хендлеров
-        /// <see cref="MethodBoundaryAspect.OnEntry(IInvocationPipeline)"/>,
-        /// <see cref="MethodBoundaryAspect.OnSuccess(IInvocationPipeline)"/>,
-        /// <see cref="MethodBoundaryAspect.OnExit(IInvocationPipeline)"/>
-        /// равно выполняется продолжение.
-        /// Для хендлера <see cref="MethodBoundaryAspect.OnException(IInvocationPipeline)"/>
-        /// эквивалетно значению <see cref="FlowBehavior.RethrowException"/>.
+        /// Значение по умолчанию - пайплайн выполяется в нормальном режиме.
+        /// Ожидаемая последовательность вызова:
+        ///     <see cref="MethodBoundaryAspect.OnEntry"/>
+        ///     <see cref="IInvocation.Proceed()"/> (вызов метода)
+        ///     <see cref="MethodBoundaryAspect.OnSuccess"/>
+        ///     <see cref="MethodBoundaryAspect.OnExit"/>
         /// </summary>
-        Default = 0,
+        Continue = 0,
         
         /// <summary>
         /// Прекращение выполнения пайплайна с возвратом результата.
-        /// У всех обработчико до и включая текущий, которые успели
+        /// У всех обработчиков до и включая текущий, которые успели
         /// выполниться - вызываются хендлеры
         ///     <see cref="MethodBoundaryAspect.OnSuccess"/>
         ///     <see cref="MethodBoundaryAspect.OnExit"/>.
+        ///
+        /// У обработчиков с более низким приоритетом
+        /// (большим значением <see cref="OrderableMethodAspect.Order"/>)
+        /// никакие из точек прикрепления внутри метода выполнены не будут.
         /// </summary>
         Return = 1,
         
@@ -34,6 +37,10 @@ namespace IvorySharp.Aspects.Pipeline
         /// У всех обработчиков до и включая текущий, которые успели
         /// выполниться - вызывается хендлер
         ///     <see cref="MethodBoundaryAspect.OnExit"/>.
+        /// 
+        /// У обработчиков с более низким приоритетом
+        /// (большим значением <see cref="OrderableMethodAspect.Order"/>)
+        /// никакие из точек прикрепления внутри метода выполнены не будут.
         /// </summary>
         ThrowException = 2,
         
@@ -43,6 +50,10 @@ namespace IvorySharp.Aspects.Pipeline
         /// выполниться - вызываются хендлеры
         ///     <see cref="MethodBoundaryAspect.OnException"/>
         ///     <see cref="MethodBoundaryAspect.OnExit"/>.
+        /// 
+        /// У обработчиков с более низким приоритетом
+        /// (большим значением <see cref="OrderableMethodAspect.Order"/>)
+        /// никакие из точек прикрепления внутри метода выполнены не будут.
         /// </summary>
         RethrowException = 3,
         

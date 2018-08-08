@@ -33,7 +33,7 @@ namespace IvorySharp.Aspects.Pipeline
 
                 // Перехватываем метод только при нормальном выполнении
                 // пайплайна
-                if (pipeline.FlowBehavior == FlowBehavior.Default)
+                if (pipeline.FlowBehavior == FlowBehavior.Continue)
                 {
                     pipeline.InterceptionAspect.OnInvoke(pipeline.Invocation);
                 }

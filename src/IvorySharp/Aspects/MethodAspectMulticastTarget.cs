@@ -3,10 +3,10 @@
 namespace IvorySharp.Aspects
 {
     /// <summary>
-    /// Точка прикрепления аспекта.
+    /// Перечень возможных мест для закрепления аспекта.
     /// </summary>
     [PublicAPI]
-    public enum MethodAspectJoinPointType
+    public enum MethodAspectMulticastTarget
     {
         /// <summary>
         /// Значение по умолчанию.
