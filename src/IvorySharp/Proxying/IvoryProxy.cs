@@ -1,10 +1,13 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel;
+using System.Reflection;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Proxying
 {
     /// <summary>
     /// Базовый класс прокси.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class IvoryProxy
     {
         /// <summary>
@@ -18,6 +21,6 @@ namespace IvorySharp.Proxying
         /// <param name="targetMethod">Целевой метод.</param>
         /// <param name="args">Параметры вызова метода.</param>
         /// <returns>Результат выполнения метода.</returns>
-        protected internal abstract object Invoke(MethodInfo targetMethod, object[] args);
+        protected internal abstract object Invoke([NotNull] MethodInfo targetMethod, [NotNull] object[] args);
     }
 }

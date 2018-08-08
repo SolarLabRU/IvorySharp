@@ -49,12 +49,17 @@ namespace IvorySharp.Aspects.Dependency
             }
         }
 
-        /// <inheritdoc />
-        public AspectPropertyDependency[] GetPropertyDependencies(Type aspectType)
+        /// <summary>
+        /// Возвращает коллекцию зависимостей аспекта.
+        /// </summary>
+        /// <param name="aspectType">Тип аспекта.</param>
+        /// <returns>Зависимости.</returns>
+        internal static AspectPropertyDependency[] GetPropertyDependencies(Type aspectType)
         {
             var dependencies = new List<AspectPropertyDependency>();
             var properties = aspectType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var property in properties)
             {
                 if (!property.CanWrite || property.GetSetMethod(nonPublic: false) == null)

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Reflection;
 using IvorySharp.Reflection;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Dependency
 {
     /// <summary>
     /// Информация о зависимости аспекта.
     /// </summary>
+    [PublicAPI]
     public class AspectPropertyDependency
     {
         /// <summary>

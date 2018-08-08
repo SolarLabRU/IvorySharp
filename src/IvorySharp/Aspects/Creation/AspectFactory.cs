@@ -64,7 +64,7 @@ namespace IvorySharp.Aspects.Creation
             return aspect;
         }
 
-        internal MethodBoundaryAspect[] PrepareBoundaryAspects(InvocationContext context)
+        private MethodBoundaryAspect[] PrepareBoundaryAspects(InvocationContext context)
         {
             var aspectDeclarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
 
@@ -83,7 +83,7 @@ namespace IvorySharp.Aspects.Creation
             return orderedAspects;
         }
 
-        internal MethodInterceptionAspect PrepareInterceptAspect(InvocationContext context)
+        private MethodInterceptionAspect PrepareInterceptAspect(InvocationContext context)
         {
             var aspectDeclarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodInterceptionAspect>(context);
 

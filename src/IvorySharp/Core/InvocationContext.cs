@@ -2,48 +2,50 @@
 using System.Collections.Generic;
 using System.Reflection;
 using IvorySharp.Comparers;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Core
 {
     /// <summary>
     /// Параметры вызова метода.
     /// </summary>
+    [PublicAPI]
     public class InvocationContext
     {        
         /// <summary>
         /// Возвращаемое значение метода.
         /// </summary>
-        public object ReturnValue { get; internal set; }
+        [PublicAPI] public object ReturnValue { get; internal set; }
         
         /// <summary>
         /// Параметры вызова метода.
         /// </summary>
-        public IReadOnlyCollection<object> Arguments { get; }
+        [PublicAPI] public IReadOnlyCollection<object> Arguments { get; }
         
         /// <summary>
         /// Вызываемый метод.
         /// </summary>
-        public MethodInfo Method { get; }
+        [PublicAPI] public MethodInfo Method { get; }
         
         /// <summary>
         /// Экземпляр класса, в котором содержится вызываемый метод.
         /// </summary>
-        public object Instance { get; }
+        [PublicAPI] public object Instance { get; }
         
         /// <summary>
         /// Экземпляр прокси.
         /// </summary>
-        public object TransparentProxy { get; }
+        [PublicAPI] public object TransparentProxy { get; }
 
         /// <summary>
         /// Тип в котором определен вызываемый метод (интерфейс).
         /// </summary>
-        public Type DeclaringType { get; }
+        [PublicAPI] public Type DeclaringType { get; }
         
         /// <summary>
         /// Тип в котором содержится реализация вызываемого метода.
         /// </summary>
-        public Type TargetType { get; }
+        [PublicAPI] public Type TargetType { get; }
 
         /// <summary>
         /// Инициализирует экземпляр модели вызова метода.
@@ -54,7 +56,7 @@ namespace IvorySharp.Core
         /// <param name="transparentProxy">Прокси.</param>
         /// <param name="declaringType">Тип в котором определен вызываемый метод (интерфейс).</param>
         /// <param name="targetType">Тип в котором содержится реализация вызываемого метода.</param>
-        public InvocationContext(
+        internal InvocationContext(
             IReadOnlyCollection<object> arguments, 
             MethodInfo method, 
             object instance, 
@@ -68,9 +70,7 @@ namespace IvorySharp.Core
             DeclaringType = declaringType;
             TargetType = targetType;
             TransparentProxy = transparentProxy;
-        }
-
-        
+        }      
         
         /// <summary>
         /// Выполняет сравнение контекстов на основе метода.

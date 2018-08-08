@@ -1,11 +1,13 @@
 ﻿using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Dependency;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Integration
 {
     /// <summary>
     /// Базовый класс контейнера аспектов.
     /// </summary>
+    [PublicAPI]
     public abstract class AspectsContainer
     {
         /// <summary>

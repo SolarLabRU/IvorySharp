@@ -12,6 +12,7 @@ namespace IvorySharp.Caching
         /// <summary>
         /// Признак активности компонента.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         internal static bool Enabled { get; }
 
         static Memoizer()

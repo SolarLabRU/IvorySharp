@@ -1,8 +1,11 @@
-﻿namespace IvorySharp.Aspects.Pipeline
+﻿using JetBrains.Annotations;
+
+namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
     /// Возможные состояния выполнения потока программы.
     /// </summary>
+    [PublicAPI]
     public enum FlowBehavior
     {
         /// <summary>
@@ -50,6 +53,6 @@
         /// Никакие внешние и текущие обработчики выполнены не будут.
         /// Возникшее исключение попадет в вызывающий код "как есть".
         /// </summary>
-        Faulted = 4,
+        Faulted = 4
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
+// ReSharper disable UnusedMember.Global
+
 [assembly:InternalsVisibleTo("IvorySharp.CastleWindsor")]
 [assembly:InternalsVisibleTo("IvorySharp.SimpleInjector")]
 [assembly:InternalsVisibleTo("IvorySharp.CastleWindsor.v330")]

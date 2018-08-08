@@ -1,16 +1,19 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Caching;
 using IvorySharp.Core;
 using IvorySharp.Proxying;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Прокси, связанное с аспектами.
     /// </summary>
+    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public class AspectWeavedProxy : IvoryProxy
     {
         private IAspectFactory _aspectFactory;
@@ -20,22 +23,22 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Исходный объект, вызовы которого будут перехватываться.
         /// </summary>
-        public object Target { get; private set; }
+        internal object Target { get; private set; }
 
         /// <summary>
         /// Экземпляр прокси.
         /// </summary>
-        public object Proxy { get; private set; }
+        internal object Proxy { get; private set; }
 
         /// <summary>
         /// Тип, в котором объявлен целевой метод (интерфейс).
         /// </summary>
-        public Type DeclaringType { get; private set; }
+        internal Type DeclaringType { get; private set; }
 
         /// <summary>
         /// Тип, в котором содержится реализация целевого метода.
         /// </summary>
-        public Type TargetType { get; private set; }
+        internal Type TargetType { get; private set; }
       
         /// <summary>
         /// Создает экземпляр прокси.
@@ -47,7 +50,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="pipelineExecutor">Компонент выполнения пайплайна.</param>
         /// <param name="weavePredicate">Предикат определения возможности применения аспектов.</param>
         /// <returns>Экземпляр прокси.</returns>
-        public static object Create(
+        internal static object Create(
             object target,
             Type targetType,
             Type declaringType,

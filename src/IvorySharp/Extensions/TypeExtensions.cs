@@ -11,11 +11,6 @@ namespace IvorySharp.Extensions
         private static readonly Type[] NotInterceptableTypes =
             typeof(MethodAspect).Assembly.GetTypes().Where(t => t.IsInterface).ToArray();
 
-        internal static bool HasDefaultConstructor(this Type type)
-        {
-            return type.IsValueType || type.GetConstructor(Type.EmptyTypes) != null;
-        }
-
         internal static object GetDefaultValue(this Type type)
         {
             if (type == null) 

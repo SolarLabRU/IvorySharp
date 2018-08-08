@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Tests.Assets;
+using IvorySharp.Tests.Assets.Invocations;
 
 namespace IvorySharp.Tests.UnitTests
 {

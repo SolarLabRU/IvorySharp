@@ -113,7 +113,7 @@ namespace IvorySharp.CastleWindsor.Core
         /// <inheritdoc />
         object IvorySharp.Core.IInvocation.Proceed()
         {
-            var castleInvocation = ((IInvocation) this);
+            var castleInvocation = (IInvocation) this;
             castleInvocation.Proceed();
             return castleInvocation.ReturnValue;
         }

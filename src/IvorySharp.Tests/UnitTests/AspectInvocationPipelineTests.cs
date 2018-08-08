@@ -2,6 +2,7 @@
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Exceptions;
 using IvorySharp.Tests.Assets;
+using IvorySharp.Tests.Assets.Invocations;
 using Xunit;
 
 namespace IvorySharp.Tests.UnitTests

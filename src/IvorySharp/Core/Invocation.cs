@@ -15,10 +15,8 @@ namespace IvorySharp.Core
         /// Делегат для быстрого вызова метода.
         /// </summary>
         private readonly Func<object, object[], object> _methodInvoker;
-        
-        /// <summary>
-        /// Контекст выполнения метода.
-        /// </summary>
+
+        /// <inheritdoc />
         public InvocationContext Context { get; }
 
         /// <summary>
@@ -73,7 +71,7 @@ namespace IvorySharp.Core
                 throw new IvorySharpException(
                     $"Невозможно установить возвращаемое значение '{returnValue}'. " +
                     $"Метод '{Context.Method.Name}' типа '{Context.DeclaringType.FullName}' " +
-                    $"не имеет возвращаемого значения (void).");
+                    "не имеет возвращаемого значения (void).");
             }
 
             if (returnValue == null)

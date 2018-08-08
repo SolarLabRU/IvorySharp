@@ -1,8 +1,11 @@
-﻿namespace IvorySharp.Aspects
+﻿using JetBrains.Annotations;
+
+namespace IvorySharp.Aspects
 {
     /// <summary>
     /// Аспект, который можно упорядочить.
     /// </summary>
+    [PublicAPI]
     public abstract class OrderableMethodAspect : MethodAspect
     {
         /// <summary>

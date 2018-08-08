@@ -1,10 +1,12 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Dependency
 {
     /// <summary>
     /// Провайдер сервисов (сервис локатор).
     /// </summary>
+    [PublicAPI]
     public interface IDependencyProvider
     {
         /// <summary>

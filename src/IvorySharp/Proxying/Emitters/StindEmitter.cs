@@ -28,7 +28,7 @@ namespace IvorySharp.Proxying.Emitters
             OpCodes.Nop, //Decimal = 15,
             OpCodes.Nop, //DateTime = 16,
             OpCodes.Nop, //17
-            OpCodes.Stind_Ref, //String = 18,
+            OpCodes.Stind_Ref //String = 18,
         };
 
         /// <summary>

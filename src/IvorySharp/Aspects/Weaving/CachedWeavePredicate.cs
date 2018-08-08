@@ -36,7 +36,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Ключ кеша.
         /// </summary>
-        internal class CacheKey
+        private class CacheKey
         {
             public readonly Type DeclaringType;
             public readonly Type TargetType;
@@ -51,9 +51,6 @@ namespace IvorySharp.Aspects.Weaving
 
             public override bool Equals(object obj)
             {
-                if (obj == null)
-                    return false;
-
                 var key = obj as CacheKey;
                 if (key == null)
                     return false;
@@ -61,10 +58,8 @@ namespace IvorySharp.Aspects.Weaving
                 if (DeclaringType != key.DeclaringType)
                     return false;
 
-                if (TargetType != key.TargetType)
-                    return false;
-
-                return MethodEqualityComparer.Instance.Equals(Method, key.Method);
+                return TargetType == key.TargetType && 
+                       MethodEqualityComparer.Instance.Equals(Method, key.Method);
             }
 
             /// <inheritdoc />

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Configuration
 {
     /// <summary>
     /// Модель настройки аспектов.
     /// </summary>
+    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public class AspectsConfiguration
     {
         /// <summary>

@@ -1,8 +1,11 @@
-﻿namespace IvorySharp.Core
+﻿using JetBrains.Annotations;
+
+namespace IvorySharp.Core
 {
     /// <summary>
     /// Интерфейс выполнения метода.
     /// </summary>
+    [PublicAPI]
     public interface IInvocation
     {
         /// <summary>
@@ -14,12 +17,12 @@
         /// Выполняет оригинальный метод.
         /// </summary>
         /// <returns>Результат вызова метода (void -> null).</returns>
-        object Proceed();
+        [CanBeNull] object Proceed();
         
         /// <summary>
         /// Устанавливает возвращаемое значение вызова.
         /// </summary>
         /// <param name="returnValue">Возвращаемое значение.</param>
-        void SetReturnValue(object returnValue);
+        void SetReturnValue([CanBeNull] object returnValue);
     }
 }

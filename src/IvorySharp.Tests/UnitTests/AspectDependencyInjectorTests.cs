@@ -38,7 +38,7 @@ namespace IvorySharp.Tests.UnitTests
             var injector = new AspectDependencyInjector(null);
 
             // Act
-            var deps = injector.GetPropertyDependencies(typeof(ZeroPropertyDependenciesAspect));
+            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(ZeroPropertyDependenciesAspect));
 
             // Assert
             Assert.Empty(deps);
@@ -51,7 +51,7 @@ namespace IvorySharp.Tests.UnitTests
             var injector = new AspectDependencyInjector(null);
 
             // Act
-            var deps = injector.GetPropertyDependencies(typeof(SinglePublicPropertyDependencyAspect));
+            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(SinglePublicPropertyDependencyAspect));
 
             // Assert
             Assert.Single(deps);
@@ -65,7 +65,7 @@ namespace IvorySharp.Tests.UnitTests
             var injector = new AspectDependencyInjector(null);
 
             // Act
-            var deps = injector.GetPropertyDependencies(typeof(MultiplePublicPropertyDependenciesAspect));
+            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(MultiplePublicPropertyDependenciesAspect));
 
             // Assert
             Assert.Equal(2, deps.Length);
@@ -80,7 +80,7 @@ namespace IvorySharp.Tests.UnitTests
             var injector = new AspectDependencyInjector(null);
 
             // Act
-            var deps = injector.GetPropertyDependencies(typeof(SinglePrivatePropertyDependencyAspect));
+            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(SinglePrivatePropertyDependencyAspect));
 
             // Assert
             Assert.Empty(deps);
@@ -93,7 +93,7 @@ namespace IvorySharp.Tests.UnitTests
             var injector = new AspectDependencyInjector(null);
 
             // Act
-            var deps = injector.GetPropertyDependencies(typeof(SinglePublicNoSetPropertyDependencyAspect));
+            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(SinglePublicNoSetPropertyDependencyAspect));
 
             // Assert
             Assert.Empty(deps);

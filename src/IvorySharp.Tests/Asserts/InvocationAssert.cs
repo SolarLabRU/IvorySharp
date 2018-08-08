@@ -1,5 +1,6 @@
 ﻿using IvorySharp.Core;
 using IvorySharp.Tests.Assets;
+using IvorySharp.Tests.Assets.Invocations;
 using Xunit;
 
 namespace IvorySharp.Tests.Asserts

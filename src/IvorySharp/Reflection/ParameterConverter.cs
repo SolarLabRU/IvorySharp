@@ -6,7 +6,7 @@ namespace IvorySharp.Reflection
     /// <summary>
     /// Вспомогательный класс для работы с параметрами метода.
     /// </summary>
-    internal class ParameterConverter
+    internal static class ParameterConverter
     {
         /// <summary>
         /// Возвращает массив типов параметров.

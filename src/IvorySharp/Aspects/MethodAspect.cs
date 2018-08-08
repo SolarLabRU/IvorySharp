@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects
 {
     /// <summary>
     /// Базовый класс для аспектов, применяемых на уровне метода.
     /// </summary>
+    [PublicAPI]
     public abstract class MethodAspect : AspectAttribute
     {
         /// <summary>
@@ -15,6 +17,7 @@ namespace IvorySharp.Aspects
         /// <summary>
         /// Выполняет инициализацию аспекта.
         /// </summary>
+        //  ReSharper disable once VirtualMemberNeverOverridden.Global (PublicAPI)
         public virtual void Initialize() { }
 
         /// <summary>
@@ -43,10 +46,7 @@ namespace IvorySharp.Aspects
             /// <inheritdoc />
             public override int GetHashCode(MethodAspect obj)
             {
-                if (obj == null)
-                    return 0;
-
-                return obj.GetType().GetHashCode();
+                return obj == null ? 0 : obj.GetType().GetHashCode();
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects
 {
@@ -8,6 +9,7 @@ namespace IvorySharp.Aspects
     /// Объявление аспекта.
     /// </summary>
     /// <typeparam name="TAspect">Тип аспекта.</typeparam>
+    [PublicAPI]
     public class MethodAspectDeclaration<TAspect> where TAspect : MethodAspect
     {
         /// <summary>
@@ -79,9 +81,7 @@ namespace IvorySharp.Aspects
             /// <inheritdoc />
             public override int GetHashCode(MethodAspectDeclaration<TAspect> obj)
             {
-                if (obj == null)
-                    return 0;
-                return Aspects.MethodAspect.ByTypeEqualityComparer.Instance.GetHashCode(obj.MethodAspect);
+                return obj == null ? 0 : Aspects.MethodAspect.ByTypeEqualityComparer.Instance.GetHashCode(obj.MethodAspect);
             }
         }
     }

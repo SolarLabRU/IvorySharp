@@ -1,12 +1,14 @@
 ﻿using System;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Компонент для выполнения связывания исходного объекта с аспектами.
     /// </summary>
+    [PublicAPI]
     public class AspectWeaver
     {
         private readonly IPipelineExecutor _aspectPipelineExecutor;

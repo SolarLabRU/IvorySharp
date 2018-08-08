@@ -1,11 +1,12 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Dependency
 {
     /// <summary>
     /// Атрибут для обозначения свойств, которые должны быть внедрены как зависимости аспекта.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    [PublicAPI, AttributeUsage(AttributeTargets.Property)]
     public sealed class DependencyAttribute : Attribute
     {    
         /// <summary>

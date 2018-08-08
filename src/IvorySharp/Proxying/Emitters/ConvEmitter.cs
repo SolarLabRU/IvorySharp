@@ -28,7 +28,7 @@ namespace IvorySharp.Proxying.Emitters
             OpCodes.Nop,//Decimal = 15,
             OpCodes.Nop,//DateTime = 16,
             OpCodes.Nop,//17
-            OpCodes.Nop,//String = 18,
+            OpCodes.Nop //String = 18,
         };
 
         /// <summary>
@@ -49,6 +49,8 @@ namespace IvorySharp.Proxying.Emitters
             {
                 var argType = source.GetElementType();
                 LdindEmitter.Emit(il, argType);
+                
+                // ReSharper disable once TailRecursiveCall
                 Emit(il, argType, target);
                 return;
             }

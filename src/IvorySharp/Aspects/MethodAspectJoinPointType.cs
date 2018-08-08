@@ -1,8 +1,11 @@
-﻿namespace IvorySharp.Aspects
+﻿using JetBrains.Annotations;
+
+namespace IvorySharp.Aspects
 {
     /// <summary>
     /// Точка прикрепления аспекта.
     /// </summary>
+    [PublicAPI]
     public enum MethodAspectJoinPointType
     {
         /// <summary>

@@ -34,7 +34,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Возвращает признак того, что применение аспектов запрещено.
         /// </summary>
-        protected bool IsWeavingSuppressed(Type type)
+        protected static bool IsWeavingSuppressed(Type type)
         {
             return !type.IsInterceptable() || type.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false).Any();
         }
@@ -42,7 +42,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Возвращает признак того, что применение аспектов запрещено.
         /// </summary>
-        protected bool IsWeavingSuppressed(MethodInfo method)
+        protected static bool IsWeavingSuppressed(MethodInfo method)
         {
             return !method.IsInterceptable() || method.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false).Any();
         }

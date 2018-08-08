@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using IvorySharp.Proxying.Emitters;
 
 namespace IvorySharp.Proxying.Generators
 {

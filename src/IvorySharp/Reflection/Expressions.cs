@@ -2,31 +2,19 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using IvorySharp.Extensions;
 
 namespace IvorySharp.Reflection
 {
     internal static class Expressions
     {
-        public static Func<TConvert> CreateFactoryMethod<TConvert>(Type type)
-        {
-            if (!type.HasDefaultConstructor())
-                throw new ArgumentException("Поддерживаются только типы с конструктором по умолчанию");
-
-            if (!typeof(TConvert).IsAssignableFrom(type))
-                throw new ArgumentException(
-                    $"Преобразование [{type.Name}] -> [{typeof(TConvert).Name}] не поддерживается");
-
-            var creatorExpression = Expression.Lambda<Func<TConvert>>(
-                Expression.Convert(
-                    Expression.New(type), typeof(TConvert))
-            );
-
-            return creatorExpression.Compile();
-        }
-
         public static Action<object, object> CreatePropertySetter(PropertyInfo property)
         {
+            if (property == null) 
+                throw new ArgumentNullException(nameof(property));
+            
+            if (property.DeclaringType == null)
+                throw new ArgumentException($"{nameof(property)}.{nameof(property.DeclaringType)}", nameof(property));
+            
             var instance = Expression.Parameter(typeof(object), "instance");
             var value = Expression.Parameter(typeof(object), "value");
 
@@ -43,6 +31,12 @@ namespace IvorySharp.Reflection
         
         public static Func<object, object[], object> CreateMethodInvoker(MethodInfo method)
         {
+            if (method == null) 
+                throw new ArgumentNullException(nameof(method));
+            
+            if (method.DeclaringType == null)
+                throw new ArgumentException($"{nameof(method)}.{nameof(method.DeclaringType)}", nameof(method));
+            
             var instanceParameterExpression = Expression.Parameter(typeof(object), "instance");
             var argumentsParameterExpression = Expression.Parameter(typeof(object[]), "args");
 

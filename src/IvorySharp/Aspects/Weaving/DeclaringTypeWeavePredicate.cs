@@ -43,10 +43,9 @@ namespace IvorySharp.Aspects.Weaving
                 return true;
 
             // На методах базового интерфейса есть аспекты
-            if (interaces.SelectMany(i => i.GetMethods()).Any(m => !IsWeavingSuppressed(m) && AspectSelector.HasAnyAspect(m, includeAbstract: false)))
-                return true;
-
-            return false;
+            return interaces.SelectMany(i => i.GetMethods())
+                .Any(m => !IsWeavingSuppressed(m) && 
+                          AspectSelector.HasAnyAspect(m, includeAbstract: false));
         }
 
         /// <inheritdoc />

@@ -1,11 +1,14 @@
 ﻿using System;
+using System.ComponentModel;
 using IvorySharp.Aspects.Integration;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Configuration
 {
     /// <summary>
     /// Синтаксис конфигурации аспектов.
     /// </summary>
+    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public class AspectsFluentConfigurationSyntax
     {
         private readonly MutableComponentsStore _componentsStore;

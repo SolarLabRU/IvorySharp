@@ -1,15 +1,17 @@
-﻿using System;
+﻿using System.ComponentModel;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Configuration
 {
     /// <summary>
     /// Компоненты библиотеки.
     /// </summary>
+    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public interface IComponentsStore
     { 
         /// <summary>

@@ -41,6 +41,7 @@ namespace IvorySharp.Comparers
             if (leftGenericParameters.Length != rightGenericParameters.Length)
                 return false;
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < leftGenericParameters.Length; i++)
             {
                 if (leftGenericParameters[i] != rightGenericParameters[i])
@@ -52,6 +53,7 @@ namespace IvorySharp.Comparers
             if (leftParameters.Length != rightParameters.Length)
                 return false;
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < leftParameters.Length; i++)
             {
                 if (leftParameters[i].ParameterType != rightParameters[i].ParameterType)
@@ -70,6 +72,7 @@ namespace IvorySharp.Comparers
             var hashCode = obj.DeclaringType.GetHashCode();
             hashCode ^= obj.Name.GetHashCode();
 
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var parameter in obj.GetParameters())
             {
                 hashCode ^= parameter.ParameterType.GetHashCode();

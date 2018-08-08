@@ -12,13 +12,6 @@ namespace IvorySharp.Exceptions
         /// <summary>
         /// Инициализирует экземпляр <see cref="IvorySharpException"/>.
         /// </summary>
-        public IvorySharpException()
-        {
-        }
-
-        /// <summary>
-        /// Инициализирует экземпляр <see cref="IvorySharpException"/>.
-        /// </summary>
         public IvorySharpException(string message) : base(message)
         {
         }

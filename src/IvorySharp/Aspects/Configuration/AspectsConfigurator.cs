@@ -1,10 +1,12 @@
 ﻿using IvorySharp.Aspects.Integration;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Configuration
 {
     /// <summary>
     /// Стартовая точка конфигурации аспектов.
     /// </summary>
+    [PublicAPI]
     public static class AspectsConfigurator
     {
         /// <summary>

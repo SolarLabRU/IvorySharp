@@ -139,7 +139,7 @@ namespace IvorySharp.Proxying.Generators
         /// </summary>
         /// <param name="source">Исходный метод.</param>
         /// <param name="target">Целевой метод.</param>
-        private void MakeGeneric(MethodBase source, MethodBuilder target)
+        private static void MakeGeneric(MethodBase source, MethodBuilder target)
         {
             if (!source.ContainsGenericParameters)
                 return;
@@ -254,16 +254,16 @@ namespace IvorySharp.Proxying.Generators
                 _internalEmitter.EmitEndSet(typeof(int));
             }
 
-            public ArrayEmitter<object> EmitArguments(ParameterInfo[] parameters, ParametersEmitter parametersEmitter)
+            public ArrayEmitter<object> EmitArguments(IReadOnlyList<ParameterInfo> parameters, ParametersEmitter parametersEmitter)
             {
                 // object[] args = new object[paramCount];
                 _ilGenerator.Emit(OpCodes.Nop);
 
                 _internalEmitter.EmitBeginSet((int) PackedArgPosition.MethodArguments);
 
-                var argsEmitter = new ArrayEmitter<object>(_ilGenerator, parameters.Length);
+                var argsEmitter = new ArrayEmitter<object>(_ilGenerator, parameters.Count);
 
-                for (var i = 0; i < parameters.Length; i++)
+                for (var i = 0; i < parameters.Count; i++)
                 {
                     // args[i] = argi;
                     if (!parameters[i].IsOut)
@@ -281,13 +281,13 @@ namespace IvorySharp.Proxying.Generators
                 return argsEmitter;
             }
 
-            public void EmitGenericTypes(Type[] genericTypes)
+            public void EmitGenericTypes(IReadOnlyList<Type> genericTypes)
             {
                 _internalEmitter.EmitBeginSet((int) PackedArgPosition.GenericTypes);
 
-                var typesEmitter = new ArrayEmitter<Type>(_ilGenerator, genericTypes.Length);
+                var typesEmitter = new ArrayEmitter<Type>(_ilGenerator, genericTypes.Count);
 
-                for (var i = 0; i < genericTypes.Length; ++i)
+                for (var i = 0; i < genericTypes.Count; ++i)
                 {
                     typesEmitter.EmitBeginSet(i);
                     _ilGenerator.Emit(OpCodes.Ldtoken, genericTypes[i]);

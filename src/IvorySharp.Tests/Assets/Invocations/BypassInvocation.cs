@@ -1,7 +1,7 @@
 ﻿using System;
 using IvorySharp.Core;
 
-namespace IvorySharp.Tests.Assets
+namespace IvorySharp.Tests.Assets.Invocations
 {
     public class BypassInvocation : Invocation
     {
