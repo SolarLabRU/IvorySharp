@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Tests.Assets;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Dependency;
 using Moq;
@@ -34,9 +33,6 @@ namespace IvorySharp.Tests.UnitTests
         [Fact]
         public void NoPropertyDependencies_GetPropertyDependencies_Returns_EmptyArray()
         {
-            // Arrange
-            var injector = new AspectDependencyInjector(null);
-
             // Act
             var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(ZeroPropertyDependenciesAspect));
 
@@ -47,9 +43,6 @@ namespace IvorySharp.Tests.UnitTests
         [Fact]
         public void SinglePropertyDependency_GetPropertyDependencies_Returns_CorrectDependency()
         {
-            // Arrange
-            var injector = new AspectDependencyInjector(null);
-
             // Act
             var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(SinglePublicPropertyDependencyAspect));
 
@@ -61,9 +54,6 @@ namespace IvorySharp.Tests.UnitTests
         [Fact]
         public void MultiplePropertyDependencies_GetPropertyDependencies_Returns_CorrectDependencies()
         {
-            // Arrange
-            var injector = new AspectDependencyInjector(null);
-
             // Act
             var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(MultiplePublicPropertyDependenciesAspect));
 
@@ -76,9 +66,6 @@ namespace IvorySharp.Tests.UnitTests
         [Fact]
         public void NotPublicPropertyDependency_GetPropertyDependencies_Returns_Result_Without_Dependency()
         {
-            // Arrange
-            var injector = new AspectDependencyInjector(null);
-
             // Act
             var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(SinglePrivatePropertyDependencyAspect));
 
@@ -89,9 +76,6 @@ namespace IvorySharp.Tests.UnitTests
         [Fact]
         public void NoSetPropertyDependency_GetPropertyDependencies_Returns_Result_Without_Dependency()
         {
-            // Arrange
-            var injector = new AspectDependencyInjector(null);
-
             // Act
             var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(SinglePublicNoSetPropertyDependencyAspect));
 

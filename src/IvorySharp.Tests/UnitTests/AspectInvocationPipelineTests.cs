@@ -1,7 +1,6 @@
 ﻿using System;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Exceptions;
-using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Invocations;
 using Xunit;
 
@@ -14,13 +13,11 @@ namespace IvorySharp.Tests.UnitTests
     {
         private readonly BypassInvocation _voidMethodReturnInvocation;
         private readonly BypassInvocation _returnTenMethodInvocation;
-        private readonly BypassInvocation _nullMethodReturnInvocation;
 
         public AspectInvocationPipelineTests()
         {
             _voidMethodReturnInvocation = new BypassInvocation(typeof(IService), new Service(), nameof(IService.Method));
             _returnTenMethodInvocation = new BypassInvocation(typeof(IService), new Service(), nameof(IService.ReturnTen));
-            _nullMethodReturnInvocation = new BypassInvocation(typeof(IService), new Service(), nameof(IService.ReturnNull));
         }
 
         [Fact]

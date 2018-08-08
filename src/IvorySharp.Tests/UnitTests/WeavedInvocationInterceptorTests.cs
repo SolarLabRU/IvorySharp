@@ -5,7 +5,6 @@ using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Core;
-using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Invocations;
 using Moq;
 using Xunit;

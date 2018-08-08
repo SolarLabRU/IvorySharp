@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using IvorySharp.Aspects;
 using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Core;
 using IvorySharp.Tests.Asserts;
 using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Aspects;
