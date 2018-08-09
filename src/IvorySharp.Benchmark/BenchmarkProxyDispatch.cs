@@ -1,60 +1,70 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Reflection;
 using BenchmarkDotNet.Attributes;
+using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Creation;
+using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
-using IvorySharp.Benchmark.Fakes;
+using IvorySharp.Benchmark.Proxy;
+using IvorySharp.Benchmark.Services;
 
 namespace IvorySharp.Benchmark
 {
-    public class BenchmarkProxyDispatch
+    public class BenchmarkDispatch
     {
-        private IAppService _serviceInstance;
-        private IAppService _bypassWeavedInstance;
-        private IDependencyAppService _dependencyAppService;
-        private DummyComponents _dummyComponents;
-     
+        private IServiceForBenchmark _defaultService;
+        private IServiceForBenchmark _proxiedService;
+        private IServiceForBenchmark _weavedService;
+        
+        private MethodInfo _reflectedMethod;
+        private ServiceForBenchmark _reflectedMethodService;
+
         [GlobalSetup]
-        public void GlobalSetup()
+        public void Setup()
         {
-            var serviceContainer = new Dictionary<Type, object>
-            {
-                [typeof(IDependencyService)] = new DependencyService()
-            };
+            _reflectedMethodService = new ServiceForBenchmark();
+            _reflectedMethod = typeof(IServiceForBenchmark).GetMethod(nameof(IServiceForBenchmark.Identity));
+
+            var settings = new DefaultComponentsStore(null);
+            var weaver = new AspectWeaver(settings.AspectWeavePredicate, settings.AspectPipelineExecutor, settings.AspectFactory);
             
-            var dependencyProvider = new DummyDependencyProvider(serviceContainer);
-            _dummyComponents = new DummyComponents {DependencyProvider = dependencyProvider};
-
-            var weaver = new AspectWeaver(_dummyComponents.AspectWeavePredicate, _dummyComponents.AspectPipelineExecutor, _dummyComponents.AspectFactory);
-
-            _serviceInstance = new AppService();
-            _bypassWeavedInstance = (IAppService) weaver.Weave(new AppService(), typeof(IAppService), typeof(AppService));
-            _dependencyAppService = (IDependencyAppService) weaver.Weave(new DependencyAppService(), typeof(IDependencyAppService), typeof(DependencyAppService));
-         }
-
-
-        [Benchmark]
-        public void Dispatch_Class_IdentityMethod()
-        {
-            _serviceInstance.Identity(10);
-        }
-
-        [Benchmark]
-        public void Dispatch_WeavedClass_IdentityMethod()
-        {
-            _bypassWeavedInstance.Identity(10);
-        }
-
-        [Benchmark]
-        public void Dispatch_WeavedDependencyClass_IdentityMethod()
-        {
-            _dependencyAppService.Identity(10);
+            _defaultService = new ServiceForBenchmark();
+            
+            _weavedService = (IServiceForBenchmark) weaver.Weave(
+                new ServiceForBenchmark(), typeof(IServiceForBenchmark), typeof(ServiceForBenchmark));
+            
+            _proxiedService = (IServiceForBenchmark) BypassProxy<IServiceForBenchmark>.Create(
+                new ServiceForBenchmark());
         }
         
         [Benchmark]
-        public void Dispath_Reflection_IdentityMethod()
+        public void DispatchProxiedMethod()
         {
-            var method = typeof(AppService).GetMethod("Identity");
-            method.Invoke(_serviceInstance, new object[]{ 10 });
+            var result = _proxiedService.Identity(10);
+            GC.KeepAlive(result);
+        }
+
+        [Benchmark]
+        public void DispatchWeavedMethod()
+        {
+            var result = _weavedService.Identity(10);
+            GC.KeepAlive(result);
+        }
+
+        [Benchmark]
+        public void DispatchReflectedMethod()
+        {
+            var result = _reflectedMethod.Invoke(_reflectedMethodService, new object[]{ 10 });
+            GC.KeepAlive(result);
+        }
+
+        [Benchmark]
+        public void DispachMethodDefault()
+        {
+            var result = _defaultService.Identity(10);
+            GC.KeepAlive(result);
         }
     }
 }
