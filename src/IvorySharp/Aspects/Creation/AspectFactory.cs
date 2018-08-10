@@ -65,7 +65,7 @@ namespace IvorySharp.Aspects.Creation
             return aspect;
         }
 
-        private MethodBoundaryAspect[] PrepareBoundaryAspects(InvocationContext context)
+        internal MethodBoundaryAspect[] PrepareBoundaryAspects(InvocationContext context)
         {
             var methodBoundaryAspects = new List<MethodBoundaryAspect>();
             var declarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
@@ -73,12 +73,13 @@ namespace IvorySharp.Aspects.Creation
             foreach (var aspect in _aspectOrderStrategy.Order(declarations.Select(d => d.MethodAspect)))
             {
                 var existingAspect = methodBoundaryAspects.Find(aspect.Equals);
+                
                 // Если у текущего аспекта приоритет выше, чем равного тому,
                 // что уже есть в коллекции, то заменяем его на новый
                 if (existingAspect != null && aspect.Order < existingAspect.Order)
                     methodBoundaryAspects.Remove(existingAspect);
-                
-                methodBoundaryAspects.Add(aspect);                
+                else if (existingAspect == null)
+                    methodBoundaryAspects.Add(aspect);                
             }
 
             for (var i = 0; i < methodBoundaryAspects.Count; i++)
@@ -89,7 +90,7 @@ namespace IvorySharp.Aspects.Creation
             return methodBoundaryAspects.ToArray();
         }
 
-        private MethodInterceptionAspect PrepareInterceptAspect(InvocationContext context)
+        internal MethodInterceptionAspect PrepareInterceptAspect(InvocationContext context)
         {
             var aspectDeclarations = _aspectDeclarationCollector
                 .CollectAspectDeclarations<MethodInterceptionAspect>(context)

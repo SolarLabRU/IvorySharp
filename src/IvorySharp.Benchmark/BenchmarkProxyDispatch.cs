@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Engines;
 using IvorySharp.Aspects.Configuration;
-using IvorySharp.Aspects.Creation;
-using IvorySharp.Aspects.Dependency;
-using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Proxy;
 using IvorySharp.Benchmark.Services;
