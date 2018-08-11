@@ -13,4 +13,4 @@ matrix:
         - cd src/IvorySharp.Tests
         - dotnet xunit -fxversion $(ls /usr/share/dotnet/shared/Microsoft.NETCore.App/)
         - cd ../IvorySharp.Benchmark
-        - dotnet run IvorySharp.Benchmark.csproj -c Release
+        - dotnet run IvorySharp.Benchmark.csproj -c Release --filter *BenchmarkDispatch*
