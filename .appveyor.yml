@@ -10,3 +10,6 @@ before_build:
 build:
   parallel: true
   verbosity: minimal
+after_build:
+  - ps: cd src/IvorySharp.Benchmark
+  - ps: dotnet run IvorySharp.Benchmark.csproj -c Release
