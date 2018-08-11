@@ -11,5 +11,4 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
-  - ps: IvorySharp.Benchmark
-  - ps: dotnet run IvorySharp.Benchmark.csproj -c Release --filter *BenchmarkDispatch*
+  - ps: dotnet run IvorySharp.Benchmark/IvorySharp.Benchmark.csproj -c Release --filter *BenchmarkDispatch*
