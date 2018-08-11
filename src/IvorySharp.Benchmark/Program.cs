@@ -6,7 +6,9 @@ namespace IvorySharp.Benchmark
     {
         static void Main(string[] args)
         {
-            BenchmarkSwitcher.FromAssembly(typeof(BenchmarkDispatch).Assembly).Run();
+            BenchmarkSwitcher
+                .FromAssembly(typeof(BenchmarkDispatch).Assembly)
+                .Run(args);
         }
     }
 }
