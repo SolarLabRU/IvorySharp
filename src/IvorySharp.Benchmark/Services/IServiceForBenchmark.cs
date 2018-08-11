@@ -1,4 +1,5 @@
-﻿using IvorySharp.Benchmark.Aspects;
+﻿using System.Threading.Tasks;
+using IvorySharp.Benchmark.Aspects;
 
 namespace IvorySharp.Benchmark.Services
 {
@@ -6,5 +7,8 @@ namespace IvorySharp.Benchmark.Services
     {
         [BypassAspect]
         int Identity(int value);
+
+        [BypassAspect]
+        Task<int> IdentityAsync(int value);
     }
 }

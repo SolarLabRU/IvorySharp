@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Engines;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Proxy;
@@ -61,6 +61,20 @@ namespace IvorySharp.Benchmark
         public void DispachMethodDefault()
         {
             var result = _defaultService.Identity(10);
+            GC.KeepAlive(result);
+        }
+
+        [Benchmark]
+        public async Task DispatchAsyncMethod()
+        {
+            var result = await _defaultService.IdentityAsync(10);
+            GC.KeepAlive(result);
+        }
+        
+        [Benchmark]
+        public async Task DispatchWeavedAsyncMethod()
+        {
+            var result = await _weavedService.IdentityAsync(10);
             GC.KeepAlive(result);
         }
     }
