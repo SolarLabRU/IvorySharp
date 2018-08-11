@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using IvorySharp.Core;
 
-namespace IvorySharp.Aspects.Pipeline
+namespace IvorySharp.Aspects.Pipeline.Synchronous
 {
     /// <summary>
-    /// Пайплайн выполнения, включающий аспекты.
+    /// Пайплайн выполнения синхронного метода, включающий аспекты.
     /// </summary>
-    internal class AspectInvocationPipeline : InvocationPipeline
+    internal class SyncAspectInvocationPipeline : SyncInvocationPipeline
     {
         /// <summary>
         /// Аспекты закрепленные в точках до и после вызова основного метода.
@@ -19,9 +19,12 @@ namespace IvorySharp.Aspects.Pipeline
         public MethodInterceptionAspect InterceptionAspect { get; }
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="AspectInvocationPipeline"/>.
+        /// Инициализирует экземпляр <see cref="SyncAspectInvocationPipeline"/>.
         /// </summary>
-        internal AspectInvocationPipeline(IInvocation invocation, IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, MethodInterceptionAspect interceptionAspect) 
+        internal SyncAspectInvocationPipeline(
+            IInvocation invocation, 
+            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects,
+            MethodInterceptionAspect interceptionAspect) 
             : base(invocation)
         {
             BoundaryAspects = boundaryAspects;

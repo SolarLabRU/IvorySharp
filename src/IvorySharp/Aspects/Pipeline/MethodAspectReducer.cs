@@ -9,13 +9,13 @@ namespace IvorySharp.Aspects.Pipeline
     /// </summary>
     internal class MethodAspectReducer
     {
-        private readonly InvocationPipeline _pipeline;
+        private readonly InvocationPipelineBase _pipeline;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="MethodAspectReducer"/>.
         /// </summary>
         /// <param name="pipeline">Пайлпайн.</param>
-        public MethodAspectReducer(InvocationPipeline pipeline)
+        public MethodAspectReducer(InvocationPipelineBase pipeline)
         {
             _pipeline = pipeline;
         }

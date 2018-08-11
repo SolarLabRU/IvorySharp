@@ -4,32 +4,34 @@ using System.Reflection;
 using IvorySharp.Aspects.Pipeline.Appliers;
 using IvorySharp.Extensions;
 
-namespace IvorySharp.Aspects.Pipeline
+namespace IvorySharp.Aspects.Pipeline.Synchronous
 {
     /// <summary>
-    /// Выполняет пайплайн <see cref="AspectInvocationPipeline"/>.
+    /// Выполняет пайплайн <see cref="SyncAspectInvocationPipeline"/>.
     /// </summary>
-    internal class AspectInvocationPipelineExecutor : IPipelineExecutor
+    internal class SyncAspectInvocationPipelineExecutor : IInvocationPipelineExecutor
     {
         /// <summary>
-        /// Инициаилизированный экземпляр <see cref="AspectInvocationPipeline"/>.
+        /// Инициализированный экземпляр <see cref="SyncAspectInvocationPipeline"/>.
         /// </summary>
-        public static readonly AspectInvocationPipelineExecutor Instance = new AspectInvocationPipelineExecutor();
+        public static readonly SyncAspectInvocationPipelineExecutor Instance 
+            = new SyncAspectInvocationPipelineExecutor();
 
-        private AspectInvocationPipelineExecutor() { }
-        
+        private SyncAspectInvocationPipelineExecutor()
+        {
+        }
+
         /// <inheritdoc />
         public void ExecutePipeline(IInvocationPipeline basePipeline)
         {
-            // Это нарушает soLid, но позволяет не выставлять кучу классов наружу библиотеки.
-            var pipeline = (AspectInvocationPipeline) basePipeline;
-            var apsectReducer = new MethodAspectReducer(pipeline);       
-            var visitResult = new AspectApplyResult();
-            
+            // Это нарушает solid, но позволяет не выставлять кучу классов наружу библиотеки.
+            var pipeline = (SyncAspectInvocationPipeline) basePipeline;
+            var apsectReducer = new MethodAspectReducer(pipeline);
+            var applyResult = new AspectApplyResult();
+
             try
             {
-                visitResult = apsectReducer.Reduce(
-                    pipeline.BoundaryAspects, OnEntryApplier.Instance);
+                applyResult = apsectReducer.Reduce(pipeline.BoundaryAspects, OnEntryApplier.Instance);
 
                 // Перехватываем метод только при нормальном выполнении
                 // пайплайна
@@ -40,12 +42,10 @@ namespace IvorySharp.Aspects.Pipeline
 
                 // Если решили вернуть результат в OnEntry, то необходимо выполнить OnSuccess
                 // так же у аспекта, решившего вернуть результат.
-                var includeBreaker = visitResult.IsExecutionBreaked && 
-                                     pipeline.FlowBehavior == FlowBehavior.Return;
+                var includeBreaker = applyResult.IsExecutionBreaked && pipeline.IsReturn();
 
-                apsectReducer.ReduceBefore(
-                    pipeline.BoundaryAspects, OnSuccessApplier.Instance, 
-                    visitResult.ExecutionBreaker, includeBreaker);
+                apsectReducer.ReduceBefore(pipeline.BoundaryAspects, OnSuccessApplier.Instance,
+                    applyResult.ExecutionBreaker, includeBreaker);
             }
             catch (Exception e)
             {
@@ -61,16 +61,16 @@ namespace IvorySharp.Aspects.Pipeline
                 // Устанавливаем состояние пайплайна, при котором для каждого из обработчиков вызовется OnException
                 pipeline.FlowBehavior = FlowBehavior.RethrowException;
 
-                visitResult = apsectReducer.ReduceBefore(
+                applyResult = apsectReducer.ReduceBefore(
                     pipeline.BoundaryAspects,
-                    OnExceptionApplier.Instance, 
-                    visitResult.ExecutionBreaker, inclusive: true);
-                
-                var breaker = visitResult.ExecutionBreaker;
-        
+                    OnExceptionApplier.Instance,
+                    applyResult.ExecutionBreaker, inclusive: true);
+
+                var breaker = applyResult.ExecutionBreaker;
+
                 // Если один из обработчиков решил вернуть результат вместо исключения
                 // то мы должны позвать обработчики OnSuccess у всех родительских аспектов    
-                if (breaker != null && !pipeline.IsExceptional)
+                if (breaker != null && pipeline.IsReturn())
                 {
                     var onSuccessAspects = pipeline.BoundaryAspects.Reverse()
                         .TakeWhile(a => !Equals(a, breaker))
@@ -78,29 +78,25 @@ namespace IvorySharp.Aspects.Pipeline
 
                     apsectReducer.Reduce(onSuccessAspects, OnSuccessApplier.Instance);
                 }
-                
+
                 // Если никто не смог обработать исключение или в процессе обработки
                 // появилось новое исключение - выбрасываем его наружу.
-                if (pipeline.IsExceptional)
+                if (pipeline.IsExceptional())
                     pipeline.CurrentException.Throw();
             }
             finally
-            {      
+            {
                 // Ничего не должно выполняться, если пайплайн в сломанном состоянии.
-                if (pipeline.IsFaulted)
+                if (pipeline.IsFaulted())
                     pipeline.CurrentException.Throw();
-             
+
                 apsectReducer.ReduceBefore(
-                    pipeline.BoundaryAspects, OnExitApplier.Instance, 
-                    visitResult.ExecutionBreaker, inclusive: true);
-                
+                    pipeline.BoundaryAspects, OnExitApplier.Instance,
+                    applyResult.ExecutionBreaker, inclusive: true);
+
                 // Выкидываем исключение, если пайплайн в ошибочном состоянии
-                if (pipeline.IsExceptional)
+                if (pipeline.IsExceptional())
                     pipeline.CurrentException.Throw();
-                
-                // В самом конце устанавливаем значение, если оно поддерживается исходным методом
-                if (!pipeline.Invocation.Context.Method.IsVoidReturn())
-                    pipeline.Context.ReturnValue = pipeline.Invocation.Context.ReturnValue;
             }
         }
     }

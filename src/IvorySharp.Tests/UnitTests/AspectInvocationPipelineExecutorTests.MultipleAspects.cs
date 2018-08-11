@@ -19,7 +19,7 @@ namespace IvorySharp.Tests.UnitTests
             var breaker = new ReturnDefaultValueAspect(BoundaryType.Entry) { InternalOrder = 1};
             var beforeBreaker = new ObservableAspect{ InternalOrder = 0};
             
-            var pipeline = CreateObservablePipeline<IService>(
+            var pipeline = CreatePipeline<IService>(
                 new Service(), nameof(IService.Identity), 
                 Args.Pack(beforeBreaker, breaker, afterBreaker1, afterBreaker2), 
                 Args.Box(10));
@@ -48,7 +48,7 @@ namespace IvorySharp.Tests.UnitTests
             var breaker = new RethrowAspect(typeof(ApplicationException)) { InternalOrder = 1 };
             var beforeBreaker = new RethrowAspect(typeof(ArgumentException)) { InternalOrder = 0};
             
-            var pipeline = CreateObservablePipeline<IService>(
+            var pipeline = CreatePipeline<IService>(
                 new Service(), nameof(IService.ThrowArgumentException), 
                 Args.Pack<MethodBoundaryAspect>(beforeBreaker, breaker, afterBreaker));
             
@@ -66,7 +66,7 @@ namespace IvorySharp.Tests.UnitTests
             var breaker = new ThrowAspect(typeof(ApplicationException), BoundaryType.Entry) { InternalOrder = 1 };
             var beforeBreaker = new ObservableAspect() { InternalOrder = 0};
             
-            var pipeline = CreateObservablePipeline<IService>(
+            var pipeline = CreatePipeline<IService>(
                 new Service(), nameof(IService.Identity), 
                 Args.Pack<MethodBoundaryAspect>(beforeBreaker, breaker, afterBreaker),
                 Args.Box(10));
@@ -99,7 +99,7 @@ namespace IvorySharp.Tests.UnitTests
             
             var beforeBreaker = new ObservableAspect() { InternalOrder = 0};
             
-            var pipeline = CreateObservablePipeline<IService>(
+            var pipeline = CreatePipeline<IService>(
                 new Service(), nameof(IService.Identity), 
                 Args.Pack<MethodBoundaryAspect>(beforeBreaker, breaker, afterBreaker),
                 Args.Box(10));

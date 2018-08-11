@@ -1,47 +1,36 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
-    /// Базовый пайплайн выполнения метода.
+    /// Базовая модель пайплайна выполнения метода.
     /// </summary>
-    internal abstract class InvocationPipeline : IInvocationPipeline
+    internal abstract class InvocationPipelineBase : IInvocationPipeline
     {
         private static readonly object SyncRoot = new object();
-        private readonly IDictionary<Type, object> _pipelineData;
+        private readonly ConcurrentDictionary<Type, object> _pipelineData;
+        
+        /// <summary>
+        /// Модель вызова метода.
+        /// </summary>
+        internal IInvocation Invocation { get; }
 
         /// <summary>
         /// Текущий выполняемый аспект.
         /// </summary>
         internal MethodAspect CurrentExecutingAspect { get; set; }
 
-        /// <summary>
-        /// Признак того, что пайплайн в поврежденном состоянии и продолжение выполнения невозможно.
-        /// </summary>
-        internal bool IsFaulted => FlowBehavior == FlowBehavior.Faulted &&
-                                   CurrentException != null;
-
-        /// <summary>
-        /// Признак того, что пайплайн в ошибочном состоянии.
-        /// </summary>
-        internal bool IsExceptional => CurrentException != null && (
-                                           FlowBehavior == FlowBehavior.ThrowException ||
-                                           FlowBehavior == FlowBehavior.RethrowException ||
-                                           FlowBehavior == FlowBehavior.Faulted);   
-        /// <summary>
-        /// Модель вызова.
-        /// </summary>
-        internal IInvocation Invocation { get; }
-
         /// <inheritdoc />
         public InvocationContext Context { get; }
 
         /// <inheritdoc />
         public Exception CurrentException { get; set; }
+
+        /// <inheritdoc />
+        public abstract object CurrentReturnValue { get; set; }
 
         /// <inheritdoc />
         public FlowBehavior FlowBehavior { get; set; }
@@ -53,15 +42,21 @@ namespace IvorySharp.Aspects.Pipeline
         }
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="InvocationPipeline"/>.
+        /// Инициализирует экземпляр <see cref="InvocationPipelineBase"/>.
         /// </summary>
-        /// <param name="invocation">Модель выполнения метода.</param>
-        internal InvocationPipeline(IInvocation invocation)
+        /// <param name="invocation">Модель вызова метода.</param>
+        protected InvocationPipelineBase(IInvocation invocation)
         {
             _pipelineData = new ConcurrentDictionary<Type, object>();
-
-            Context = invocation.Context;
             Invocation = invocation;
+            Context = Invocation.Context;
+        }
+        
+        /// <inheritdoc />
+        public void Return()
+        {
+            CurrentReturnValue = Context.Method.ReturnType.GetDefaultValue();
+            FlowBehavior = FlowBehavior.Return;
         }
 
         /// <inheritdoc />
@@ -69,20 +64,7 @@ namespace IvorySharp.Aspects.Pipeline
         {
             CurrentException = null;
             FlowBehavior = FlowBehavior.Return;        
-            Invocation.SetReturnValue(returnValue);
-        }
-
-        /// <inheritdoc />
-        public void Return()
-        {
-            FlowBehavior = FlowBehavior.Return;
-
-            // Если забыли указать результат, то ставим результат по умолчанию
-            // Возможно лучше отдельно проверять этот кейс и кидать исключение
-            if (Context.ReturnValue == null)
-            {
-                Context.ReturnValue = Context.Method.ReturnType.GetDefaultValue();
-            }
+            CurrentReturnValue = returnValue;
         }
 
         /// <inheritdoc />
@@ -98,7 +80,7 @@ namespace IvorySharp.Aspects.Pipeline
             CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
             FlowBehavior = FlowBehavior.RethrowException;
         }
-
+        
         /// <summary>
         /// Переводит пайплайн в состояние <see cref="Pipeline.FlowBehavior.Faulted"/>.
         /// </summary>
@@ -109,6 +91,10 @@ namespace IvorySharp.Aspects.Pipeline
             FlowBehavior = FlowBehavior.Faulted;
         }
         
+        /// <summary>
+        /// Возвращает текущее состояние аспекта.
+        /// </summary>
+        /// <returns>Состояние аспекта.</returns>
         private object GetAspectState()
         {
             lock (SyncRoot)
@@ -122,7 +108,11 @@ namespace IvorySharp.Aspects.Pipeline
             }
         }
 
-        private void SetAspectState(object newState)
+        /// <summary>
+        /// Устанавливает текущее состояние аспекта.
+        /// </summary>
+        /// <param name="newState">Новое состояние.</param>
+        protected void SetAspectState(object newState)
         {
             lock (SyncRoot)
             {

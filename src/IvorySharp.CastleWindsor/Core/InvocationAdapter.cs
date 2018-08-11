@@ -16,6 +16,13 @@ namespace IvorySharp.CastleWindsor.Core
         public InvocationContext Context { get; }
 
         /// <inheritdoc />
+        object IvorySharp.Core.IInvocation.ReturnValue
+        {
+            get => ReturnValue;
+            set => ReturnValue = value;
+        }
+
+        /// <inheritdoc />
         public object[] Arguments { get; }
 
         /// <inheritdoc />
@@ -34,11 +41,7 @@ namespace IvorySharp.CastleWindsor.Core
         public object Proxy { get; }
 
         /// <inheritdoc />
-        public object ReturnValue
-        {
-            get => Context.ReturnValue;
-            set => Context.ReturnValue = value;
-        }
+        public object ReturnValue { get; set; }
 
         /// <inheritdoc />
         public Type TargetType { get; }
@@ -102,12 +105,6 @@ namespace IvorySharp.CastleWindsor.Core
 
             if (ReferenceEquals(ReturnValue, Context.Instance))
                 ReturnValue = Proxy;
-        }
-
-        /// <inheritdoc />
-        public void SetReturnValue(object returnValue)
-        {
-            ReturnValue = returnValue;
         }
 
         /// <inheritdoc />

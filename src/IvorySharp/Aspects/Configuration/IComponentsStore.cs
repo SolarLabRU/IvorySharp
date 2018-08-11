@@ -35,9 +35,9 @@ namespace IvorySharp.Aspects.Configuration
         IAspectDeclarationCollector AspectDeclarationCollector { get; }
 
         /// <summary>
-        /// Компонент выполнения пайплайна.
+        /// Фабрика компонентов пайлпайна.
         /// </summary>
-        IPipelineExecutor AspectPipelineExecutor { get; }
+        IInvocationPipelineFactory PipelineFactory { get; }
 
         /// <summary>
         /// Компонент, выпонялющий инициализацию аспектов.

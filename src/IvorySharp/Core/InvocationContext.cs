@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using IvorySharp.Comparers;
+using IvorySharp.Extensions;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Core
@@ -13,10 +14,10 @@ namespace IvorySharp.Core
     public class InvocationContext
     {        
         /// <summary>
-        /// Возвращаемое значение метода.
+        /// Тип метода.
         /// </summary>
-        [PublicAPI] public object ReturnValue { get; internal set; }
-        
+        internal MethodType MethodType { get; }
+       
         /// <summary>
         /// Параметры вызова метода.
         /// </summary>
@@ -70,7 +71,8 @@ namespace IvorySharp.Core
             DeclaringType = declaringType;
             TargetType = targetType;
             TransparentProxy = transparentProxy;
-        }      
+            MethodType = Method.GetMethodType();
+        }
         
         /// <summary>
         /// Выполняет сравнение контекстов на основе метода.

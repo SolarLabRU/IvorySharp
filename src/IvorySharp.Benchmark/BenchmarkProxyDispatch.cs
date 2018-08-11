@@ -25,7 +25,7 @@ namespace IvorySharp.Benchmark
             _reflectedMethod = typeof(IServiceForBenchmark).GetMethod(nameof(IServiceForBenchmark.Identity));
 
             var settings = new DefaultComponentsStore(null);
-            var weaver = new AspectWeaver(settings.AspectWeavePredicate, settings.AspectPipelineExecutor, settings.AspectFactory);
+            var weaver = new AspectWeaver(settings.AspectWeavePredicate, settings.PipelineFactory, settings.AspectFactory);
             
             _defaultService = new ServiceForBenchmark();
             

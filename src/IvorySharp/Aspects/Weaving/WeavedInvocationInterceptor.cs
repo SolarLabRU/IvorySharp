@@ -11,13 +11,19 @@ namespace IvorySharp.Aspects.Weaving
     internal class WeavedInvocationInterceptor
     {
         private readonly IAspectFactory _aspectFactory;
-        private readonly IPipelineExecutor _aspectPipelineExecutor;
+        private readonly IInvocationPipelineFactory _pipelineFactory;
         private readonly IAspectWeavePredicate _aspectWeavePredicate;
         
-        public WeavedInvocationInterceptor(IAspectFactory aspectFactory, IPipelineExecutor aspectPipelineExecutor, IAspectWeavePredicate aspectWeavePredicate)
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="WeavedInvocationInterceptor"/>.
+        /// </summary>
+        public WeavedInvocationInterceptor(
+            IAspectFactory aspectFactory,
+            IInvocationPipelineFactory pipelineFactory,
+            IAspectWeavePredicate aspectWeavePredicate)
         {
             _aspectFactory = aspectFactory;
-            _aspectPipelineExecutor = aspectPipelineExecutor;
+            _pipelineFactory = pipelineFactory;         
             _aspectWeavePredicate = aspectWeavePredicate;
         }
 
@@ -38,9 +44,10 @@ namespace IvorySharp.Aspects.Weaving
 
             var boundaryAspects = _aspectFactory.CreateBoundaryAspects(invocation.Context);
             var interceptAspect = _aspectFactory.CreateInterceptionAspect(invocation.Context);
-
-            _aspectPipelineExecutor.ExecutePipeline(
-                new AspectInvocationPipeline(invocation, boundaryAspects, interceptAspect));
+            var executor = _pipelineFactory.CreateExecutor(invocation);
+            var pipeline = _pipelineFactory.CreatePipeline(invocation, boundaryAspects, interceptAspect);    
+            
+            executor.ExecutePipeline(pipeline);
 
             foreach (var aspect in boundaryAspects)
             {
@@ -53,7 +60,7 @@ namespace IvorySharp.Aspects.Weaving
             if (interceptAspect is IDisposable ds2)
                 ds2.Dispose();
 
-            return invocation.Context.ReturnValue;
+            return invocation.ReturnValue;
         }
     }
 }

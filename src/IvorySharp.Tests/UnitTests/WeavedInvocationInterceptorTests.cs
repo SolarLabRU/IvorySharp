@@ -8,6 +8,7 @@ using IvorySharp.Core;
 using IvorySharp.Tests.Assets.Invocations;
 using Moq;
 using Xunit;
+using IInvocation = IvorySharp.Core.IInvocation;
 
 namespace IvorySharp.Tests.UnitTests
 {
@@ -20,7 +21,8 @@ namespace IvorySharp.Tests.UnitTests
         private MethodInterceptionAspect _interceptionAspect;
 
         private readonly IAspectWeavePredicate _weavePredicateAlwaysTrue;
-        private readonly IPipelineExecutor _doNothingPipelineExecutor;
+        private readonly IInvocationPipelineExecutor _doNothingPipelineExecutor;
+        private readonly IInvocationPipelineFactory _pipelineFactory;
         private readonly IAspectFactory _predefinedAspectsFactory;
 
         public WeavedInvocationInterceptorTests()
@@ -35,9 +37,15 @@ namespace IvorySharp.Tests.UnitTests
 
             _weavePredicateAlwaysTrue = truePredicateMock.Object;
 
-            var pipelineExecutorMock = new Mock<IPipelineExecutor>();
+            var pipelineExecutorMock = new Mock<IInvocationPipelineExecutor>();
             _doNothingPipelineExecutor = pipelineExecutorMock.Object;
 
+            var pipelineFactoryMock = new Mock<IInvocationPipelineFactory>();
+            pipelineFactoryMock.Setup(c => c.CreateExecutor(It.IsAny<IInvocation>()))
+                .Returns(_doNothingPipelineExecutor);
+
+            _pipelineFactory = pipelineFactoryMock.Object;
+            
             var aspectInitializerMock = new Mock<IAspectFactory>();
 
             aspectInitializerMock.Setup(m => m.CreateBoundaryAspects(It.IsAny<InvocationContext>()))
@@ -54,7 +62,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspect = new DisposableAspect();
-            var interceptor = new WeavedInvocationInterceptor(_predefinedAspectsFactory, _doNothingPipelineExecutor, _weavePredicateAlwaysTrue);
+            var interceptor = new WeavedInvocationInterceptor(_predefinedAspectsFactory, _pipelineFactory, _weavePredicateAlwaysTrue);
 
             _boundaryAspects = new MethodBoundaryAspect[] { aspect };
 

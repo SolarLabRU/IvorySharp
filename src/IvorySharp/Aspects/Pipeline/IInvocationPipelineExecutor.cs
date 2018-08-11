@@ -3,7 +3,7 @@
     /// <summary>
     /// Компонент, выполняющий пайплан вызова.
     /// </summary>
-    public interface IPipelineExecutor
+    public interface IInvocationPipelineExecutor
     {
         /// <summary>
         /// Выполняет пайплайн.

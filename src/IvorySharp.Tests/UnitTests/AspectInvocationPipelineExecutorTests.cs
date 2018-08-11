@@ -1,7 +1,9 @@
 ﻿using System;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Aspects.Pipeline.Synchronous;
 using IvorySharp.Tests.Assets;
+using IvorySharp.Tests.Assets.Aspects;
 using IvorySharp.Tests.Assets.Invocations;
 
 namespace IvorySharp.Tests.UnitTests
@@ -22,24 +24,37 @@ namespace IvorySharp.Tests.UnitTests
             new BoundaryState(BoundaryType.Entry),
         };
         
-        private readonly AspectInvocationPipelineExecutor _executor;
+        private readonly SyncAspectInvocationPipelineExecutor _executor;
         
         public AspectInvocationPipelineExecutorTests()
         {
-            _executor = AspectInvocationPipelineExecutor.Instance;
+            _executor = SyncAspectInvocationPipelineExecutor.Instance;
         }
         
-        private AspectInvocationPipeline CreateObservablePipeline<TService>(
+        private SyncAspectInvocationPipeline CreatePipeline<TService>(
             TService instace, 
             string methodName,  
             MethodBoundaryAspect[] boundaryAspects,
             params object[] arguments)
         {
-            return new AspectInvocationPipeline(
+            return new SyncAspectInvocationPipeline(
                 new ObservableInvocation(typeof(TService), instace, methodName, arguments), 
                 boundaryAspects, BypassMethodAspect.Instance);
         }
         
+        #region Aspects
+
+        private class IncrementReturnValueOnSuccess : ObservableAspect
+        {
+            protected override void Success(IInvocationPipeline pipeline)
+            {
+                var result = (int)pipeline.CurrentReturnValue;
+                pipeline.ReturnValue(result + 1);
+            }
+        }
+
+        #endregion
+            
         #region Services
 
         private interface IService

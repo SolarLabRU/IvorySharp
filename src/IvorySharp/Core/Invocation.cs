@@ -19,6 +19,15 @@ namespace IvorySharp.Core
         /// <inheritdoc />
         public InvocationContext Context { get; }
 
+        /// <inheritdoc />
+        public object ReturnValue
+        {
+            get => _returnValue;
+            set => _returnValue = ConvertReturnValue(value);
+        }
+        
+        private object _returnValue;
+        
         /// <summary>
         /// Инициализирует экземпляр класса <see cref="Invocation"/>.
         /// </summary>
@@ -44,14 +53,14 @@ namespace IvorySharp.Core
         {
             try
             {
-                Context.ReturnValue = _methodInvoker != null 
+                ReturnValue = _methodInvoker != null 
                     ? _methodInvoker(Context.Instance, (object[]) Context.Arguments) 
                     : Context.Method.Invoke(Context.Instance, (object[]) Context.Arguments);
                 
-                if (ReferenceEquals(Context.ReturnValue, Context.Instance))
-                    Context.ReturnValue = Context.TransparentProxy;
+                if (ReferenceEquals(ReturnValue, Context.Instance))
+                    ReturnValue = Context.TransparentProxy;
 
-                return Context.ReturnValue;
+                return ReturnValue;
             }
             catch (TargetInvocationException e)
             {
@@ -61,10 +70,10 @@ namespace IvorySharp.Core
         }
         
         /// <summary>
-        /// Устанавливает возвращаемое значение вызова.
+        /// Конвертирует возвращаемое значение вызова.
         /// </summary>
         /// <param name="returnValue">Возвращаемое значение.</param>
-        public void SetReturnValue(object returnValue)
+        public object ConvertReturnValue(object returnValue)
         {
             if (Context.Method.IsVoidReturn())
             {
@@ -75,21 +84,18 @@ namespace IvorySharp.Core
             }
 
             if (returnValue == null)
-            {
-                Context.ReturnValue = Context.Method.ReturnType.GetDefaultValue();
-            }
-            else
-            {
-                if (!TypeConversion.TryConvert(returnValue, Context.Method.ReturnType, out var converted))
-                {
-                    throw new IvorySharpException(
-                        $"Невозможно установить возвращаемое значение '{returnValue}'. " +
-                        $"Тип результата '{returnValue.GetType().FullName}' " +
-                        $"невозможно привести к возвращаемому типу '{Context.Method.ReturnType.FullName}'.");
-                }
+                return Context.Method.ReturnType.GetDefaultValue();
+            
 
-                Context.ReturnValue = converted;
+            if (!TypeConversion.TryConvert(returnValue, Context.Method.ReturnType, out var converted))
+            {
+                throw new IvorySharpException(
+                    $"Невозможно установить возвращаемое значение '{returnValue}'. " +
+                    $"Тип результата '{returnValue.GetType().FullName}' " +
+                    $"невозможно привести к возвращаемому типу '{Context.Method.ReturnType.FullName}'.");
             }
+
+            return converted;
         }
     }
 }

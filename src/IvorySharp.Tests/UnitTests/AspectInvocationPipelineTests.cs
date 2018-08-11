@@ -1,5 +1,6 @@
 ﻿using System;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Aspects.Pipeline.Synchronous;
 using IvorySharp.Exceptions;
 using IvorySharp.Tests.Assets.Invocations;
 using Xunit;
@@ -7,7 +8,7 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для <see cref="AspectInvocationPipeline"/>
+    /// Набор тестов для <see cref="SyncAspectInvocationPipeline"/>
     /// </summary>
     public class AspectInvocationPipelineTests
     {
@@ -24,7 +25,7 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_Rethow_Should_SetException_And_ChangeFlow_To_Rethow()
         {
             // Arrage
-            var pipeline = new AspectInvocationPipeline(_voidMethodReturnInvocation, null, null);
+            var pipeline = new SyncAspectInvocationPipeline(_voidMethodReturnInvocation, null, null);
             var exception = new ArgumentException();
 
             // Act
@@ -39,7 +40,7 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_Throw_Should_SetException_And_ChangeFlow_To_Throw()
         {
             // Arrage
-            var pipeline = new AspectInvocationPipeline(_voidMethodReturnInvocation, null, null);
+            var pipeline = new SyncAspectInvocationPipeline(_voidMethodReturnInvocation, null, null);
             var exception = new ArgumentException();
 
             // Act
@@ -54,13 +55,13 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_Return_ShouldSet_ReturnValue_And_ChangeFlow_To_Return()
         {
             // Arrange
-            var pipeline = new AspectInvocationPipeline(_returnTenMethodInvocation, null, null);
+            var pipeline = new SyncAspectInvocationPipeline(_returnTenMethodInvocation, null, null);
             
             // Act
             pipeline.Return();
             
             // Assert
-            Assert.Equal(0, pipeline.Context.ReturnValue);
+            Assert.Equal(0, pipeline.Invocation.ReturnValue);
             Assert.Equal(FlowBehavior.Return, pipeline.FlowBehavior);
         }
 
@@ -68,13 +69,13 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_ReturnValue_ShouldSet_ReturnValue_And_ChangeFlow_To_Return()
         {
             // Arrange
-            var pipeline = new AspectInvocationPipeline(_returnTenMethodInvocation, null, null);
+            var pipeline = new SyncAspectInvocationPipeline(_returnTenMethodInvocation, null, null);
             
             // Act
             pipeline.ReturnValue(15);
             
             // Assert
-            Assert.Equal(15, pipeline.Context.ReturnValue);
+            Assert.Equal(15, pipeline.Invocation.ReturnValue);
             Assert.Equal(FlowBehavior.Return, pipeline.FlowBehavior);
         }
 
@@ -82,7 +83,7 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_ReturnValue_ShouldThrow_If_MethodReturnType_IsVoid()
         {
             // Arrange
-            var pipeline = new AspectInvocationPipeline(_voidMethodReturnInvocation, null, null);
+            var pipeline = new SyncAspectInvocationPipeline(_voidMethodReturnInvocation, null, null);
             
             // Act & Assert
             Assert.Throws<IvorySharpException>(() =>  pipeline.ReturnValue(15));
@@ -92,7 +93,7 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_ReturnValue_ShouldThrow_If_ResultIsUncastable_To_Method_ReturnType()
         {
             // Arrange
-            var pipeline = new AspectInvocationPipeline(_returnTenMethodInvocation, null, null);
+            var pipeline = new SyncAspectInvocationPipeline(_returnTenMethodInvocation, null, null);
             
             // Act & Assert
             Assert.Throws<IvorySharpException>(() =>  pipeline.ReturnValue(new object()));

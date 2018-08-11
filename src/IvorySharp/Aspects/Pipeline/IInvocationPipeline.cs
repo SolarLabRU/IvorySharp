@@ -14,12 +14,17 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Параметры вызова метода.
         /// </summary>
-        InvocationContext Context { get; }
+        [NotNull] InvocationContext Context { get; }
 
         /// <summary>
-        /// Текущее исключение.
+        /// Исключение, возникшее в ходе выполнения пайплайна.
         /// </summary>
         Exception CurrentException { get; }
+        
+        /// <summary>
+        /// Возвращаемое значение, установленное в ходе выполнения пайплайна.
+        /// </summary>
+        object CurrentReturnValue { get; }
         
         /// <summary>
         /// Текущее состояние потока.
@@ -29,18 +34,18 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Пользовательское состояние, устанавливаемое в рамках выполнения текущего аспекта.
         /// </summary>
-        object AspectExecutionState { get; set; }
+        [NotNull] object AspectExecutionState { get; set; }
         
         /// <summary>
-        /// Прекращает выполнение пайплайна, возвращая результат.
-        /// Вся ответственность за приведение типов лежит на стороне клиентского кода.
-        /// Если приведение типов невозможно, то будет выброшено исключение.
+        /// Выполняет возврат значения из пайплайна.
+        /// Устанавливает состояние пайплайна в <see cref="Aspects.Pipeline.FlowBehavior.Return"/>.
         /// </summary>
-        /// <param name="returnValue">Значение возврата.</param>
-        void ReturnValue(object returnValue);
+        /// <param name="returnValue">Возвращаемое значение.</param>
+        void ReturnValue([CanBeNull] object returnValue);
 
         /// <summary>
-        /// Прекращает выполнение пайплайна без изменения результата, заданного на момент вызова.
+        /// Выполняет возврат значения по умолчанию (default({ReturnType})) из пайплайна.
+        /// Устанавливает состояние пайплайна в <see cref="Aspects.Pipeline.FlowBehavior.Return"/>.
         /// </summary>
         void Return();
         
@@ -48,12 +53,12 @@ namespace IvorySharp.Aspects.Pipeline
         /// Завершает выполнение пайплайна, выбрасывая новое исключение.
         /// </summary>
         /// <param name="exception">Исключение.</param>
-        void ThrowException(Exception exception);
+        void ThrowException([NotNull] Exception exception);
 
         /// <summary>
         /// Прокидывает исключение дальше по пайплайну, не прерывая выполнение.
         /// </summary>
         /// <param name="exception">Исключение,</param>
-        void RethrowException(Exception exception);
+        void RethrowException([NotNull] Exception exception);
     }
 }

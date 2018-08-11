@@ -17,7 +17,8 @@ namespace IvorySharp.Tests.Assets.Invocations
 
         public override object Proceed()
         {
-            return Context.Method.Invoke(Context.Instance, (object[])Context.Arguments);
+            ReturnValue = Context.Method.Invoke(Context.Instance, (object[])Context.Arguments);
+            return ReturnValue;
         }
 
         private static InvocationContext CreateContext(Type declaringType, object instance, string methodName, object[] arguments)

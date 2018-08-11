@@ -24,7 +24,7 @@ namespace IvorySharp.Aspects.Configuration
         public IAspectDeclarationCollector AspectDeclarationCollector { get; set; }
 
         /// <inheritdoc />
-        public IPipelineExecutor AspectPipelineExecutor { get; set; }
+        public IInvocationPipelineFactory PipelineFactory { get; set; }
 
         /// <inheritdoc />
         public IAspectFactory AspectFactory { get; set; }

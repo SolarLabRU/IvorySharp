@@ -22,12 +22,12 @@ namespace IvorySharp.Examples.Aspects
             if (MemoryCache.TryGetValue(cacheKey, out var cached))
             {
                 Console.WriteLine($"Return '{invocation.Context.Method.ReturnType.Name}' with key '{cacheKey}' from cache");
-                invocation.SetReturnValue(cached);
+                invocation.ReturnValue = cached;
             }
             else
             {
                 invocation.Proceed();
-                MemoryCache.Set(cacheKey, invocation.Context.ReturnValue);
+                MemoryCache.Set(cacheKey, invocation.ReturnValue);
                 Console.WriteLine($"Set '{invocation.Context.Method.ReturnType.Name}' to cache with key '{cacheKey}'");
             }
         }

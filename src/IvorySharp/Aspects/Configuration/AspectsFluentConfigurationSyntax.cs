@@ -30,6 +30,7 @@ namespace IvorySharp.Aspects.Configuration
         /// Инициализирует библиотеку для работы.
         /// </summary>
         /// <param name="configurator">Конфигуратор настроек.</param>
+        //  ReSharper disable once MemberCanBePrivate.Global
         public void Initialize(Action<AspectsConfiguration> configurator)
         {
             var dependencyProvider = _container.GetDependencyProvider();
@@ -46,8 +47,8 @@ namespace IvorySharp.Aspects.Configuration
             if (_componentsStore.AspectDeclarationCollector == null)
                 _componentsStore.AspectDeclarationCollector = defaultComponents.AspectDeclarationCollector;
                 
-            if (_componentsStore.AspectPipelineExecutor == null)
-                _componentsStore.AspectPipelineExecutor = defaultComponents.AspectPipelineExecutor;
+            if (_componentsStore.PipelineFactory == null)
+                _componentsStore.PipelineFactory = defaultComponents.PipelineFactory;
 
             if (_componentsStore.AspectDependencyInjector == null)
                 _componentsStore.AspectDependencyInjector = defaultComponents.AspectDependencyInjector;

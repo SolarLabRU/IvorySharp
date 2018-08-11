@@ -11,7 +11,7 @@ namespace IvorySharp.Aspects.Weaving
     [PublicAPI]
     public class AspectWeaver
     {
-        private readonly IPipelineExecutor _aspectPipelineExecutor;
+        private readonly IInvocationPipelineFactory _pipelineFactory;
         private readonly IAspectFactory _aspectFactory;
         private readonly IAspectWeavePredicate _aspectWeavePredicate;
 
@@ -20,10 +20,10 @@ namespace IvorySharp.Aspects.Weaving
         /// </summary>
         public AspectWeaver(
             IAspectWeavePredicate aspectWeavePredicate, 
-            IPipelineExecutor aspectPipelineExecutor, 
+            IInvocationPipelineFactory pipelineFactory, 
             IAspectFactory aspectFactory)
         {
-            _aspectPipelineExecutor = aspectPipelineExecutor;
+            _pipelineFactory = pipelineFactory;
             _aspectFactory = aspectFactory;
             _aspectWeavePredicate = aspectWeavePredicate;
         }
@@ -38,7 +38,12 @@ namespace IvorySharp.Aspects.Weaving
         public object Weave(object target, Type declaringType, Type targetType)
         {
             return AspectWeavedProxy.Create(
-                target, targetType, declaringType, _aspectFactory, _aspectPipelineExecutor, _aspectWeavePredicate);
+                target, 
+                targetType, 
+                declaringType, 
+                _aspectFactory, 
+                _pipelineFactory,
+                _aspectWeavePredicate);
         }
     }
 }

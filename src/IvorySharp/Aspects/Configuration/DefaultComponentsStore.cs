@@ -28,9 +28,9 @@ namespace IvorySharp.Aspects.Configuration
         private readonly Lazy<IAspectDeclarationCollector> _aspectDeclarationCollectorProvider;
 
         /// <inheritdoc />
-        public IPipelineExecutor AspectPipelineExecutor => _aspectPipelineExecutorProvider.Value;
-        private readonly Lazy<IPipelineExecutor> _aspectPipelineExecutorProvider;
-
+        public IInvocationPipelineFactory PipelineFactory => _pipelineFactoryProvider.Value;
+        private readonly Lazy<IInvocationPipelineFactory> _pipelineFactoryProvider;
+        
         /// <inheritdoc />
         public IAspectFactory AspectFactory => _aspectFactoryProvider.Value;
         private readonly Lazy<IAspectFactory> _aspectFactoryProvider;
@@ -57,9 +57,9 @@ namespace IvorySharp.Aspects.Configuration
             _aspectDeclarationCollectorProvider = new Lazy<IAspectDeclarationCollector>(
                 () => new DeclaringTypeAspectDeclarationCollector(AspectSelector));
             
-            _aspectPipelineExecutorProvider = new Lazy<IPipelineExecutor>(
-                () => AspectInvocationPipelineExecutor.Instance);
-            
+            _pipelineFactoryProvider = new Lazy<IInvocationPipelineFactory>(
+                () => AsyncDeterminingPipelineFactory.Instance);
+
             _aspectFactoryProvider = new Lazy<IAspectFactory>(
                 () => new AspectFactory(AspectDeclarationCollector, AspectDependencyInjector, AspectOrderStrategy));
             
@@ -67,7 +67,7 @@ namespace IvorySharp.Aspects.Configuration
                 () => new AspectDependencyInjector(dependencyProvider));
             
             _aspectOrderStrategyProvider = new Lazy<IAspectOrderStrategy>(
-                () => new DefaultAspectOrderStrategy());
+                () => new DefaultAspectOrderStrategy());          
         }
 
     }

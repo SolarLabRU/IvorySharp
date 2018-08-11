@@ -33,7 +33,7 @@ namespace IvorySharp.Tests.Assets
             _windsorContainer = windsorContainer;
             _simpleInjectorContainer = simpleInjectorContainer;
             _aspectWeaver = new AspectWeaver(
-                components.AspectWeavePredicate, components.AspectPipelineExecutor, components.AspectFactory);
+                components.AspectWeavePredicate, components.PipelineFactory, components.AspectFactory);
         }
 
         private void InitializeWindsor(IEnumerable<DependencyPair> dependency)

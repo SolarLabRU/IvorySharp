@@ -14,15 +14,14 @@ namespace IvorySharp.Core
         InvocationContext Context { get; }
         
         /// <summary>
+        /// Возвращаемое значение.
+        /// </summary>
+        object ReturnValue { get; set; }
+    
+        /// <summary>
         /// Выполняет оригинальный метод.
         /// </summary>
         /// <returns>Результат вызова метода (void -> null).</returns>
         [CanBeNull] object Proceed();
-        
-        /// <summary>
-        /// Устанавливает возвращаемое значение вызова.
-        /// </summary>
-        /// <param name="returnValue">Возвращаемое значение.</param>
-        void SetReturnValue([CanBeNull] object returnValue);
     }
 }

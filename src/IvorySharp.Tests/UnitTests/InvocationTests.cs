@@ -29,7 +29,7 @@ namespace IvorySharp.Tests.UnitTests
             invocation.Proceed();
 
             // Assert
-            Assert.IsType<FakeProxy>(invocation.Context.ReturnValue);
+            Assert.IsType<FakeProxy>(invocation.ReturnValue);
         }
 
         #region Services
