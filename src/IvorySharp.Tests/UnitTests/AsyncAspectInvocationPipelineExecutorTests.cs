@@ -28,12 +28,12 @@ namespace IvorySharp.Tests.UnitTests
         };
 
         
-        private static async Task Unwrap(IInvocation invocation)
+        private static async Task Await(IInvocation invocation)
         {
             await ((Task) invocation.ReturnValue);
         }
 
-        private static async Task<T> Unwrap<T>(IInvocation invocation)
+        private static async Task<T> Await<T>(IInvocation invocation)
         {
             return await (Task<T>) invocation.ReturnValue;
         }    
@@ -55,6 +55,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             Task<int> IdentityAsync(int value);
             Task ThrowArgumentExceptionAsync();
+            Task<string> ShouldNotThrow();
         }
         
         public class Service : IService
@@ -69,6 +70,11 @@ namespace IvorySharp.Tests.UnitTests
             {
                 await Task.Delay(TimeSpan.FromMilliseconds(400));
                 await Task.FromException(new ArgumentException());
+            }
+
+            public async Task<string> ShouldNotThrow()
+            {
+                return await Task.FromException<string>(new ArgumentException());
             }
         }
 

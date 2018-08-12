@@ -1,4 +1,5 @@
 using IvorySharp.Core;
+using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline.Synchronous
 {
@@ -20,6 +21,21 @@ namespace IvorySharp.Aspects.Pipeline.Synchronous
         /// <param name="invocation">Модель вызова метода.</param>
         protected SyncInvocationPipeline(IInvocation invocation) : base(invocation)
         {
+        }
+        
+        /// <inheritdoc />
+        public override void Return()
+        {
+            CurrentReturnValue = Context.Method.ReturnType.GetDefaultValue();
+            FlowBehavior = FlowBehavior.Return;
+        }
+
+        /// <inheritdoc />
+        public override void ReturnValue(object returnValue)
+        {
+            CurrentException = null;
+            FlowBehavior = FlowBehavior.Return;        
+            CurrentReturnValue = returnValue;
         }
     }
 }

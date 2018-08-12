@@ -61,6 +61,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             int Identity(int value);
             void ThrowArgumentException();
+            string ShouldNotThrow();
         }
         
         private class Service : IService
@@ -71,6 +72,11 @@ namespace IvorySharp.Tests.UnitTests
             }
 
             public void ThrowArgumentException()
+            {
+                throw new ArgumentException();
+            }
+
+            public string ShouldNotThrow()
             {
                 throw new ArgumentException();
             }

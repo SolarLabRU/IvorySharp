@@ -1,4 +1,7 @@
 using IvorySharp.Core;
+using IvorySharp.Exceptions;
+using IvorySharp.Extensions;
+using IvorySharp.Reflection;
 
 namespace IvorySharp.Aspects.Pipeline.Async
 {
@@ -13,6 +16,47 @@ namespace IvorySharp.Aspects.Pipeline.Async
         protected AsyncInvocationPipeline(IInvocation invocation)
             : base(invocation)
         {
+        }
+        
+        /// <inheritdoc />
+        public override void Return()
+        {
+            FlowBehavior = FlowBehavior.Return;
+            
+            if (Context.InvocationType == InvocationType.AsyncAction)
+                CurrentReturnValue = null;
+
+            var innerType = Context.Method.ReturnType.GetGenericArguments()[0];
+            CurrentReturnValue = innerType.GetDefaultValue();
+        }
+
+        /// <inheritdoc />
+        public override void ReturnValue(object returnValue)
+        {
+            FlowBehavior = FlowBehavior.Return; 
+            
+            if (Context.InvocationType == InvocationType.AsyncAction)
+                return;
+            
+            var innerType = Context.Method.ReturnType.GetGenericArguments()[0];
+            if (returnValue == null)
+            {
+                CurrentReturnValue = innerType.GetDefaultValue();
+                return;
+            }
+            
+            if (TypeConversion.TryConvert(returnValue, innerType, out var converted))
+            {                   
+                CurrentReturnValue = converted;
+            }
+            else
+            {
+                var message = $"Невозможно установить возвращаемое значение '{returnValue}', " +
+                              $"т.к. его тип '{returnValue.GetType()}' неприводим " +
+                              $"к ожидаемому возвращаемому типу '{innerType}'";
+
+                throw new IvorySharpException(message);
+            }
         }
     }
 }

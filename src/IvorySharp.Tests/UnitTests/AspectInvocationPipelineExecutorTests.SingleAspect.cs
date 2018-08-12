@@ -127,14 +127,28 @@ namespace IvorySharp.Tests.UnitTests
             Assert.Throws<ArgumentException>(() =>  _executor.ExecutePipeline(pipeline));
 
             // Assert
-            Assert.Equal(new []
-            {
-                new BoundaryState(BoundaryType.Exit), 
-                new BoundaryState(BoundaryType.Success), 
-                new BoundaryState(BoundaryType.Entry)
-            }, aspect.ExecutionStack);
+            Assert.Equal(_normalExecutionStack, aspect.ExecutionStack);
             
             Assert.IsType<ArgumentException>(pipeline.CurrentException);          
+            InvocationAssert.ProceedCalled(pipeline.Invocation);
+        }
+
+        [Fact]
+        public void SingleAspect_SwallowException_SetResult_ShoultNotThrow()
+        {
+            // Arrange
+            var aspect = new ReturnValueAspect(BoundaryType.Exception, "hello world");
+            var pipeline = CreatePipeline<IService>(
+                new Service(), nameof(IService.ShouldNotThrow), Args.Pack(aspect));
+            
+            // Act
+            _executor.ExecutePipeline(pipeline);
+            
+            // Assert
+            
+            Assert.Equal(_exceptionExecutionStack, aspect.ExecutionStack);
+            Assert.Equal("hello world", pipeline.Invocation.ReturnValue);
+            Assert.Equal("hello world", pipeline.CurrentReturnValue);
             InvocationAssert.ProceedCalled(pipeline.Invocation);
         }
     }

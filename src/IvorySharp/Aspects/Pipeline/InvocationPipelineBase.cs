@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using IvorySharp.Core;
-using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -50,21 +49,12 @@ namespace IvorySharp.Aspects.Pipeline
             _pipelineData = new ConcurrentDictionary<Guid, object>();
             Invocation = invocation;
         }
-        
-        /// <inheritdoc />
-        public void Return()
-        {
-            CurrentReturnValue = Context.Method.ReturnType.GetDefaultValue();
-            FlowBehavior = FlowBehavior.Return;
-        }
 
         /// <inheritdoc />
-        public void ReturnValue(object returnValue)
-        {
-            CurrentException = null;
-            FlowBehavior = FlowBehavior.Return;        
-            CurrentReturnValue = returnValue;
-        }
+        public abstract void Return();
+
+        /// <inheritdoc />
+        public abstract void ReturnValue(object returnValue);
 
         /// <inheritdoc />
         public void ThrowException(Exception exception)
