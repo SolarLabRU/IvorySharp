@@ -61,7 +61,7 @@ namespace IvorySharp.Tests.UnitTests
         }
         
         [Fact]
-        public void SingleAspect_If_HandledException_Occuring_InBoundary_OnEntry_OnExit_Called()
+        public void SingleAspect_If_HandledException_Occuring_InBoundary_OnEntry_OtherAspectsShouldNotBeCalled()
         {
             // Arrange            
             var aspect = new ThrowAspect(typeof(ArgumentException), BoundaryType.Entry);
@@ -74,7 +74,6 @@ namespace IvorySharp.Tests.UnitTests
             InvocationAssert.ProceedNotCalled(pipeline.Invocation);
             Assert.Equal(new[]
             {
-                new BoundaryState(BoundaryType.Exit),
                 new BoundaryState(BoundaryType.Entry), 
             }, aspect.ExecutionStack);
         }
@@ -93,7 +92,11 @@ namespace IvorySharp.Tests.UnitTests
             // Assert
            
             InvocationAssert.ProceedNotCalled(pipeline.Invocation);
-            Assert.Equal(_normalExecutionStack, aspect.ExecutionStack);
+            
+            Assert.Equal(new[]
+            {
+                new BoundaryState(BoundaryType.Entry)
+            }, aspect.ExecutionStack);
         }
         
         [Fact]
@@ -146,7 +149,12 @@ namespace IvorySharp.Tests.UnitTests
             
             // Assert
             
-            Assert.Equal(_exceptionExecutionStack, aspect.ExecutionStack);
+            Assert.Equal(new[]
+            {
+                new BoundaryState(BoundaryType.Exception),
+                new BoundaryState(BoundaryType.Entry), 
+            }, aspect.ExecutionStack);
+            
             Assert.Equal("hello world", pipeline.Invocation.ReturnValue);
             Assert.Equal("hello world", pipeline.CurrentReturnValue);
             InvocationAssert.ProceedCalled(pipeline.Invocation);

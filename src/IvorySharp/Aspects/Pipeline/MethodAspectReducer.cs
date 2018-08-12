@@ -29,7 +29,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <returns>Результат применения аспектов.</returns>
         public AspectApplyResult Reduce(IEnumerable<MethodBoundaryAspect> aspects, AspectApplier applier)
         {
-            return ReduceBefore(aspects, applier, wall: null, inclusive: true);
+            return ReduceBefore(aspects, applier, wall: null);
         }
 
         /// <summary>
@@ -42,13 +42,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// <param name="aspects">Коллекция аспектов.</param>
         /// <param name="applier">Компонент, выполняющий применение аспекта на пайплайн вызова.</param>
         /// <param name="wall">Аспект - барьер.</param>
-        /// <param name="inclusive">Признак необходимости включить <paramref name="wall"/> в выполнение.</param>
         /// <returns>Результат применения аспектов.</returns>
         public AspectApplyResult ReduceBefore(
             IEnumerable<MethodBoundaryAspect> aspects,
             AspectApplier applier, 
-            MethodBoundaryAspect wall,
-            bool inclusive = false)
+            MethodBoundaryAspect wall)
         {
             foreach (var aspect in aspects)
             {
@@ -61,11 +59,7 @@ namespace IvorySharp.Aspects.Pipeline
                     
                     if (wall != null)
                     {
-                        var shouldSkip = inclusive
-                            ? aspect.InternalOrder > wall.InternalOrder
-                            : aspect.InternalOrder >= wall.InternalOrder;
-                            
-                        if (shouldSkip)
+                        if (aspect.InternalOrder >= wall.InternalOrder)
                             continue;  
                     }
 

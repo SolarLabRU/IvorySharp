@@ -42,7 +42,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
 
                 case InvocationType.AsyncFunction:
                     var signalWhenAwait = GetAsyncFunctionHandler(pipeline.Invocation);
-                    pipeline.Invocation.ReturnValue = signalWhenAwait(this, new[] { pipeline });
+                    pipeline.Invocation.ReturnValue = signalWhenAwait(this, new object[] { pipeline });
                     break;
 
                 default:
@@ -59,12 +59,12 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// <returns>Результат выполнения метода.</returns>
         internal async Task SignalWhenAwait(AsyncAspectInvocationPipeline pipeline)
         {
-            var apsectReducer = new MethodAspectReducer(pipeline);
+            var aspectReducer = new MethodAspectReducer(pipeline);
             var applyResult = new AspectApplyResult();
 
             try
             {
-                applyResult = apsectReducer.Reduce(pipeline.BoundaryAspects, OnEntryApplier.Instance);
+                applyResult = aspectReducer.Reduce(pipeline.BoundaryAspects, OnEntryApplier.Instance);
 
                 if (pipeline.FlowBehavior == FlowBehavior.Continue)
                 {
@@ -79,46 +79,16 @@ namespace IvorySharp.Aspects.Pipeline.Async
                         : Task.CompletedTask;
                 }
 
-                var includeBreaker = applyResult.IsExecutionBreaked && pipeline.IsReturn();
-
-                apsectReducer.ReduceBefore(pipeline.BoundaryAspects, OnSuccessApplier.Instance,
-                    applyResult.ExecutionBreaker, includeBreaker);
+                aspectReducer.ReduceBefore(pipeline.BoundaryAspects, OnSuccessApplier.Instance,
+                    applyResult.ExecutionBreaker);
             }
             catch (Exception e)
             {
-                if (pipeline.FlowBehavior == FlowBehavior.ThrowException ||
-                    pipeline.FlowBehavior == FlowBehavior.Faulted)
-                    throw;
-
-                pipeline.CurrentException = e.GetInnerIf(e is TargetInvocationException && e.InnerException != null);
-                pipeline.FlowBehavior = FlowBehavior.RethrowException;
-
-                applyResult = apsectReducer.ReduceBefore(pipeline.BoundaryAspects,
-                    OnExceptionApplier.Instance, applyResult.ExecutionBreaker, inclusive: true);
-
-                var breaker = applyResult.ExecutionBreaker;
-                if (breaker != null && pipeline.IsReturn())
-                {
-                    var onSuccessAspects = pipeline.BoundaryAspects.Reverse()
-                        .TakeWhile(a => !Equals(a, breaker))
-                        .ToArray();
-
-                    apsectReducer.Reduce(onSuccessAspects, OnSuccessApplier.Instance);
-                }
-
-                if (pipeline.IsExceptional())
-                    pipeline.CurrentException.Throw();
+                applyResult = ExecuteExceptionBlock(e, pipeline, aspectReducer, applyResult.ExecutionBreaker);
             }
             finally
             {
-                if (pipeline.IsFaulted())
-                    pipeline.CurrentException.Throw();
-
-                apsectReducer.ReduceBefore(pipeline.BoundaryAspects, OnExitApplier.Instance,
-                    applyResult.ExecutionBreaker, inclusive: true);
-
-                if (pipeline.IsExceptional())
-                    pipeline.CurrentException.Throw();
+                ExecuteFinallyBlock(pipeline, aspectReducer, applyResult.ExecutionBreaker);
             }
         }
 
@@ -131,12 +101,12 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// <returns>Результат выполнения метода.</returns>
         internal async Task<T> SignalWhenAwait<T>(AsyncAspectInvocationPipeline pipeline)
         {
-            var apsectReducer = new MethodAspectReducer(pipeline);
+            var aspectReducer = new MethodAspectReducer(pipeline);
             var applyResult = new AspectApplyResult();
 
             try
             {
-                applyResult = apsectReducer.Reduce(pipeline.BoundaryAspects, OnEntryApplier.Instance);
+                applyResult = aspectReducer.Reduce(pipeline.BoundaryAspects, OnEntryApplier.Instance);
 
                 // Перехватываем метод только при нормальном выполнении
                 // пайплайна
@@ -159,60 +129,16 @@ namespace IvorySharp.Aspects.Pipeline.Async
                     // в ошибочном состоянии.
                 }
 
-                // Если решили вернуть результат в OnEntry, то необходимо выполнить OnSuccess
-                // так же у аспекта, решившего вернуть результат.
-                var includeBreaker = applyResult.IsExecutionBreaked && pipeline.IsReturn();
-
-                apsectReducer.ReduceBefore(pipeline.BoundaryAspects, OnSuccessApplier.Instance,
-                    applyResult.ExecutionBreaker, includeBreaker);
+                aspectReducer.ReduceBefore(pipeline.BoundaryAspects, OnSuccessApplier.Instance,
+                    applyResult.ExecutionBreaker);
             }
             catch (Exception e)
             {
-                // Если это исключение, сгенерированное каким-то из обработчиков
-                // прокидываем его дальше 
-                if (pipeline.FlowBehavior == FlowBehavior.ThrowException ||
-                    pipeline.FlowBehavior == FlowBehavior.Faulted)
-                    throw;
-
-                // Устанавливаем исключение в пайплайн (распаковываем - если оно связано с рефлексией).
-                pipeline.CurrentException = e.GetInnerIf(e is TargetInvocationException && e.InnerException != null);
-
-                // Устанавливаем состояние пайплайна, при котором для каждого из обработчиков вызовется OnException
-                pipeline.FlowBehavior = FlowBehavior.RethrowException;
-
-                applyResult = apsectReducer.ReduceBefore(pipeline.BoundaryAspects,
-                    OnExceptionApplier.Instance, applyResult.ExecutionBreaker, inclusive: true);
-
-                var breaker = applyResult.ExecutionBreaker;
-
-                // Если один из обработчиков решил вернуть результат вместо исключения
-                // то мы должны позвать обработчики OnSuccess у всех родительских аспектов    
-                if (breaker != null && pipeline.IsReturn())
-                {
-                    var onSuccessAspects = pipeline.BoundaryAspects.Reverse()
-                        .TakeWhile(a => !Equals(a, breaker))
-                        .ToArray();
-
-                    apsectReducer.Reduce(onSuccessAspects, OnSuccessApplier.Instance);
-                }
-
-                // Если никто не смог обработать исключение или в процессе обработки
-                // появилось новое исключение - выбрасываем его наружу.
-                if (pipeline.IsExceptional())
-                    pipeline.CurrentException.Throw();
+                applyResult = ExecuteExceptionBlock(e, pipeline, aspectReducer, applyResult.ExecutionBreaker);
             }
             finally
             {
-                // Ничего не должно выполняться, если пайплайн в сломанном состоянии.
-                if (pipeline.IsFaulted())
-                    pipeline.CurrentException.Throw();
-
-                apsectReducer.ReduceBefore(pipeline.BoundaryAspects, OnExitApplier.Instance,
-                    applyResult.ExecutionBreaker, inclusive: true);
-
-                // Выкидываем исключение, если пайплайн в ошибочном состоянии
-                if (pipeline.IsExceptional())
-                    pipeline.CurrentException.Throw();
+                ExecuteFinallyBlock(pipeline, aspectReducer, applyResult.ExecutionBreaker);
             }
 
             // Нужно заменить результат у клиента, если он изменился
@@ -221,6 +147,69 @@ namespace IvorySharp.Aspects.Pipeline.Async
                     .ConfigureAwait(continueOnCapturedContext: false)
                 : (T) pipeline.CurrentReturnValue;
         }
+
+        private static AspectApplyResult ExecuteExceptionBlock(
+            Exception exception,
+            AsyncAspectInvocationPipeline pipeline,
+            MethodAspectReducer aspectReducer,
+            MethodBoundaryAspect executionBreaker)
+        {
+            // Если это исключение, сгенерированное каким-то из обработчиков
+            // прокидываем его дальше 
+            if (pipeline.FlowBehavior == FlowBehavior.ThrowException ||
+                pipeline.FlowBehavior == FlowBehavior.Faulted)
+            {
+                exception.Throw();
+            }
+
+            // Устанавливаем исключение в пайплайн (распаковываем - если оно связано с рефлексией).
+            pipeline.CurrentException = exception.GetInnerIf(exception is TargetInvocationException &&
+                                                             exception.InnerException != null);
+
+            // Устанавливаем состояние пайплайна, при котором для каждого из обработчиков вызовется OnException
+            pipeline.FlowBehavior = FlowBehavior.RethrowException;
+
+            var applyResult = aspectReducer.ReduceBefore(pipeline.BoundaryAspects,
+                OnExceptionApplier.Instance, executionBreaker);
+
+            var breaker = applyResult.ExecutionBreaker;
+
+            // Если один из обработчиков решил вернуть результат вместо исключения
+            // то мы должны позвать обработчики OnSuccess у всех родительских аспектов    
+            if (breaker != null && pipeline.IsReturn())
+            {
+                var onSuccessAspects = pipeline.BoundaryAspects.Reverse()
+                    .TakeWhile(a => !Equals(a, breaker))
+                    .ToArray();
+
+                aspectReducer.Reduce(onSuccessAspects, OnSuccessApplier.Instance);
+            }
+
+            // Если никто не смог обработать исключение или в процессе обработки
+            // появилось новое исключение - выбрасываем его наружу.
+            if (pipeline.IsExceptional())
+                pipeline.CurrentException.Throw();
+
+            return applyResult;
+        }
+
+        private static void ExecuteFinallyBlock(
+            AsyncAspectInvocationPipeline pipeline,
+            MethodAspectReducer aspectReducer,
+            MethodBoundaryAspect executionBreaker)
+        {
+            // Ничего не должно выполняться, если пайплайн в сломанном состоянии.
+            if (pipeline.IsFaulted())
+                pipeline.CurrentException.Throw();
+
+            aspectReducer.ReduceBefore(pipeline.BoundaryAspects, OnExitApplier.Instance,
+                executionBreaker);
+
+            // Выкидываем исключение, если пайплайн в ошибочном состоянии
+            if (pipeline.IsExceptional())
+                pipeline.CurrentException.Throw();
+        }
+
 
         /// <summary>
         /// Возвращает хендлер для создания продолжения вызова с использованием <see cref="SignalWhenAwait{T}"/>

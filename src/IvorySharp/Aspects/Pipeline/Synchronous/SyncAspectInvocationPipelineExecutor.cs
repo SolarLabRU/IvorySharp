@@ -40,12 +40,8 @@ namespace IvorySharp.Aspects.Pipeline.Synchronous
                     pipeline.InterceptionAspect.OnInvoke(pipeline.Invocation);
                 }
 
-                // Если решили вернуть результат в OnEntry, то необходимо выполнить OnSuccess
-                // так же у аспекта, решившего вернуть результат.
-                var includeBreaker = applyResult.IsExecutionBreaked && pipeline.IsReturn();
-
                 apsectReducer.ReduceBefore(pipeline.BoundaryAspects, OnSuccessApplier.Instance,
-                    applyResult.ExecutionBreaker, includeBreaker);
+                    applyResult.ExecutionBreaker);
             }
             catch (Exception e)
             {
@@ -64,7 +60,7 @@ namespace IvorySharp.Aspects.Pipeline.Synchronous
                 applyResult = apsectReducer.ReduceBefore(
                     pipeline.BoundaryAspects,
                     OnExceptionApplier.Instance,
-                    applyResult.ExecutionBreaker, inclusive: true);
+                    applyResult.ExecutionBreaker);
 
                 var breaker = applyResult.ExecutionBreaker;
 
@@ -92,7 +88,7 @@ namespace IvorySharp.Aspects.Pipeline.Synchronous
 
                 apsectReducer.ReduceBefore(
                     pipeline.BoundaryAspects, OnExitApplier.Instance,
-                    applyResult.ExecutionBreaker, inclusive: true);
+                    applyResult.ExecutionBreaker);
 
                 // Выкидываем исключение, если пайплайн в ошибочном состоянии
                 if (pipeline.IsExceptional())

@@ -11,7 +11,7 @@ namespace IvorySharp.Tests.UnitTests
     public partial class AspectInvocationPipelineExecutorTests
     { 
         [Fact]
-        public void MultipleAspects_OnEntry_ReturnResult_OnSuccess_Called_OnTriggered_Aspect_But_Not_On_OuterAspects()
+        public void MultipleAspects_OnEntry_ReturnResult_OnSuccess_NotCalled_OnTriggered_Aspect_But_On_OuterAspects()
         {
             // Arrange
             var afterBreaker1 = new ObservableAspect { InternalOrder = 3};
@@ -33,8 +33,12 @@ namespace IvorySharp.Tests.UnitTests
             InvocationAssert.ProceedNotCalled(pipeline.Invocation);
             // Первый аспект прошел весь нормальный флоу
             Assert.Equal(_normalExecutionStack, beforeBreaker.ExecutionStack);
-            // Второй вернул результат и тоже успешно выполнился
-            Assert.Equal(_normalExecutionStack, breaker.ExecutionStack);
+            // Второй вернул результат и кроме OnEntry ничего не выполнилось
+            Assert.Equal(new[]
+            {
+                new BoundaryState(BoundaryType.Entry)
+            }, breaker.ExecutionStack);
+            
             // Остальные не выполнились
             Assert.Empty(afterBreaker1.ExecutionStack);
             Assert.Empty(afterBreaker2.ExecutionStack);
@@ -82,8 +86,7 @@ namespace IvorySharp.Tests.UnitTests
             
             Assert.Equal(new []
             {
-                new BoundaryState(BoundaryType.Exit),
-                new BoundaryState(BoundaryType.Entry), 
+                new BoundaryState(BoundaryType.Entry)
             }, breaker.ExecutionStack);
         }
         

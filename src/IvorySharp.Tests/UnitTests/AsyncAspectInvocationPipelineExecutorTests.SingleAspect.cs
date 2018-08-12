@@ -68,7 +68,7 @@ namespace IvorySharp.Tests.UnitTests
         }
 
         [Fact]
-        public async Task SingleAspect_ReturnOnEntry_BoundariesCalled()
+        public async Task SingleAspect_ReturnOnEntry_ShouldNotCallBoundaries()
         {
             // Arrange            
             var aspect = new ReturnValueAspect(BoundaryType.Entry, valueToReturn: 25);
@@ -81,7 +81,11 @@ namespace IvorySharp.Tests.UnitTests
             
             // Assert
             Assert.Equal(25, result);
-            Assert.Equal(_normalExecutionStack, aspect.ExecutionStack);
+            Assert.Equal(new []
+            {
+                new BoundaryState(BoundaryType.Entry),
+            }, aspect.ExecutionStack);
+            
             Assert.Equal(25, pipeline.CurrentReturnValue);
             
             InvocationAssert.ProceedNotCalled(pipeline.Invocation);        
@@ -109,7 +113,7 @@ namespace IvorySharp.Tests.UnitTests
         }
 
         [Fact]
-        public async Task SingleAspect_HandledException_ShouldNotBreakPipeline()
+        public async Task SingleAspect_HandledException_Should_NotCall_OtherBoundaries()
         {
             // Arrange            
             var aspect = new ThrowAspect(typeof(ArgumentException), BoundaryType.Entry, throwAsUnhandled: false);
@@ -125,7 +129,6 @@ namespace IvorySharp.Tests.UnitTests
             // Assert
             Assert.Equal(new []
             {
-                new BoundaryState(BoundaryType.Exit), 
                 new BoundaryState(BoundaryType.Entry)
             }, aspect.ExecutionStack);
             
@@ -189,7 +192,12 @@ namespace IvorySharp.Tests.UnitTests
             // Assert
             var result = await Await<string>(pipeline.Invocation);
             
-            Assert.Equal(_exceptionExecutionStack, aspect.ExecutionStack);
+            Assert.Equal(new[]
+            {
+                new BoundaryState(BoundaryType.Exception), 
+                new BoundaryState(BoundaryType.Entry),
+            }, aspect.ExecutionStack);
+            
             Assert.Equal("hello world", result);
             Assert.Equal("hello world", pipeline.CurrentReturnValue);
             InvocationAssert.ProceedCalled(pipeline.Invocation);
