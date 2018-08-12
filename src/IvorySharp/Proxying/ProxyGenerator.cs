@@ -15,7 +15,7 @@ namespace IvorySharp.Proxying
     {
         private static readonly object Lock = new object();
         private static readonly Func<object, object[], object> FastProxyInvoke =
-            Expressions.CreateMethodInvoker(MethodReferences.ProxyInvoke);
+            Expressions.CreateLambda(MethodReferences.ProxyInvoke);
         
         /// <summary>
         /// Хранит информацию о связях методов.

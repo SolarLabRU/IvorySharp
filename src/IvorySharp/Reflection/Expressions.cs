@@ -29,7 +29,7 @@ namespace IvorySharp.Reflection
             return expression.Compile();
         }
         
-        public static Func<object, object[], object> CreateMethodInvoker(MethodInfo method)
+        public static Func<object, object[], object> CreateLambda(MethodInfo method)
         {
             if (method == null) 
                 throw new ArgumentNullException(nameof(method));

@@ -239,7 +239,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
                     .First(m => m.IsGenericMethodDefinition && m.Name == nameof(SignalWhenAwait))
                     .MakeGenericMethod(innerType);
 
-                return Expressions.CreateMethodInvoker(method);
+                return Expressions.CreateLambda(method);
             });
         }
     }

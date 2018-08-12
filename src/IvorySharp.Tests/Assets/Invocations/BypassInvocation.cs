@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using IvorySharp.Core;
 
 namespace IvorySharp.Tests.Assets.Invocations
@@ -6,12 +7,17 @@ namespace IvorySharp.Tests.Assets.Invocations
     public class BypassInvocation : Invocation
     {
         public BypassInvocation(Type declaringType, object instance, string methodName)
-            : base(CreateContext(declaringType, instance, methodName, Array.Empty<object>()))
+            : base(CreateContext(declaringType, instance, declaringType.GetMethod(methodName), Array.Empty<object>()))
+        {
+        }
+        
+        public BypassInvocation(Type declaringType, object instance, MethodInfo method)
+            : base(CreateContext(declaringType, instance, method, Array.Empty<object>()))
         {
         }
         
         public BypassInvocation(Type declaringType, object instance, string methodName, object[] arguments)
-            : base(CreateContext(declaringType, instance, methodName, arguments))
+            : base(CreateContext(declaringType, instance, declaringType.GetMethod(methodName), arguments))
         {
         }
 
@@ -21,12 +27,16 @@ namespace IvorySharp.Tests.Assets.Invocations
             return ReturnValue;
         }
 
-        private static InvocationContext CreateContext(Type declaringType, object instance, string methodName, object[] arguments)
+        private static InvocationContext CreateContext(Type declaringType, object instance, MethodInfo method, object[] arguments)
         {
             return new InvocationContext(
                 arguments, 
-                declaringType.GetMethod(methodName), 
-                instance, instance, declaringType, instance.GetType());
+                method,
+                instance, 
+                instance, 
+                declaringType,
+                instance.GetType());
         }
+        
     }
 }

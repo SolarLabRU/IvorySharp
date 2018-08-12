@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using IvorySharp.Aspects.Pipeline.Async;
 using IvorySharp.Aspects.Pipeline.Synchronous;
 using IvorySharp.Comparers;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
+using IvorySharp.Reflection;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -60,7 +62,14 @@ namespace IvorySharp.Aspects.Pipeline
             var key = new CacheKey(invocation.Context.TargetType, invocation.Context.Method);
             return _isAsyncCache.GetOrAdd(key, k =>
             {
-                var targetMethod = k.TargetType.GetMethod(k.DeclaringMethod.Name);
+                var targetMethod = ReflectedMethod.GetMethodMap(k.TargetType, k.DeclaringMethod);
+                
+                if (targetMethod == null)
+                    throw new InvalidOperationException(
+                        $"Не удалось найти (или выбрать корректную реализацию) метода '{k.DeclaringMethod.Name}' " +
+                        $"в типе '{invocation.Context.TargetType}'. " +
+                        $"Проверьте наличие этого метода в интерфейсе '{invocation.Context.DeclaringType.Name}'.");
+                
                 return targetMethod.IsAsync();
             });
         }

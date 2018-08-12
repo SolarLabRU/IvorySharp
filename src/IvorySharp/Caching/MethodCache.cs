@@ -30,7 +30,7 @@ namespace IvorySharp.Caching
         /// <returns>Делегат для быстрого вызова метода.</returns>
         public Func<object, object[], object> GetOrAdd(MethodInfo method)
         {
-            return _cache.GetOrAdd(method, Expressions.CreateMethodInvoker);
+            return _cache.GetOrAdd(method, Expressions.CreateLambda);
         }
     }
 }
