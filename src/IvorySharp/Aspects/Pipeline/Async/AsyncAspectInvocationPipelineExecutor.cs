@@ -47,7 +47,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
 
                 default:
                     throw new NotSupportedException(
-                        $"Поддерживание метода типа '{pipeline.Context.MethodType}' не поддерживается");
+                        $"Асинхронное выполнение метода типа '{pipeline.Context.MethodType}' не поддерживается");
             }
         }
 
@@ -228,7 +228,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// </summary>
         /// <param name="invocation">Модель вызова.</param>
         /// <returns>Хендлер для создания продолжения вызова.</returns>
-        internal Func<object, object[], object> GetAsyncFunctionHandler(IInvocation invocation)
+        private Func<object, object[], object> GetAsyncFunctionHandler(IInvocation invocation)
         {
             var innerType = invocation.Context.Method.ReturnType.GetGenericArguments()[0];
 

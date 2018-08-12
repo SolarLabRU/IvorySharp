@@ -89,15 +89,15 @@ namespace IvorySharp.Proxying
         public void EnsureTypeVisible(Type type)
         {
             var typeInfo = type.GetTypeInfo();
-            if (!typeInfo.IsVisible)
-            {
-                var assemblyName = type.Assembly.GetName().Name;
-                if (!_ignoreAccessCheckAssemblies.Contains(assemblyName))
-                {
-                    MakeAssemblyVisible(assemblyName);
-                    _ignoreAccessCheckAssemblies.Add(assemblyName);
-                }
-            }
+            if (typeInfo.IsVisible) 
+                return;
+            
+            var assemblyName = type.Assembly.GetName().Name;
+            if (_ignoreAccessCheckAssemblies.Contains(assemblyName)) 
+                return;
+            
+            MakeAssemblyVisible(assemblyName);
+            _ignoreAccessCheckAssemblies.Add(assemblyName);
         }
 
         /// <summary>

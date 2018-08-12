@@ -18,10 +18,8 @@ namespace IvorySharp.Tests.UnitTests
     public class WeavedInvocationInterceptorTests
     {
         private MethodBoundaryAspect[] _boundaryAspects;
-        private MethodInterceptionAspect _interceptionAspect;
 
         private readonly IAspectWeavePredicate _weavePredicateAlwaysTrue;
-        private readonly IInvocationPipelineExecutor _doNothingPipelineExecutor;
         private readonly IInvocationPipelineFactory _pipelineFactory;
         private readonly IAspectFactory _predefinedAspectsFactory;
 
@@ -38,11 +36,11 @@ namespace IvorySharp.Tests.UnitTests
             _weavePredicateAlwaysTrue = truePredicateMock.Object;
 
             var pipelineExecutorMock = new Mock<IInvocationPipelineExecutor>();
-            _doNothingPipelineExecutor = pipelineExecutorMock.Object;
+            var doNothingPipelineExecutor = pipelineExecutorMock.Object;
 
             var pipelineFactoryMock = new Mock<IInvocationPipelineFactory>();
             pipelineFactoryMock.Setup(c => c.CreateExecutor(It.IsAny<IInvocation>()))
-                .Returns(_doNothingPipelineExecutor);
+                .Returns(doNothingPipelineExecutor);
 
             _pipelineFactory = pipelineFactoryMock.Object;
             
@@ -50,9 +48,6 @@ namespace IvorySharp.Tests.UnitTests
 
             aspectInitializerMock.Setup(m => m.CreateBoundaryAspects(It.IsAny<InvocationContext>()))
                 .Returns(() => _boundaryAspects);
-
-            aspectInitializerMock.Setup(m => m.CreateInterceptionAspect(It.IsAny<InvocationContext>()))
-                .Returns(() => _interceptionAspect);
 
             _predefinedAspectsFactory = aspectInitializerMock.Object;
         }

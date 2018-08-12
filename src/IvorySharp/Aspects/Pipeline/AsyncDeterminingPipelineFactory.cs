@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using IvorySharp.Aspects.Pipeline.Async;
 using IvorySharp.Aspects.Pipeline.Synchronous;
@@ -99,8 +98,9 @@ namespace IvorySharp.Aspects.Pipeline
             {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != GetType()) return false;
-                return Equals((CacheKey) obj);
+                
+                return obj.GetType() == GetType() && 
+                       Equals((CacheKey) obj);
             }
 
             /// <inheritdoc />

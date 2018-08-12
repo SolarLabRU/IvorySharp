@@ -35,7 +35,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Выполняет обработку аспектов <paramref name="aspects"/>, расположенных
         /// в коллекции до аспекта <paramref name="wall"/>. То есть, у которых
-        /// значение порядка выше (<see cref="MethodBoundaryAspect.InternalOrder"/>) больше, чем
+        /// значение порядка выше (<see cref="OrderableMethodAspect.InternalOrder"/>) больше, чем
         /// у <paramref name="wall"/>. 
         /// с применением компонента <paramref name="applier"/>.
         /// </summary>
@@ -43,7 +43,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <param name="applier">Компонент, выполняющий применение аспекта на пайплайн вызова.</param>
         /// <param name="wall">Аспект - барьер.</param>
         /// <param name="inclusive">Признак необходимости включить <paramref name="wall"/> в выполнение.</param>
-        /// <returns></returns>
+        /// <returns>Результат применения аспектов.</returns>
         public AspectApplyResult ReduceBefore(
             IEnumerable<MethodBoundaryAspect> aspects,
             AspectApplier applier, 

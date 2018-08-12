@@ -25,6 +25,7 @@ namespace IvorySharp.Proxying
         /// <returns>Токен.</returns>
         public MethodToken CreateToken(MethodInfo method)
         {
+            // ReSharper disable once InvertIf
             if (!_methodToKey.TryGetValue(method, out var key))
             {
                 _methodsByKey.Add(method);

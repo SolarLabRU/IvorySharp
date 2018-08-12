@@ -78,6 +78,7 @@ namespace IvorySharp.Proxying.Generators
                         associatedProperty.SetMethodBuilder = mdb;
                 }
 
+                // ReSharper disable once InvertIf
                 if (eventMap.TryGetValue(mi, out var associatedEvent))
                 {
                     if (MethodEqualityComparer.Instance.Equals(associatedEvent.InterfaceAddMethod, mi))
@@ -200,6 +201,7 @@ namespace IvorySharp.Proxying.Generators
             // Странный блок, не уверен что он нужен. 
             for (var i = 0; i < parameters.Length; i++)
             {
+                // ReSharper disable once InvertIf
                 if (parameters[i].ParameterType.IsByRef)
                 {
                     parametersEmitter.EmitBeginSet(i);
@@ -265,13 +267,13 @@ namespace IvorySharp.Proxying.Generators
 
                 for (var i = 0; i < parameters.Count; i++)
                 {
+                    if (parameters[i].IsOut) 
+                        continue;
+                    
                     // args[i] = argi;
-                    if (!parameters[i].IsOut)
-                    {
-                        argsEmitter.EmitBeginSet(i);
-                        parametersEmitter.EmitGet(i);
-                        argsEmitter.EmitEndSet(parameters[i].ParameterType);
-                    }
+                    argsEmitter.EmitBeginSet(i);
+                    parametersEmitter.EmitGet(i);
+                    argsEmitter.EmitEndSet(parameters[i].ParameterType);
                 }
 
                 argsEmitter.EmitLoad();

@@ -44,43 +44,40 @@ namespace IvorySharp.Reflection
 
             // Пытаемся распаковать value из Nullable{T}
             var valueUnpackedType = Nullable.GetUnderlyingType(targetType);
-            if (valueUnpackedType != null)
-            {
-                // Nullable<T> -> Nullable<E> where E.IsAssignableFrom(T)
-                if (targetUnpackedType != null &&
-                    targetUnpackedType.IsAssignableFrom(valueUnpackedType))
-                { 
-                    var coverter = 
-                        Expression.Lambda<Func<object>>(
-                            // Boxing () => (object)[Nullable<UnpackedTarget>] value
+            if (valueUnpackedType == null) 
+                return false;
+            
+            // Nullable<T> -> Nullable<E> where E.IsAssignableFrom(T)
+            if (targetUnpackedType == null || !targetUnpackedType.IsAssignableFrom(valueUnpackedType)) 
+                return false;
+            
+            var coverter = 
+                Expression.Lambda<Func<object>>(
+                    // Boxing () => (object)[Nullable<UnpackedTarget>] value
+                    Expression.Convert(
+                        // const Nullable<UnpackedTarget> = (UnpackedTarget) value
+                        Expression.Convert(
+                            // ((TargetUnpackedType)ValueUnpackedType)value
                             Expression.Convert(
-                                // const Nullable<UnpackedTarget> = (UnpackedTarget) value
+                                // (ValueUnpackedType)value
                                 Expression.Convert(
-                                    // ((TargetUnpackedType)ValueUnpackedType)value
-                                    Expression.Convert(
-                                        // (ValueUnpackedType)value
-                                        Expression.Convert(
-                                            // const ValueType value;
-                                            Expression.Constant(value, valueType),
-                                            valueUnpackedType),
-                                        targetUnpackedType),
-                                    targetType),
-                                typeof(object))
-                        );
+                                    // const ValueType value;
+                                    Expression.Constant(value, valueType),
+                                    valueUnpackedType),
+                                targetUnpackedType),
+                            targetType),
+                        typeof(object))
+                );
 
-                    try
-                    {
-                        result = coverter.Compile().Invoke();
-                        return true;
-                    }
-                    catch (Exception )
-                    {
-                        return false;
-                    }
-                }
+            try
+            {
+                result = coverter.Compile().Invoke();
+                return true;
             }
-       
-            return false;
+            catch (Exception )
+            {
+                return false;
+            }
         }
             
         private static bool TryConvertUnderlying(object value, Type targetType, out object result)

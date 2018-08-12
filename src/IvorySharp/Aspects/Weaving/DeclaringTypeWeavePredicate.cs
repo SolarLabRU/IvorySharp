@@ -57,10 +57,8 @@ namespace IvorySharp.Aspects.Weaving
             if (IsWeavingSuppressed(method))
                 return false;
 
-            if (AspectSelector.HasAnyAspect(method, includeAbstract: false))
-                return true;
-
-            return IsWeaveable(declaringType, targetType);
+            return AspectSelector.HasAnyAspect(method, includeAbstract: false) || 
+                   IsWeaveable(declaringType, targetType);
         }
     }
 }
