@@ -24,7 +24,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// </summary>
         internal AsyncAspectInvocationPipeline(
             IInvocation invocation,
-            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, 
+            MethodBoundaryAspect[] boundaryAspects, 
             MethodInterceptionAspect interceptionAspect)
             : base(invocation)
         {

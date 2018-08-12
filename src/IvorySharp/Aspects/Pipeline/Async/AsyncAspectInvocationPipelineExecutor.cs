@@ -34,20 +34,20 @@ namespace IvorySharp.Aspects.Pipeline.Async
             // Это нарушает solid, но позволяет не выставлять кучу классов наружу библиотеки.
             var pipeline = (AsyncAspectInvocationPipeline) basePipeline;
 
-            switch (pipeline.Context.MethodType)
+            switch (pipeline.Invocation.InvocationType)
             {
-                case MethodType.AsyncAction:
+                case InvocationType.AsyncAction:
                     pipeline.Invocation.ReturnValue = SignalWhenAwait(pipeline);
                     break;
 
-                case MethodType.AsyncFunction:
+                case InvocationType.AsyncFunction:
                     var signalWhenAwait = GetAsyncFunctionHandler(pipeline.Invocation);
                     pipeline.Invocation.ReturnValue = signalWhenAwait(this, new[] { pipeline });
                     break;
 
                 default:
                     throw new NotSupportedException(
-                        $"Асинхронное выполнение метода типа '{pipeline.Context.MethodType}' не поддерживается");
+                        $"Асинхронное выполнение метода типа '{pipeline.Invocation.InvocationType}' не поддерживается");
             }
         }
 
@@ -224,13 +224,13 @@ namespace IvorySharp.Aspects.Pipeline.Async
 
         /// <summary>
         /// Возвращает хендлер для создания продолжения вызова с использованием <see cref="SignalWhenAwait{T}"/>
-        /// с внутренним типом задачи, возвращаемой методом <see cref="InvocationContext.Method"/>.
+        /// с внутренним типом задачи, возвращаемой методом <see cref="IInvocationContext.Method"/>.
         /// </summary>
         /// <param name="invocation">Модель вызова.</param>
         /// <returns>Хендлер для создания продолжения вызова.</returns>
-        private Func<object, object[], object> GetAsyncFunctionHandler(IInvocation invocation)
+        private Func<object, object[], object> GetAsyncFunctionHandler(IInvocationContext invocation)
         {
-            var innerType = invocation.Context.Method.ReturnType.GetGenericArguments()[0];
+            var innerType = invocation.Method.ReturnType.GetGenericArguments()[0];
 
             return _handlersCache.GetOrAdd(innerType, key =>
             {

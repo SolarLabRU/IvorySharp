@@ -13,7 +13,7 @@ using IInvocation = IvorySharp.Core.IInvocation;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для компонента <see cref="WeavedInvocationInterceptor"/>.
+    /// Набор тестов для компонента <see cref="InvocationInterceptor"/>.
     /// </summary>
     public class WeavedInvocationInterceptorTests
     {
@@ -46,7 +46,7 @@ namespace IvorySharp.Tests.UnitTests
             
             var aspectInitializerMock = new Mock<IAspectFactory>();
 
-            aspectInitializerMock.Setup(m => m.CreateBoundaryAspects(It.IsAny<InvocationContext>()))
+            aspectInitializerMock.Setup(m => m.CreateBoundaryAspects(It.IsAny<IInvocationContext>()))
                 .Returns(() => _boundaryAspects);
 
             _predefinedAspectsFactory = aspectInitializerMock.Object;
@@ -57,14 +57,14 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspect = new DisposableAspect();
-            var interceptor = new WeavedInvocationInterceptor(_predefinedAspectsFactory, _pipelineFactory, _weavePredicateAlwaysTrue);
+            var interceptor = new InvocationInterceptor(_predefinedAspectsFactory, _pipelineFactory, _weavePredicateAlwaysTrue);
 
             _boundaryAspects = new MethodBoundaryAspect[] { aspect };
 
             // Act
 
             Assert.False(aspect.IsDisposed);
-            interceptor.InterceptInvocation(new BypassInvocation(typeof(IService), new Service(), nameof(IService.Method)));
+            interceptor.Intercept(new BypassInvocation(typeof(IService), new Service(), nameof(IService.Method)));
 
             // Assert
             Assert.True(aspect.IsDisposed);

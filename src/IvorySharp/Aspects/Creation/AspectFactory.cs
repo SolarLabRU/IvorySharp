@@ -18,8 +18,8 @@ namespace IvorySharp.Aspects.Creation
         private readonly IAspectDependencyInjector _aspectDependencyInjector;
         private readonly IAspectOrderStrategy _aspectOrderStrategy;
 
-        private readonly Func<InvocationContext, MethodBoundaryAspect[]> _cachedPrepareMethodBoundaryAspect;
-        private readonly Func<InvocationContext, MethodInterceptionAspect> _cachedPrepareMethodInterceptionAspect;
+        private readonly Func<IInvocationContext, MethodBoundaryAspect[]> _cachedPrepareMethodBoundaryAspect;
+        private readonly Func<IInvocationContext, MethodInterceptionAspect> _cachedPrepareMethodInterceptionAspect;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectFactory"/>.
@@ -34,14 +34,14 @@ namespace IvorySharp.Aspects.Creation
             _aspectOrderStrategy = aspectOrderStrategy;
 
             _cachedPrepareMethodBoundaryAspect = Memoizer.CreateProducer(PrepareBoundaryAspects,
-                InvocationContext.ByMethodEqualityComparer.Instance);
+                InvocationContextMethodComparer.Instance);
             
             _cachedPrepareMethodInterceptionAspect = Memoizer.CreateProducer(PrepareInterceptAspect,
-                InvocationContext.ByMethodEqualityComparer.Instance);
+                InvocationContextMethodComparer.Instance);
         }
 
         /// <inheritdoc />
-        public MethodBoundaryAspect[] CreateBoundaryAspects(InvocationContext context)
+        public MethodBoundaryAspect[] CreateBoundaryAspects(IInvocationContext context)
         {
             var aspects = _cachedPrepareMethodBoundaryAspect(context);
 
@@ -55,7 +55,7 @@ namespace IvorySharp.Aspects.Creation
         }
 
         /// <inheritdoc />
-        public MethodInterceptionAspect CreateInterceptionAspect(InvocationContext context)
+        public MethodInterceptionAspect CreateInterceptionAspect(IInvocationContext context)
         {
             var aspect = _cachedPrepareMethodInterceptionAspect(context);
 
@@ -65,7 +65,7 @@ namespace IvorySharp.Aspects.Creation
             return aspect;
         }
 
-        internal MethodBoundaryAspect[] PrepareBoundaryAspects(InvocationContext context)
+        internal MethodBoundaryAspect[] PrepareBoundaryAspects(IInvocationContext context)
         {
             var methodBoundaryAspects = new List<MethodBoundaryAspect>();
             var declarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
@@ -85,12 +85,13 @@ namespace IvorySharp.Aspects.Creation
             for (var i = 0; i < methodBoundaryAspects.Count; i++)
             {
                 methodBoundaryAspects[i].InternalOrder = methodBoundaryAspects[i].Order + i + 1;
+                methodBoundaryAspects[i].InternalId = Guid.NewGuid();
             }
             
             return methodBoundaryAspects.ToArray();
         }
 
-        internal MethodInterceptionAspect PrepareInterceptAspect(InvocationContext context)
+        internal MethodInterceptionAspect PrepareInterceptAspect(IInvocationContext context)
         {
             var aspectDeclarations = _aspectDeclarationCollector
                 .CollectAspectDeclarations<MethodInterceptionAspect>(context)

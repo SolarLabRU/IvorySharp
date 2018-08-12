@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using IvorySharp.Core;
+using IvorySharp.Extensions;
 using IInvocation = Castle.DynamicProxy.IInvocation;
 
 namespace IvorySharp.CastleWindsor.Core
@@ -11,71 +12,47 @@ namespace IvorySharp.CastleWindsor.Core
     public class InvocationAdapter : IvorySharp.Core.IInvocation, IInvocation
     {
         private readonly IInvocation _castleInvocation;
-            
+
+        #region Castle
+        
         /// <inheritdoc />
-        public InvocationContext Context { get; }
+        public object[] Arguments => _castleInvocation.Arguments;
 
         /// <inheritdoc />
-        object IvorySharp.Core.IInvocation.ReturnValue
+        public Type[] GenericArguments => _castleInvocation.GenericArguments;
+
+        /// <inheritdoc />
+        public object InvocationTarget => _castleInvocation.InvocationTarget;
+
+        /// <inheritdoc />
+        MethodInfo IInvocation.Method => _castleInvocation.Method;
+
+        /// <inheritdoc />
+        public MethodInfo MethodInvocationTarget => _castleInvocation.MethodInvocationTarget;
+
+        /// <inheritdoc />
+        object IInvocation.Proxy => _castleInvocation.Proxy;
+
+        /// <inheritdoc />
+        object IInvocation.ReturnValue
         {
-            get => ReturnValue;
-            set => ReturnValue = value;
+            get => _castleInvocation.ReturnValue;
+            set => _castleInvocation.ReturnValue = value;
         }
 
         /// <inheritdoc />
-        public object[] Arguments { get; }
+        Type IInvocation.TargetType => _castleInvocation.TargetType;
 
-        /// <inheritdoc />
-        public Type[] GenericArguments { get; }
-
-        /// <inheritdoc />
-        public object InvocationTarget { get; }
-
-        /// <inheritdoc />
-        public MethodInfo Method { get; }
-
-        /// <inheritdoc />
-        public MethodInfo MethodInvocationTarget { get; }
-
-        /// <inheritdoc />
-        public object Proxy { get; }
-
-        /// <inheritdoc />
-        public object ReturnValue { get; set; }
-
-        /// <inheritdoc />
-        public Type TargetType { get; }
-
-        /// <summary>
-        /// Адаптер для модели вызова Castle Windsor.
-        /// </summary>
-        /// <param name="castleInvocation">Модель вызова Castle Windsor.</param>
-        /// <param name="declaringType">Объявленный тип сущности.</param>
-        public InvocationAdapter(IInvocation castleInvocation, Type declaringType)
-        {
-            _castleInvocation = castleInvocation;
-                
-            Arguments = castleInvocation.Arguments;
-            GenericArguments = castleInvocation.GenericArguments;
-            InvocationTarget = castleInvocation.InvocationTarget;
-            Method = castleInvocation.Method;
-            MethodInvocationTarget = castleInvocation.MethodInvocationTarget;
-            Proxy = castleInvocation.Proxy;
-            TargetType = castleInvocation.TargetType;
-
-            Context = new InvocationContext(
-                castleInvocation.Arguments,
-                castleInvocation.Method,
-                InvocationTarget,
-                castleInvocation.Proxy,
-                declaringType,
-                castleInvocation.TargetType);
-        }
-            
         /// <inheritdoc />
         public object GetArgumentValue(int index)
         {
             return _castleInvocation.GetArgumentValue(index);
+        }
+        
+        /// <inheritdoc />
+        public void SetArgumentValue(int index, object value)
+        {
+            _castleInvocation.SetArgumentValue(index, value);
         }
 
         /// <inheritdoc />
@@ -91,28 +68,66 @@ namespace IvorySharp.CastleWindsor.Core
         }
 
         /// <inheritdoc />
-        public void SetArgumentValue(int index, object value)
-        {
-            _castleInvocation.SetArgumentValue(index, value);
-        }
-
-        /// <inheritdoc />
         void IInvocation.Proceed()
         {
             _castleInvocation.Proceed();
+        }       
 
-            ReturnValue = _castleInvocation.ReturnValue;
+        #endregion
 
-            if (ReferenceEquals(ReturnValue, Context.Instance))
-                ReturnValue = Proxy;
+        #region Ivory
+        
+        /// <inheritdoc />
+        InvocationArguments IInvocationContext.Arguments => Arguments;
+
+        /// <inheritdoc />
+        public MethodInfo Method => _castleInvocation.Method;
+
+        /// <inheritdoc />
+        public MethodInfo TargetMethod => _targetMethodProvider.Value;
+        private readonly Lazy<MethodInfo> _targetMethodProvider;
+        
+        /// <inheritdoc />
+        public Type DeclaringType { get; }
+
+        /// <inheritdoc />
+        public Type TargetType => _castleInvocation.TargetType;
+
+        /// <inheritdoc />
+        public object Proxy => _castleInvocation.Proxy;
+
+        /// <inheritdoc />
+        public object Target => _castleInvocation.InvocationTarget;
+
+        /// <inheritdoc />
+        public InvocationType InvocationType { get; }
+
+        /// <inheritdoc />
+        public object ReturnValue
+        {
+            get => ((IInvocation) this).ReturnValue;
+            set => ((IInvocation) this).ReturnValue = value;
         }
 
         /// <inheritdoc />
-        object IvorySharp.Core.IInvocation.Proceed()
+        public object Proceed()
         {
-            var castleInvocation = (IInvocation) this;
-            castleInvocation.Proceed();
-            return castleInvocation.ReturnValue;
+            ((IInvocation)this).Proceed();
+            return ReturnValue;
+        }
+        
+        #endregion
+        
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="InvocationAdapter"/>.
+        /// </summary>
+        public InvocationAdapter(IInvocation castleInvocation, Type declaringType)
+        {
+            _castleInvocation = castleInvocation;
+            _targetMethodProvider = new Lazy<MethodInfo>(() => _castleInvocation.GetConcreteMethodInvocationTarget());
+         
+            DeclaringType = declaringType;
+            InvocationType = Method.GetInvocationType();
         }
     }
 }

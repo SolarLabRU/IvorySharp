@@ -14,7 +14,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Параметры вызова метода.
         /// </summary>
-        [NotNull] InvocationContext Context { get; }
+        [NotNull] IInvocationContext Context { get; }
 
         /// <summary>
         /// Исключение, возникшее в ходе выполнения пайплайна.

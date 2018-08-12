@@ -79,31 +79,9 @@ namespace IvorySharp.Tests.UnitTests
             Assert.Equal(FlowBehavior.Return, pipeline.FlowBehavior);
         }
 
-        [Fact]
-        public void Call_ReturnValue_ShouldThrow_If_MethodReturnType_IsVoid()
-        {
-            // Arrange
-            var pipeline = new SyncAspectInvocationPipeline(_voidMethodReturnInvocation, null, null);
-            
-            // Act & Assert
-            Assert.Throws<IvorySharpException>(() =>  pipeline.ReturnValue(15));
-        }
-
-        [Fact]
-        public void Call_ReturnValue_ShouldThrow_If_ResultIsUncastable_To_Method_ReturnType()
-        {
-            // Arrange
-            var pipeline = new SyncAspectInvocationPipeline(_returnTenMethodInvocation, null, null);
-            
-            // Act & Assert
-            Assert.Throws<IvorySharpException>(() =>  pipeline.ReturnValue(new object()));
-        }
-
         private interface IService
         {
             void Method();
-
-            object ReturnNull();
 
             int ReturnTen();
         }
@@ -112,11 +90,6 @@ namespace IvorySharp.Tests.UnitTests
         {
             public void Method()
             {
-            }
-
-            public object ReturnNull()
-            {
-                return default(object);
             }
 
             public int ReturnTen()

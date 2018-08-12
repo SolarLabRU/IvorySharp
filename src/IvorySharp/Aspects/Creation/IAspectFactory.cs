@@ -12,13 +12,13 @@ namespace IvorySharp.Aspects.Creation
         /// </summary>
         /// <param name="context">Контекст вызова.</param>
         /// <returns>Массив инициализированных аспектов.</returns>
-        MethodBoundaryAspect[] CreateBoundaryAspects(InvocationContext context);
+        MethodBoundaryAspect[] CreateBoundaryAspects(IInvocationContext context);
 
         /// <summary>
         /// Создает аспект типа <see cref="MethodInterceptionAspect"/> из модели вызова <paramref name="context"/>.
         /// </summary>
         /// <param name="context">Контекст вызова.</param>
         /// <returns>Инициализированный аспект.</returns>
-        MethodInterceptionAspect CreateInterceptionAspect(InvocationContext context);
+        MethodInterceptionAspect CreateInterceptionAspect(IInvocationContext context);
     }
 }

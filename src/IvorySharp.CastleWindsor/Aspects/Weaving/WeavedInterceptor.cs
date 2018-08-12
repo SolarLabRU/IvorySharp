@@ -12,7 +12,7 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
     /// <typeparam name="TService">Тип сервиса.</typeparam>
     public class WeavedInterceptor<TService> : IInterceptor
     {
-        private readonly WeavedInvocationInterceptor _invocationFacade;
+        private readonly InvocationInterceptor _invocationFacade;
 
         /// <summary>
         /// Адаптер для обработчика вызовов <see cref="IInterceptor"/>.
@@ -20,14 +20,14 @@ namespace IvorySharp.CastleWindsor.Aspects.Weaving
         /// <param name="components">Компоненты библиотеки.</param>
         public WeavedInterceptor(IComponentsStore components)
         {
-            _invocationFacade = new WeavedInvocationInterceptor(
+            _invocationFacade = new InvocationInterceptor(
                 components.AspectFactory, components.PipelineFactory, components.AspectWeavePredicate);
         }
 
         /// <inheritdoc />
         public void Intercept(IInvocation invocation)
         {
-            invocation.ReturnValue = _invocationFacade.InterceptInvocation(
+            invocation.ReturnValue = _invocationFacade.Intercept(
                 new InvocationAdapter(invocation, typeof(TService)));
         }
     }

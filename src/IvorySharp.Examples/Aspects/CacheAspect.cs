@@ -18,21 +18,21 @@ namespace IvorySharp.Examples.Aspects
         /// <inheritdoc />
         public override void OnInvoke(IInvocation invocation)
         {         
-            var cacheKey = GetCacheKey(invocation.Context);
+            var cacheKey = GetCacheKey(invocation);
             if (MemoryCache.TryGetValue(cacheKey, out var cached))
             {
-                Console.WriteLine($"Return '{invocation.Context.Method.ReturnType.Name}' with key '{cacheKey}' from cache");
+                Console.WriteLine($"Return '{invocation.Method.ReturnType.Name}' with key '{cacheKey}' from cache");
                 invocation.ReturnValue = cached;
             }
             else
             {
                 invocation.Proceed();
                 MemoryCache.Set(cacheKey, invocation.ReturnValue);
-                Console.WriteLine($"Set '{invocation.Context.Method.ReturnType.Name}' to cache with key '{cacheKey}'");
+                Console.WriteLine($"Set '{invocation.Method.ReturnType.Name}' to cache with key '{cacheKey}'");
             }
         }
         
-        private string GetCacheKey(InvocationContext context)
+        private string GetCacheKey(IInvocationContext context)
         {
             var sb = new StringBuilder();
 

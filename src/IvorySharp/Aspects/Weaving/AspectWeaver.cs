@@ -37,7 +37,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <returns>Экземпляр связанного с аспектами исходного объекта типа <paramref name="declaringType"/>.</returns>
         public object Weave(object target, Type declaringType, Type targetType)
         {
-            return AspectWeavedProxy.Create(
+            return AspectWeaveProxy.Create(
                 target, 
                 targetType, 
                 declaringType, 

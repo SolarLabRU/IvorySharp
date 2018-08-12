@@ -14,7 +14,7 @@ namespace IvorySharp.Aspects.Selection
         /// <typeparam name="TAspect">Тип аспекта.</typeparam>
         /// <param name="context">Контекст вызова.</param>
         /// <returns>Перечень деклараций аспектов для применения.</returns>
-        IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(InvocationContext context)
+        IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(IInvocationContext context)
             where TAspect : MethodAspect;
     }
 }

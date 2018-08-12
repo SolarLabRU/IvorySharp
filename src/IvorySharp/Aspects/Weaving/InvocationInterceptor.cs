@@ -8,16 +8,16 @@ namespace IvorySharp.Aspects.Weaving
     /// <summary>
     /// Класс, содержащий логику перехвата вызываемого метода.
     /// </summary>
-    internal class WeavedInvocationInterceptor
+    internal class InvocationInterceptor
     {
         private readonly IAspectFactory _aspectFactory;
         private readonly IInvocationPipelineFactory _pipelineFactory;
         private readonly IAspectWeavePredicate _aspectWeavePredicate;
         
         /// <summary>
-        /// Инициализирует экземпляр <see cref="WeavedInvocationInterceptor"/>.
+        /// Инициализирует экземпляр <see cref="InvocationInterceptor"/>.
         /// </summary>
-        public WeavedInvocationInterceptor(
+        public InvocationInterceptor(
             IAspectFactory aspectFactory,
             IInvocationPipelineFactory pipelineFactory,
             IAspectWeavePredicate aspectWeavePredicate)
@@ -32,18 +32,18 @@ namespace IvorySharp.Aspects.Weaving
         /// </summary>
         /// <param name="invocation">Модель исходного вызова.</param>
         /// <returns>Результат вызова метода.</returns>
-        internal object InterceptInvocation(IInvocation invocation)
+        internal object Intercept(IInvocation invocation)
         {
             if (!_aspectWeavePredicate.IsWeaveable(
-                invocation.Context.Method,
-                invocation.Context.DeclaringType,
-                invocation.Context.TargetType))
+                invocation.Method,
+                invocation.DeclaringType,
+                invocation.TargetType))
             {
                 return invocation.Proceed();
             }
 
-            var boundaryAspects = _aspectFactory.CreateBoundaryAspects(invocation.Context);
-            var interceptAspect = _aspectFactory.CreateInterceptionAspect(invocation.Context);
+            var boundaryAspects = _aspectFactory.CreateBoundaryAspects(invocation);
+            var interceptAspect = _aspectFactory.CreateInterceptionAspect(invocation);
             var executor = _pipelineFactory.CreateExecutor(invocation);
             var pipeline = _pipelineFactory.CreatePipeline(invocation, boundaryAspects, interceptAspect);    
             

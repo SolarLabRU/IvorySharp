@@ -14,7 +14,7 @@ namespace IvorySharp.Aspects.Weaving
     /// Прокси, связанное с аспектами.
     /// </summary>
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
-    public class AspectWeavedProxy : IvoryProxy
+    public class AspectWeaveProxy : IvoryProxy
     {
         private IAspectFactory _aspectFactory;
         private IInvocationPipelineFactory _pipelineFactory;
@@ -59,24 +59,30 @@ namespace IvorySharp.Aspects.Weaving
             IAspectWeavePredicate weavePredicate)
         {
             var transparentProxy = ProxyGenerator.Instance.CreateTransparentProxy(
-                typeof(AspectWeavedProxy), declaringType);
+                typeof(AspectWeaveProxy), declaringType);
             
-            var weavedProxy = (AspectWeavedProxy) transparentProxy;
+            var weavedProxy = (AspectWeaveProxy) transparentProxy;
 
-            weavedProxy.Initialize(target, transparentProxy, targetType, declaringType, aspectFactory, pipelineFactory, weavePredicate);
+            weavedProxy.Initialize(
+                target, 
+                transparentProxy,
+                targetType,
+                declaringType,
+                aspectFactory, 
+                pipelineFactory,
+                weavePredicate);
 
             return transparentProxy;
         }
 
         /// <inheritdoc />
-        protected internal override object Invoke(MethodInfo targetMethod, object[] args)
+        protected internal override object Invoke(MethodInfo method, object[] args)
         {
-            var invoker = MethodCache.Instance.GetOrAdd(targetMethod);
-            var context = new InvocationContext(args, targetMethod, Target, Proxy, DeclaringType, TargetType);
-            var invocation = new Invocation(context, invoker);         
-            var facade = new WeavedInvocationInterceptor(_aspectFactory, _pipelineFactory, _weavePredicate);
+            var invoker = MethodCache.Instance.GetMethodInvoker(method);
+            var invocation = new Invocation(args, method, DeclaringType, TargetType, Proxy, Target, invoker);     
+            var facade = new InvocationInterceptor(_aspectFactory, _pipelineFactory, _weavePredicate);
 
-            return facade.InterceptInvocation(invocation);
+            return facade.Intercept(invocation);
         }
 
         /// <summary>

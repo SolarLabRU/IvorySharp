@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects
 {
@@ -8,6 +9,11 @@ namespace IvorySharp.Aspects
     [PublicAPI]
     public abstract class MethodAspect : AspectAttribute
     {
+        /// <summary>
+        /// Идентификатор аспекта.
+        /// </summary>
+        internal Guid InternalId { get; set; }
+        
         /// <summary>
         /// Описание аспекта.
         /// </summary>

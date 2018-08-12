@@ -6,13 +6,8 @@ namespace IvorySharp.Core
     /// Интерфейс выполнения метода.
     /// </summary>
     [PublicAPI]
-    public interface IInvocation
+    public interface IInvocation : IInvocationContext
     {
-        /// <summary>
-        /// Контекст выполнения метода.
-        /// </summary>
-        InvocationContext Context { get; }
-        
         /// <summary>
         /// Возвращаемое значение.
         /// </summary>

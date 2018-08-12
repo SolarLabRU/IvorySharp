@@ -23,7 +23,7 @@ namespace IvorySharp.Aspects.Selection
         }
 
         /// <inheritdoc />
-        public IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(InvocationContext context) 
+        public IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(IInvocationContext context) 
             where TAspect : MethodAspect
         {
             var methodAspectDeclarations = _selector.SelectAspectDeclarations<TAspect>(context.Method, includeAbstract: false);

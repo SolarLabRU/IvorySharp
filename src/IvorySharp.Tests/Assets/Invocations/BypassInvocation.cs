@@ -4,39 +4,74 @@ using IvorySharp.Core;
 
 namespace IvorySharp.Tests.Assets.Invocations
 {
-    public class BypassInvocation : Invocation
+    public class BypassInvocation : AbstractInvocation
     {
-        public BypassInvocation(Type declaringType, object instance, string methodName)
-            : base(CreateContext(declaringType, instance, declaringType.GetMethod(methodName), Array.Empty<object>()))
+        internal BypassInvocation(
+            Type declaringType,
+            object target,
+            MethodInfo method,
+            InvocationArguments arguments)
+            : base(
+                arguments,
+                method,
+                declaringType,
+                target.GetType(),
+                null,
+                target)
         {
         }
         
-        public BypassInvocation(Type declaringType, object instance, MethodInfo method)
-            : base(CreateContext(declaringType, instance, method, Array.Empty<object>()))
+        internal BypassInvocation(
+            Type declaringType,
+            object target,
+            MethodInfo method)
+            : base(
+                InvocationArguments.Empty, 
+                method,
+                declaringType,
+                target.GetType(),
+                null,
+                target)
         {
         }
         
-        public BypassInvocation(Type declaringType, object instance, string methodName, object[] arguments)
-            : base(CreateContext(declaringType, instance, declaringType.GetMethod(methodName), arguments))
+        internal BypassInvocation(
+            Type declaringType,
+            object target,
+            string methodName,
+            InvocationArguments arguments)
+            : base(
+                arguments,
+                declaringType.GetMethod(methodName),
+                declaringType,
+                target.GetType(),
+                null,
+                target)
+        {
+        }
+        
+        internal BypassInvocation(
+            Type declaringType,
+            object target,
+            string methodName)
+            : base(
+                InvocationArguments.Empty, 
+                declaringType.GetMethod(methodName),
+                declaringType,
+                target.GetType(),
+                null,
+                target)
         {
         }
 
+        /// <inheritdoc />
+        public override object ReturnValue { get; set; }
+
+        /// <inheritdoc />
         public override object Proceed()
         {
-            ReturnValue = Context.Method.Invoke(Context.Instance, (object[])Context.Arguments);
+            ReturnValue = Method.Invoke(Target, Arguments);
             return ReturnValue;
         }
-
-        private static InvocationContext CreateContext(Type declaringType, object instance, MethodInfo method, object[] arguments)
-        {
-            return new InvocationContext(
-                arguments, 
-                method,
-                instance, 
-                instance, 
-                declaringType,
-                instance.GetType());
-        }
-        
     }
 }

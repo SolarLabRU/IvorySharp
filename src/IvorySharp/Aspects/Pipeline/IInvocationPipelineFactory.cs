@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Pipeline
@@ -17,14 +16,14 @@ namespace IvorySharp.Aspects.Pipeline
         /// <returns>Модель пайплайна.</returns>
         IInvocationPipeline CreatePipeline(
             IInvocation invocation,
-            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, 
+            MethodBoundaryAspect[] boundaryAspects, 
             MethodInterceptionAspect interceptionAspect);
 
         /// <summary>
         /// Создает компонент выполнения пайплайна.
         /// </summary>
-        /// <param name="invocation">Модель вызова.</param>
+        /// <param name="context">Контекст вызова.</param>
         /// <returns>Компонент выполнения пайплайна.</returns>
-        IInvocationPipelineExecutor CreateExecutor(IInvocation invocation);
+        IInvocationPipelineExecutor CreateExecutor(IInvocationContext context);
     }
 }

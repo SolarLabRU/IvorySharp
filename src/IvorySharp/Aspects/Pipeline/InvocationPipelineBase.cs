@@ -11,7 +11,7 @@ namespace IvorySharp.Aspects.Pipeline
     internal abstract class InvocationPipelineBase : IInvocationPipeline
     {
         private static readonly object SyncRoot = new object();
-        private readonly ConcurrentDictionary<Type, object> _pipelineData;
+        private readonly ConcurrentDictionary<Guid, object> _pipelineData;
         
         /// <summary>
         /// Модель вызова метода.
@@ -24,7 +24,7 @@ namespace IvorySharp.Aspects.Pipeline
         internal MethodAspect CurrentExecutingAspect { get; set; }
 
         /// <inheritdoc />
-        public InvocationContext Context { get; }
+        public IInvocationContext Context => Invocation;
 
         /// <inheritdoc />
         public Exception CurrentException { get; set; }
@@ -47,9 +47,8 @@ namespace IvorySharp.Aspects.Pipeline
         /// <param name="invocation">Модель вызова метода.</param>
         protected InvocationPipelineBase(IInvocation invocation)
         {
-            _pipelineData = new ConcurrentDictionary<Type, object>();
+            _pipelineData = new ConcurrentDictionary<Guid, object>();
             Invocation = invocation;
-            Context = Invocation.Context;
         }
         
         /// <inheritdoc />
@@ -102,7 +101,7 @@ namespace IvorySharp.Aspects.Pipeline
                 if (CurrentExecutingAspect == null)
                     return null;
                 
-                return _pipelineData.TryGetValue(CurrentExecutingAspect.GetType(), out var data)
+                return _pipelineData.TryGetValue(CurrentExecutingAspect.InternalId, out var data)
                     ? data 
                     : null;
             }
@@ -119,7 +118,7 @@ namespace IvorySharp.Aspects.Pipeline
                 if (CurrentExecutingAspect == null)
                     return;
 
-                _pipelineData[CurrentExecutingAspect.GetType()] = newState;
+                _pipelineData[CurrentExecutingAspect.InternalId] = newState;
             }
         }
     }

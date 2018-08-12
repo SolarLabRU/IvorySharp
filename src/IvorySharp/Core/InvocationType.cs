@@ -5,7 +5,7 @@ namespace IvorySharp.Core
     /// <summary>
     /// Тип метода.
     /// </summary>
-    internal enum MethodType
+    public enum InvocationType
     {
         /// <summary>
         /// Синхронный метод.

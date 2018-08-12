@@ -98,7 +98,7 @@ namespace IvorySharp.SimpleInjector.Aspects.Integration
         {
             try
             {
-                var proxy = (AspectWeavedProxy) service;
+                var proxy = (AspectWeaveProxy) service;
                 return proxy.Target;
             }
             catch (Exception)

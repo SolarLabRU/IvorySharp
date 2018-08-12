@@ -50,7 +50,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             var mock = new Mock<IAspectDeclarationCollector>();
 
-            mock.Setup(c => c.CollectAspectDeclarations<MethodBoundaryAspect>(It.IsAny<InvocationContext>()))
+            mock.Setup(c => c.CollectAspectDeclarations<MethodBoundaryAspect>(It.IsAny<IInvocationContext>()))
                 .Returns(boundaryAspectDeclarations);
             
             return mock.Object;

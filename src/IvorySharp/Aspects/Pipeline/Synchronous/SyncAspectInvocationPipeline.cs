@@ -23,7 +23,7 @@ namespace IvorySharp.Aspects.Pipeline.Synchronous
         /// </summary>
         internal SyncAspectInvocationPipeline(
             IInvocation invocation, 
-            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects,
+            MethodBoundaryAspect[] boundaryAspects,
             MethodInterceptionAspect interceptionAspect) 
             : base(invocation)
         {

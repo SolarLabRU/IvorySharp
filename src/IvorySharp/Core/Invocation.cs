@@ -9,58 +9,57 @@ namespace IvorySharp.Core
     /// <summary>
     /// Модель выполнения метода.
     /// </summary>
-    public class Invocation : IInvocation
+    public class Invocation : AbstractInvocation
     {
         /// <summary>
         /// Делегат для быстрого вызова метода.
         /// </summary>
-        private readonly Func<object, object[], object> _methodInvoker;
+        private readonly Func<object, object[], object> _invoker;
 
         /// <inheritdoc />
-        public InvocationContext Context { get; }
-
-        /// <inheritdoc />
-        public object ReturnValue
+        public override object ReturnValue
         {
-            get => _returnValue;
-            set => _returnValue = ConvertReturnValue(value);
+            get => _unsafeReturnValue;
+            set => _unsafeReturnValue = ConvertReturnValue(value);
         }
         
-        private object _returnValue;
-        
-        /// <summary>
-        /// Инициализирует экземпляр класса <see cref="Invocation"/>.
-        /// </summary>
-        /// <param name="context">Контекст выполнения метода.</param>
-        /// <param name="methodInvoker">Делегат для быстрого вызова метода.</param>
-        internal Invocation(InvocationContext context, Func<object, object[], object> methodInvoker)
-        {
-            Context = context;
-            _methodInvoker = methodInvoker;
-        }
+        private object _unsafeReturnValue;
 
         /// <summary>
         /// Инициализирует экземпляр класса <see cref="Invocation"/>.
         /// </summary>
-        /// <param name="context">Контекст выполнения метода.</param>
-        internal Invocation(InvocationContext context)
+        internal Invocation(
+            InvocationArguments arguments,
+            MethodInfo proxiedMethod, 
+            Type declaringType,
+            Type targetType, 
+            object proxy, 
+            object target,
+            Func<object, object[], object> invoker) 
+            : base(
+                arguments,
+                proxiedMethod,
+                declaringType,
+                targetType, 
+                proxy, 
+                target)
         {
-            Context = context;
+            _invoker = invoker;
         }
         
         /// <inheritdoc />
-        public virtual object Proceed()
+        public override object Proceed()
         {
             try
             {
-                ReturnValue = _methodInvoker != null 
-                    ? _methodInvoker(Context.Instance, (object[]) Context.Arguments) 
-                    : Context.Method.Invoke(Context.Instance, (object[]) Context.Arguments);
+                _unsafeReturnValue = _invoker != null 
+                    ? _invoker(Target, Arguments) 
+                    : Method.Invoke(Target, Arguments);
                 
-                if (ReferenceEquals(ReturnValue, Context.Instance))
-                    ReturnValue = Context.TransparentProxy;
+                if (ReferenceEquals(_unsafeReturnValue, Target))
+                    _unsafeReturnValue = Proxy;
 
-                return ReturnValue;
+                return _unsafeReturnValue;
             }
             catch (TargetInvocationException e)
             {
@@ -75,24 +74,23 @@ namespace IvorySharp.Core
         /// <param name="returnValue">Возвращаемое значение.</param>
         public object ConvertReturnValue(object returnValue)
         {
-            if (Context.Method.IsVoidReturn())
+            if (Method.IsVoidReturn())
             {
                 throw new IvorySharpException(
                     $"Невозможно установить возвращаемое значение '{returnValue}'. " +
-                    $"Метод '{Context.Method.Name}' типа '{Context.DeclaringType.FullName}' " +
+                    $"Метод '{Method.Name}' типа '{DeclaringType.FullName}' " +
                     "не имеет возвращаемого значения (void).");
             }
 
             if (returnValue == null)
-                return Context.Method.ReturnType.GetDefaultValue();
+                return Method.ReturnType.GetDefaultValue();
             
-
-            if (!TypeConversion.TryConvert(returnValue, Context.Method.ReturnType, out var converted))
+            if (!TypeConversion.TryConvert(returnValue, Method.ReturnType, out var converted))
             {
                 throw new IvorySharpException(
                     $"Невозможно установить возвращаемое значение '{returnValue}'. " +
                     $"Тип результата '{returnValue.GetType().FullName}' " +
-                    $"невозможно привести к возвращаемому типу '{Context.Method.ReturnType.FullName}'.");
+                    $"невозможно привести к возвращаемому типу '{Method.ReturnType.FullName}'.");
             }
 
             return converted;

@@ -26,19 +26,19 @@ namespace IvorySharp.Extensions
             return methodInfo.GetCustomAttributes<AsyncStateMachineAttribute>(inherit: false).Any();
         }
         
-        internal static MethodType GetMethodType(this MethodInfo method)
+        internal static InvocationType GetInvocationType(this MethodInfo method)
         {
             var returnType = method.ReturnType;
 
             if (returnType == typeof(void) ||
                 !typeof(Task).IsAssignableFrom(returnType))
             {
-                return MethodType.Synchronous;
+                return InvocationType.Synchronous;
             }
 
             return returnType.GetTypeInfo().IsGenericType 
-                ? MethodType.AsyncFunction 
-                : MethodType.AsyncAction;
+                ? InvocationType.AsyncFunction 
+                : InvocationType.AsyncAction;
         }
     }
 }
