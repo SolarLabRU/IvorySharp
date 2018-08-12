@@ -9,7 +9,7 @@
         DeclaringType = 1,
         MethodTokenKey = 2,
         MethodArguments = 3,
-        GenericTypes = 4,
+        GenericArgs = 4,
         ReturnValue = 5
     }
 }

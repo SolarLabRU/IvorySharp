@@ -22,7 +22,9 @@ namespace IvorySharp.Proxying.Generators
         /// <summary>
         /// Инициализирует экземпляр <see cref="ProxyTypeGenerator"/>
         /// </summary>
-        public ProxyTypeGenerator(TypeBuilder dynamicTypeBuilder, ProxyAssembly proxyAssembly,
+        public ProxyTypeGenerator(
+            TypeBuilder dynamicTypeBuilder,
+            ProxyAssembly proxyAssembly,
             MethodLinkStore methodLinkStore)
             : base(dynamicTypeBuilder)
         {
@@ -190,7 +192,7 @@ namespace IvorySharp.Proxying.Generators
             
             if (method.ContainsGenericParameters)
             {
-                packedArgsEmitter.EmitGenericTypes(method.GetGenericArguments());
+                packedArgsEmitter.EmitGenericArguments(method.GetGenericArguments());
             }
             
             ilGenerator.Emit(OpCodes.Ldarg_0);
@@ -283,16 +285,16 @@ namespace IvorySharp.Proxying.Generators
                 return argsEmitter;
             }
 
-            public void EmitGenericTypes(IReadOnlyList<Type> genericTypes)
+            public void EmitGenericArguments(IReadOnlyList<Type> genericArgs)
             {
-                _internalEmitter.EmitBeginSet((int) PackedArgPosition.GenericTypes);
+                _internalEmitter.EmitBeginSet((int) PackedArgPosition.GenericArgs);
 
-                var typesEmitter = new ArrayEmitter<Type>(_ilGenerator, genericTypes.Count);
+                var typesEmitter = new ArrayEmitter<Type>(_ilGenerator, genericArgs.Count);
 
-                for (var i = 0; i < genericTypes.Count; ++i)
+                for (var i = 0; i < genericArgs.Count; ++i)
                 {
                     typesEmitter.EmitBeginSet(i);
-                    _ilGenerator.Emit(OpCodes.Ldtoken, genericTypes[i]);
+                    _ilGenerator.Emit(OpCodes.Ldtoken, genericArgs[i]);
                     _ilGenerator.Emit(OpCodes.Call, MethodReferences.GetTypeFromHandle);
                     typesEmitter.EmitEndSet(typeof(Type));
                 }

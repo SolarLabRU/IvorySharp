@@ -44,7 +44,7 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// Обобщенные параметры.
         /// </summary>
-        public Type[] GenericTypes => Get<Type[]>(PackedArgPosition.GenericTypes);
+        public Type[] GenericTypes => Get<Type[]>(PackedArgPosition.GenericArgs);
 
         /// <summary>
         /// Возвращаемое значение.

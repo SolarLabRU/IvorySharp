@@ -6,7 +6,7 @@ using System.Reflection;
 namespace IvorySharp.Proxying
 {
     /// <summary>
-    /// Создает тип прокси класса.
+    /// Фасад для генерации типа прокси.
     /// </summary>
     internal class ProxyTypeGeneratorFacade
     {
@@ -25,12 +25,6 @@ namespace IvorySharp.Proxying
         /// </summary>
         /// <param name="baseType">Базовый тип.</param>
         /// <param name="interfaceType">Тип, который прокси реализует.</param>
-        /// <remarks>
-        ///   Иерархия:
-        ///     interface IService { }
-        ///     dynamic_class Proxy : BaseType : IService { }
-        ///     class BaseType : DispatchProxy { }
-        /// </remarks>
         /// <returns>Тип прокси.</returns>
         public Type GenerateProxyType(Type baseType, Type interfaceType)
         {
