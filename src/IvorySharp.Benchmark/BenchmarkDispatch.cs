@@ -2,18 +2,21 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Proxy;
 using IvorySharp.Benchmark.Services;
+using IvorySharp.CastleWindsor.Aspects.Integration;
 
 namespace IvorySharp.Benchmark
 {
     public class BenchmarkDispatch
     {
-        private IServiceForBenchmark _defaultService;
         private IServiceForBenchmark _proxiedService;
         private IServiceForBenchmark _weavedService;
+        private IServiceForBenchmark _windsorService;
         
         private MethodInfo _reflectedMethod;
         private ServiceForBenchmark _reflectedMethodService;
@@ -21,13 +24,24 @@ namespace IvorySharp.Benchmark
         [GlobalSetup]
         public void Setup()
         {
+            var winsorContainer = new WindsorContainer();
+            
+            AspectsConfigurator
+                .UseContainer(new WindsorAspectsContainer(winsorContainer))
+                .Initialize();
+
+            winsorContainer.Register(
+                Component
+                    .For<IServiceForBenchmark>()
+                    .ImplementedBy<ServiceForBenchmark>());
+
+            _windsorService = winsorContainer.Resolve<IServiceForBenchmark>();
+            
             _reflectedMethodService = new ServiceForBenchmark();
             _reflectedMethod = typeof(IServiceForBenchmark).GetMethod(nameof(IServiceForBenchmark.Identity));
 
             var settings = new DefaultComponentsStore(null);
             var weaver = new AspectWeaver(settings.AspectWeavePredicate, settings.PipelineFactory, settings.AspectFactory);
-            
-            _defaultService = new ServiceForBenchmark();
             
             _weavedService = (IServiceForBenchmark) weaver.Weave(
                 new ServiceForBenchmark(), typeof(IServiceForBenchmark), typeof(ServiceForBenchmark));
@@ -51,6 +65,13 @@ namespace IvorySharp.Benchmark
         }
 
         [Benchmark]
+        public void DispatchWindsorMethod()
+        {
+            var result = _windsorService.Identity(10);
+            GC.KeepAlive(result);
+        }
+        
+        [Benchmark]
         public void DispatchReflectedMethod()
         {
             var result = _reflectedMethod.Invoke(_reflectedMethodService, new object[]{ 10 });
@@ -58,23 +79,16 @@ namespace IvorySharp.Benchmark
         }
 
         [Benchmark]
-        public void DispachMethodDefault()
+        public async Task DispatchWeavedAsyncMethod()
         {
-            var result = _defaultService.Identity(10);
+            var result = await _weavedService.IdentityAsync(10);
             GC.KeepAlive(result);
         }
 
         [Benchmark]
-        public async Task DispatchAsyncMethod()
+        public async Task DispatchWindsorAsyncMethod()
         {
-            var result = await _defaultService.IdentityAsync(10);
-            GC.KeepAlive(result);
-        }
-        
-        [Benchmark]
-        public async Task DispatchWeavedAsyncMethod()
-        {
-            var result = await _weavedService.IdentityAsync(10);
+            var result = await _windsorService.IdentityAsync(10);
             GC.KeepAlive(result);
         }
     }
