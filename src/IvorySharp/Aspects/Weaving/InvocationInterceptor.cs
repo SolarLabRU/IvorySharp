@@ -1,4 +1,5 @@
 ﻿using System;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Core;
@@ -10,21 +11,21 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     internal sealed class InvocationInterceptor
     {
-        private readonly IAspectFactory _aspectFactory;
-        private readonly IInvocationPipelineFactory _pipelineFactory;
-        private readonly IAspectWeavePredicate _aspectWeavePredicate;
+        private readonly IComponentProvider<IAspectFactory> _aspectFactoryProvider;
+        private readonly IComponentProvider<IInvocationPipelineFactory> _pipelineFactoryProvider;
+        private readonly IComponentProvider<IAspectWeavePredicate> _aspectWeavePredicateProvider;
         
         /// <summary>
         /// Инициализирует экземпляр <see cref="InvocationInterceptor"/>.
         /// </summary>
         public InvocationInterceptor(
-            IAspectFactory aspectFactory,
-            IInvocationPipelineFactory pipelineFactory,
-            IAspectWeavePredicate aspectWeavePredicate)
+            IComponentProvider<IAspectFactory>  aspectFactoryProvider,
+            IComponentProvider<IInvocationPipelineFactory> pipelineFactoryProvider,
+            IComponentProvider<IAspectWeavePredicate> aspectWeavePredicateProvider)
         {
-            _aspectFactory = aspectFactory;
-            _pipelineFactory = pipelineFactory;         
-            _aspectWeavePredicate = aspectWeavePredicate;
+            _aspectFactoryProvider = aspectFactoryProvider;
+            _pipelineFactoryProvider = pipelineFactoryProvider;         
+            _aspectWeavePredicateProvider = aspectWeavePredicateProvider;
         }
 
         /// <summary>
@@ -34,18 +35,20 @@ namespace IvorySharp.Aspects.Weaving
         /// <returns>Результат вызова метода.</returns>
         internal object Intercept(IInvocation invocation)
         {
-            if (!_aspectWeavePredicate.IsWeaveable(
-                invocation.Method,
-                invocation.DeclaringType,
-                invocation.TargetType))
+            var weavePredicate = _aspectWeavePredicateProvider.Get();
+            
+            if (!weavePredicate.IsWeaveable(invocation))
             {
                 return invocation.Proceed();
             }
 
-            var boundaryAspects = _aspectFactory.CreateBoundaryAspects(invocation);
-            var interceptAspect = _aspectFactory.CreateInterceptionAspect(invocation);
-            var executor = _pipelineFactory.CreateExecutor(invocation);
-            var pipeline = _pipelineFactory.CreatePipeline(invocation, boundaryAspects, interceptAspect);    
+            var aspectFactory = _aspectFactoryProvider.Get();
+            var pipelineFactory = _pipelineFactoryProvider.Get();
+            
+            var boundaryAspects = aspectFactory.CreateBoundaryAspects(invocation);
+            var interceptAspect = aspectFactory.CreateInterceptionAspect(invocation);
+            var executor = pipelineFactory.CreateExecutor(invocation);
+            var pipeline = pipelineFactory.CreatePipeline(invocation, boundaryAspects, interceptAspect);    
             
             executor.ExecutePipeline(pipeline);
 

@@ -1,9 +1,9 @@
 ﻿using Castle.DynamicProxy;
-using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Weaving;
-using IvorySharp.CastleWindsor.Core;
+using IvorySharp.Integration.CastleWindsor.Core;
 
-namespace IvorySharp.CastleWindsor.Aspects.Weaving
+namespace IvorySharp.Integration.CastleWindsor.Aspects.Weaving
 {
     /// <summary>
     /// Адаптирует механизм перехвата под внутренний механизм библиотеки Dynamic.Proxy.

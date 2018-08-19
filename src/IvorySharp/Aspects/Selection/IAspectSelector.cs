@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using IvorySharp.Aspects.Components;
 
 namespace IvorySharp.Aspects.Selection
 {
     /// <summary>
     /// Компонент выбора аспектов с элементов.
     /// </summary>
-    public interface IAspectSelector
+    public interface IAspectSelector : IComponent
     {
         /// <summary>
         /// Возвращает коллекцию аспектов определенного типа.

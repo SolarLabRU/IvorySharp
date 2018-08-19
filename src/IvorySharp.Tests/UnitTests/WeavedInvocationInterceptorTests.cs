@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using IvorySharp.Aspects;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Weaving;
@@ -27,7 +28,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             var truePredicateMock = new Mock<IAspectWeavePredicate>();
 
-            truePredicateMock.Setup(p => p.IsWeaveable(It.IsAny<MethodInfo>(), It.IsAny<Type>(), It.IsAny<Type>()))
+            truePredicateMock.Setup(p => p.IsWeaveable(It.IsAny<IInvocation>()))
                 .Returns(true);
 
             truePredicateMock.Setup(p => p.IsWeaveable(It.IsAny<Type>(), It.IsAny<Type>()))
@@ -57,7 +58,10 @@ namespace IvorySharp.Tests.UnitTests
         {
             // Arrange
             var aspect = new DisposableAspect();
-            var interceptor = new InvocationInterceptor(_predefinedAspectsFactory, _pipelineFactory, _weavePredicateAlwaysTrue);
+            var interceptor = new InvocationInterceptor(
+                _predefinedAspectsFactory.ToProvider(), 
+                _pipelineFactory.ToProvider(), 
+                _weavePredicateAlwaysTrue.ToProvider());
 
             _boundaryAspects = new MethodBoundaryAspect[] { aspect };
 

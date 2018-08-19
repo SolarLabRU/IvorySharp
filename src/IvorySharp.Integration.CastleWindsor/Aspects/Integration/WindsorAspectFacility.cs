@@ -2,11 +2,11 @@
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
-using IvorySharp.Aspects.Configuration;
-using IvorySharp.CastleWindsor.Aspects.Weaving;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Extensions;
+using IvorySharp.Integration.CastleWindsor.Aspects.Weaving;
 
-namespace IvorySharp.CastleWindsor.Aspects.Integration
+namespace IvorySharp.Integration.CastleWindsor.Aspects.Integration
 {
     /// <summary>
     /// Объект настройки контейнера <see cref="IKernel"/>.
@@ -36,9 +36,11 @@ namespace IvorySharp.CastleWindsor.Aspects.Integration
             if (componentInterfaces.Any(i => !i.IsInterceptable()))
                 return;
 
+            var weavePredicate = _components.AspectWeavePredicate.Get();
+
             foreach (var serviceType in handler.ComponentModel.Services)
             {
-                if (!_components.AspectWeavePredicate.IsWeaveable(serviceType, 
+                if (!weavePredicate.IsWeaveable(serviceType, 
                         handler.ComponentModel.Implementation))
                     continue;
 

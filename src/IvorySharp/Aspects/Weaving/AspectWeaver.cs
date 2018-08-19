@@ -1,4 +1,5 @@
 ﻿using System;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using JetBrains.Annotations;
@@ -11,21 +12,21 @@ namespace IvorySharp.Aspects.Weaving
     [PublicAPI]
     public sealed class AspectWeaver
     {
-        private readonly IInvocationPipelineFactory _pipelineFactory;
-        private readonly IAspectFactory _aspectFactory;
-        private readonly IAspectWeavePredicate _aspectWeavePredicate;
+        private readonly IComponentProvider<IInvocationPipelineFactory> _pipelineFactoryProvider;
+        private readonly IComponentProvider<IAspectFactory> _aspectFactoryProvider;
+        private readonly IComponentProvider<IAspectWeavePredicate> _aspectWeavePredicateProvider;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectWeaver"/>.
         /// </summary>
         public AspectWeaver(
-            IAspectWeavePredicate aspectWeavePredicate, 
-            IInvocationPipelineFactory pipelineFactory, 
-            IAspectFactory aspectFactory)
+            IComponentProvider<IAspectWeavePredicate> aspectWeavePredicateProvider, 
+            IComponentProvider<IInvocationPipelineFactory> pipelineFactoryProvider, 
+            IComponentProvider<IAspectFactory> aspectFactoryProvider)
         {
-            _pipelineFactory = pipelineFactory;
-            _aspectFactory = aspectFactory;
-            _aspectWeavePredicate = aspectWeavePredicate;
+            _pipelineFactoryProvider = pipelineFactoryProvider;
+            _aspectFactoryProvider = aspectFactoryProvider;
+            _aspectWeavePredicateProvider = aspectWeavePredicateProvider;
         }
 
         /// <summary>
@@ -41,9 +42,9 @@ namespace IvorySharp.Aspects.Weaving
                 target, 
                 targetType, 
                 declaringType, 
-                _aspectFactory, 
-                _pipelineFactory,
-                _aspectWeavePredicate);
+                _aspectFactoryProvider, 
+                _pipelineFactoryProvider,
+                _aspectWeavePredicateProvider);
         }
     }
 }

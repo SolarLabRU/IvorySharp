@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Reflection;
+using IvorySharp.Aspects.Components;
+using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Предикат для определения возможности применения аспектов.
     /// </summary>
-    public interface IAspectWeavePredicate
+    public interface IAspectWeavePredicate : IComponent
     {
         /// <summary>
         /// Возвращает признак возможности применения аспектов.
@@ -19,10 +20,8 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Возвращает признак возможности применения аспектов.
         /// </summary>
-        /// <param name="method">Вызываемый метод.</param>
-        /// <param name="declaringType">Тип, в котором объявлен вызываемый метод.</param>
-        /// <param name="targetType">Исходный тип объекта, метод которого был вызван.</param>
+        /// <param name="invocation">Модель вызова метода.</param>
         /// <returns>Признак возможности применения аспектов.</returns>
-        bool IsWeaveable(MethodInfo method, Type declaringType, Type targetType);
+        bool IsWeaveable(IInvocation invocation);
     }
 }

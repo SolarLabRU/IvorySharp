@@ -1,12 +1,12 @@
 ﻿using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Integration;
-using IvorySharp.CastleWindsor.Aspects.Weaving;
+using IvorySharp.Integration.CastleWindsor.Aspects.Weaving;
 
-namespace IvorySharp.CastleWindsor.Aspects.Integration
+namespace IvorySharp.Integration.CastleWindsor.Aspects.Integration
 {
     /// <summary>
     /// Контейнер аспектов.

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
-using IvorySharp.CastleWindsor.Aspects.Integration;
-using IvorySharp.SimpleInjector.Aspects.Integration;
+using IvorySharp.Integration.CastleWindsor.Aspects.Integration;
+using IvorySharp.Integration.SimpleInjector.Aspects.Integration;
 using SimpleInjector;
 
 namespace IvorySharp.Tests.Assets
@@ -18,8 +19,15 @@ namespace IvorySharp.Tests.Assets
         private readonly Container _simpleInjectorContainer;
         private readonly AspectWeaver _aspectWeaver;
         private readonly DependencyPair[] _dependency;
+        private readonly Action<AspectsConfiguration> _configurator;
 
         private bool _isInitialized;
+
+        public Weaved(IComponentsStore components, Action<AspectsConfiguration> configurator)
+            : this(components, new Container(), new WindsorContainer(), Array.Empty<DependencyPair>())
+        {
+            _configurator = configurator;
+        }
 
         public Weaved(IComponentsStore components, params DependencyPair[] dependency)
             : this(components, new Container(), new WindsorContainer(), dependency)
@@ -40,7 +48,11 @@ namespace IvorySharp.Tests.Assets
         {
             AspectsConfigurator
                 .UseContainer(new WindsorAspectsContainer(_windsorContainer))
-                .Initialize();
+                .Initialize(s =>
+                {
+                    if (_configurator != null)
+                        _configurator(s);
+                });
 
             _windsorContainer.Register(
                 Component
@@ -57,10 +69,14 @@ namespace IvorySharp.Tests.Assets
         {
             AspectsConfigurator
                 .UseContainer(new SimpleInjectorAspectContainer(_simpleInjectorContainer))
-                .Initialize();
+                .Initialize(s =>
+                {
+                    if (_configurator != null)
+                        _configurator(s);
+                });
 
             _simpleInjectorContainer.Register<TService, TImplementation>();
-            
+
             foreach (var pair in dependency)
             {
                 _simpleInjectorContainer.Register(pair.ServiceType, pair.ImplementationType);
@@ -80,7 +96,8 @@ namespace IvorySharp.Tests.Assets
             switch (frameworkType)
             {
                 case FrameworkType.Native:
-                    return (TService)_aspectWeaver.Weave(new TImplementation(), typeof(TService), typeof(TImplementation));
+                    return (TService) _aspectWeaver.Weave(new TImplementation(), typeof(TService),
+                        typeof(TImplementation));
                 case FrameworkType.CastleWindsor:
                     return _windsorContainer.Resolve<TService>();
                 case FrameworkType.SimpleInjector:

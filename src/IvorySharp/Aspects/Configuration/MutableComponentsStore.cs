@@ -1,4 +1,5 @@
-﻿using IvorySharp.Aspects.Creation;
+﻿using IvorySharp.Aspects.Components;
+using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
@@ -12,27 +13,42 @@ namespace IvorySharp.Aspects.Configuration
     internal sealed class MutableComponentsStore : IComponentsStore
     {
         /// <inheritdoc />
-        public IDependencyProvider DependencyProvider { get; set; }
+        public IComponentProvider<IDependencyProvider> DependencyProvider { get; set; }
 
         /// <inheritdoc />
-        public IAspectSelector AspectSelector { get; set; }
+        public IComponentProvider<IAspectSelector> AspectSelector { get; set; }
 
         /// <inheritdoc />
-        public IAspectWeavePredicate AspectWeavePredicate { get; set; }
+        public IComponentProvider<IAspectWeavePredicate> AspectWeavePredicate { get; set; }
 
         /// <inheritdoc />
-        public IAspectDeclarationCollector AspectDeclarationCollector { get; set; }
+        public IComponentProvider<IAspectDeclarationCollector> AspectDeclarationCollector { get; set; }
 
         /// <inheritdoc />
-        public IInvocationPipelineFactory PipelineFactory { get; set; }
+        public IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; set; }
 
         /// <inheritdoc />
-        public IAspectFactory AspectFactory { get; set; }
+        public IComponentProvider<IAspectFactory> AspectFactory { get; set; }
 
         /// <inheritdoc />
-        public IAspectDependencyInjector AspectDependencyInjector { get; set; }
+        public IComponentProvider<IAspectDependencyInjector> AspectDependencyInjector { get; set; }
 
         /// <inheritdoc />
-        public IAspectOrderStrategy AspectOrderStrategy { get; set; }
+        public IComponentProvider<IAspectOrderStrategy> AspectOrderStrategy { get; set; }
+
+        /// <summary>
+        /// Замораживает компоненты (запрещает замену внутренней реализации).
+        /// </summary>
+        public void Freeze()
+        {
+            DependencyProvider.Freeze();
+            AspectSelector.Freeze();
+            AspectWeavePredicate.Freeze();
+            AspectDeclarationCollector.Freeze();
+            PipelineFactory.Freeze();
+            AspectFactory.Freeze();
+            AspectDependencyInjector.Freeze();
+            AspectOrderStrategy.Freeze();
+        }
     }
 }

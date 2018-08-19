@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <PackageReference Include="SimpleInjector" Version="4.3.0" />
-  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\IvorySharp\IvorySharp.csproj" />
   </ItemGroup>
   <PropertyGroup>
-    <Version>0.1.0</Version>
+    <Version>1.0.0-alpha</Version>
     <LangVersion>latest</LangVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Title>IvorySharp.SimpleInjector</Title>
-    <Description>Integration plugin for SimpleInjector framework.</Description>
+    <Title>IvorySharp.Extensions.ClassAspectSelection</Title>
+    <Description>Extension plugin for IvorySharp. Allow to write aspects on classes.</Description>
     <Authors>bitshift.it@icloud.com</Authors>
     <Copyright>Copyright © Igor Polyakov 2018</Copyright>
     <PackageProjectUrl>https://github.com/rex-core/IvorySharp</PackageProjectUrl>

@@ -1,9 +1,11 @@
-﻿namespace IvorySharp.Aspects.Dependency
+﻿using IvorySharp.Aspects.Components;
+
+namespace IvorySharp.Aspects.Dependency
 {
     /// <summary>
     /// Компонент для внедрения зависимостей в аспекты.
     /// </summary>
-    public interface IAspectDependencyInjector
+    public interface IAspectDependencyInjector : IComponent
     {
         /// <summary>
         /// Выполняет внедрение зависимостей в аспект.

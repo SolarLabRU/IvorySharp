@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using IvorySharp.Aspects;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Core;
@@ -31,9 +32,9 @@ namespace IvorySharp.Tests.UnitTests
             var collector = CreateAspectCollector(declarations);
             var orderer = CreateAspectOrderStrategy<MethodBoundaryAspect, int>(a => a.Order);
             var factory = new AspectFactory(
-                aspectDeclarationCollector: collector, 
-                aspectDependencyInjector: null, 
-                aspectOrderStrategy: orderer);
+                collector.ToProvider(), 
+                null, 
+                orderer.ToProvider());
             
             
             // Act

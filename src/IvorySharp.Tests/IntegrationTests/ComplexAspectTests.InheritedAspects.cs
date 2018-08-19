@@ -20,10 +20,10 @@ namespace IvorySharp.Tests.IntegrationTests
             var simpleInjectorContainer = new Container();
             
             _commandExecutorProvider = new Weaved<IIntCommandExecutor, IntCommandExecutor>(
-                new DefaultComponentsStore(null), simpleInjectorContainer, windsorContainer);
+                new DefaultComponentsStore(new NullDependencyProvider()), simpleInjectorContainer, windsorContainer);
             
             _commandExecutorBaseProvider = new Weaved<ICommandExecutor<int>, IntCommandExecutor>(
-                new DefaultComponentsStore(null), simpleInjectorContainer, windsorContainer);
+                new DefaultComponentsStore(new NullDependencyProvider()), simpleInjectorContainer, windsorContainer);
         }
         
         #region Services

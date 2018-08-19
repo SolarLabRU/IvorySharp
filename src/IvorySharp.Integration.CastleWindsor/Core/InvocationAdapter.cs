@@ -4,7 +4,7 @@ using IvorySharp.Core;
 using IvorySharp.Extensions;
 using IInvocation = Castle.DynamicProxy.IInvocation;
 
-namespace IvorySharp.CastleWindsor.Core
+namespace IvorySharp.Integration.CastleWindsor.Core
 {
     /// <summary>
     /// Адаптирует модель вызова под модель вызова Castle.

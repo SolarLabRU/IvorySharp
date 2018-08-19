@@ -2,7 +2,7 @@
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Examples.AppServices;
 using IvorySharp.Examples.Models;
-using IvorySharp.SimpleInjector.Aspects.Integration;
+using IvorySharp.Integration.SimpleInjector.Aspects.Integration;
 using SimpleInjector;
 
 namespace IvorySharp.Examples

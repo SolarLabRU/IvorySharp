@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq.Expressions;
-using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Integration;
 using IvorySharp.Aspects.Weaving;
 using SimpleInjector;
 
-namespace IvorySharp.SimpleInjector.Aspects.Integration
+namespace IvorySharp.Integration.SimpleInjector.Aspects.Integration
 {
     /// <summary>
     /// Экземпляр контейнера аспектов для SimpleInjector-а.

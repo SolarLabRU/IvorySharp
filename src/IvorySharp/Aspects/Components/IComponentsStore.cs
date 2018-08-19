@@ -6,52 +6,52 @@ using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
 using JetBrains.Annotations;
 
-namespace IvorySharp.Aspects.Configuration
+namespace IvorySharp.Aspects.Components
 {
     /// <summary>
     /// Компоненты библиотеки.
     /// </summary>
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IComponentsStore
+    public interface IComponentsStore 
     { 
         /// <summary>
         /// Провайдер зависимостей.
         /// </summary>
-        IDependencyProvider DependencyProvider { get; }
+        IComponentProvider<IDependencyProvider> DependencyProvider { get; }
 
         /// <summary>
         /// Стратегия получения аспектов.
         /// </summary>
-        IAspectSelector AspectSelector { get; }
+        IComponentProvider<IAspectSelector> AspectSelector { get; }
 
         /// <summary>
         /// Предикат, определяющий возможность применения аспекта.
         /// </summary>
-        IAspectWeavePredicate AspectWeavePredicate { get; }
+        IComponentProvider<IAspectWeavePredicate> AspectWeavePredicate { get; }
 
         /// <summary>
         /// Компонент, агрегирующий аспекты вызова.
         /// </summary>
-        IAspectDeclarationCollector AspectDeclarationCollector { get; }
+        IComponentProvider<IAspectDeclarationCollector> AspectDeclarationCollector { get; }
 
         /// <summary>
         /// Фабрика компонентов пайлпайна.
         /// </summary>
-        IInvocationPipelineFactory PipelineFactory { get; }
+        IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; }
 
         /// <summary>
         /// Компонент, выпонялющий инициализацию аспектов.
         /// </summary>
-        IAspectFactory AspectFactory { get; }
+        IComponentProvider<IAspectFactory> AspectFactory { get; }
 
         /// <summary>
         /// Компонент, для внедрения зависимостей в аспекты.
         /// </summary>
-        IAspectDependencyInjector AspectDependencyInjector { get; }
+        IComponentProvider<IAspectDependencyInjector> AspectDependencyInjector { get; }
 
         /// <summary>
         /// Стратегия упорядочивания аспектов.
         /// </summary>
-        IAspectOrderStrategy AspectOrderStrategy { get; }
+        IComponentProvider<IAspectOrderStrategy> AspectOrderStrategy { get; }
     }
 }

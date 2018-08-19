@@ -1,5 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Integration;
 using JetBrains.Annotations;
 
@@ -36,7 +39,7 @@ namespace IvorySharp.Aspects.Configuration
             var dependencyProvider = _container.GetDependencyProvider();
             var defaultComponents = new DefaultComponentsStore(dependencyProvider);
 
-            _componentsStore.DependencyProvider = dependencyProvider;
+            _componentsStore.DependencyProvider = dependencyProvider.ToProvider();
             
             if (_componentsStore.AspectSelector == null)
                 _componentsStore.AspectSelector = defaultComponents.AspectSelector;

@@ -5,9 +5,5 @@ namespace IvorySharp.Benchmark.Aspects
 {
     public class BypassAspect : MethodBoundaryAspect
     {
-        public override void OnEntry(IInvocationPipeline pipeline)
-        {
-            base.OnEntry(pipeline);
-        }
     }
 }

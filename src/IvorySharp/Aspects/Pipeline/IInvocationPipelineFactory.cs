@@ -1,3 +1,4 @@
+using IvorySharp.Aspects.Components;
 using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Pipeline
@@ -5,7 +6,7 @@ namespace IvorySharp.Aspects.Pipeline
     /// <summary>
     /// Фабрика компонентов пайплайна.
     /// </summary>
-    public interface IInvocationPipelineFactory
+    public interface IInvocationPipelineFactory : IComponent
     {
         /// <summary>
         /// Создает модель пайплайна вызова метода.

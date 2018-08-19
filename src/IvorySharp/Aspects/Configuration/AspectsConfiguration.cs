@@ -1,5 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using IvorySharp.Aspects.Components;
+using IvorySharp.Reflection;
 using JetBrains.Annotations;
+using IComponent = IvorySharp.Aspects.Components.IComponent;
 
 namespace IvorySharp.Aspects.Configuration
 {
@@ -21,6 +26,22 @@ namespace IvorySharp.Aspects.Configuration
         internal AspectsConfiguration(MutableComponentsStore componentsStore)
         {
             ComponentsStore = componentsStore;
+        }
+
+        /// <summary>
+        /// Заменяет компонент библиотеки.
+        /// </summary>
+        /// <param name="componentSelector">Селектор компонента.</param>
+        /// <typeparam name="TComponent">Тип компонента.</typeparam>
+        /// <returns>Синтаксис замены компонента.</returns>
+        public ReplaceComponentSyntax<TComponent> ReplaceComponent<TComponent>(
+            Expression<Func<IComponentsStore, IComponentProvider<TComponent>>> componentSelector)
+            where TComponent : IComponent
+        {
+            var propertyName = Expressions.GetMemberName(componentSelector);
+            var property = typeof(MutableComponentsStore).GetProperty(propertyName);
+            
+            return new ReplaceComponentSyntax<TComponent>(ComponentsStore, property);
         }
     }
 }

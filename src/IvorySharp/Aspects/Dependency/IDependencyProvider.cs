@@ -1,4 +1,5 @@
 ﻿using System;
+using IvorySharp.Aspects.Components;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Dependency
@@ -7,7 +8,7 @@ namespace IvorySharp.Aspects.Dependency
     /// Провайдер сервисов (сервис локатор).
     /// </summary>
     [PublicAPI]
-    public interface IDependencyProvider
+    public interface IDependencyProvider : IComponent
     {
         /// <summary>
         /// Получает экземпляр сервиса по типу.

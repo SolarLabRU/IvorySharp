@@ -2,9 +2,8 @@
 
 // ReSharper disable UnusedMember.Global
 
-[assembly:InternalsVisibleTo("IvorySharp.CastleWindsor")]
-[assembly:InternalsVisibleTo("IvorySharp.SimpleInjector")]
-[assembly:InternalsVisibleTo("IvorySharp.CastleWindsor.v330")]
+[assembly:InternalsVisibleTo("IvorySharp.Integration.CastleWindsor")]
+[assembly:InternalsVisibleTo("IvorySharp.Integration.SimpleInjector")]
 [assembly:InternalsVisibleTo("IvorySharp.Tests")]
 [assembly:InternalsVisibleTo("IvorySharp.Benchmark")]
 

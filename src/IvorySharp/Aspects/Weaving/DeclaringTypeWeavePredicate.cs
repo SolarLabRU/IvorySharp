@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Selection;
+using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Weaving
 {
@@ -13,8 +14,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Инициализирует экземпляр <see cref="DeclaringTypeWeavePredicate"/>.
         /// </summary>
-        /// <param name="selector">Компонент выбора аспектов.</param>
-        public DeclaringTypeWeavePredicate(IAspectSelector selector)
+        public DeclaringTypeWeavePredicate(IComponentProvider<IAspectSelector> selector)
             : base(selector)
         {
         }
@@ -28,37 +28,41 @@ namespace IvorySharp.Aspects.Weaving
             if (IsWeavingSuppressed(declaringType))
                 return false;
 
+            var selector = AspectSelectorProvider.Get();
+            
             // На интерфейсе есть аспект
-            if (AspectSelector.HasAnyAspect(declaringType, includeAbstract: false))
+            if (selector.HasAnyAspect(declaringType, includeAbstract: false))
                 return true;
 
-            // На методах интерфейсва есть аспекты
-            if (declaringType.GetMethods().Any(m => !IsWeavingSuppressed(m) && AspectSelector.HasAnyAspect(m, includeAbstract: false)))
+            // На методах интерфейса есть аспекты
+            if (declaringType.GetMethods().Any(m => !IsWeavingSuppressed(m) && selector.HasAnyAspect(m, includeAbstract: false)))
                 return true;
 
             var interaces = declaringType.GetInterfaces().Where(i => !IsWeavingSuppressed(i)).ToArray();
 
             // На базовом интерфейсе есть аспект
-            if (interaces.Any(i => AspectSelector.HasAnyAspect(i, includeAbstract: false)))
+            if (interaces.Any(i => selector.HasAnyAspect(i, includeAbstract: false)))
                 return true;
 
             // На методах базового интерфейса есть аспекты
             return interaces.SelectMany(i => i.GetMethods())
                 .Any(m => !IsWeavingSuppressed(m) && 
-                          AspectSelector.HasAnyAspect(m, includeAbstract: false));
+                           selector.HasAnyAspect(m, includeAbstract: false));
         }
 
         /// <inheritdoc />
-        public override bool IsWeaveable(MethodInfo method, Type declaringType, Type targetType)
+        public override bool IsWeaveable(IInvocation invocation)
         {
-            if (!declaringType.IsInterface)
+            if (!invocation.DeclaringType.IsInterface)
                 return false;
 
-            if (IsWeavingSuppressed(method))
+            if (IsWeavingSuppressed(invocation.Method))
                 return false;
 
-            return AspectSelector.HasAnyAspect(method, includeAbstract: false) || 
-                   IsWeaveable(declaringType, targetType);
+            var selector = AspectSelectorProvider.Get();
+            
+            return selector.HasAnyAspect(invocation.Method, includeAbstract: false) || 
+                   IsWeaveable(invocation.DeclaringType, invocation.TargetType);
         }
     }
 }

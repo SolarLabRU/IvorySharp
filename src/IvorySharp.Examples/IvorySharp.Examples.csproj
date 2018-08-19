@@ -9,7 +9,7 @@
     <PackageReference Include="SimpleInjector" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IvorySharp.SimpleInjector\IvorySharp.SimpleInjector.csproj" />
+    <ProjectReference Include="..\IvorySharp.Integration.SimpleInjector\IvorySharp.Integration.SimpleInjector.csproj" />
     <ProjectReference Include="..\IvorySharp\IvorySharp.csproj" />
   </ItemGroup>
 </Project>

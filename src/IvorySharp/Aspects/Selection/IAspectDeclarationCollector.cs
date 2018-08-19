@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Selection
@@ -6,7 +7,7 @@ namespace IvorySharp.Aspects.Selection
     /// <summary>
     /// Компонент, агрегирующий получение аспектов вызова.
     /// </summary>
-    public interface IAspectDeclarationCollector
+    public interface IAspectDeclarationCollector : IComponent
     {
         /// <summary>
         /// Собирает аспекты, которые необходимо внедрить в вызов.

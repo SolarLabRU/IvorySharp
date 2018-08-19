@@ -1,18 +1,25 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Reflection;
 using IvorySharp.Comparers;
+using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Предикат возможности применения аспекта с кешем.
     /// </summary>
-    internal sealed class CachedWeavePredicate : IAspectWeavePredicate
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public sealed class CachedWeavePredicate : IAspectWeavePredicate
     {
         private readonly ConcurrentDictionary<CacheKey, bool> _cache;
         private readonly IAspectWeavePredicate _predicate;
 
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="CachedWeavePredicate"/>.
+        /// </summary>
+        /// <param name="predicate">Исходный предикат.</param>
         public CachedWeavePredicate(IAspectWeavePredicate predicate)
         {
             _predicate = predicate;
@@ -22,15 +29,20 @@ namespace IvorySharp.Aspects.Weaving
         /// <inheritdoc />
         public bool IsWeaveable(Type declaringType, Type targetType)
         {
-            return _cache.GetOrAdd(new CacheKey(declaringType, targetType, null), 
+            return _cache.GetOrAdd(new CacheKey(declaringType, targetType, method: null, targetMethod: null), 
                 key => _predicate.IsWeaveable(key.DeclaringType, key.TargetType));
         }
 
         /// <inheritdoc />
-        public bool IsWeaveable(MethodInfo method, Type declaringType, Type targetType)
+        public bool IsWeaveable(IInvocation invocation)
         {
-            return _cache.GetOrAdd(new CacheKey(declaringType, targetType, method),
-                key => _predicate.IsWeaveable(key.Method, key.DeclaringType, key.TargetType));
+            var key = new CacheKey(
+                invocation.DeclaringType, 
+                invocation.TargetType, 
+                invocation.Method, 
+                invocation.TargetMethod);
+            
+            return _cache.GetOrAdd(key, _ => _predicate.IsWeaveable(invocation));
         }
         
         /// <summary>
@@ -41,12 +53,14 @@ namespace IvorySharp.Aspects.Weaving
             public readonly Type DeclaringType;
             public readonly Type TargetType;
             public readonly MethodInfo Method;
+            public readonly MethodInfo TargetMethod;
 
-            public CacheKey(Type declaringType, Type targetType, MethodInfo method)
+            public CacheKey(Type declaringType, Type targetType, MethodInfo method, MethodInfo targetMethod)
             {
                 DeclaringType = declaringType;
                 TargetType = targetType;
                 Method = method;
+                TargetMethod = targetMethod;
             }
 
             public override bool Equals(object obj)
@@ -59,7 +73,8 @@ namespace IvorySharp.Aspects.Weaving
                     return false;
 
                 return TargetType == key.TargetType && 
-                       MethodEqualityComparer.Instance.Equals(Method, key.Method);
+                       MethodEqualityComparer.Instance.Equals(Method, key.Method) &&
+                       MethodEqualityComparer.Instance.Equals(TargetMethod, key.TargetMethod);
             }
 
             /// <inheritdoc />
@@ -75,6 +90,9 @@ namespace IvorySharp.Aspects.Weaving
                 if (Method != null)
                     hash ^= Method.GetHashCode();
 
+                if (TargetMethod != null)
+                    hash ^= TargetMethod.GetHashCode();
+                
                 return hash;
             }
         }

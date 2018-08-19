@@ -7,14 +7,37 @@ namespace IvorySharp.Reflection
 {
     internal static class Expressions
     {
+        public static string GetMemberName(Expression expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
+            switch (expression)
+            {
+                case MethodCallExpression mce:
+                    return mce.Method.Name;
+                case MemberExpression me:
+                    return me.Member.Name;
+                case UnaryExpression ue:
+                    return GetMemberName(ue.Operand);
+                default:
+                    throw new NotSupportedException($"Выражение типа '{expression.NodeType}' не поддерживается/");
+            }
+        }
+
+        public static string GetMemberName<T1, T2>(Expression<Func<T1, T2>> selector)
+        {
+            return GetMemberName(selector.Body);
+        }
+
         public static Action<object, object> CreatePropertySetter(PropertyInfo property)
         {
-            if (property == null) 
+            if (property == null)
                 throw new ArgumentNullException(nameof(property));
-            
+
             if (property.DeclaringType == null)
                 throw new ArgumentException($"{nameof(property)}.{nameof(property.DeclaringType)}", nameof(property));
-            
+
             var instance = Expression.Parameter(typeof(object), "instance");
             var value = Expression.Parameter(typeof(object), "value");
 
@@ -23,20 +46,20 @@ namespace IvorySharp.Reflection
                     Expression.Convert(instance, property.DeclaringType),
                     property.SetMethod,
                     Expression.Convert(value, property.PropertyType)
-                ), 
+                ),
                 instance, value);
 
             return expression.Compile();
         }
-        
+
         public static Func<object, object[], object> CreateLambda(MethodInfo method)
         {
-            if (method == null) 
+            if (method == null)
                 throw new ArgumentNullException(nameof(method));
-            
+
             if (method.DeclaringType == null)
                 throw new ArgumentException($"{nameof(method)}.{nameof(method.DeclaringType)}", nameof(method));
-            
+
             var instanceParameterExpression = Expression.Parameter(typeof(object), "instance");
             var argumentsParameterExpression = Expression.Parameter(typeof(object[]), "args");
 

@@ -22,8 +22,9 @@
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IvorySharp.CastleWindsor\IvorySharp.CastleWindsor.csproj" />
-    <ProjectReference Include="..\IvorySharp.SimpleInjector\IvorySharp.SimpleInjector.csproj" />
+    <ProjectReference Include="..\IvorySharp.Extensions.ClassAspectSelection\IvorySharp.Extensions.ClassAspectSelection.csproj" />
+    <ProjectReference Include="..\IvorySharp.Integration.CastleWindsor\IvorySharp.Integration.CastleWindsor.csproj" />
+    <ProjectReference Include="..\IvorySharp.Integration.SimpleInjector\IvorySharp.Integration.SimpleInjector.csproj" />
     <ProjectReference Include="..\IvorySharp\IvorySharp.csproj" />
   </ItemGroup>
   <ItemGroup>

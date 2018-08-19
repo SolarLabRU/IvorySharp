@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Caching;
@@ -14,10 +15,10 @@ namespace IvorySharp.Aspects.Creation
     /// </summary>
     internal sealed class AspectFactory : IAspectFactory
     {
-        private readonly IAspectDeclarationCollector _aspectDeclarationCollector;
-        private readonly IAspectDependencyInjector _aspectDependencyInjector;
-        private readonly IAspectOrderStrategy _aspectOrderStrategy;
-
+        private readonly IComponentProvider<IAspectDeclarationCollector> _aspectDeclarationCollectorProvider;
+        private readonly IComponentProvider<IAspectDependencyInjector> _dependencyInjectorProvider;
+        private readonly IComponentProvider<IAspectOrderStrategy> _orderStrategyProvider;
+        
         private readonly Func<IInvocationContext, MethodBoundaryAspect[]> _cachedPrepareMethodBoundaryAspect;
         private readonly Func<IInvocationContext, MethodInterceptionAspect> _cachedPrepareMethodInterceptionAspect;
 
@@ -25,29 +26,30 @@ namespace IvorySharp.Aspects.Creation
         /// Инициализирует экземпляр <see cref="AspectFactory"/>.
         /// </summary>
         public AspectFactory(
-            IAspectDeclarationCollector aspectDeclarationCollector,
-            IAspectDependencyInjector aspectDependencyInjector, 
-            IAspectOrderStrategy aspectOrderStrategy)
+            IComponentProvider<IAspectDeclarationCollector> aspectDeclarationCollectorProvider,
+            IComponentProvider<IAspectDependencyInjector> dependencyInjectorProvider,
+            IComponentProvider<IAspectOrderStrategy> orderStrategyProvider)
         {
-            _aspectDeclarationCollector = aspectDeclarationCollector;
-            _aspectDependencyInjector = aspectDependencyInjector;
-            _aspectOrderStrategy = aspectOrderStrategy;
-
+            _aspectDeclarationCollectorProvider = aspectDeclarationCollectorProvider;
+            _dependencyInjectorProvider = dependencyInjectorProvider;
+            _orderStrategyProvider = orderStrategyProvider;
+            
             _cachedPrepareMethodBoundaryAspect = Memoizer.CreateProducer(PrepareBoundaryAspects,
                 InvocationContextMethodComparer.Instance);
             
             _cachedPrepareMethodInterceptionAspect = Memoizer.CreateProducer(PrepareInterceptAspect,
                 InvocationContextMethodComparer.Instance);
-        }
+        }  
 
         /// <inheritdoc />
         public MethodBoundaryAspect[] CreateBoundaryAspects(IInvocationContext context)
         {
             var aspects = _cachedPrepareMethodBoundaryAspect(context);
-
+            var dependencyInjector = _dependencyInjectorProvider.Get();
+            
             foreach (var aspect in aspects)
             {
-                _aspectDependencyInjector.InjectPropertyDependencies(aspect);
+                dependencyInjector.InjectPropertyDependencies(aspect);
                 aspect.Initialize();
             }
 
@@ -58,8 +60,9 @@ namespace IvorySharp.Aspects.Creation
         public MethodInterceptionAspect CreateInterceptionAspect(IInvocationContext context)
         {
             var aspect = _cachedPrepareMethodInterceptionAspect(context);
-
-            _aspectDependencyInjector.InjectPropertyDependencies(aspect);
+            var dependencyInjector = _dependencyInjectorProvider.Get();
+            
+            dependencyInjector.InjectPropertyDependencies(aspect);
             aspect.Initialize();
 
             return aspect;
@@ -72,10 +75,13 @@ namespace IvorySharp.Aspects.Creation
         /// <returns>Массив не инициализированных аспектов.</returns>
         internal MethodBoundaryAspect[] PrepareBoundaryAspects(IInvocationContext context)
         {
+            var collector = _aspectDeclarationCollectorProvider.Get();
+            var orderer = _orderStrategyProvider.Get();
+            
             var methodBoundaryAspects = new List<MethodBoundaryAspect>();
-            var declarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
+            var declarations = collector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
 
-            foreach (var aspect in _aspectOrderStrategy.Order(declarations.Select(d => d.MethodAspect)))
+            foreach (var aspect in orderer.Order(declarations.Select(d => d.MethodAspect)))
             {
                 var existingAspect = methodBoundaryAspects.Find(aspect.Equals);
                 
@@ -103,7 +109,9 @@ namespace IvorySharp.Aspects.Creation
         /// <returns>Не инициализированный аспект типа <see cref="MethodInterceptionAspect"/>.</returns>
         internal MethodInterceptionAspect PrepareInterceptAspect(IInvocationContext context)
         {
-            var aspectDeclarations = _aspectDeclarationCollector
+            var collector = _aspectDeclarationCollectorProvider.Get();
+            
+            var aspectDeclarations = collector
                 .CollectAspectDeclarations<MethodInterceptionAspect>(context)
                 .ToArray();
 

@@ -1,11 +1,12 @@
-﻿using IvorySharp.Core;
+﻿using IvorySharp.Aspects.Components;
+using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Creation
 {
     /// <summary>
     /// Компонент, выполняющий создание аспектов.
     /// </summary>
-    public interface IAspectFactory
+    public interface IAspectFactory : IComponent
     {
         /// <summary>
         /// Создает аспекты типа <see cref="MethodBoundaryAspect"/> из модели вызова <paramref name="context"/>.

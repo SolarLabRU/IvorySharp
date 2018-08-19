@@ -17,7 +17,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IvorySharp.CastleWindsor\IvorySharp.CastleWindsor.csproj" />
+    <ProjectReference Include="..\IvorySharp.Integration.CastleWindsor\IvorySharp.Integration.CastleWindsor.csproj" />
     <ProjectReference Include="..\IvorySharp\IvorySharp.csproj" />
   </ItemGroup>
   <ItemGroup>

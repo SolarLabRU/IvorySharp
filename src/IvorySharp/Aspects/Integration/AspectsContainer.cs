@@ -1,4 +1,5 @@
-﻿using IvorySharp.Aspects.Configuration;
+﻿using IvorySharp.Aspects.Components;
+using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Dependency;
 using JetBrains.Annotations;
 
