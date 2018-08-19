@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IvorySharp.Aspects.Components
+namespace IvorySharp.Components
 {
     /// <summary>
     /// Провайдер компонентов на основе <see cref="Lazy{T}"/>.

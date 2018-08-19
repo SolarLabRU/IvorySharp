@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using IvorySharp.Aspects.Components;
+using IvorySharp.Components;
 
 namespace IvorySharp.Aspects.Selection
 {

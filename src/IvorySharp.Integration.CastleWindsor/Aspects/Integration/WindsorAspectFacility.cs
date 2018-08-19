@@ -2,7 +2,7 @@
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Facilities;
-using IvorySharp.Aspects.Components;
+using IvorySharp.Components;
 using IvorySharp.Extensions;
 using IvorySharp.Integration.CastleWindsor.Aspects.Weaving;
 

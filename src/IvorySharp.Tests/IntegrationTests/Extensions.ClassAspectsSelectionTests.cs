@@ -1,12 +1,12 @@
 ﻿using System;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
+using IvorySharp.Components;
 using IvorySharp.Extensions.ClassAspectSelection;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Selection;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Weaving;

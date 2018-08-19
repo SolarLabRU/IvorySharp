@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Selection;
+using IvorySharp.Components;
 using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Weaving

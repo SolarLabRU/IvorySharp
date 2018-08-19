@@ -1,4 +1,4 @@
-﻿namespace IvorySharp.Aspects.Components
+﻿namespace IvorySharp.Components
 {
     /// <summary>
     /// Провайдер компонента.

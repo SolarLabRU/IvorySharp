@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Caching;
+using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
 

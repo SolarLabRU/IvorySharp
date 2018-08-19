@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Components;
 using IvorySharp.Tests.Assets;
 using Xunit;
 

@@ -1,4 +1,4 @@
-﻿using IvorySharp.Aspects.Components;
+﻿using IvorySharp.Components;
 
 namespace IvorySharp.Aspects.Dependency
 {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using IvorySharp.Aspects.Components;
+using IvorySharp.Components;
 using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Selection

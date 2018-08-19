@@ -1,9 +1,9 @@
-﻿using IvorySharp.Aspects.Components;
-using IvorySharp.Aspects.Creation;
+﻿using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
+using IvorySharp.Components;
 
 namespace IvorySharp.Aspects.Configuration
 {

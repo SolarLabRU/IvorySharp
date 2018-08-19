@@ -1,4 +1,4 @@
-﻿using IvorySharp.Aspects.Components;
+﻿using IvorySharp.Components;
 using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Creation

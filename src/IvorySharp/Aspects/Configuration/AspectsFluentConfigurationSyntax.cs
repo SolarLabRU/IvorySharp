@@ -2,8 +2,8 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Integration;
+using IvorySharp.Components;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Configuration

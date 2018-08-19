@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using IvorySharp.Aspects.Components;
+using IvorySharp.Components;
 
 namespace IvorySharp.Aspects.Selection
 {

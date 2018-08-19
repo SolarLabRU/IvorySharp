@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Selection;
+using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Aspects;

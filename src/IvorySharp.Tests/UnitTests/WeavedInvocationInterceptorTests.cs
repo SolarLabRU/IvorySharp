@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Weaving;
+using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Tests.Assets.Invocations;
 using Moq;

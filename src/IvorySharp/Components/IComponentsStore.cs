@@ -6,7 +6,7 @@ using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
 using JetBrains.Annotations;
 
-namespace IvorySharp.Aspects.Components
+namespace IvorySharp.Components
 {
     /// <summary>
     /// Компоненты библиотеки.

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
-using IvorySharp.Aspects.Components;
+using IvorySharp.Components;
 using IvorySharp.Reflection;
 using JetBrains.Annotations;
-using IComponent = IvorySharp.Aspects.Components.IComponent;
+using IComponent = IvorySharp.Components.IComponent;
 
 namespace IvorySharp.Aspects.Configuration
 {

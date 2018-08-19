@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using JetBrains.Annotations;
 
-namespace IvorySharp.Aspects.Components
+namespace IvorySharp.Components
 {
     /// <summary>
     /// Компонент библиотеки.

@@ -1,6 +1,6 @@
-﻿using IvorySharp.Aspects.Components;
-using IvorySharp.Aspects.Configuration;
+﻿using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Dependency;
+using IvorySharp.Components;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Integration

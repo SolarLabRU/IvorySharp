@@ -1,5 +1,5 @@
 ﻿using System;
-using IvorySharp.Aspects.Components;
+using IvorySharp.Components;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Dependency

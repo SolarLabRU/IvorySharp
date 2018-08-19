@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
+using IvorySharp.Components;
 using IvorySharp.Integration.CastleWindsor.Aspects.Integration;
 using IvorySharp.Integration.SimpleInjector.Aspects.Integration;
 using SimpleInjector;

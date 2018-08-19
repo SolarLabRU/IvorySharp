@@ -1,7 +1,7 @@
 ﻿using System;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Components;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Weaving

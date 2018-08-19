@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
+using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Extensions.ClassAspectSelection.Extensions;
 

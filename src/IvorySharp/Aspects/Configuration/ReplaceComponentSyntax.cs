@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
-using IvorySharp.Aspects.Components;
+using IvorySharp.Components;
 using JetBrains.Annotations;
-using IComponent = IvorySharp.Aspects.Components.IComponent;
+using IComponent = IvorySharp.Components.IComponent;
 
 namespace IvorySharp.Aspects.Configuration
 {

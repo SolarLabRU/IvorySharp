@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
-using IvorySharp.Aspects.Components;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Caching;
+using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Proxying;
 using JetBrains.Annotations;
