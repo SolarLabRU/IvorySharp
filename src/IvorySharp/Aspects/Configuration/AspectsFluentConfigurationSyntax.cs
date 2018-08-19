@@ -64,6 +64,8 @@ namespace IvorySharp.Aspects.Configuration
 
             configurator(_aspectsConfiguration);
             
+            _componentsStore.Freeze();
+            
             _container.BindAspects(_aspectsConfiguration.ComponentsStore);
         }
 
