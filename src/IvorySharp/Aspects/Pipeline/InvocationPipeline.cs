@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
 
-namespace IvorySharp.Aspects.Pipeline.Synchronous
+namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
     /// Модель пайплайна выполнения метода.

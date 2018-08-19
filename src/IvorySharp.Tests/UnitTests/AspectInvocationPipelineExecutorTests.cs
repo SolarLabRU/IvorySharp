@@ -1,7 +1,6 @@
 ﻿using System;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Pipeline;
-using IvorySharp.Aspects.Pipeline.Synchronous;
 using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Aspects;
 using IvorySharp.Tests.Assets.Invocations;

@@ -1,5 +1,4 @@
-﻿using IvorySharp.Aspects.Pipeline.Synchronous;
-using IvorySharp.Core;
+﻿using IvorySharp.Core;
 using IvorySharp.Exceptions;
 using Xunit;
 

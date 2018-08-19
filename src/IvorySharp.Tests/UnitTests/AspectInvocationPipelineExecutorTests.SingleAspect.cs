@@ -1,5 +1,5 @@
 ﻿using System;
-using IvorySharp.Aspects.Pipeline.Synchronous;
+using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Tests.Asserts;
 using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Aspects;

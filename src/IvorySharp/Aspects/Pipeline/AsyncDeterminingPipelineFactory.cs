@@ -1,5 +1,4 @@
 using IvorySharp.Aspects.Pipeline.Async;
-using IvorySharp.Aspects.Pipeline.Synchronous;
 using IvorySharp.Caching;
 using IvorySharp.Core;
 

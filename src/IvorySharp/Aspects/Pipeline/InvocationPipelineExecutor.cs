@@ -1,6 +1,6 @@
 ﻿using IvorySharp.Aspects.Pipeline.StateMachine;
 
-namespace IvorySharp.Aspects.Pipeline.Synchronous
+namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
     /// Выполняет пайплайн <see cref="InvocationPipeline"/>.
