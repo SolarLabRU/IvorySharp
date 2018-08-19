@@ -13,8 +13,7 @@ namespace IvorySharp.Aspects.Weaving
     public sealed class AspectWeaver
     {
         private readonly IComponentProvider<IInvocationPipelineFactory> _pipelineFactoryProvider;
-        private readonly IComponentProvider<IAspectFactory<MethodBoundaryAspect>> _boundaryAspectFactoryProvider;
-        private readonly IComponentProvider<IAspectFactory<MethodInterceptionAspect>> _interceptionAspectFactoryProvider;
+        private readonly IComponentProvider<IAspectFactory> _aspectFactoryProvider;
         private readonly IComponentProvider<IAspectWeavePredicate> _aspectWeavePredicateProvider;
 
         /// <summary>
@@ -22,13 +21,11 @@ namespace IvorySharp.Aspects.Weaving
         /// </summary>
         public AspectWeaver(
             IComponentProvider<IAspectWeavePredicate> aspectWeavePredicateProvider, 
-            IComponentProvider<IAspectFactory<MethodBoundaryAspect>> boundaryAspectFactoryProvider,
-            IComponentProvider<IAspectFactory<MethodInterceptionAspect>> interceptionAspectFactoryProvider,
-            IComponentProvider<IInvocationPipelineFactory> pipelineFactoryProvider)
+            IComponentProvider<IInvocationPipelineFactory> pipelineFactoryProvider, 
+            IComponentProvider<IAspectFactory> aspectFactoryProvider)
         {
             _pipelineFactoryProvider = pipelineFactoryProvider;
-            _interceptionAspectFactoryProvider = interceptionAspectFactoryProvider;
-            _boundaryAspectFactoryProvider = boundaryAspectFactoryProvider;
+            _aspectFactoryProvider = aspectFactoryProvider;
             _aspectWeavePredicateProvider = aspectWeavePredicateProvider;
         }
 
@@ -45,8 +42,7 @@ namespace IvorySharp.Aspects.Weaving
                 target, 
                 targetType, 
                 declaringType, 
-                _boundaryAspectFactoryProvider,
-                _interceptionAspectFactoryProvider,
+                _aspectFactoryProvider, 
                 _pipelineFactoryProvider,
                 _aspectWeavePredicateProvider);
         }

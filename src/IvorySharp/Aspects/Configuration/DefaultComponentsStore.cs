@@ -26,10 +26,7 @@ namespace IvorySharp.Aspects.Configuration
         public IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectFactory<MethodBoundaryAspect>> BoundaryAspectFactory { get; }
-
-        /// <inheritdoc />
-        public IComponentProvider<IAspectFactory<MethodInterceptionAspect>> InterceptionAspectFactory { get; }
+        public IComponentProvider<IAspectFactory> AspectFactory { get; }
 
         /// <inheritdoc />
         public IComponentProvider<IAspectDependencyInjector> AspectDependencyInjector { get; }
@@ -42,12 +39,9 @@ namespace IvorySharp.Aspects.Configuration
             DependencyProvider = dependencyProvider.ToProvider();
             
             AspectSelector = new LazyComponentProvider<IAspectSelector>(() => new DefaultAspectSelector());
-            
-            var declaringTypeWeavePredicate = new LazyComponentProvider<IAspectWeavePredicate>(
-                () => new DeclaringTypeWeavePredicate(AspectSelector));
-            
             AspectWeavePredicate = new LazyComponentProvider<IAspectWeavePredicate>(
-                () => new CachedWeavePredicate(declaringTypeWeavePredicate));
+                () => new CachedWeavePredicate(
+                    new DeclaringTypeWeavePredicate(AspectSelector)));
             
             AspectDeclarationCollector = new LazyComponentProvider<IAspectDeclarationCollector>(
                 () => new DeclaringTypeAspectDeclarationCollector(AspectSelector));
@@ -55,46 +49,14 @@ namespace IvorySharp.Aspects.Configuration
             PipelineFactory = new LazyComponentProvider<IInvocationPipelineFactory>(
                 () => new AsyncDeterminingPipelineFactory(MethodCache.Instance));
             
-            var defaultBoundaryAspectPreinitializer = 
-                new LazyComponentProvider<IAspectPreInitializer<MethodBoundaryAspect>>(
-                    () => new DefaultAspectPreInitializer<MethodBoundaryAspect>(
-                        AspectDeclarationCollector, 
-                        AspectOrderStrategy));
-            
-            var cachedBoundaryAspectPreinitializer 
-                = new LazyComponentProvider<IAspectPreInitializer<MethodBoundaryAspect>>(
-                    () => new CachedAspectPreInitializer<MethodBoundaryAspect>(
-                        defaultBoundaryAspectPreinitializer));
-
-            BoundaryAspectFactory = new LazyComponentProvider<IAspectFactory<MethodBoundaryAspect>>(
-                () => new DefaultAspectFactory<MethodBoundaryAspect>(
+            AspectFactory = new LazyComponentProvider<IAspectFactory>(
+                () => new AspectFactory(
+                    AspectDeclarationCollector, 
                     AspectDependencyInjector,
-                    cachedBoundaryAspectPreinitializer));
-
-            var defaultInterceptionAspectPreinitializer = 
-                new LazyComponentProvider<IAspectPreInitializer<MethodInterceptionAspect>>(
-                    () => new DefaultAspectPreInitializer<MethodInterceptionAspect>(
-                        AspectDeclarationCollector, 
-                        AspectOrderStrategy));
-            
-            var cachedInterceptionAspectPreinitializer 
-                = new LazyComponentProvider<IAspectPreInitializer<MethodInterceptionAspect>>(
-                    () => new CachedAspectPreInitializer<MethodInterceptionAspect>(
-                        defaultInterceptionAspectPreinitializer));
-            
-            InterceptionAspectFactory = new LazyComponentProvider<IAspectFactory<MethodInterceptionAspect>>(
-                () => new MethodInterceptionAspectFactory(
-                    AspectDependencyInjector, 
-                    cachedInterceptionAspectPreinitializer));
-            
-            var defaultAspectDependencyProvider = new LazyComponentProvider<IAspectDependencyProvider>(
-                () => new DefaultAspectDependencyProvider());
-            
-            var cachedAspectDependencyProvider = new LazyComponentProvider<IAspectDependencyProvider>(
-                () => new CachedAspectDependencyProvider(defaultAspectDependencyProvider));
+                    AspectOrderStrategy));
             
             AspectDependencyInjector = new LazyComponentProvider<IAspectDependencyInjector>(
-                () => new AspectDependencyInjector(DependencyProvider, cachedAspectDependencyProvider));
+                () => new AspectDependencyInjector(dependencyProvider));
             
             AspectOrderStrategy = new LazyComponentProvider<IAspectOrderStrategy>(
                 () => new DefaultAspectOrderStrategy());

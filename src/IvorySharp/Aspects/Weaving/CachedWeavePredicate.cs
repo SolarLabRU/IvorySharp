@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.ComponentModel;
-using IvorySharp.Caching;
-using IvorySharp.Components;
+using System.Reflection;
+using IvorySharp.Comparers;
 using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Weaving
@@ -12,77 +13,87 @@ namespace IvorySharp.Aspects.Weaving
     [EditorBrowsable(EditorBrowsableState.Never)]
     public sealed class CachedWeavePredicate : IAspectWeavePredicate
     {
-        private readonly IComponentProvider<IAspectWeavePredicate> _predicateProvider;
+        private readonly ConcurrentDictionary<CacheKey, bool> _cache;
+        private readonly IAspectWeavePredicate _predicate;
 
-        private Func<IInvocation, bool> _isWeaveableInvocationCached;
-        private Func<TypePair, bool> _isWeaveableTypeCached;
-        
         /// <summary>
         /// Инициализирует экземпляр <see cref="CachedWeavePredicate"/>.
         /// </summary>
-        /// <param name="predicateProvider">Исходный предикат.</param>
-        public CachedWeavePredicate(IComponentProvider<IAspectWeavePredicate> predicateProvider)
+        /// <param name="predicate">Исходный предикат.</param>
+        public CachedWeavePredicate(IAspectWeavePredicate predicate)
         {
-            _predicateProvider = predicateProvider;
+            _predicate = predicate;
+            _cache = new ConcurrentDictionary<CacheKey, bool>();
         }
         
         /// <inheritdoc />
         public bool IsWeaveable(Type declaringType, Type targetType)
         {
-            if (_isWeaveableTypeCached == null)
-                _isWeaveableTypeCached = Memoizer.CreateProducer<TypePair, bool>(
-                    tp => _predicateProvider.Get().IsWeaveable(tp.DeclaringType, tp.TargetType));
-
-            return _isWeaveableTypeCached(new TypePair(declaringType, targetType));
+            return _cache.GetOrAdd(new CacheKey(declaringType, targetType, method: null, targetMethod: null), 
+                key => _predicate.IsWeaveable(key.DeclaringType, key.TargetType));
         }
 
         /// <inheritdoc />
         public bool IsWeaveable(IInvocation invocation)
         {
-            if (_isWeaveableInvocationCached == null)
-                _isWeaveableInvocationCached = Memoizer.CreateProducer<IInvocation, bool>(
-                    i => _predicateProvider.Get().IsWeaveable(i));
-
-            return _isWeaveableInvocationCached(invocation);
+            var key = new CacheKey(
+                invocation.DeclaringType, 
+                invocation.TargetType, 
+                invocation.Method, 
+                invocation.TargetMethod);
+            
+            return _cache.GetOrAdd(key, _ => _predicate.IsWeaveable(invocation));
         }
         
         /// <summary>
-        /// Пара типов.
+        /// Ключ кеша.
         /// </summary>
-        private sealed class TypePair
+        private class CacheKey
         {
             public readonly Type DeclaringType;
             public readonly Type TargetType;
+            public readonly MethodInfo Method;
+            public readonly MethodInfo TargetMethod;
 
-            public TypePair(Type declaringType, Type targetType)
+            public CacheKey(Type declaringType, Type targetType, MethodInfo method, MethodInfo targetMethod)
             {
                 DeclaringType = declaringType;
                 TargetType = targetType;
+                Method = method;
+                TargetMethod = targetMethod;
             }
 
-            private bool Equals(TypePair other)
-            {
-                return DeclaringType == other.DeclaringType &&
-                       TargetType == other.TargetType;
-            }
-
-            /// <inheritdoc />
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != GetType()) return false;
-                return Equals((TypePair) obj);
+                var key = obj as CacheKey;
+                if (key == null)
+                    return false;
+
+                if (DeclaringType != key.DeclaringType)
+                    return false;
+
+                return TargetType == key.TargetType && 
+                       MethodEqualityComparer.Instance.Equals(Method, key.Method) &&
+                       MethodEqualityComparer.Instance.Equals(TargetMethod, key.TargetMethod);
             }
 
             /// <inheritdoc />
             public override int GetHashCode()
             {
-                unchecked
-                {
-                    return ((DeclaringType != null ? DeclaringType.GetHashCode() : 0) * 397) ^ 
-                           (TargetType != null ? TargetType.GetHashCode() : 0);
-                }
+                var hash = 0;
+                if (DeclaringType != null)
+                    hash ^= DeclaringType.GetHashCode();
+
+                if (TargetType != null)
+                    hash ^= TargetType.GetHashCode();
+
+                if (Method != null)
+                    hash ^= Method.GetHashCode();
+
+                if (TargetMethod != null)
+                    hash ^= TargetMethod.GetHashCode();
+                
+                return hash;
             }
         }
     }

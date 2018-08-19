@@ -29,11 +29,7 @@ namespace IvorySharp.Integration.SimpleInjector.Aspects.Integration
         /// <inheritdoc />
         public override void BindAspects(IComponentsStore components)
         {  
-            var weaver = new AspectWeaver(
-                components.AspectWeavePredicate,
-                components.BoundaryAspectFactory,
-                components.InterceptionAspectFactory,
-                components.PipelineFactory);
+            var weaver = new AspectWeaver(components.AspectWeavePredicate, components.PipelineFactory, components.AspectFactory);
 
             object Proxier(object o, Type declaredType, Type targetType) => weaver.Weave(o, declaredType, targetType);
 

@@ -1,6 +1,5 @@
 ﻿using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
-using IvorySharp.Components;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Selection;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Weaving;
 
@@ -18,11 +17,10 @@ namespace IvorySharp.Extensions.ClassAspectSelection
         {
             configuration.ReplaceComponent(s => s.AspectDeclarationCollector)
                 .Use(st => new TargetTypeAspectDeclarationCollector(st.AspectSelector));
-
+                    
             configuration.ReplaceComponent(s => s.AspectWeavePredicate)
                 .Use(st => new CachedWeavePredicate(
-                    new InstanceComponentProvider<IAspectWeavePredicate>(
-                        new TargetTypeWeavePredicate(st.AspectSelector))));
+                    new TargetTypeWeavePredicate(st.AspectSelector)));
         }
     }
 }

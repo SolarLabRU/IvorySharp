@@ -21,10 +21,7 @@ namespace IvorySharp.Integration.CastleWindsor.Aspects.Weaving
         public WeavedInterceptor(IComponentsStore components)
         {
             _invocationFacade = new InvocationInterceptor(
-                components.BoundaryAspectFactory, 
-                components.InterceptionAspectFactory, 
-                components.PipelineFactory, 
-                components.AspectWeavePredicate);
+                components.AspectFactory, components.PipelineFactory, components.AspectWeavePredicate);
         }
 
         /// <inheritdoc />

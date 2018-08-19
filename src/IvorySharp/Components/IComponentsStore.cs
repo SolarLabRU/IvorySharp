@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using IvorySharp.Aspects;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
@@ -13,8 +12,8 @@ namespace IvorySharp.Components
     /// Компоненты библиотеки.
     /// </summary>
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IComponentsStore
-    {
+    public interface IComponentsStore 
+    { 
         /// <summary>
         /// Провайдер зависимостей.
         /// </summary>
@@ -41,14 +40,9 @@ namespace IvorySharp.Components
         IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; }
 
         /// <summary>
-        /// Компонент, создающий аспекты типа <see cref="MethodBoundaryAspect"/>.
+        /// Компонент, выпонялющий инициализацию аспектов.
         /// </summary>
-        IComponentProvider<IAspectFactory<MethodBoundaryAspect>> BoundaryAspectFactory { get; }
-
-        /// <summary>
-        /// Компонент, создающий аспекты типа <see cref="MethodInterceptionAspect"/>.
-        /// </summary>
-        IComponentProvider<IAspectFactory<MethodInterceptionAspect>> InterceptionAspectFactory { get; }
+        IComponentProvider<IAspectFactory> AspectFactory { get; }
 
         /// <summary>
         /// Компонент, для внедрения зависимостей в аспекты.

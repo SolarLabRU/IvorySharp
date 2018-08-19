@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Components;
@@ -12,8 +11,7 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     internal sealed class InvocationInterceptor
     {
-        private readonly IComponentProvider<IAspectFactory<MethodBoundaryAspect>> _boundaryAspectFactoryProvider;
-        private readonly IComponentProvider<IAspectFactory<MethodInterceptionAspect>> _interceptionAspectFactoryProvider;
+        private readonly IComponentProvider<IAspectFactory> _aspectFactoryProvider;
         private readonly IComponentProvider<IInvocationPipelineFactory> _pipelineFactoryProvider;
         private readonly IComponentProvider<IAspectWeavePredicate> _aspectWeavePredicateProvider;
         
@@ -21,13 +19,11 @@ namespace IvorySharp.Aspects.Weaving
         /// Инициализирует экземпляр <see cref="InvocationInterceptor"/>.
         /// </summary>
         public InvocationInterceptor(
-            IComponentProvider<IAspectFactory<MethodBoundaryAspect>> boundaryAspectFactoryProvider,
-            IComponentProvider<IAspectFactory<MethodInterceptionAspect>> interceptionAspectFactoryProvider,
+            IComponentProvider<IAspectFactory>  aspectFactoryProvider,
             IComponentProvider<IInvocationPipelineFactory> pipelineFactoryProvider,
             IComponentProvider<IAspectWeavePredicate> aspectWeavePredicateProvider)
         {
-            _boundaryAspectFactoryProvider = boundaryAspectFactoryProvider;
-            _interceptionAspectFactoryProvider = interceptionAspectFactoryProvider;
+            _aspectFactoryProvider = aspectFactoryProvider;
             _pipelineFactoryProvider = pipelineFactoryProvider;         
             _aspectWeavePredicateProvider = aspectWeavePredicateProvider;
         }
@@ -46,15 +42,11 @@ namespace IvorySharp.Aspects.Weaving
                 return invocation.Proceed();
             }
 
-            var pipelineFactory = _pipelineFactoryProvider.Get();       
+            var aspectFactory = _aspectFactoryProvider.Get();
+            var pipelineFactory = _pipelineFactoryProvider.Get();
             
-            var boundaryAspects = _boundaryAspectFactoryProvider.Get().CreateAspects(invocation);       
-            var interceptAspect = _interceptionAspectFactoryProvider.Get().CreateAspects(invocation)
-                .SingleOrDefault();
-
-            if (interceptAspect == null)
-                interceptAspect = BypassMethodAspect.Instance;
-            
+            var boundaryAspects = aspectFactory.CreateBoundaryAspects(invocation);
+            var interceptAspect = aspectFactory.CreateInterceptionAspect(invocation);
             var executor = pipelineFactory.CreateExecutor(invocation);
             var pipeline = pipelineFactory.CreatePipeline(invocation, boundaryAspects, interceptAspect);    
             

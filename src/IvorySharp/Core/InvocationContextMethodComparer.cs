@@ -4,7 +4,7 @@ using IvorySharp.Comparers;
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Выполняет сравнение контекстов на основе методов.
+    /// Выполняет сравнение контекстов на основе метода.
     /// </summary>
     internal sealed class InvocationContextMethodComparer : IEqualityComparer<IInvocationContext>
     {
@@ -20,8 +20,8 @@ namespace IvorySharp.Core
             if (ReferenceEquals(x, null)) return false;
             if (ReferenceEquals(y, null)) return false;
                 
-            return MethodEqualityComparer.Instance.Equals(x.Method, y.Method) &&
-                   MethodEqualityComparer.Instance.Equals(x.TargetMethod, y.TargetMethod);
+            return x.GetType() == y.GetType() && 
+                   MethodEqualityComparer.Instance.Equals(x.Method, y.Method);
         }
 
         /// <inheritdoc />
