@@ -42,9 +42,12 @@ namespace IvorySharp.Aspects.Configuration
             DependencyProvider = dependencyProvider.ToProvider();
             
             AspectSelector = new LazyComponentProvider<IAspectSelector>(() => new DefaultAspectSelector());
+            
+            var declaringTypeWeavePredicate = new LazyComponentProvider<IAspectWeavePredicate>(
+                () => new DeclaringTypeWeavePredicate(AspectSelector));
+            
             AspectWeavePredicate = new LazyComponentProvider<IAspectWeavePredicate>(
-                () => new CachedWeavePredicate(
-                    new DeclaringTypeWeavePredicate(AspectSelector)));
+                () => new CachedWeavePredicate(declaringTypeWeavePredicate));
             
             AspectDeclarationCollector = new LazyComponentProvider<IAspectDeclarationCollector>(
                 () => new DeclaringTypeAspectDeclarationCollector(AspectSelector));

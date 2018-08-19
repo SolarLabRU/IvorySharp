@@ -76,5 +76,36 @@ namespace IvorySharp.Core
             
             return null;
         }
+        
+        /// <summary>
+        /// Выполняет сравнение вызовов.
+        /// </summary>
+        protected bool Equals(AbstractInvocation other)
+        {
+            return Equals(Method, other.Method) && 
+                   DeclaringType == other.DeclaringType &&
+                   TargetType == other.TargetType;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((AbstractInvocation) obj);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (Method != null ? Method.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (DeclaringType != null ? DeclaringType.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (TargetType != null ? TargetType.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
     }
 }
