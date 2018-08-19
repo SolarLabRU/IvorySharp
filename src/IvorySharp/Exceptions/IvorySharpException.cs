@@ -7,7 +7,7 @@ namespace IvorySharp.Exceptions
     /// Исключение, возникающее при работе с библиотекой.
     /// </summary>
     [Serializable]
-    public class IvorySharpException : Exception
+    public sealed class IvorySharpException : Exception
     {
         /// <summary>
         /// Инициализирует экземпляр <see cref="IvorySharpException"/>.

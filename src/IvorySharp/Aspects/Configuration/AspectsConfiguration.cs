@@ -7,7 +7,7 @@ namespace IvorySharp.Aspects.Configuration
     /// Модель настройки аспектов.
     /// </summary>
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
-    public class AspectsConfiguration
+    public sealed class AspectsConfiguration
     {
         /// <summary>
         /// Набор компонентов библиотеки.

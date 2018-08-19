@@ -8,7 +8,7 @@ namespace IvorySharp.Proxying.Generators
     /// <summary>
     /// Выполняет генерацию атрибута для игнорирования модификаторов доступа сборки.
     /// </summary>
-    internal class IgnoresAccessChecksToAttributeTypeGenerator : AbstractTypeGenerator
+    internal sealed class IgnoresAccessChecksToAttributeTypeGenerator : AbstractTypeGenerator
     {
         public IgnoresAccessChecksToAttributeTypeGenerator(ModuleBuilder moduleBuilder)
             : base(CreateTypeBuilder(moduleBuilder))

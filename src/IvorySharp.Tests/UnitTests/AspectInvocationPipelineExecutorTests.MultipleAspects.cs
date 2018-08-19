@@ -63,7 +63,7 @@ namespace IvorySharp.Tests.UnitTests
         }
 
         [Fact]
-        public void MultipleAspect_OnException_ThrowException_In_OnEntry_Handled_InnerAspects_OnEntry_OnExit_Called()
+        public void MultipleAspect_ThrowException_In_OnEntry_Handled_InnerAspects_OnEntry_OnExit_Called()
         {
             // Arrange
             var afterBreaker = new ObservableAspect { InternalOrder = 2 };

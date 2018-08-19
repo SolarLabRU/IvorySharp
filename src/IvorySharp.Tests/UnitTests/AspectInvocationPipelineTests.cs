@@ -25,7 +25,7 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_Rethow_Should_SetException_And_ChangeFlow_To_Rethow()
         {
             // Arrage
-            var pipeline = new SyncAspectInvocationPipeline(_voidMethodReturnInvocation, null, null);
+            var pipeline = new InvocationPipeline(_voidMethodReturnInvocation, null, null);
             var exception = new ArgumentException();
 
             // Act
@@ -40,7 +40,7 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_Throw_Should_SetException_And_ChangeFlow_To_Throw()
         {
             // Arrage
-            var pipeline = new SyncAspectInvocationPipeline(_voidMethodReturnInvocation, null, null);
+            var pipeline = new InvocationPipeline(_voidMethodReturnInvocation, null, null);
             var exception = new ArgumentException();
 
             // Act
@@ -55,7 +55,7 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_Return_ShouldSet_ReturnValue_And_ChangeFlow_To_Return()
         {
             // Arrange
-            var pipeline = new SyncAspectInvocationPipeline(_returnTenMethodInvocation, null, null);
+            var pipeline = new InvocationPipeline(_returnTenMethodInvocation, null, null);
             
             // Act
             pipeline.Return();
@@ -69,7 +69,7 @@ namespace IvorySharp.Tests.UnitTests
         public void Call_ReturnValue_ShouldSet_ReturnValue_And_ChangeFlow_To_Return()
         {
             // Arrange
-            var pipeline = new SyncAspectInvocationPipeline(_returnTenMethodInvocation, null, null);
+            var pipeline = new InvocationPipeline(_returnTenMethodInvocation, null, null);
             
             // Act
             pipeline.ReturnValue(15);

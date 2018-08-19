@@ -5,7 +5,7 @@ namespace IvorySharp.Aspects
     /// <summary>
     /// Реализация аспекта для перехвата метода, которая ничего не делает (просто вызывает метод).
     /// </summary>
-    internal class BypassMethodAspect : MethodInterceptionAspect
+    internal sealed class BypassMethodAspect : MethodInterceptionAspect
     {
         /// <summary>
         /// Экземпляр аспекта.

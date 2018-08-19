@@ -9,7 +9,7 @@ namespace IvorySharp.Aspects.Configuration
     /// <summary>
     /// Компоненты библиотеки.
     /// </summary>
-    internal class MutableComponentsStore : IComponentsStore
+    internal sealed class MutableComponentsStore : IComponentsStore
     {
         /// <inheritdoc />
         public IDependencyProvider DependencyProvider { get; set; }

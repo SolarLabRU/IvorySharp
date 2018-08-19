@@ -13,7 +13,7 @@ namespace IvorySharp.Proxying
     /// <summary>
     /// Динамическая сборка.
     /// </summary>
-    internal class ProxyAssembly
+    internal sealed class ProxyAssembly
     {
         private readonly HashSet<string> _ignoreAccessCheckAssemblies;
         private readonly Lazy<TypeInfo> _ignoreAccessCheckAttributeProvider;

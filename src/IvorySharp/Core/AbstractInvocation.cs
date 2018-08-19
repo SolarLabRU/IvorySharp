@@ -73,6 +73,7 @@ namespace IvorySharp.Core
         {
             if (TargetType != null && Method != null)
                 return MethodCache.Instance.GetMethodMap(TargetType, Method);
+            
             return null;
         }
     }

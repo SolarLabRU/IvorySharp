@@ -9,7 +9,7 @@ namespace IvorySharp.Core
     /// <summary>
     /// Модель выполнения метода.
     /// </summary>
-    public class Invocation : AbstractInvocation
+    public sealed class Invocation : AbstractInvocation
     {
         /// <summary>
         /// Делегат для быстрого вызова метода.

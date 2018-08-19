@@ -7,7 +7,7 @@ namespace IvorySharp.Proxying.Emitters
     /// Вспомогательный класс для эмита массивов.
     /// </summary>
     /// <typeparam name="T">Тип массива.</typeparam>
-    internal class ArrayEmitter<T>
+    internal sealed class ArrayEmitter<T>
     {
         private readonly ILGenerator _ilGenerator;
         private readonly LocalBuilder _localBuilder;

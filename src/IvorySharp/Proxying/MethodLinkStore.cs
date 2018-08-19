@@ -7,7 +7,7 @@ namespace IvorySharp.Proxying
     /// <summary>
     /// Хранит связь вида [Method -> Token] [Token -> Method].
     /// </summary>
-    internal class MethodLinkStore
+    internal sealed class MethodLinkStore
     {
         private readonly Dictionary<MethodBase, int> _methodToKey;
         private readonly List<MethodBase> _methodsByKey;

@@ -9,7 +9,7 @@ namespace IvorySharp.Aspects.Configuration
     /// Синтаксис конфигурации аспектов.
     /// </summary>
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
-    public class AspectsFluentConfigurationSyntax
+    public sealed class AspectsFluentConfigurationSyntax
     {
         private readonly MutableComponentsStore _componentsStore;
         private readonly AspectsConfiguration _aspectsConfiguration;

@@ -13,7 +13,7 @@ namespace IvorySharp.Proxying.Generators
     /// <summary>
     /// Генератор для создания типа прокси.
     /// </summary>
-    internal class ProxyTypeGenerator : AbstractTypeGenerator
+    internal sealed class ProxyTypeGenerator : AbstractTypeGenerator
     {
         private readonly FieldBuilder _invokeDelegateField;
         private readonly ProxyAssembly _proxyAssembly;

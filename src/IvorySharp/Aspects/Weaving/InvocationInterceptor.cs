@@ -8,7 +8,7 @@ namespace IvorySharp.Aspects.Weaving
     /// <summary>
     /// Класс, содержащий логику перехвата вызываемого метода.
     /// </summary>
-    internal class InvocationInterceptor
+    internal sealed class InvocationInterceptor
     {
         private readonly IAspectFactory _aspectFactory;
         private readonly IInvocationPipelineFactory _pipelineFactory;

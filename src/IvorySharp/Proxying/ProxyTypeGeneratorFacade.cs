@@ -8,7 +8,7 @@ namespace IvorySharp.Proxying
     /// <summary>
     /// Фасад для генерации типа прокси.
     /// </summary>
-    internal class ProxyTypeGeneratorFacade
+    internal sealed class ProxyTypeGeneratorFacade
     {
         private readonly ProxyAssembly _proxyAssembly;
 

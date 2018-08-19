@@ -9,7 +9,7 @@ namespace IvorySharp.Aspects.Weaving
     /// Компонент для выполнения связывания исходного объекта с аспектами.
     /// </summary>
     [PublicAPI]
-    public class AspectWeaver
+    public sealed class AspectWeaver
     {
         private readonly IInvocationPipelineFactory _pipelineFactory;
         private readonly IAspectFactory _aspectFactory;

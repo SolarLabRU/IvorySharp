@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Reflection;
 using IvorySharp.Comparers;
+using IvorySharp.Extensions;
 using IvorySharp.Reflection;
-using JetBrains.Annotations;
 
 namespace IvorySharp.Caching
 {
     /// <summary>
     /// Кеш методов.
     /// </summary>
-    internal class MethodCache
+    internal sealed class MethodCache : IMethodCache
     {
         private readonly ConcurrentDictionary<MethodInfo, Func<object, object[], object>> _invokerCache;
         private readonly ConcurrentDictionary<MethodMapCacheKey, MethodInfo> _methodMapCacheKey;
+        private readonly ConcurrentDictionary<MethodInfo, bool> _asyncMethodCache;
         
         /// <summary>
         /// Инициализированный экземпляр <see cref="MethodCache"/>.
@@ -24,28 +26,33 @@ namespace IvorySharp.Caching
         {
             _invokerCache = new ConcurrentDictionary<MethodInfo, Func<object, object[], object>>(MethodEqualityComparer.Instance);
             _methodMapCacheKey = new ConcurrentDictionary<MethodMapCacheKey, MethodInfo>();
+            _asyncMethodCache = new ConcurrentDictionary<MethodInfo, bool>(MethodEqualityComparer.Instance);
         }
-        
-        /// <summary>
-        /// Получает либо добавляет делегат вызова метода в кеш.
-        /// </summary>
-        /// <param name="method">Метод.</param>
-        /// <returns>Делегат для быстрого вызова метода.</returns>
-        [NotNull] public Func<object, object[], object> GetMethodInvoker([NotNull] MethodInfo method)
+
+        /// <inheritdoc />
+        public Func<object, object[], object> GetInvoker(MethodInfo method)
         {
+            Debug.Assert(method != null, "method != null");
+            
             return _invokerCache.GetOrAdd(method, Expressions.CreateLambda);
         }
 
-        /// <summary>
-        /// Возвращает метод в типе <paramref name="targetType"/>, соответствующий методу <paramref name="interfaceMethod"/>.
-        /// </summary>
-        /// <param name="targetType">Тип класса.</param>
-        /// <param name="interfaceMethod">Метод в интерфейсе.</param>
-        /// <returns>Метод, соответствующий <paramref name="interfaceMethod"/>.</returns>
-        [CanBeNull] public MethodInfo GetMethodMap([NotNull] Type targetType, [NotNull] MethodInfo interfaceMethod)
+        /// <inheritdoc />
+        public MethodInfo GetMethodMap(Type targetType, MethodInfo interfaceMethod)
         {
+            Debug.Assert(targetType != null, "targetType != null");
+            Debug.Assert(interfaceMethod != null, "interfaceMethod != null");
+            
             var key = new MethodMapCacheKey(targetType, interfaceMethod);
             return _methodMapCacheKey.GetOrAdd(key, k => ReflectedMethod.GetMethodMap(targetType, interfaceMethod));
+        }
+
+        /// <inheritdoc />
+        public bool GetIsAsync(MethodInfo method)
+        {
+            Debug.Assert(method != null, "method != null");
+
+            return _asyncMethodCache.GetOrAdd(method, m => m.IsAsync());
         }
         
         /// <summary>

@@ -9,7 +9,7 @@ namespace IvorySharp.Aspects.Dependency
     /// <summary>
     /// Компонент для внедрения зависимостей в аспекты.
     /// </summary>
-    internal class AspectDependencyInjector : IAspectDependencyInjector
+    internal sealed class AspectDependencyInjector : IAspectDependencyInjector
     {
         private readonly IDependencyProvider _dependencyProvider;
         private readonly Func<Type, AspectPropertyDependency[]> _cachedPropertyDependencyProvider;

@@ -11,7 +11,7 @@ using IvorySharp.Tests.Assets.Invocations;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Базовый класс тестов для проверки <see cref="AsyncAspectInvocationPipelineExecutor"/>.
+    /// Базовый класс тестов для проверки <see cref="AsyncInvocationPipelineExecutor"/>.
     /// </summary>
     public partial class AsyncAspectInvocationPipelineExecutorTests
     {
@@ -38,13 +38,13 @@ namespace IvorySharp.Tests.UnitTests
             return await (Task<T>) invocation.ReturnValue;
         }    
         
-        private AsyncAspectInvocationPipeline CreatePipeline<TService>(
+        private AsyncInvocationPipeline CreatePipeline<TService>(
             TService instace, 
             string methodName,  
             MethodBoundaryAspect[] boundaryAspects,
             params object[] arguments)
         {
-            return new AsyncAspectInvocationPipeline(
+            return new AsyncInvocationPipeline(
                 new ObservableInvocation(typeof(TService), instace, methodName, arguments), 
                 boundaryAspects, BypassMethodAspect.Instance);
         }

@@ -4,13 +4,14 @@ using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
+using IvorySharp.Caching;
 
 namespace IvorySharp.Aspects.Configuration
 {
     /// <summary>
     /// Набор компонентов по умолчанию.
     /// </summary>
-    internal class DefaultComponentsStore : IComponentsStore
+    internal sealed class DefaultComponentsStore : IComponentsStore
     {
         /// <inheritdoc />
         public IDependencyProvider DependencyProvider { get; }
@@ -58,7 +59,7 @@ namespace IvorySharp.Aspects.Configuration
                 () => new DeclaringTypeAspectDeclarationCollector(AspectSelector));
             
             _pipelineFactoryProvider = new Lazy<IInvocationPipelineFactory>(
-                () => AsyncDeterminingPipelineFactory.Instance);
+                () => new AsyncDeterminingPipelineFactory(MethodCache.Instance));
 
             _aspectFactoryProvider = new Lazy<IAspectFactory>(
                 () => new AspectFactory(AspectDeclarationCollector, AspectDependencyInjector, AspectOrderStrategy));

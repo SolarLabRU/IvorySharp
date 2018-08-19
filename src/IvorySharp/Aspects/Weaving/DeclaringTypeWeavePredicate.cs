@@ -8,7 +8,7 @@ namespace IvorySharp.Aspects.Weaving
     /// <summary>
     /// Предикат определяющий возможность применения аспектов на основе типа, в котором объявлен перехватываемый метод.
     /// </summary>
-    internal class DeclaringTypeWeavePredicate : BaseWeavePredicate
+    internal sealed class DeclaringTypeWeavePredicate : BaseWeavePredicate
     {
         /// <summary>
         /// Инициализирует экземпляр <see cref="DeclaringTypeWeavePredicate"/>.

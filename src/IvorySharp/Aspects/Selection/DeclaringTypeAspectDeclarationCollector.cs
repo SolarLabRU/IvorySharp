@@ -8,7 +8,7 @@ namespace IvorySharp.Aspects.Selection
     /// <summary>
     /// Собирает аспекты с типа, в котором объявлен перехватываемый метод.
     /// </summary>
-    internal class DeclaringTypeAspectDeclarationCollector : IAspectDeclarationCollector
+    internal sealed class DeclaringTypeAspectDeclarationCollector : IAspectDeclarationCollector
     {
         private readonly IAspectSelector _selector;
 

@@ -6,7 +6,7 @@ namespace IvorySharp.Proxying.Emitters
     /// <summary>
     /// Вспомогательный класс для эмита параметров.
     /// </summary>
-    internal class ParametersEmitter
+    internal sealed class ParametersEmitter
     {
         private readonly ILGenerator _il;
         private readonly Type[] _paramTypes;

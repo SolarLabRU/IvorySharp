@@ -8,7 +8,7 @@ namespace IvorySharp.Aspects.Weaving
     /// <summary>
     /// Предикат возможности применения аспекта с кешем.
     /// </summary>
-    internal class CachedWeavePredicate : IAspectWeavePredicate
+    internal sealed class CachedWeavePredicate : IAspectWeavePredicate
     {
         private readonly ConcurrentDictionary<CacheKey, bool> _cache;
         private readonly IAspectWeavePredicate _predicate;

@@ -8,7 +8,7 @@ namespace IvorySharp.Aspects.Selection
     /// Сначала аспекты упорядочиваются по возрастанию <see cref="OrderableMethodAspect.Order"/>, затем по
     /// <see cref="MethodAspect.MulticastTarget"/>.
     /// </summary>
-    internal class DefaultAspectOrderStrategy : IAspectOrderStrategy
+    internal sealed class DefaultAspectOrderStrategy : IAspectOrderStrategy
     {
         /// <inheritdoc />
         public IOrderedEnumerable<TAspect> Order<TAspect>(IEnumerable<TAspect> aspects) where TAspect : OrderableMethodAspect

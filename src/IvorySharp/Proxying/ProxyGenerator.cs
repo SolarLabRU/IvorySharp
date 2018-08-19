@@ -104,7 +104,7 @@ namespace IvorySharp.Proxying
     ///   }
     ///
     /// ]]>
-    internal class ProxyGenerator
+    internal sealed class ProxyGenerator
     {
         private static readonly object Lock = new object();
 

@@ -9,7 +9,7 @@ namespace IvorySharp.Proxying.Accessors
     /// <summary>
     /// Вспомогательный класс для доступа к событиями.
     /// </summary>
-    internal class EventAccessor
+    internal sealed class EventAccessor
     {
         public MethodInfo InterfaceAddMethod { get; }
         public MethodInfo InterfaceRemoveMethod { get; }

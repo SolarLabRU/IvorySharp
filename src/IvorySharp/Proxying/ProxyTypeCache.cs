@@ -6,7 +6,7 @@ namespace IvorySharp.Proxying
     /// <summary>
     /// Кеш сгенерированных прокси типов.
     /// </summary>
-    internal class ProxyTypeCache
+    internal sealed class ProxyTypeCache
     {
         private readonly Dictionary<Type, Dictionary<Type, Type>> _internalCache;
         private readonly ProxyTypeGeneratorFacade _proxyTypeGeneratorFacade;

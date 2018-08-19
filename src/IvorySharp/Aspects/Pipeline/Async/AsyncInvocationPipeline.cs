@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
@@ -6,14 +7,28 @@ using IvorySharp.Reflection;
 namespace IvorySharp.Aspects.Pipeline.Async
 {
     /// <summary>
-    /// Базовая модель пайлпайна выполнения асинхронного метода.
+    /// Модель пайлпайна выполнения асинхронного метода.
     /// </summary>
-    internal abstract class AsyncInvocationPipeline : InvocationPipelineBase
+    internal sealed class AsyncInvocationPipeline : InvocationPipelineBase
     {
         /// <inheritdoc />
         public override object CurrentReturnValue { get; set; }
 
-        protected AsyncInvocationPipeline(IInvocation invocation)
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="AsyncInvocationPipeline"/>.
+        /// </summary>
+        public AsyncInvocationPipeline(
+            IInvocation invocation, 
+            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, 
+            MethodInterceptionAspect interceptionAspect) 
+            : base(invocation, boundaryAspects, interceptionAspect)
+        {
+        }
+
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="AsyncInvocationPipeline"/>.
+        /// </summary>
+        public AsyncInvocationPipeline(IInvocation invocation) 
             : base(invocation)
         {
         }
@@ -21,8 +36,8 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// <inheritdoc />
         public override void Return()
         {
-            FlowBehavior = FlowBehavior.Return;
-            
+            base.Return();
+
             if (Context.InvocationType == InvocationType.AsyncAction)
                 CurrentReturnValue = null;
 
@@ -33,7 +48,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// <inheritdoc />
         public override void ReturnValue(object returnValue)
         {
-            FlowBehavior = FlowBehavior.Return; 
+            base.ReturnValue(returnValue);
             
             if (Context.InvocationType == InvocationType.AsyncAction)
                 return;

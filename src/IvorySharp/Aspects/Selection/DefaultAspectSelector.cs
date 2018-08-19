@@ -8,7 +8,7 @@ namespace IvorySharp.Aspects.Selection
     /// <summary>
     /// Компонент выбора аспектов по умолчанию.
     /// </summary>
-    internal class DefaultAspectSelector : IAspectSelector
+    internal sealed class DefaultAspectSelector : IAspectSelector
     {
         /// <inheritdoc />
         public bool HasAnyAspect(Type type, bool includeAbstract)

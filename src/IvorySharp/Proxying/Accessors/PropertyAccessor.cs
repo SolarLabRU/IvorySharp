@@ -9,7 +9,7 @@ namespace IvorySharp.Proxying.Accessors
     /// <summary>
     /// Вспомогательный класс для доступа к свойствам.
     /// </summary>
-    internal class PropertyAccessor
+    internal sealed class PropertyAccessor
     {
         public MethodInfo InterfaceGetMethod { get; }
         public MethodInfo InterfaceSetMethod { get; }

@@ -19,6 +19,7 @@ namespace IvorySharp.Aspects.Weaving
         private IAspectFactory _aspectFactory;
         private IInvocationPipelineFactory _pipelineFactory;
         private IAspectWeavePredicate _weavePredicate;
+        private IMethodCache _methodCache;
         
         /// <summary>
         /// Исходный объект, вызовы которого будут перехватываться.
@@ -70,7 +71,8 @@ namespace IvorySharp.Aspects.Weaving
                 declaringType,
                 aspectFactory, 
                 pipelineFactory,
-                weavePredicate);
+                weavePredicate,
+                MethodCache.Instance);
 
             return transparentProxy;
         }
@@ -78,7 +80,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <inheritdoc />
         protected internal override object Invoke(MethodInfo method, object[] args)
         {
-            var invoker = MethodCache.Instance.GetMethodInvoker(method);
+            var invoker = _methodCache.GetInvoker(method);
             var invocation = new Invocation(args, method, DeclaringType, TargetType, Proxy, Target, invoker);     
             var facade = new InvocationInterceptor(_aspectFactory, _pipelineFactory, _weavePredicate);
 
@@ -95,11 +97,13 @@ namespace IvorySharp.Aspects.Weaving
             Type declaringType,
             IAspectFactory aspectFactory,
             IInvocationPipelineFactory pipelineFactory,
-            IAspectWeavePredicate weavePredicate)
+            IAspectWeavePredicate weavePredicate,
+            IMethodCache methodCache)
         {
             _aspectFactory = aspectFactory;
             _pipelineFactory = pipelineFactory;
             _weavePredicate = weavePredicate;
+            _methodCache = methodCache;
 
             Target = target;
             Proxy = proxy;

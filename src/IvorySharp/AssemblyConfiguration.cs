@@ -14,7 +14,7 @@ namespace IvorySharp
     /// Конфигурационный класс библиотеки.
     /// Вместо AssemblyInfo.
     /// </summary>
-    internal class AssemblyConfiguration
+    internal sealed class AssemblyConfiguration
     {
     }
 }

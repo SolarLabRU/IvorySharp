@@ -9,7 +9,7 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для компонента <see cref="SyncAspectInvocationPipelineExecutor"/> для одного аспекта.
+    /// Набор тестов для компонента <see cref="InvocationPipelineExecutor"/> для одного аспекта.
     /// </summary>
     public partial class AspectInvocationPipelineExecutorTests
     {
@@ -112,7 +112,11 @@ namespace IvorySharp.Tests.UnitTests
             
             // Assert
             Assert.Equal(11, pipeline.Invocation.ReturnValue);
-            Assert.Equal(_normalExecutionStack, aspect.ExecutionStack);
+            Assert.Equal(new []
+            {
+                new BoundaryState(BoundaryType.Success), 
+                new BoundaryState(BoundaryType.Entry),
+            }, aspect.ExecutionStack);
             Assert.Equal(11, pipeline.CurrentReturnValue);
             
             InvocationAssert.ProceedCalled(pipeline.Invocation);  
@@ -130,7 +134,11 @@ namespace IvorySharp.Tests.UnitTests
             Assert.Throws<ArgumentException>(() =>  _executor.ExecutePipeline(pipeline));
 
             // Assert
-            Assert.Equal(_normalExecutionStack, aspect.ExecutionStack);
+            Assert.Equal(new []
+            {
+                new BoundaryState(BoundaryType.Success),
+                new BoundaryState(BoundaryType.Entry)
+            }, aspect.ExecutionStack);
             
             Assert.IsType<ArgumentException>(pipeline.CurrentException);          
             InvocationAssert.ProceedCalled(pipeline.Invocation);

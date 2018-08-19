@@ -24,20 +24,20 @@ namespace IvorySharp.Tests.UnitTests
             new BoundaryState(BoundaryType.Entry),
         };
         
-        private readonly SyncAspectInvocationPipelineExecutor _executor;
+        private readonly InvocationPipelineExecutor _executor;
         
         public AspectInvocationPipelineExecutorTests()
         {
-            _executor = SyncAspectInvocationPipelineExecutor.Instance;
+            _executor = InvocationPipelineExecutor.Instance;
         }
         
-        private SyncAspectInvocationPipeline CreatePipeline<TService>(
+        private InvocationPipeline CreatePipeline<TService>(
             TService instace, 
             string methodName,  
             MethodBoundaryAspect[] boundaryAspects,
             params object[] arguments)
         {
-            return new SyncAspectInvocationPipeline(
+            return new InvocationPipeline(
                 new ObservableInvocation(typeof(TService), instace, methodName, arguments), 
                 boundaryAspects, BypassMethodAspect.Instance);
         }

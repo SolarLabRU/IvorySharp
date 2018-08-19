@@ -12,7 +12,7 @@ namespace IvorySharp.Aspects.Creation
     /// <summary>
     /// Инициализатор аспектов.
     /// </summary>
-    internal class AspectFactory : IAspectFactory
+    internal sealed class AspectFactory : IAspectFactory
     {
         private readonly IAspectDeclarationCollector _aspectDeclarationCollector;
         private readonly IAspectDependencyInjector _aspectDependencyInjector;
@@ -65,6 +65,11 @@ namespace IvorySharp.Aspects.Creation
             return aspect;
         }
 
+        /// <summary>
+        /// Подготавливает аспекты типа <see cref="MethodBoundaryAspect"/> для инициализации.
+        /// </summary>
+        /// <param name="context">Контекст вызова метода.</param>
+        /// <returns>Массив не инициализированных аспектов.</returns>
         internal MethodBoundaryAspect[] PrepareBoundaryAspects(IInvocationContext context)
         {
             var methodBoundaryAspects = new List<MethodBoundaryAspect>();
@@ -91,6 +96,11 @@ namespace IvorySharp.Aspects.Creation
             return methodBoundaryAspects.ToArray();
         }
 
+        /// <summary>
+        /// Подготавливает аспект типа <see cref="MethodInterceptionAspect"/> для инициализации.
+        /// </summary>
+        /// <param name="context">Контекст вызова метода.</param>
+        /// <returns>Не инициализированный аспект типа <see cref="MethodInterceptionAspect"/>.</returns>
         internal MethodInterceptionAspect PrepareInterceptAspect(IInvocationContext context)
         {
             var aspectDeclarations = _aspectDeclarationCollector
@@ -110,6 +120,7 @@ namespace IvorySharp.Aspects.Creation
             var declaration = aspectDeclarations.Single();
 
             declaration.MethodAspect.MulticastTarget = declaration.MulticastTarget;
+            declaration.MethodAspect.InternalId = Guid.NewGuid();
 
             return declaration.MethodAspect;
         }

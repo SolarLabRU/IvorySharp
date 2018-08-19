@@ -10,15 +10,15 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для компонента <see cref="AsyncAspectInvocationPipelineExecutor"/>
+    /// Набор тестов для компонента <see cref="AsyncInvocationPipelineExecutor"/>
     /// </summary>
     public partial class AsyncAspectInvocationPipelineExecutorTests
     {
-        private readonly AsyncAspectInvocationPipelineExecutor _executor;
+        private readonly AsyncInvocationPipelineExecutor _executor;
 
         public AsyncAspectInvocationPipelineExecutorTests()
         {
-            _executor = AsyncAspectInvocationPipelineExecutor.Instance;
+            _executor = AsyncInvocationPipelineExecutor.Instance;
         }
 
         [Fact]
@@ -151,7 +151,11 @@ namespace IvorySharp.Tests.UnitTests
             
             // Assert
             Assert.Equal(11, result);
-            Assert.Equal(_normalExecutionStack, aspect.ExecutionStack);
+            Assert.Equal(new []
+            {
+                new BoundaryState(BoundaryType.Success), 
+                new BoundaryState(BoundaryType.Entry),
+            }, aspect.ExecutionStack);
             Assert.Equal(11, pipeline.CurrentReturnValue);
             
             InvocationAssert.ProceedCalled(pipeline.Invocation);  
@@ -172,7 +176,11 @@ namespace IvorySharp.Tests.UnitTests
                 async () => await Await<int>(pipeline.Invocation));
             
             // Assert
-            Assert.Equal(_normalExecutionStack, aspect.ExecutionStack);
+            Assert.Equal(new []
+            {
+                new BoundaryState(BoundaryType.Success),
+                new BoundaryState(BoundaryType.Entry),
+            }, aspect.ExecutionStack);
             
             Assert.IsType<ArgumentException>(pipeline.CurrentException);          
             InvocationAssert.ProceedCalled(pipeline.Invocation);

@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Pipeline
@@ -10,7 +10,22 @@ namespace IvorySharp.Aspects.Pipeline
     internal abstract class InvocationPipelineBase : IInvocationPipeline
     {
         private static readonly object SyncRoot = new object();
-        private readonly ConcurrentDictionary<Guid, object> _pipelineData;
+        private readonly Dictionary<Guid, object> _pipelineData;
+        
+        /// <summary>
+        /// Аспекты типа <see cref="MethodBoundaryAspect"/>.
+        /// </summary>
+        internal IReadOnlyCollection<MethodBoundaryAspect> BoundaryAspects { get; }
+        
+        /// <summary>
+        /// Аспект перехвата вызова метода.
+        /// </summary>
+        internal MethodInterceptionAspect InterceptionAspect { get; }
+        
+        /// <summary>
+        /// Внутреннее состояние пайплайна.
+        /// </summary>
+        internal InvocationPipelineState InternalState { get; set; } 
         
         /// <summary>
         /// Модель вызова метода.
@@ -18,10 +33,10 @@ namespace IvorySharp.Aspects.Pipeline
         internal IInvocation Invocation { get; }
 
         /// <summary>
-        /// Текущий выполняемый аспект.
+        /// Ключ состояния вызова, для установки/получения <see cref="ExecutionState"/>.
         /// </summary>
-        internal MethodAspect CurrentExecutingAspect { get; set; }
-
+        internal Guid? ExecutionStateKey { get; set; }
+        
         /// <inheritdoc />
         public IInvocationContext Context => Invocation;
 
@@ -35,32 +50,54 @@ namespace IvorySharp.Aspects.Pipeline
         public FlowBehavior FlowBehavior { get; set; }
 
         /// <inheritdoc />
-        public object AspectExecutionState {
+        public object ExecutionState {
             get => GetAspectState();
             set => SetAspectState(value);
         }
 
         /// <summary>
+        /// Инициаилизирует экземпляр <see cref="InvocationPipelineBase"/>.
+        /// </summary>
+        protected InvocationPipelineBase(
+            IInvocation invocation,
+            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects,
+            MethodInterceptionAspect interceptionAspect)
+        {
+            _pipelineData = new Dictionary<Guid, object>();
+
+            Invocation = invocation;
+            BoundaryAspects = boundaryAspects;
+            InterceptionAspect = interceptionAspect;
+        }
+        
+        /// <summary>
         /// Инициализирует экземпляр <see cref="InvocationPipelineBase"/>.
         /// </summary>
         /// <param name="invocation">Модель вызова метода.</param>
         protected InvocationPipelineBase(IInvocation invocation)
+           : this(invocation, Array.Empty<MethodBoundaryAspect>(), BypassMethodAspect.Instance) 
+        { }
+
+        /// <inheritdoc />
+        public virtual void Return()
         {
-            _pipelineData = new ConcurrentDictionary<Guid, object>();
-            Invocation = invocation;
+            FlowBehavior = FlowBehavior.Return;
+            InternalState = InvocationPipelineState.Return;
         }
 
         /// <inheritdoc />
-        public abstract void Return();
-
-        /// <inheritdoc />
-        public abstract void ReturnValue(object returnValue);
+        public virtual void ReturnValue(object returnValue)
+        {
+            FlowBehavior = FlowBehavior.Return;
+            InternalState = InvocationPipelineState.Return;
+        }
 
         /// <inheritdoc />
         public void ThrowException(Exception exception)
         {
             CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
             FlowBehavior = FlowBehavior.ThrowException;
+            InternalState = InvocationPipelineState.Exception;
         }
 
         /// <inheritdoc />
@@ -68,16 +105,7 @@ namespace IvorySharp.Aspects.Pipeline
         {
             CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
             FlowBehavior = FlowBehavior.RethrowException;
-        }
-        
-        /// <summary>
-        /// Переводит пайплайн в состояние <see cref="Pipeline.FlowBehavior.Faulted"/>.
-        /// </summary>
-        /// <param name="exception">Исключение.</param>
-        internal void Fault(Exception exception)
-        {
-            CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
-            FlowBehavior = FlowBehavior.Faulted;
+            InternalState = InvocationPipelineState.Exception;
         }
         
         /// <summary>
@@ -88,10 +116,10 @@ namespace IvorySharp.Aspects.Pipeline
         {
             lock (SyncRoot)
             {
-                if (CurrentExecutingAspect == null)
+                if (ExecutionStateKey == null)
                     return null;
                 
-                return _pipelineData.TryGetValue(CurrentExecutingAspect.InternalId, out var data)
+                return _pipelineData.TryGetValue(ExecutionStateKey.Value, out var data)
                     ? data 
                     : null;
             }
@@ -105,10 +133,10 @@ namespace IvorySharp.Aspects.Pipeline
         {
             lock (SyncRoot)
             {
-                if (CurrentExecutingAspect == null)
+                if (ExecutionStateKey == null)
                     return;
 
-                _pipelineData[CurrentExecutingAspect.InternalId] = newState;
+                _pipelineData[ExecutionStateKey.Value] = newState;
             }
         }
     }

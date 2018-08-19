@@ -9,7 +9,7 @@ namespace IvorySharp.Aspects.Dependency
     /// Информация о зависимости аспекта.
     /// </summary>
     [PublicAPI]
-    public class AspectPropertyDependency
+    public sealed class AspectPropertyDependency
     {
         /// <summary>
         /// Атрибут зависимости.

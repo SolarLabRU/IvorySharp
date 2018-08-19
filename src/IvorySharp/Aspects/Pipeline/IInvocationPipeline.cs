@@ -34,7 +34,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Пользовательское состояние, устанавливаемое в рамках выполнения текущего аспекта.
         /// </summary>
-        [NotNull] object AspectExecutionState { get; set; }
+        [NotNull] object ExecutionState { get; set; }
         
         /// <summary>
         /// Выполняет возврат значения из пайплайна.
