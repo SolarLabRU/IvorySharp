@@ -4,22 +4,17 @@ using IvorySharp.Core;
 namespace IvorySharp.Aspects.Creation
 {
     /// <summary>
-    /// Компонент, выполняющий создание аспектов.
+    /// Фабрика аспектов.
     /// </summary>
-    public interface IAspectFactory : IComponent
+    /// <typeparam name="TAspect">Тип аспекта.</typeparam>
+    public interface IAspectFactory<out TAspect>  : IComponent
+        where TAspect : OrderableMethodAspect
     {
         /// <summary>
-        /// Создает аспекты типа <see cref="MethodBoundaryAspect"/> из модели вызова <paramref name="context"/>.
+        /// Создает инициализированные аспекты.
         /// </summary>
-        /// <param name="context">Контекст вызова.</param>
+        /// <param name="context">Контекст.</param>
         /// <returns>Массив инициализированных аспектов.</returns>
-        MethodBoundaryAspect[] CreateBoundaryAspects(IInvocationContext context);
-
-        /// <summary>
-        /// Создает аспект типа <see cref="MethodInterceptionAspect"/> из модели вызова <paramref name="context"/>.
-        /// </summary>
-        /// <param name="context">Контекст вызова.</param>
-        /// <returns>Инициализированный аспект.</returns>
-        MethodInterceptionAspect CreateInterceptionAspect(IInvocationContext context);
+        TAspect[] CreateAspects(IInvocationContext context);
     }
 }

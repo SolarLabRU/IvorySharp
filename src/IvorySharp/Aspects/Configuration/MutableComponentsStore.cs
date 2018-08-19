@@ -28,7 +28,10 @@ namespace IvorySharp.Aspects.Configuration
         public IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; set; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectFactory> AspectFactory { get; set; }
+        public IComponentProvider<IAspectFactory<MethodBoundaryAspect>> BoundaryAspectFactory { get; set; }
+
+        /// <inheritdoc />
+        public IComponentProvider<IAspectFactory<MethodInterceptionAspect>> InterceptionAspectFactory { get; set; }
 
         /// <inheritdoc />
         public IComponentProvider<IAspectDependencyInjector> AspectDependencyInjector { get; set; }
@@ -46,7 +49,8 @@ namespace IvorySharp.Aspects.Configuration
             AspectWeavePredicate.Freeze();
             AspectDeclarationCollector.Freeze();
             PipelineFactory.Freeze();
-            AspectFactory.Freeze();
+            BoundaryAspectFactory.Freeze();
+            InterceptionAspectFactory.Freeze();
             AspectDependencyInjector.Freeze();
             AspectOrderStrategy.Freeze();
         }

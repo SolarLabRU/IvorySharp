@@ -7,7 +7,7 @@ namespace IvorySharp.Aspects
     /// Базовая модель аспекта для перехвата вызова метода. 
     /// </summary>
     [PublicAPI]
-    public abstract class MethodInterceptionAspect : MethodAspect
+    public abstract class MethodInterceptionAspect : OrderableMethodAspect
     {
         /// <summary>
         /// Выполняет перехват вызова метода.

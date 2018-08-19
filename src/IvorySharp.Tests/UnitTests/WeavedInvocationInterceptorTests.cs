@@ -22,7 +22,8 @@ namespace IvorySharp.Tests.UnitTests
 
         private readonly IAspectWeavePredicate _weavePredicateAlwaysTrue;
         private readonly IInvocationPipelineFactory _pipelineFactory;
-        private readonly IAspectFactory _predefinedAspectsFactory;
+        private readonly IAspectFactory<MethodBoundaryAspect> _predefinedBoundaryAspectsFactory;
+        private readonly IAspectFactory<MethodInterceptionAspect> _predefinedInterceptionAspectsFactory;
 
         public WeavedInvocationInterceptorTests()
         {
@@ -45,12 +46,13 @@ namespace IvorySharp.Tests.UnitTests
 
             _pipelineFactory = pipelineFactoryMock.Object;
             
-            var aspectInitializerMock = new Mock<IAspectFactory>();
+            var aspectInitializerMock = new Mock<IAspectFactory<MethodBoundaryAspect>>();
 
-            aspectInitializerMock.Setup(m => m.CreateBoundaryAspects(It.IsAny<IInvocationContext>()))
+            aspectInitializerMock.Setup(m => m.CreateAspects(It.IsAny<IInvocationContext>()))
                 .Returns(() => _boundaryAspects);
 
-            _predefinedAspectsFactory = aspectInitializerMock.Object;
+            _predefinedBoundaryAspectsFactory = aspectInitializerMock.Object;
+            _predefinedInterceptionAspectsFactory = Mock.Of<IAspectFactory<MethodInterceptionAspect>>();
         }
 
         [Fact]
@@ -59,7 +61,8 @@ namespace IvorySharp.Tests.UnitTests
             // Arrange
             var aspect = new DisposableAspect();
             var interceptor = new InvocationInterceptor(
-                _predefinedAspectsFactory.ToProvider(), 
+                _predefinedBoundaryAspectsFactory.ToProvider(), 
+                _predefinedInterceptionAspectsFactory.ToProvider(),
                 _pipelineFactory.ToProvider(), 
                 _weavePredicateAlwaysTrue.ToProvider());
 

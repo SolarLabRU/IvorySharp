@@ -1,40 +1,29 @@
 ﻿using System.Linq;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Dependency;
+using IvorySharp.Components;
 using Moq;
 using Xunit;
 
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для <see cref="AspectDependencyInjector"/>
+    /// Набор тестов для <see cref="DefaultAspectDependencyProvider"/>
     /// </summary>
-    public class AspectDependencyInjectorTests
+    public class DefaultAspectDependencyProviderTests
     {
-        [Fact]
-        public void SinglePropertyDependency_InjectPropertyDependencies_Should_Inject_Service()
+        private readonly IAspectDependencyProvider _aspectDependencyProvider;
+
+        public DefaultAspectDependencyProviderTests()
         {
-            // Arrange
-            var dependencyService = new object();
-            var dependencyProvider = new Mock<IDependencyProvider>();
-
-            dependencyProvider.Setup(c => c.GetService(typeof(object))).Returns(dependencyService);
-
-            var injector = new AspectDependencyInjector(dependencyProvider.Object);
-            var aspect = new SinglePublicPropertyDependencyAspect();
-
-            // Act
-            injector.InjectPropertyDependencies(aspect);
-
-            // Assert
-            Assert.Equal(dependencyService, aspect.Dependency);
+            _aspectDependencyProvider = new DefaultAspectDependencyProvider();
         }
 
         [Fact]
         public void NoPropertyDependencies_GetPropertyDependencies_Returns_EmptyArray()
         {
             // Act
-            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(ZeroPropertyDependenciesAspect));
+            var deps = _aspectDependencyProvider.GetPropertyDependencies(typeof(ZeroPropertyDependenciesAspect));
 
             // Assert
             Assert.Empty(deps);
@@ -44,7 +33,7 @@ namespace IvorySharp.Tests.UnitTests
         public void SinglePropertyDependency_GetPropertyDependencies_Returns_CorrectDependency()
         {
             // Act
-            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(SinglePublicPropertyDependencyAspect));
+            var deps = _aspectDependencyProvider.GetPropertyDependencies(typeof(SinglePublicPropertyDependencyAspect));
 
             // Assert
             Assert.Single(deps);
@@ -55,10 +44,10 @@ namespace IvorySharp.Tests.UnitTests
         public void MultiplePropertyDependencies_GetPropertyDependencies_Returns_CorrectDependencies()
         {
             // Act
-            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(MultiplePublicPropertyDependenciesAspect));
+            var deps = _aspectDependencyProvider.GetPropertyDependencies(typeof(MultiplePublicPropertyDependenciesAspect));
 
             // Assert
-            Assert.Equal(2, deps.Length);
+            Assert.Equal(2, deps.Count());
             Assert.Equal(nameof(MultiplePublicPropertyDependenciesAspect.Dependency1), deps.ElementAt(0).Property.Name);
             Assert.Equal(nameof(MultiplePublicPropertyDependenciesAspect.Dependency2), deps.ElementAt(1).Property.Name);
         }
@@ -67,7 +56,7 @@ namespace IvorySharp.Tests.UnitTests
         public void NotPublicPropertyDependency_GetPropertyDependencies_Returns_Result_Without_Dependency()
         {
             // Act
-            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(SinglePrivatePropertyDependencyAspect));
+            var deps = _aspectDependencyProvider.GetPropertyDependencies(typeof(SinglePrivatePropertyDependencyAspect));
 
             // Assert
             Assert.Empty(deps);
@@ -77,7 +66,7 @@ namespace IvorySharp.Tests.UnitTests
         public void NoSetPropertyDependency_GetPropertyDependencies_Returns_Result_Without_Dependency()
         {
             // Act
-            var deps = AspectDependencyInjector.GetPropertyDependencies(typeof(SinglePublicNoSetPropertyDependencyAspect));
+            var deps = _aspectDependencyProvider.GetPropertyDependencies(typeof(SinglePublicNoSetPropertyDependencyAspect));
 
             // Assert
             Assert.Empty(deps);

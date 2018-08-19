@@ -59,9 +59,12 @@ namespace IvorySharp.Aspects.Configuration
             if (_componentsStore.AspectOrderStrategy == null)
                 _componentsStore.AspectOrderStrategy = defaultComponents.AspectOrderStrategy;
 
-            if (_componentsStore.AspectFactory == null)
-                _componentsStore.AspectFactory = defaultComponents.AspectFactory;
+            if (_componentsStore.BoundaryAspectFactory == null)
+                _componentsStore.BoundaryAspectFactory = defaultComponents.BoundaryAspectFactory;
 
+            if (_componentsStore.InterceptionAspectFactory == null)
+                _componentsStore.InterceptionAspectFactory = defaultComponents.InterceptionAspectFactory;
+            
             configurator(_aspectsConfiguration);
             
             _componentsStore.Freeze();

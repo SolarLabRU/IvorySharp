@@ -110,7 +110,8 @@ namespace IvorySharp.Tests.IntegrationTests
             public IComponentProvider<IAspectWeavePredicate> AspectWeavePredicate { get; }
             public IComponentProvider<IAspectDeclarationCollector> AspectDeclarationCollector { get; }
             public IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; }
-            public IComponentProvider<IAspectFactory> AspectFactory { get; }
+            public IComponentProvider<IAspectFactory<MethodBoundaryAspect>> BoundaryAspectFactory { get; }
+            public IComponentProvider<IAspectFactory<MethodInterceptionAspect>> InterceptionAspectFactory { get; }
             public IComponentProvider<IAspectDependencyInjector> AspectDependencyInjector { get; }
             public IComponentProvider<IAspectOrderStrategy> AspectOrderStrategy { get; }
 
@@ -121,7 +122,8 @@ namespace IvorySharp.Tests.IntegrationTests
                 AspectWeavePredicate = componentsStore.AspectWeavePredicate;
                 AspectDeclarationCollector = componentsStore.AspectDeclarationCollector;
                 PipelineFactory = componentsStore.PipelineFactory;
-                AspectFactory = componentsStore.AspectFactory;
+                BoundaryAspectFactory = componentsStore.BoundaryAspectFactory;
+                InterceptionAspectFactory = componentsStore.InterceptionAspectFactory;
                 AspectDependencyInjector = componentsStore.AspectDependencyInjector;
                 AspectOrderStrategy = componentsStore.AspectOrderStrategy;
             

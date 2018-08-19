@@ -14,12 +14,12 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для компонента <see cref="AspectFactory"/>.
+    /// Набор тестов для компонента <see cref="DefaultAspectPreInitializer{T}"/>.
     /// </summary>
-    public class AspectFactoryTests
+    public class DefaultAspectPreInitializerTests
     {
         [Fact]
-        public void PrepareBoundaryAspects_ShouldRemove_DuplicatedAspects()
+        public void PrepareAspects_ShouldRemove_DuplicatedAspects()
         {
             // Arrange
             var declarations = new []
@@ -31,14 +31,13 @@ namespace IvorySharp.Tests.UnitTests
 
             var collector = CreateAspectCollector(declarations);
             var orderer = CreateAspectOrderStrategy<MethodBoundaryAspect, int>(a => a.Order);
-            var factory = new AspectFactory(
-                collector.ToProvider(), 
-                null, 
+            var preInitializer = new DefaultAspectPreInitializer<MethodBoundaryAspect>(
+                collector.ToProvider(),
                 orderer.ToProvider());
-            
+             
             
             // Act
-            var aspects = factory.PrepareBoundaryAspects(context: null);
+            var aspects = preInitializer.PrepareAspects(context: null);
 
             // Assert
             Assert.Equal(2, aspects.Length);
