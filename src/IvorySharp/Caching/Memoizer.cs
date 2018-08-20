@@ -10,21 +10,6 @@ namespace IvorySharp.Caching
     internal static class Memoizer
     {
         /// <summary>
-        /// Признак активности компонента.
-        /// </summary>
-        // ReSharper disable once MemberCanBePrivate.Global
-        internal static bool Enabled { get; }
-
-        static Memoizer()
-        {
-#if DISABLE_CACHE
-            Enabled = false;
-#else
-            Enabled = true;
-#endif
-        }
-
-        /// <summary>
         /// Сохраняет первичный результат выполнения в кеш. При последующих обращения возвращает сохраненный результат.
         /// </summary>
         /// <param name="handler">Делегар, результат которого необходимо сохранить.</param>
@@ -33,9 +18,6 @@ namespace IvorySharp.Caching
         /// <returns>Новый делегат, который возвращает сохраненный результат первичного вычисления при вызове.</returns>
         public static Func<TIn, TOut> CreateProducer<TIn, TOut>(Func<TIn, TOut> handler)
         {
-            if (!Enabled)
-                return handler;
-
             var cache = new ConcurrentDictionary<TIn, TOut>();
             return arg => cache.GetOrAdd(arg, handler);
         }
@@ -50,9 +32,6 @@ namespace IvorySharp.Caching
         /// <returns>Новый делегат, который возвращает сохраненный результат первичного вычисления при вызове.</returns>
         public static Func<TIn, TOut> CreateProducer<TIn, TOut>(Func<TIn, TOut> handler, IEqualityComparer<TIn> comparer)
         {
-            if (!Enabled)
-                return handler;
-
             var cache = new ConcurrentDictionary<TIn, TOut>(comparer);
             return arg => cache.GetOrAdd(arg, handler);
         }
