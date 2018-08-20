@@ -49,14 +49,19 @@ namespace IvorySharp.Aspects.Configuration
             PipelineFactory = new LazyComponentProvider<IInvocationPipelineFactory>(
                 () => new AsyncDeterminingPipelineFactory(MethodCache.Instance));
             
+            var aspectsPreInitializerProvider = new LazyComponentProvider<IAspectsPreInitializer>(
+                () => new CachedAspectsPreInitializer(
+                    new DefaultAspectsPreInitializer(AspectDeclarationCollector, AspectOrderStrategy)));
+            
             AspectFactory = new LazyComponentProvider<IAspectFactory>(
-                () => new AspectFactory(
-                    AspectDeclarationCollector, 
-                    AspectDependencyInjector,
-                    AspectOrderStrategy));
+                () => new DefaultAspectFactory(aspectsPreInitializerProvider, AspectDependencyInjector));
+            
+            var selectorProvider = new LazyComponentProvider<IAspectDependencySelector>(
+                () => new CachedAspectDependencySelector(
+                    new DefaultAspectDependencySelector()));
             
             AspectDependencyInjector = new LazyComponentProvider<IAspectDependencyInjector>(
-                () => new AspectDependencyInjector(dependencyProvider));
+                () => new AspectDependencyInjector(DependencyProvider, selectorProvider));
             
             AspectOrderStrategy = new LazyComponentProvider<IAspectOrderStrategy>(
                 () => new DefaultAspectOrderStrategy());

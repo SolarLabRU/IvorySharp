@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using IvorySharp.Caching;
+﻿using IvorySharp.Components;
 
 namespace IvorySharp.Aspects.Dependency
 {
@@ -11,72 +7,47 @@ namespace IvorySharp.Aspects.Dependency
     /// </summary>
     internal sealed class AspectDependencyInjector : IAspectDependencyInjector
     {
-        private readonly IDependencyProvider _dependencyProvider;
-        private readonly Func<Type, AspectPropertyDependency[]> _cachedPropertyDependencyProvider;
+        private readonly IComponentProvider<IDependencyProvider> _dependencyProvider;
+        private readonly IComponentProvider<IAspectDependencySelector> _dependencySelector;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectDependencyInjector"/>.
         /// </summary>
-        /// <param name="dependencyProvider">Провайдер зависимостей.</param>
-        public AspectDependencyInjector(IDependencyProvider dependencyProvider)
+        public AspectDependencyInjector(
+            IComponentProvider<IDependencyProvider> dependencyProvider,
+            IComponentProvider<IAspectDependencySelector> dependencySelector)
         {
             _dependencyProvider = dependencyProvider;
-            _cachedPropertyDependencyProvider = Memoizer.CreateProducer<Type, AspectPropertyDependency[]>(GetPropertyDependencies);
+            _dependencySelector = dependencySelector;
         }
-
+        
         /// <inheritdoc />
         public void InjectPropertyDependencies(MethodAspect aspect)
         {
-            foreach (var propertyDependency in _cachedPropertyDependencyProvider(aspect.GetType()))
+            var selector = _dependencySelector.Get();
+            var provider = _dependencyProvider.Get();
+            
+            foreach (var propertyDependency in selector.SelectPropertyDependencies(aspect.GetType()))
             {
                 object service;
 
                 if (propertyDependency.Dependency.Transparent)
                 {
                     service = propertyDependency.Dependency.ServiceKey == null
-                        ? _dependencyProvider.GetTransparentService(propertyDependency.Property.PropertyType)
-                        : _dependencyProvider.GetTransparentNamedService(
+                        ? provider.GetTransparentService(propertyDependency.Property.PropertyType)
+                        : provider.GetTransparentNamedService(
                             propertyDependency.Property.PropertyType, propertyDependency.Dependency.ServiceKey);
                 }
                 else
                 {
                     service = propertyDependency.Dependency.ServiceKey == null
-                        ? _dependencyProvider.GetService(propertyDependency.Property.PropertyType)
-                        : _dependencyProvider.GetNamedService(
+                        ? provider.GetService(propertyDependency.Property.PropertyType)
+                        : provider.GetNamedService(
                             propertyDependency.Property.PropertyType, propertyDependency.Dependency.ServiceKey);
                 }
 
                 propertyDependency.FastPropertySetter(aspect, service);
             }
-        }
-
-        /// <summary>
-        /// Возвращает коллекцию зависимостей аспекта.
-        /// </summary>
-        /// <param name="aspectType">Тип аспекта.</param>
-        /// <returns>Зависимости.</returns>
-        internal static AspectPropertyDependency[] GetPropertyDependencies(Type aspectType)
-        {
-            var dependencies = new List<AspectPropertyDependency>();
-            var properties = aspectType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (var property in properties)
-            {
-                if (!property.CanWrite || property.GetSetMethod(nonPublic: false) == null)
-                    continue;
-
-                var aspectDependency = property
-                    .GetCustomAttributes<DependencyAttribute>(inherit: false)
-                    .FirstOrDefault();
-                
-                if (aspectDependency == null)
-                    continue;
-
-                dependencies.Add(new AspectPropertyDependency(aspectDependency, property));
-            }
-
-            return dependencies.ToArray();
         }
     }
 }

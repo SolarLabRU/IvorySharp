@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Selection;
-using IvorySharp.Caching;
 using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
@@ -11,69 +9,26 @@ using IvorySharp.Exceptions;
 namespace IvorySharp.Aspects.Creation
 {
     /// <summary>
-    /// Инициализатор аспектов.
+    /// Компонент подготовки аспектов для инициализации.
     /// </summary>
-    internal sealed class AspectFactory : IAspectFactory
+    internal class DefaultAspectsPreInitializer : IAspectsPreInitializer
     {
         private readonly IComponentProvider<IAspectDeclarationCollector> _aspectDeclarationCollectorProvider;
-        private readonly IComponentProvider<IAspectDependencyInjector> _dependencyInjectorProvider;
-        private readonly IComponentProvider<IAspectOrderStrategy> _orderStrategyProvider;
-        
-        private readonly Func<IInvocationContext, MethodBoundaryAspect[]> _cachedPrepareMethodBoundaryAspect;
-        private readonly Func<IInvocationContext, MethodInterceptionAspect> _cachedPrepareMethodInterceptionAspect;
+        private readonly IComponentProvider<IAspectOrderStrategy> _orderStrategyProvider;  
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="AspectFactory"/>.
+        /// Инициализирует экземпляр <see cref="DefaultAspectsPreInitializer"/>.
         /// </summary>
-        public AspectFactory(
+        public DefaultAspectsPreInitializer(
             IComponentProvider<IAspectDeclarationCollector> aspectDeclarationCollectorProvider,
-            IComponentProvider<IAspectDependencyInjector> dependencyInjectorProvider,
             IComponentProvider<IAspectOrderStrategy> orderStrategyProvider)
         {
             _aspectDeclarationCollectorProvider = aspectDeclarationCollectorProvider;
-            _dependencyInjectorProvider = dependencyInjectorProvider;
             _orderStrategyProvider = orderStrategyProvider;
-            
-            _cachedPrepareMethodBoundaryAspect = Memoizer.CreateProducer(PrepareBoundaryAspects,
-                InvocationContextMethodComparer.Instance);
-            
-            _cachedPrepareMethodInterceptionAspect = Memoizer.CreateProducer(PrepareInterceptAspect,
-                InvocationContextMethodComparer.Instance);
-        }  
-
-        /// <inheritdoc />
-        public MethodBoundaryAspect[] CreateBoundaryAspects(IInvocationContext context)
-        {
-            var aspects = _cachedPrepareMethodBoundaryAspect(context);
-            var dependencyInjector = _dependencyInjectorProvider.Get();
-            
-            foreach (var aspect in aspects)
-            {
-                dependencyInjector.InjectPropertyDependencies(aspect);
-                aspect.Initialize();
-            }
-
-            return aspects;
         }
 
         /// <inheritdoc />
-        public MethodInterceptionAspect CreateInterceptionAspect(IInvocationContext context)
-        {
-            var aspect = _cachedPrepareMethodInterceptionAspect(context);
-            var dependencyInjector = _dependencyInjectorProvider.Get();
-            
-            dependencyInjector.InjectPropertyDependencies(aspect);
-            aspect.Initialize();
-
-            return aspect;
-        }
-
-        /// <summary>
-        /// Подготавливает аспекты типа <see cref="MethodBoundaryAspect"/> для инициализации.
-        /// </summary>
-        /// <param name="context">Контекст вызова метода.</param>
-        /// <returns>Массив не инициализированных аспектов.</returns>
-        internal MethodBoundaryAspect[] PrepareBoundaryAspects(IInvocationContext context)
+        public MethodBoundaryAspect[] PrepareBoundaryAspects(IInvocationContext context)
         {
             var collector = _aspectDeclarationCollectorProvider.Get();
             var orderer = _orderStrategyProvider.Get();
@@ -102,12 +57,8 @@ namespace IvorySharp.Aspects.Creation
             return methodBoundaryAspects.ToArray();
         }
 
-        /// <summary>
-        /// Подготавливает аспект типа <see cref="MethodInterceptionAspect"/> для инициализации.
-        /// </summary>
-        /// <param name="context">Контекст вызова метода.</param>
-        /// <returns>Не инициализированный аспект типа <see cref="MethodInterceptionAspect"/>.</returns>
-        internal MethodInterceptionAspect PrepareInterceptAspect(IInvocationContext context)
+        /// <inheritdoc />
+        public MethodInterceptionAspect PrepareInterceptAspect(IInvocationContext context)
         {
             var collector = _aspectDeclarationCollectorProvider.Get();
             

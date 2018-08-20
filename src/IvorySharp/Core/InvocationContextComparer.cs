@@ -4,14 +4,14 @@ using IvorySharp.Comparers;
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Выполняет сравнение контекстов на основе метода.
+    /// Выполняет сравнение контекстов.
     /// </summary>
-    internal sealed class InvocationContextMethodComparer : IEqualityComparer<IInvocationContext>
+    internal sealed class InvocationContextComparer : IEqualityComparer<IInvocationContext>
     {
         /// <summary>
-        /// Инициализированный экземпляр <see cref="InvocationContextMethodComparer"/>.
+        /// Инициализированный экземпляр <see cref="InvocationContextComparer"/>.
         /// </summary>
-        public static readonly InvocationContextMethodComparer Instance = new InvocationContextMethodComparer();
+        public static readonly InvocationContextComparer Instance = new InvocationContextComparer();
             
         /// <inheritdoc />
         public bool Equals(IInvocationContext x, IInvocationContext y)
@@ -21,6 +21,8 @@ namespace IvorySharp.Core
             if (ReferenceEquals(y, null)) return false;
                 
             return x.GetType() == y.GetType() && 
+                   x.DeclaringType == y.DeclaringType &&
+                   x.TargetType == y.TargetType &&
                    MethodEqualityComparer.Instance.Equals(x.Method, y.Method);
         }
 
