@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
@@ -9,7 +10,8 @@ namespace IvorySharp.Core
     /// <summary>
     /// Модель выполнения метода.
     /// </summary>
-    public sealed class Invocation : AbstractInvocation
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    internal sealed class Invocation : AbstractInvocation
     {
         /// <summary>
         /// Делегат для быстрого вызова метода.

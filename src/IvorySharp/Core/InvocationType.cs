@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace IvorySharp.Core
@@ -5,6 +6,7 @@ namespace IvorySharp.Core
     /// <summary>
     /// Тип метода.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public enum InvocationType
     {
         /// <summary>

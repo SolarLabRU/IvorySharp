@@ -1,11 +1,13 @@
-﻿using IvorySharp.Components;
+﻿using System.ComponentModel;
 using IvorySharp.Core;
+using IComponent = IvorySharp.Components.IComponent;
 
 namespace IvorySharp.Aspects.Creation
 {
     /// <summary>
     /// Компонент, выполняющий создание аспектов.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IAspectFactory : IComponent
     {
         /// <summary>

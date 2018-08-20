@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace IvorySharp.Components
 {
@@ -6,7 +7,8 @@ namespace IvorySharp.Components
     /// Провайдер компонента на основе экземпляра.
     /// </summary>
     /// <typeparam name="TComponent">Тип компонента.</typeparam>
-    public class InstanceComponentProvider<TComponent> : ComponentProviderBase<TComponent>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public sealed class InstanceComponentProvider<TComponent> : ComponentProviderBase<TComponent>
         where TComponent : IComponent
     {
         private TComponent _instance;

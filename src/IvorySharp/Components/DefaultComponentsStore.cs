@@ -4,10 +4,12 @@ using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Caching;
-using IvorySharp.Components;
 
-namespace IvorySharp.Aspects.Configuration
+namespace IvorySharp.Components
 {
+    /// <summary>
+    /// Компоненты по умолчанию.
+    /// </summary>
     internal sealed class DefaultComponentsStore : IComponentsStore
     {
         /// <inheritdoc />

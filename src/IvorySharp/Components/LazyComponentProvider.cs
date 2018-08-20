@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace IvorySharp.Components
 {
@@ -6,7 +7,8 @@ namespace IvorySharp.Components
     /// Провайдер компонентов на основе <see cref="Lazy{T}"/>.
     /// </summary>
     /// <typeparam name="TComponent">Тип компонента.</typeparam>
-    public class LazyComponentProvider<TComponent> : ComponentProviderBase<TComponent>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public sealed class LazyComponentProvider<TComponent> : ComponentProviderBase<TComponent>
         where TComponent : IComponent
     {
         private Lazy<TComponent> _instanceProvider;

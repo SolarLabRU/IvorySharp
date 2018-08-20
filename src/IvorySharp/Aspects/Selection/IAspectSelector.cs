@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
-using IvorySharp.Components;
+using IComponent = IvorySharp.Components.IComponent;
 
 namespace IvorySharp.Aspects.Selection
 {
     /// <summary>
     /// Компонент выбора аспектов с элементов.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IAspectSelector : IComponent
     {
         /// <summary>

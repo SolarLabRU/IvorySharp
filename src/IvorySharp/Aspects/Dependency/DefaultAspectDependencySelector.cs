@@ -8,7 +8,7 @@ namespace IvorySharp.Aspects.Dependency
     /// <summary>
     /// Селектор зависимостей аспектов.
     /// </summary>
-    internal class DefaultAspectDependencySelector : IAspectDependencySelector
+    internal sealed class DefaultAspectDependencySelector : IAspectDependencySelector
     {
         public AspectPropertyDependency[] SelectPropertyDependencies(Type aspectType)
         {

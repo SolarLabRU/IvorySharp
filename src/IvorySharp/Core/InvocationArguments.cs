@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace IvorySharp.Core
@@ -8,6 +9,7 @@ namespace IvorySharp.Core
     /// <summary>
     /// Параметры вызова метода.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public sealed class InvocationArguments : IReadOnlyCollection<object>
     {
         /// <summary>

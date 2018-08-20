@@ -8,6 +8,7 @@ using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Proxy;
 using IvorySharp.Benchmark.Services;
+using IvorySharp.Components;
 using IvorySharp.Integration.CastleWindsor.Aspects.Integration;
 
 namespace IvorySharp.Benchmark

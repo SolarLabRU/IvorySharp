@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Components
 {
@@ -6,6 +7,7 @@ namespace IvorySharp.Components
     /// Базовый провайдер компонентов.
     /// </summary>
     /// <typeparam name="TComponent">Тип компонента.</typeparam>
+    [PublicAPI]
     public abstract class ComponentProviderBase<TComponent> : IComponentProvider<TComponent>
         where TComponent : IComponent
     {
@@ -15,7 +17,7 @@ namespace IvorySharp.Components
         /// <summary>
         /// Признак того, что провайдер "заморожен".
         /// </summary>
-        protected bool IsFrozen { get; private set; }
+        public bool IsFrozen { get; private set; }
 
         /// <inheritdoc />
         public abstract TComponent Get();
@@ -47,7 +49,7 @@ namespace IvorySharp.Components
         public void Freeze()
         {
             lock (Lock)
-            {
+            {  
                 IsFrozen = true;
             }
         }

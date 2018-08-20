@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using JetBrains.Annotations;
 
@@ -8,8 +9,8 @@ namespace IvorySharp.Aspects
     /// Объявление аспекта.
     /// </summary>
     /// <typeparam name="TAspect">Тип аспекта.</typeparam>
-    [PublicAPI]
-    public class MethodAspectDeclaration<TAspect> where TAspect : MethodAspect
+    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    public sealed class MethodAspectDeclaration<TAspect> where TAspect : MethodAspect
     {
         /// <summary>
         /// Атрибут аспекта.

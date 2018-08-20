@@ -1,11 +1,13 @@
-using IvorySharp.Components;
+using System.ComponentModel;
 using IvorySharp.Core;
+using IComponent = IvorySharp.Components.IComponent;
 
 namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
     /// Фабрика компонентов пайплайна.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IInvocationPipelineFactory : IComponent
     {
         /// <summary>

@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using IvorySharp.Components;
+using IComponent = IvorySharp.Components.IComponent;
 
 namespace IvorySharp.Aspects.Selection
 {
     /// <summary>
     /// Стратегия упорядочивания аспектов.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IAspectOrderStrategy : IComponent
     {
         /// <summary>

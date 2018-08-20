@@ -1,8 +1,11 @@
-﻿namespace IvorySharp.Aspects.Pipeline
+﻿using System.ComponentModel;
+
+namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
     /// Компонент, выполняющий пайплан вызова метода.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IInvocationPipelineExecutor
     {
         /// <summary>

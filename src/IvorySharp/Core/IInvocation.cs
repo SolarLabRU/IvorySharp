@@ -1,11 +1,12 @@
-﻿using JetBrains.Annotations;
+﻿using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Core
 {
     /// <summary>
     /// Интерфейс выполнения метода.
     /// </summary>
-    [PublicAPI]
+    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public interface IInvocation : IInvocationContext
     {
         /// <summary>

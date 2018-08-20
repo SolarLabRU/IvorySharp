@@ -11,7 +11,7 @@ namespace IvorySharp.Aspects.Creation
     /// <summary>
     /// Компонент подготовки аспектов для инициализации.
     /// </summary>
-    internal class DefaultAspectsPreInitializer : IAspectsPreInitializer
+    internal sealed class DefaultAspectsPreInitializer : IAspectsPreInitializer
     {
         private readonly IComponentProvider<IAspectDeclarationCollector> _aspectDeclarationCollectorProvider;
         private readonly IComponentProvider<IAspectOrderStrategy> _orderStrategyProvider;  

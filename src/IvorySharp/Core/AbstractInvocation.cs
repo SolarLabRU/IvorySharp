@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using IvorySharp.Caching;
 using IvorySharp.Extensions;
@@ -9,6 +10,7 @@ namespace IvorySharp.Core
     /// <summary>
     /// Базовая модель вызываемого метода.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class AbstractInvocation : IInvocation
     {
         /// <inheritdoc />

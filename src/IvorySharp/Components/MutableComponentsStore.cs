@@ -3,9 +3,8 @@ using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
-using IvorySharp.Components;
 
-namespace IvorySharp.Aspects.Configuration
+namespace IvorySharp.Components
 {
     /// <summary>
     /// Компоненты библиотеки.

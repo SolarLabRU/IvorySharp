@@ -7,7 +7,7 @@ namespace IvorySharp.Aspects.Creation
     /// <summary>
     /// Компонент для предварительной подготовки аспектов к инициализации с кешем.
     /// </summary>
-    internal class CachedAspectsPreInitializer : IAspectsPreInitializer
+    internal sealed class CachedAspectsPreInitializer : IAspectsPreInitializer
     {
         private readonly IAspectsPreInitializer _originalPreInitializer;
         

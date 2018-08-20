@@ -3,6 +3,7 @@ using Castle.Windsor;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Components;
 using IvorySharp.Tests.Assets;
 using SimpleInjector;
 using Xunit;

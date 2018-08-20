@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Components;
@@ -9,7 +10,7 @@ namespace IvorySharp.Aspects.Weaving
     /// <summary>
     /// Компонент для выполнения связывания исходного объекта с аспектами.
     /// </summary>
-    [PublicAPI]
+    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public sealed class AspectWeaver
     {
         private readonly IComponentProvider<IInvocationPipelineFactory> _pipelineFactoryProvider;

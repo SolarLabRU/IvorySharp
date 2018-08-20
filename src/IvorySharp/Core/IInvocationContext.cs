@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using JetBrains.Annotations;
 
@@ -7,7 +8,7 @@ namespace IvorySharp.Core
     /// <summary>
     /// Контекст вызова метода.
     /// </summary>
-    [PublicAPI]
+    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public interface IInvocationContext
     {
         /// <summary>

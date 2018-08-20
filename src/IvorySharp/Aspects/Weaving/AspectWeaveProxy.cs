@@ -83,9 +83,9 @@ namespace IvorySharp.Aspects.Weaving
         {
             var invoker = _methodCache.GetInvoker(method);
             var invocation = new Invocation(args, method, DeclaringType, TargetType, Proxy, Target, invoker);     
-            var facade = new InvocationInterceptor(_aspectFactory, _pipelineFactory, _weavePredicate);
+            var interceptor = new InvocationInterceptor(_aspectFactory, _pipelineFactory, _weavePredicate);
 
-            return facade.Intercept(invocation);
+            return interceptor.Intercept(invocation);
         }
 
         /// <summary>
