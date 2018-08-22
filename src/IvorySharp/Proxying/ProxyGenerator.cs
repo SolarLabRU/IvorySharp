@@ -46,7 +46,9 @@ namespace IvorySharp.Proxying
     ///        int Identity(int arg);
     ///   }
     ///
-    ///   dynclass DynamicProxy : IvoryProxy, IService {
+    ///   class YourProxy : IvoryProxy { ... }
+    /// 
+    ///   dynclass DynamicProxy : SomeProxy, IService {
     /// 
     ///       private Action{object[]} invoke;
     ///
