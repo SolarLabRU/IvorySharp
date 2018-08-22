@@ -13,59 +13,59 @@ namespace IvorySharp.Components
     internal sealed class DefaultComponentsStore : IComponentsStore
     {
         /// <inheritdoc />
-        public IComponentProvider<IDependencyProvider> DependencyProvider { get; }
+        public IComponentHolder<IDependencyProvider> DependencyHolder { get; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectSelector> AspectSelector { get; }
+        public IComponentHolder<IAspectSelector> AspectSelector { get; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectWeavePredicate> AspectWeavePredicate { get; }
+        public IComponentHolder<IAspectWeavePredicate> AspectWeavePredicate { get; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectDeclarationCollector> AspectDeclarationCollector { get; }
+        public IComponentHolder<IAspectDeclarationCollector> AspectDeclarationCollector { get; }
 
         /// <inheritdoc />
-        public IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; }
+        public IComponentHolder<IInvocationPipelineFactory> PipelineFactory { get; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectFactory> AspectFactory { get; }
+        public IComponentHolder<IAspectFactory> AspectFactory { get; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectDependencyInjector> AspectDependencyInjector { get; }
+        public IComponentHolder<IAspectDependencyInjector> AspectDependencyInjector { get; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectOrderStrategy> AspectOrderStrategy { get; }
+        public IComponentHolder<IAspectOrderStrategy> AspectOrderStrategy { get; }
 
         internal DefaultComponentsStore(IDependencyProvider dependencyProvider)
         {
-            DependencyProvider = dependencyProvider.ToProvider();
+            DependencyHolder = dependencyProvider.ToProvider();
             
-            AspectSelector = new LazyComponentProvider<IAspectSelector>(() => new DefaultAspectSelector());
-            AspectWeavePredicate = new LazyComponentProvider<IAspectWeavePredicate>(
+            AspectSelector = new LazyComponentHolder<IAspectSelector>(() => new DefaultAspectSelector());
+            AspectWeavePredicate = new LazyComponentHolder<IAspectWeavePredicate>(
                 () => new CachedWeavePredicate(
                     new DeclaringTypeWeavePredicate(AspectSelector)));
             
-            AspectDeclarationCollector = new LazyComponentProvider<IAspectDeclarationCollector>(
+            AspectDeclarationCollector = new LazyComponentHolder<IAspectDeclarationCollector>(
                 () => new DeclaringTypeAspectDeclarationCollector(AspectSelector));
             
-            PipelineFactory = new LazyComponentProvider<IInvocationPipelineFactory>(
+            PipelineFactory = new LazyComponentHolder<IInvocationPipelineFactory>(
                 () => new AsyncDeterminingPipelineFactory(MethodCache.Instance));
             
-            var aspectsPreInitializerProvider = new LazyComponentProvider<IAspectsPreInitializer>(
+            var aspectsPreInitializerProvider = new LazyComponentHolder<IAspectsPreInitializer>(
                 () => new CachedAspectsPreInitializer(
                     new DefaultAspectsPreInitializer(AspectDeclarationCollector, AspectOrderStrategy)));
             
-            AspectFactory = new LazyComponentProvider<IAspectFactory>(
+            AspectFactory = new LazyComponentHolder<IAspectFactory>(
                 () => new DefaultAspectFactory(aspectsPreInitializerProvider, AspectDependencyInjector));
             
-            var selectorProvider = new LazyComponentProvider<IAspectDependencySelector>(
+            var selectorProvider = new LazyComponentHolder<IAspectDependencySelector>(
                 () => new CachedAspectDependencySelector(
                     new DefaultAspectDependencySelector()));
             
-            AspectDependencyInjector = new LazyComponentProvider<IAspectDependencyInjector>(
-                () => new AspectDependencyInjector(DependencyProvider, selectorProvider));
+            AspectDependencyInjector = new LazyComponentHolder<IAspectDependencyInjector>(
+                () => new AspectDependencyInjector(DependencyHolder, selectorProvider));
             
-            AspectOrderStrategy = new LazyComponentProvider<IAspectOrderStrategy>(
+            AspectOrderStrategy = new LazyComponentHolder<IAspectOrderStrategy>(
                 () => new DefaultAspectOrderStrategy());
         }
     }

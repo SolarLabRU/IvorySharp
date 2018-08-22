@@ -11,21 +11,21 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     internal sealed class InvocationInterceptor
     {
-        private readonly IComponentProvider<IAspectFactory> _aspectFactoryProvider;
-        private readonly IComponentProvider<IInvocationPipelineFactory> _pipelineFactoryProvider;
-        private readonly IComponentProvider<IAspectWeavePredicate> _aspectWeavePredicateProvider;
+        private readonly IComponentHolder<IAspectFactory> _aspectFactoryHolder;
+        private readonly IComponentHolder<IInvocationPipelineFactory> _pipelineFactoryHolder;
+        private readonly IComponentHolder<IAspectWeavePredicate> _aspectWeavePredicateHolder;
         
         /// <summary>
         /// Инициализирует экземпляр <see cref="InvocationInterceptor"/>.
         /// </summary>
         public InvocationInterceptor(
-            IComponentProvider<IAspectFactory>  aspectFactoryProvider,
-            IComponentProvider<IInvocationPipelineFactory> pipelineFactoryProvider,
-            IComponentProvider<IAspectWeavePredicate> aspectWeavePredicateProvider)
+            IComponentHolder<IAspectFactory>  aspectFactoryHolder,
+            IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder,
+            IComponentHolder<IAspectWeavePredicate> aspectWeavePredicateHolder)
         {
-            _aspectFactoryProvider = aspectFactoryProvider;
-            _pipelineFactoryProvider = pipelineFactoryProvider;         
-            _aspectWeavePredicateProvider = aspectWeavePredicateProvider;
+            _aspectFactoryHolder = aspectFactoryHolder;
+            _pipelineFactoryHolder = pipelineFactoryHolder;         
+            _aspectWeavePredicateHolder = aspectWeavePredicateHolder;
         }
 
         /// <summary>
@@ -35,15 +35,15 @@ namespace IvorySharp.Aspects.Weaving
         /// <returns>Результат вызова метода.</returns>
         internal object Intercept(IInvocation invocation)
         {
-            var weavePredicate = _aspectWeavePredicateProvider.Get();
+            var weavePredicate = _aspectWeavePredicateHolder.Get();
             
             if (!weavePredicate.IsWeaveable(invocation))
             {
                 return invocation.Proceed();
             }
 
-            var aspectFactory = _aspectFactoryProvider.Get();
-            var pipelineFactory = _pipelineFactoryProvider.Get();
+            var aspectFactory = _aspectFactoryHolder.Get();
+            var pipelineFactory = _pipelineFactoryHolder.Get();
             
             var boundaryAspects = aspectFactory.CreateBoundaryAspects(invocation);
             var interceptAspect = aspectFactory.CreateInterceptionAspect(invocation);

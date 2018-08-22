@@ -105,18 +105,18 @@ namespace IvorySharp.Tests.IntegrationTests
 
         internal class TargetAspectSelectionComponents : IComponentsStore
         {
-            public IComponentProvider<IDependencyProvider> DependencyProvider { get; }
-            public IComponentProvider<IAspectSelector> AspectSelector { get; }
-            public IComponentProvider<IAspectWeavePredicate> AspectWeavePredicate { get; }
-            public IComponentProvider<IAspectDeclarationCollector> AspectDeclarationCollector { get; }
-            public IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; }
-            public IComponentProvider<IAspectFactory> AspectFactory { get; }
-            public IComponentProvider<IAspectDependencyInjector> AspectDependencyInjector { get; }
-            public IComponentProvider<IAspectOrderStrategy> AspectOrderStrategy { get; }
+            public IComponentHolder<IDependencyProvider> DependencyHolder { get; }
+            public IComponentHolder<IAspectSelector> AspectSelector { get; }
+            public IComponentHolder<IAspectWeavePredicate> AspectWeavePredicate { get; }
+            public IComponentHolder<IAspectDeclarationCollector> AspectDeclarationCollector { get; }
+            public IComponentHolder<IInvocationPipelineFactory> PipelineFactory { get; }
+            public IComponentHolder<IAspectFactory> AspectFactory { get; }
+            public IComponentHolder<IAspectDependencyInjector> AspectDependencyInjector { get; }
+            public IComponentHolder<IAspectOrderStrategy> AspectOrderStrategy { get; }
 
             public TargetAspectSelectionComponents(IComponentsStore componentsStore)
             {
-                DependencyProvider = componentsStore.DependencyProvider;
+                DependencyHolder = componentsStore.DependencyHolder;
                 AspectSelector = componentsStore.AspectSelector;
                 AspectWeavePredicate = componentsStore.AspectWeavePredicate;
                 AspectDeclarationCollector = componentsStore.AspectDeclarationCollector;

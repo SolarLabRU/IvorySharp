@@ -8,16 +8,16 @@ namespace IvorySharp.Components
     /// </summary>
     /// <typeparam name="TComponent">Тип компонента.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public sealed class InstanceComponentProvider<TComponent> : ComponentProviderBase<TComponent>
+    public sealed class InstanceComponentHolder<TComponent> : ComponentHolderBase<TComponent>
         where TComponent : IComponent
     {
         private TComponent _instance;
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="InstanceComponentProvider{TComponent}"/>.
+        /// Инициализирует экземпляр <see cref="InstanceComponentHolder{TComponent}"/>.
         /// </summary>
         /// <param name="instance">Экземпляр компонента.</param>
-        public InstanceComponentProvider(TComponent instance)
+        public InstanceComponentHolder(TComponent instance)
         {
             if (instance == null)
                 throw new ArgumentNullException(nameof(instance));

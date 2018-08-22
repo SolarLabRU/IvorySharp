@@ -37,7 +37,7 @@ namespace IvorySharp.Aspects.Configuration
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
             
-            var provider = (IComponentProvider<TComponent>) _componentProp.GetValue(_componentsStore);
+            var provider = (IComponentHolder<TComponent>) _componentProp.GetValue(_componentsStore);
             provider.Replace(component);
         }
 
@@ -54,7 +54,7 @@ namespace IvorySharp.Aspects.Configuration
             if (component == null)
                 throw new ArgumentException($"{nameof(componentFactory)} result null");
 
-            var provider = (IComponentProvider<TComponent>) _componentProp.GetValue(_componentsStore);
+            var provider = (IComponentHolder<TComponent>) _componentProp.GetValue(_componentsStore);
             provider.Replace(component);
         }
     }

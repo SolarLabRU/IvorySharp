@@ -13,25 +13,25 @@ namespace IvorySharp.Aspects.Creation
     /// </summary>
     internal sealed class DefaultAspectsPreInitializer : IAspectsPreInitializer
     {
-        private readonly IComponentProvider<IAspectDeclarationCollector> _aspectDeclarationCollectorProvider;
-        private readonly IComponentProvider<IAspectOrderStrategy> _orderStrategyProvider;  
+        private readonly IComponentHolder<IAspectDeclarationCollector> _aspectDeclarationCollectorHolder;
+        private readonly IComponentHolder<IAspectOrderStrategy> _orderStrategyHolder;  
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="DefaultAspectsPreInitializer"/>.
         /// </summary>
         public DefaultAspectsPreInitializer(
-            IComponentProvider<IAspectDeclarationCollector> aspectDeclarationCollectorProvider,
-            IComponentProvider<IAspectOrderStrategy> orderStrategyProvider)
+            IComponentHolder<IAspectDeclarationCollector> aspectDeclarationCollectorHolder,
+            IComponentHolder<IAspectOrderStrategy> orderStrategyHolder)
         {
-            _aspectDeclarationCollectorProvider = aspectDeclarationCollectorProvider;
-            _orderStrategyProvider = orderStrategyProvider;
+            _aspectDeclarationCollectorHolder = aspectDeclarationCollectorHolder;
+            _orderStrategyHolder = orderStrategyHolder;
         }
 
         /// <inheritdoc />
         public MethodBoundaryAspect[] PrepareBoundaryAspects(IInvocationContext context)
         {
-            var collector = _aspectDeclarationCollectorProvider.Get();
-            var orderer = _orderStrategyProvider.Get();
+            var collector = _aspectDeclarationCollectorHolder.Get();
+            var orderer = _orderStrategyHolder.Get();
             
             var methodBoundaryAspects = new List<MethodBoundaryAspect>();
             var declarations = collector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
@@ -60,7 +60,7 @@ namespace IvorySharp.Aspects.Creation
         /// <inheritdoc />
         public MethodInterceptionAspect PrepareInterceptAspect(IInvocationContext context)
         {
-            var collector = _aspectDeclarationCollectorProvider.Get();
+            var collector = _aspectDeclarationCollectorHolder.Get();
             
             var aspectDeclarations = collector
                 .CollectAspectDeclarations<MethodInterceptionAspect>(context)

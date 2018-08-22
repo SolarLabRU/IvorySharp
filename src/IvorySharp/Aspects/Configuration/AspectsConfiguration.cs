@@ -35,7 +35,7 @@ namespace IvorySharp.Aspects.Configuration
         /// <typeparam name="TComponent">Тип компонента.</typeparam>
         /// <returns>Синтаксис замены компонента.</returns>
         public ReplaceComponentSyntax<TComponent> ReplaceComponent<TComponent>(
-            Expression<Func<IComponentsStore, IComponentProvider<TComponent>>> componentSelector)
+            Expression<Func<IComponentsStore, IComponentHolder<TComponent>>> componentSelector)
             where TComponent : IComponent
         {
             var propertyName = Expressions.GetMemberName(componentSelector);

@@ -8,16 +8,16 @@ namespace IvorySharp.Components
     /// </summary>
     /// <typeparam name="TComponent">Тип компонента.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public sealed class LazyComponentProvider<TComponent> : ComponentProviderBase<TComponent>
+    public sealed class LazyComponentHolder<TComponent> : ComponentHolderBase<TComponent>
         where TComponent : IComponent
     {
         private Lazy<TComponent> _instanceProvider;
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="LazyComponentProvider{TComponent}"/>.
+        /// Инициализирует экземпляр <see cref="LazyComponentHolder{TComponent}"/>.
         /// </summary>
         /// <param name="provider">Провайдер экземпляра.</param>
-        public LazyComponentProvider(Func<TComponent> provider)
+        public LazyComponentHolder(Func<TComponent> provider)
         {
             _instanceProvider = new Lazy<TComponent>(provider);
         }

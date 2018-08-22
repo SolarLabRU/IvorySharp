@@ -1,9 +1,9 @@
 ﻿namespace IvorySharp.Components
 {
     /// <summary>
-    /// Провайдер компонента.
+    /// Компонент для хранения компонентов.
     /// </summary>
-    public interface IComponentProvider<TComponent> where TComponent : IComponent
+    public interface IComponentHolder<TComponent> where TComponent : IComponent
     {
         /// <summary>
         /// Возвращает экземпляр компонента.
@@ -18,7 +18,7 @@
         void Replace(TComponent component);
 
         /// <summary>
-        /// Замораживает провайдер компонентов, запрещая замену компонентов на новые.
+        /// Замораживает контейнтер, запрещая замену компонентов на новые.
         /// </summary>
         void Freeze();
     }

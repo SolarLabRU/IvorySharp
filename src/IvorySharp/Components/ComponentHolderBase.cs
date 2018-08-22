@@ -8,7 +8,7 @@ namespace IvorySharp.Components
     /// </summary>
     /// <typeparam name="TComponent">Тип компонента.</typeparam>
     [PublicAPI]
-    public abstract class ComponentProviderBase<TComponent> : IComponentProvider<TComponent>
+    public abstract class ComponentHolderBase<TComponent> : IComponentHolder<TComponent>
         where TComponent : IComponent
     {
         // ReSharper disable once StaticMemberInGenericType

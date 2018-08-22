@@ -19,15 +19,15 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Провайдер стратегии выбора аспектов.
         /// </summary>
-        protected IComponentProvider<IAspectSelector> AspectSelectorProvider { get; }
+        protected IComponentHolder<IAspectSelector> AspectSelectorHolder { get; }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="BaseWeavePredicate"/>.
         /// </summary>
-        /// <param name="selectorProvider">Провайдера стратегии выбора аспектов.</param>
-        protected BaseWeavePredicate(IComponentProvider<IAspectSelector> selectorProvider)
+        /// <param name="selectorHolder">Провайдера стратегии выбора аспектов.</param>
+        protected BaseWeavePredicate(IComponentHolder<IAspectSelector> selectorHolder)
         {
-            AspectSelectorProvider = selectorProvider;
+            AspectSelectorHolder = selectorHolder;
         }
 
         /// <inheritdoc />

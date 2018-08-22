@@ -16,8 +16,8 @@ namespace IvorySharp.Extensions.ClassAspectSelection.Aspects.Weaving
         /// <summary>
         /// Инициализирует экземпляр <see cref="TargetTypeWeavePredicate"/>.
         /// </summary>
-        public TargetTypeWeavePredicate(IComponentProvider<IAspectSelector> selectorProvider) 
-            : base(selectorProvider)
+        public TargetTypeWeavePredicate(IComponentHolder<IAspectSelector> selectorHolder) 
+            : base(selectorHolder)
         {
         }     
         
@@ -35,28 +35,28 @@ namespace IvorySharp.Extensions.ClassAspectSelection.Aspects.Weaving
             if (IsWeavingSuppressed(targetType))
                 return false;
 
-            var aspectSelector = AspectSelectorProvider.Get();
+            var aspectSelector = AspectSelectorHolder.Get();
             
             // На интерфейсе есть аспект
-            if (aspectSelector.HasAnyAspect(targetType, includeAbstract: false))
+            if (aspectSelector.HasAnyAspect(targetType))
                 return true;
 
             // На методах класса есть аспекты
             if (targetType.GetMethods().Any(
                 m => !IsWeavingSuppressed(m) && 
-                     aspectSelector.HasAnyAspect(m, includeAbstract: false)))
+                     aspectSelector.HasAnyAspect(m)))
                 return true;
 
             var baseTypes = targetType.GetInterceptableBaseTypes().Where(t => !IsWeavingSuppressed(t)).ToArray();
 
             // На базовых типах есть аспекты
-            if (baseTypes.Any(t => aspectSelector.HasAnyAspect(t, includeAbstract: false)))
+            if (baseTypes.Any(t => aspectSelector.HasAnyAspect(t)))
                 return true;
 
             // На методах базового типа есть аспекты
             return baseTypes.SelectMany(i => i.GetMethods())
                 .Any(m => !IsWeavingSuppressed(m) && 
-                          aspectSelector.HasAnyAspect(m, includeAbstract: false));
+                          aspectSelector.HasAnyAspect(m));
         }
 
         /// <inheritdoc />
@@ -72,9 +72,9 @@ namespace IvorySharp.Extensions.ClassAspectSelection.Aspects.Weaving
             if (IsWeavingSuppressed(invocation.TargetMethod))
                 return false;
 
-            var aspectSelector = AspectSelectorProvider.Get();
+            var aspectSelector = AspectSelectorHolder.Get();
             
-            return aspectSelector.HasAnyAspect(invocation.TargetMethod, includeAbstract: false) || 
+            return aspectSelector.HasAnyAspect(invocation.TargetMethod) || 
                    IsWeaveable(invocation.DeclaringType, invocation.TargetType);
         }
     }

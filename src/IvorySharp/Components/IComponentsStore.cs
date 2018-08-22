@@ -17,41 +17,41 @@ namespace IvorySharp.Components
         /// <summary>
         /// Провайдер зависимостей.
         /// </summary>
-        IComponentProvider<IDependencyProvider> DependencyProvider { get; }
+        IComponentHolder<IDependencyProvider> DependencyHolder { get; }
 
         /// <summary>
         /// Стратегия получения аспектов.
         /// </summary>
-        IComponentProvider<IAspectSelector> AspectSelector { get; }
+        IComponentHolder<IAspectSelector> AspectSelector { get; }
 
         /// <summary>
         /// Предикат, определяющий возможность применения аспекта.
         /// </summary>
-        IComponentProvider<IAspectWeavePredicate> AspectWeavePredicate { get; }
+        IComponentHolder<IAspectWeavePredicate> AspectWeavePredicate { get; }
 
         /// <summary>
         /// Компонент, агрегирующий аспекты вызова.
         /// </summary>
-        IComponentProvider<IAspectDeclarationCollector> AspectDeclarationCollector { get; }
+        IComponentHolder<IAspectDeclarationCollector> AspectDeclarationCollector { get; }
 
         /// <summary>
         /// Фабрика компонентов пайлпайна.
         /// </summary>
-        IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; }
+        IComponentHolder<IInvocationPipelineFactory> PipelineFactory { get; }
 
         /// <summary>
         /// Компонент, выпонялющий инициализацию аспектов.
         /// </summary>
-        IComponentProvider<IAspectFactory> AspectFactory { get; }
+        IComponentHolder<IAspectFactory> AspectFactory { get; }
 
         /// <summary>
         /// Компонент, для внедрения зависимостей в аспекты.
         /// </summary>
-        IComponentProvider<IAspectDependencyInjector> AspectDependencyInjector { get; }
+        IComponentHolder<IAspectDependencyInjector> AspectDependencyInjector { get; }
 
         /// <summary>
         /// Стратегия упорядочивания аспектов.
         /// </summary>
-        IComponentProvider<IAspectOrderStrategy> AspectOrderStrategy { get; }
+        IComponentHolder<IAspectOrderStrategy> AspectOrderStrategy { get; }
     }
 }

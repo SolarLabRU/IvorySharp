@@ -12,35 +12,35 @@ namespace IvorySharp.Components
     internal sealed class MutableComponentsStore : IComponentsStore
     {
         /// <inheritdoc />
-        public IComponentProvider<IDependencyProvider> DependencyProvider { get; set; }
+        public IComponentHolder<IDependencyProvider> DependencyHolder { get; set; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectSelector> AspectSelector { get; set; }
+        public IComponentHolder<IAspectSelector> AspectSelector { get; set; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectWeavePredicate> AspectWeavePredicate { get; set; }
+        public IComponentHolder<IAspectWeavePredicate> AspectWeavePredicate { get; set; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectDeclarationCollector> AspectDeclarationCollector { get; set; }
+        public IComponentHolder<IAspectDeclarationCollector> AspectDeclarationCollector { get; set; }
 
         /// <inheritdoc />
-        public IComponentProvider<IInvocationPipelineFactory> PipelineFactory { get; set; }
+        public IComponentHolder<IInvocationPipelineFactory> PipelineFactory { get; set; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectFactory> AspectFactory { get; set; }
+        public IComponentHolder<IAspectFactory> AspectFactory { get; set; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectDependencyInjector> AspectDependencyInjector { get; set; }
+        public IComponentHolder<IAspectDependencyInjector> AspectDependencyInjector { get; set; }
 
         /// <inheritdoc />
-        public IComponentProvider<IAspectOrderStrategy> AspectOrderStrategy { get; set; }
+        public IComponentHolder<IAspectOrderStrategy> AspectOrderStrategy { get; set; }
 
         /// <summary>
         /// Замораживает компоненты (запрещает замену внутренней реализации).
         /// </summary>
         public void Freeze()
         {
-            DependencyProvider.Freeze();
+            DependencyHolder.Freeze();
             AspectSelector.Freeze();
             AspectWeavePredicate.Freeze();
             AspectDeclarationCollector.Freeze();

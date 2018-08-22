@@ -2,10 +2,10 @@
 {
     internal static class ComponentsExtensions
     {
-        public static IComponentProvider<TComponent> ToProvider<TComponent>(this TComponent component, bool freeze = true)
+        public static IComponentHolder<TComponent> ToProvider<TComponent>(this TComponent component, bool freeze = true)
             where TComponent : IComponent
         {
-            var provider = new InstanceComponentProvider<TComponent>(component);
+            var provider = new InstanceComponentHolder<TComponent>(component);
             if (freeze)
                 provider.Freeze();
 

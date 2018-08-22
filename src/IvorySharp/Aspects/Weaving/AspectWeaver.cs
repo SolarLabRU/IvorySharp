@@ -13,21 +13,21 @@ namespace IvorySharp.Aspects.Weaving
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public sealed class AspectWeaver
     {
-        private readonly IComponentProvider<IInvocationPipelineFactory> _pipelineFactoryProvider;
-        private readonly IComponentProvider<IAspectFactory> _aspectFactoryProvider;
-        private readonly IComponentProvider<IAspectWeavePredicate> _aspectWeavePredicateProvider;
+        private readonly IComponentHolder<IInvocationPipelineFactory> _pipelineFactoryHolder;
+        private readonly IComponentHolder<IAspectFactory> _aspectFactoryHolder;
+        private readonly IComponentHolder<IAspectWeavePredicate> _aspectWeavePredicateHolder;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectWeaver"/>.
         /// </summary>
         public AspectWeaver(
-            IComponentProvider<IAspectWeavePredicate> aspectWeavePredicateProvider, 
-            IComponentProvider<IInvocationPipelineFactory> pipelineFactoryProvider, 
-            IComponentProvider<IAspectFactory> aspectFactoryProvider)
+            IComponentHolder<IAspectWeavePredicate> aspectWeavePredicateHolder, 
+            IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder, 
+            IComponentHolder<IAspectFactory> aspectFactoryHolder)
         {
-            _pipelineFactoryProvider = pipelineFactoryProvider;
-            _aspectFactoryProvider = aspectFactoryProvider;
-            _aspectWeavePredicateProvider = aspectWeavePredicateProvider;
+            _pipelineFactoryHolder = pipelineFactoryHolder;
+            _aspectFactoryHolder = aspectFactoryHolder;
+            _aspectWeavePredicateHolder = aspectWeavePredicateHolder;
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace IvorySharp.Aspects.Weaving
                 target, 
                 targetType, 
                 declaringType, 
-                _aspectFactoryProvider, 
-                _pipelineFactoryProvider,
-                _aspectWeavePredicateProvider);
+                _aspectFactoryHolder, 
+                _pipelineFactoryHolder,
+                _aspectWeavePredicateHolder);
         }
     }
 }

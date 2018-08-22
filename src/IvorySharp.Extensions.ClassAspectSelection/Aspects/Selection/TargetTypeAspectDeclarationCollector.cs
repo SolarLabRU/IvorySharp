@@ -13,29 +13,27 @@ namespace IvorySharp.Extensions.ClassAspectSelection.Aspects.Selection
     /// </summary>
     internal sealed class TargetTypeAspectDeclarationCollector : IAspectDeclarationCollector
     {
-        private readonly IComponentProvider<IAspectSelector> _selectorProvider;
+        private readonly IComponentHolder<IAspectSelector> _selectorHolder;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="TargetTypeAspectDeclarationCollector"/>.
         /// </summary>
-        public TargetTypeAspectDeclarationCollector(IComponentProvider<IAspectSelector> selectorProvider)
+        public TargetTypeAspectDeclarationCollector(IComponentHolder<IAspectSelector> selectorHolder)
         {
-            _selectorProvider = selectorProvider;
+            _selectorHolder = selectorHolder;
         }
         
         /// <inheritdoc />
         public IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(
             IInvocationContext context) where TAspect : MethodAspect
         {
-            var selector = _selectorProvider.Get();
+            var selector = _selectorHolder.Get();
             
-            var methodAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(
-                context.TargetMethod, includeAbstract: false);
+            var methodAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.TargetMethod);
             
-            var typeAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(
-                    context.TargetType, includeAbstract: false)
+            var typeAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.TargetType)
                 .Concat(context.TargetType.GetInterceptableBaseTypes()
-                    .SelectMany(t => selector.SelectAspectDeclarations<TAspect>(t, includeAbstract: false)));
+                    .SelectMany(t => selector.SelectAspectDeclarations<TAspect>(t)));
 
             var aspectDeclarations = typeAspectDeclarations
                 .Concat(methodAspectDeclarations)

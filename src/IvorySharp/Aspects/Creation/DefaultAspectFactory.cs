@@ -9,25 +9,25 @@ namespace IvorySharp.Aspects.Creation
     /// </summary>
     internal sealed class DefaultAspectFactory : IAspectFactory
     {
-        private readonly IComponentProvider<IAspectsPreInitializer> _preInitializerProvider;
-        private readonly IComponentProvider<IAspectDependencyInjector> _dependencyInjectorProvider;
+        private readonly IComponentHolder<IAspectsPreInitializer> _preInitializerHolder;
+        private readonly IComponentHolder<IAspectDependencyInjector> _dependencyInjectorHolder;
         
         /// <summary>
         /// Инициализирует экземпляр <see cref="DefaultAspectFactory"/>.
         /// </summary>
         public DefaultAspectFactory(
-            IComponentProvider<IAspectsPreInitializer> preInitializerProvider,
-            IComponentProvider<IAspectDependencyInjector> dependencyInjectorProvider)
+            IComponentHolder<IAspectsPreInitializer> preInitializerHolder,
+            IComponentHolder<IAspectDependencyInjector> dependencyInjectorHolder)
         {
-            _preInitializerProvider = preInitializerProvider;
-            _dependencyInjectorProvider = dependencyInjectorProvider;
+            _preInitializerHolder = preInitializerHolder;
+            _dependencyInjectorHolder = dependencyInjectorHolder;
         }
 
         /// <inheritdoc />
         public MethodBoundaryAspect[] CreateBoundaryAspects(IInvocationContext context)
         {
-            var aspects = _preInitializerProvider.Get().PrepareBoundaryAspects(context);
-            var dependencyInjector = _dependencyInjectorProvider.Get();
+            var aspects = _preInitializerHolder.Get().PrepareBoundaryAspects(context);
+            var dependencyInjector = _dependencyInjectorHolder.Get();
             
             foreach (var aspect in aspects)
             {
@@ -41,8 +41,8 @@ namespace IvorySharp.Aspects.Creation
         /// <inheritdoc />
         public MethodInterceptionAspect CreateInterceptionAspect(IInvocationContext context)
         {
-            var aspect = _preInitializerProvider.Get().PrepareInterceptAspect(context);
-            var dependencyInjector = _dependencyInjectorProvider.Get();
+            var aspect = _preInitializerHolder.Get().PrepareInterceptAspect(context);
+            var dependencyInjector = _dependencyInjectorHolder.Get();
             
             dependencyInjector.InjectPropertyDependencies(aspect);
             aspect.Initialize();

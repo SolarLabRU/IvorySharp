@@ -11,27 +11,27 @@ namespace IvorySharp.Aspects.Selection
     /// </summary>
     internal sealed class DeclaringTypeAspectDeclarationCollector : IAspectDeclarationCollector
     {
-        private readonly IComponentProvider<IAspectSelector> _aspectSelectorProvider;
+        private readonly IComponentHolder<IAspectSelector> _aspectSelectorHolder;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="DeclaringTypeAspectDeclarationCollector"/>.
         /// </summary>
-        /// <param name="aspectSelectorProvider">Провайдера компонента выбора аспектов.</param>
-        public DeclaringTypeAspectDeclarationCollector(IComponentProvider<IAspectSelector> aspectSelectorProvider)
+        /// <param name="aspectSelectorHolder">Провайдера компонента выбора аспектов.</param>
+        public DeclaringTypeAspectDeclarationCollector(IComponentHolder<IAspectSelector> aspectSelectorHolder)
         {
-            _aspectSelectorProvider = aspectSelectorProvider;
+            _aspectSelectorHolder = aspectSelectorHolder;
         }
 
         /// <inheritdoc />
         public IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(IInvocationContext context) 
             where TAspect : MethodAspect
         {
-            var selector = _aspectSelectorProvider.Get();
+            var selector = _aspectSelectorHolder.Get();
             
-            var methodAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.Method, includeAbstract: false);
-            var typeAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.DeclaringType, includeAbstract: false)
+            var methodAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.Method);
+            var typeAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.DeclaringType)
                 .Concat(context.DeclaringType.GetInterceptableInterfaces()
-                    .SelectMany(i => selector.SelectAspectDeclarations<TAspect>(i, includeAbstract: false)));
+                    .SelectMany(i => selector.SelectAspectDeclarations<TAspect>(i)));
 
             var aspectDeclarations = typeAspectDeclarations
                 .Concat(methodAspectDeclarations)

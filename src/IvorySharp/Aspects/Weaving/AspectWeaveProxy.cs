@@ -17,9 +17,9 @@ namespace IvorySharp.Aspects.Weaving
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public class AspectWeaveProxy : IvoryProxy
     {
-        private IComponentProvider<IAspectFactory> _aspectFactory;
-        private IComponentProvider<IInvocationPipelineFactory> _pipelineFactory;
-        private IComponentProvider<IAspectWeavePredicate> _weavePredicate;
+        private IComponentHolder<IAspectFactory> _aspectFactory;
+        private IComponentHolder<IInvocationPipelineFactory> _pipelineFactory;
+        private IComponentHolder<IAspectWeavePredicate> _weavePredicate;
         private IMethodCache _methodCache;
         
         /// <summary>
@@ -48,17 +48,17 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="target">Целевой объект</param>
         /// <param name="targetType">Тип целевого объекта.</param>
         /// <param name="declaringType">Тип интерфейса, реализуемого целевым классом.</param>
-        /// <param name="aspectFactoryProvider">Фабрика аспектов.</param>
-        /// <param name="pipelineFactoryProvider">Фабрика компонентов пайлпайна.</param>
-        /// <param name="weavePredicateProvider">Предикат определения возможности применения аспектов.</param>
+        /// <param name="aspectFactoryHolder">Фабрика аспектов.</param>
+        /// <param name="pipelineFactoryHolder">Фабрика компонентов пайлпайна.</param>
+        /// <param name="weavePredicateHolder">Предикат определения возможности применения аспектов.</param>
         /// <returns>Экземпляр прокси.</returns>
         internal static object Create(
             object target,
             Type targetType,
             Type declaringType,
-            IComponentProvider<IAspectFactory> aspectFactoryProvider,
-            IComponentProvider<IInvocationPipelineFactory> pipelineFactoryProvider,
-            IComponentProvider<IAspectWeavePredicate> weavePredicateProvider)
+            IComponentHolder<IAspectFactory> aspectFactoryHolder,
+            IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder,
+            IComponentHolder<IAspectWeavePredicate> weavePredicateHolder)
         {
             var transparentProxy = ProxyGenerator.Instance.CreateTransparentProxy(
                 typeof(AspectWeaveProxy), declaringType);
@@ -70,9 +70,9 @@ namespace IvorySharp.Aspects.Weaving
                 transparentProxy,
                 targetType,
                 declaringType,
-                aspectFactoryProvider, 
-                pipelineFactoryProvider,
-                weavePredicateProvider,
+                aspectFactoryHolder, 
+                pipelineFactoryHolder,
+                weavePredicateHolder,
                 MethodCache.Instance);
 
             return transparentProxy;
@@ -96,14 +96,14 @@ namespace IvorySharp.Aspects.Weaving
             object proxy,
             Type targetType,
             Type declaringType,
-            IComponentProvider<IAspectFactory> aspectFactoryProvider,
-            IComponentProvider<IInvocationPipelineFactory> pipelineFactoryProvider,
-            IComponentProvider<IAspectWeavePredicate> weavePredicateProvider,
+            IComponentHolder<IAspectFactory> aspectFactoryHolder,
+            IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder,
+            IComponentHolder<IAspectWeavePredicate> weavePredicateHolder,
             IMethodCache methodCache)
         {
-            _aspectFactory = aspectFactoryProvider;
-            _pipelineFactory = pipelineFactoryProvider;
-            _weavePredicate = weavePredicateProvider;
+            _aspectFactory = aspectFactoryHolder;
+            _pipelineFactory = pipelineFactoryHolder;
+            _weavePredicate = weavePredicateHolder;
             _methodCache = methodCache;
 
             Target = target;

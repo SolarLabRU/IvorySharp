@@ -7,17 +7,17 @@ namespace IvorySharp.Aspects.Dependency
     /// </summary>
     internal sealed class AspectDependencyInjector : IAspectDependencyInjector
     {
-        private readonly IComponentProvider<IDependencyProvider> _dependencyProvider;
-        private readonly IComponentProvider<IAspectDependencySelector> _dependencySelector;
+        private readonly IComponentHolder<IDependencyProvider> _dependencyHolder;
+        private readonly IComponentHolder<IAspectDependencySelector> _dependencySelector;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectDependencyInjector"/>.
         /// </summary>
         public AspectDependencyInjector(
-            IComponentProvider<IDependencyProvider> dependencyProvider,
-            IComponentProvider<IAspectDependencySelector> dependencySelector)
+            IComponentHolder<IDependencyProvider> dependencyHolder,
+            IComponentHolder<IAspectDependencySelector> dependencySelector)
         {
-            _dependencyProvider = dependencyProvider;
+            _dependencyHolder = dependencyHolder;
             _dependencySelector = dependencySelector;
         }
         
@@ -25,7 +25,7 @@ namespace IvorySharp.Aspects.Dependency
         public void InjectPropertyDependencies(MethodAspect aspect)
         {
             var selector = _dependencySelector.Get();
-            var provider = _dependencyProvider.Get();
+            var provider = _dependencyHolder.Get();
             
             foreach (var propertyDependency in selector.SelectPropertyDependencies(aspect.GetType()))
             {

@@ -26,8 +26,8 @@ namespace IvorySharp.Tests.UnitTests
             // Arrange
             var selectionStategyMock = new Mock<IAspectSelector>();
 
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(false);
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(false);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>())).Returns(false);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(false);
 
             var predicate = new DeclaringTypeWeavePredicate(selectionStategyMock.Object.ToProvider());
 
@@ -67,8 +67,8 @@ namespace IvorySharp.Tests.UnitTests
             // Arrange
             var selectionStategyMock = new Mock<IAspectSelector>();
 
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(true);
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(true);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>())).Returns(true);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(true);
 
             var predicate = new DeclaringTypeWeavePredicate(selectionStategyMock.Object.ToProvider());
 
@@ -89,8 +89,8 @@ namespace IvorySharp.Tests.UnitTests
             // Arrange
             var selectionStategyMock = new Mock<IAspectSelector>();
 
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(false);
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(true);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>())).Returns(false);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(true);
 
             var predicate = new DeclaringTypeWeavePredicate(selectionStategyMock.Object.ToProvider());
 
@@ -111,8 +111,8 @@ namespace IvorySharp.Tests.UnitTests
             // Arrange
             var selectionStategyMock = new Mock<IAspectSelector>();
 
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(true);
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(false);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>())).Returns(true);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(false);
 
             var predicate = new DeclaringTypeWeavePredicate(selectionStategyMock.Object.ToProvider());
             
@@ -133,8 +133,8 @@ namespace IvorySharp.Tests.UnitTests
             // Arrange
             var selectionStategyMock = new Mock<IAspectSelector>();
 
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>(), It.IsAny<bool>())).Returns(true);
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<Type>(t => t.GetInterfaces().Contains(typeof(IService))), It.IsAny<bool>()))
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<MethodInfo>())).Returns(true);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<Type>(t => t.GetInterfaces().Contains(typeof(IService)))))
                 .Returns(false);
 
             var predicate = new DeclaringTypeWeavePredicate(selectionStategyMock.Object.ToProvider());
@@ -156,8 +156,8 @@ namespace IvorySharp.Tests.UnitTests
             // Arrange
             var selectionStategyMock = new Mock<IAspectSelector>();
 
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m.DeclaringType == typeof(IService)), It.IsAny<bool>())).Returns(true);
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>(), It.IsAny<bool>())).Returns(false);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m.DeclaringType == typeof(IService)))).Returns(true);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(false);
 
             var predicate = new DeclaringTypeWeavePredicate(selectionStategyMock.Object.ToProvider());
 
@@ -179,7 +179,7 @@ namespace IvorySharp.Tests.UnitTests
             var selectionStategyMock = new Mock<IAspectSelector>();
             var method = typeof(IService).GetMethod(nameof(IService.SupressedMethod));
 
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m == method), It.IsAny<bool>())).Returns(true);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m == method))).Returns(true);
 
             var predicate = new DeclaringTypeWeavePredicate(selectionStategyMock.Object.ToProvider());
 
@@ -201,7 +201,7 @@ namespace IvorySharp.Tests.UnitTests
             var selectionStategyMock = new Mock<IAspectSelector>();
             var method = typeof(IService).GetMethod(nameof(IService.Method));
 
-            selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m == method), It.IsAny<bool>())).Returns(true);
+            selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m == method))).Returns(true);
 
             var predicate = new DeclaringTypeWeavePredicate(selectionStategyMock.Object.ToProvider());
 
