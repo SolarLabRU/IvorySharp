@@ -23,17 +23,18 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// Получает тип прокси.
         /// </summary>
-        /// <param name="baseType">Базовый тип.</param>
+        /// <param name="baseProxyType">Базовый тип.</param>
         /// <param name="interfaceType">Тип интерфейса.</param>
         /// <returns>Экземпляр тип прокси.</returns>
-        public Type GetProxyType(Type baseType, Type interfaceType)
+        public Type GetProxyType(Type baseProxyType, Type interfaceType)
         {
             // mapping = interface -> generated_proxy
-            if (!_internalCache.TryGetValue(baseType, out var mapping))
-                _internalCache[baseType] = mapping = new Dictionary<Type, Type>();
+            if (!_internalCache.TryGetValue(baseProxyType, out var mapping))
+                _internalCache[baseProxyType] = mapping = new Dictionary<Type, Type>();
 
             if (!mapping.TryGetValue(interfaceType, out var proxyType))
-                mapping[interfaceType] = proxyType = _proxyTypeGeneratorFacade.GenerateProxyType(baseType, interfaceType);
+                mapping[interfaceType] = proxyType = _proxyTypeGeneratorFacade
+                    .GenerateProxyType(baseProxyType, interfaceType);
 
             return proxyType;
         }

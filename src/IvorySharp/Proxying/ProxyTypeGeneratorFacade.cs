@@ -23,19 +23,19 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// Создает тип прокси.
         /// </summary>
-        /// <param name="baseType">Базовый тип.</param>
+        /// <param name="baseProxyType">Базовый тип.</param>
         /// <param name="interfaceType">Тип, который прокси реализует.</param>
         /// <returns>Тип прокси.</returns>
-        public Type GenerateProxyType(Type baseType, Type interfaceType)
+        public Type GenerateProxyType(Type baseProxyType, Type interfaceType)
         {
-            Debug.Assert(baseType != null, "baseType != null");
+            Debug.Assert(baseProxyType != null, "baseProxyType != null");
             Debug.Assert(interfaceType != null, "interfaceType != null");
 
-            EnsureBaseTypeValid(baseType);
+            EnsureBaseProxyTypeValid(baseProxyType);
             EnsureInterfaceTypeValid(interfaceType);
 
             var interfaceTypeInfo = interfaceType.GetTypeInfo();
-            var proxyTypeGenerator = _proxyAssembly.CreateProxyTypeGenerator(baseType);
+            var proxyTypeGenerator = _proxyAssembly.CreateProxyTypeGenerator(baseProxyType);
 
             foreach (var @interface in interfaceTypeInfo.ImplementedInterfaces)
                 proxyTypeGenerator.ImplementInterface(@interface);
@@ -48,26 +48,26 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// Выполняет проверку того, что базовый тип является корректным.
         /// </summary>
-        /// <param name="baseType">Базовый тип.</param>
-        private void EnsureBaseTypeValid(Type baseType)
+        /// <param name="baseProxyType">Базовый тип.</param>
+        private void EnsureBaseProxyTypeValid(Type baseProxyType)
         {
-            var typeInfo = baseType.GetTypeInfo();
+            var typeInfo = baseProxyType.GetTypeInfo();
 
             // Базовый тип не может быть запечатанным, т.к. прокси наследуется от него
             if (typeInfo.IsSealed)
-                throw new ArgumentException($"Базовый тип '{typeInfo.FullName}' не должен быть запечатанным",
-                    nameof(baseType));
+                throw new ArgumentException($"Тип '{typeInfo.FullName}' не должен быть запечатанным",
+                    nameof(baseProxyType));
 
             // Базовый тип не может быть абстрактным.
             if (typeInfo.IsAbstract)
-                throw new ArgumentException($"Базовый тип '{typeInfo.FullName}' не должен быть абстрактным",
-                    nameof(baseType));
+                throw new ArgumentException($"Тип '{typeInfo.FullName}' не должен быть абстрактным",
+                    nameof(baseProxyType));
 
             // Базовый тип должен иметь публичный конструктор по умолчанию.
             if (!typeInfo.DeclaredConstructors.Any(c => c.IsPublic && c.GetParameters().Length == 0))
                 throw new ArgumentException(
-                    $"Базовый тип '{typeInfo.FullName}' должен иметь публичный конструктор без параметров",
-                    nameof(baseType));
+                    $"Тип '{typeInfo.FullName}' должен иметь публичный конструктор без параметров",
+                    nameof(baseProxyType));
         }
 
         /// <summary>

@@ -7,12 +7,6 @@ using IvorySharp.Reflection;
 
 namespace IvorySharp.Proxying
 {
-    internal static class ProxyCallTranslator
-    {
-        
-    }
-    
-    
     /// <summary>
     /// Генератор экземпляров прокси.
     /// Усовершенствованная версия генератора DispatchProxy:
@@ -144,18 +138,18 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// Создает экземпляр прокси.
         /// </summary>
-        /// <param name="baseType">Базовый тип.</param>
+        /// <param name="baseProxyType">Тип прокси (должен наследоваться от <see cref="IvoryProxy"/>.</param>
         /// <param name="interfaceType">Тип интерфейса.</param>
         /// <returns>Экземпляр прокси.</returns>
-        public object CreateTransparentProxy(Type baseType, Type interfaceType)
+        public object CreateTransparentProxy(Type baseProxyType, Type interfaceType)
         {
-            Debug.Assert(baseType != null, "baseType != null");
+            Debug.Assert(baseProxyType != null, "baseProxyType != null");
             Debug.Assert(interfaceType != null, "interfaceType != null");
 
             lock (Lock)
             {
-                var proxyType = _proxyTypeCache.GetProxyType(baseType, interfaceType);
-                return Activator.CreateInstance(proxyType, (Action<object[]>) TranslateInvoke);
+                var dynamicProxyType = _proxyTypeCache.GetProxyType(baseProxyType, interfaceType);
+                return Activator.CreateInstance(dynamicProxyType, (Action<object[]>) TranslateInvoke);
             }
         }
 
@@ -178,7 +172,8 @@ namespace IvorySharp.Proxying
 
             try
             {
-                packed.ReturnValue = FastProxyInvoke(packed.Proxy, new object[] {method, packed.MethodArguments});
+                packed.ReturnValue = FastProxyInvoke(
+                    packed.Proxy, new object[] {method, packed.MethodArguments});
             }
             catch (TargetInvocationException tie)
             {

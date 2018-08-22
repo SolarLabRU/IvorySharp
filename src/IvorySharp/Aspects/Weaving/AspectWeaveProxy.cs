@@ -79,7 +79,7 @@ namespace IvorySharp.Aspects.Weaving
         }
 
         /// <inheritdoc />
-        protected internal override object Invoke(MethodInfo method, object[] args)
+        protected internal sealed override object Invoke(MethodInfo method, object[] args)
         {
             var invoker = _methodCache.GetInvoker(method);
             var invocation = new Invocation(args, method, DeclaringType, TargetType, Proxy, Target, invoker);     
