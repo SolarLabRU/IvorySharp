@@ -48,7 +48,7 @@ namespace IvorySharp.Proxying
     ///
     ///   class YourProxy : IvoryProxy { ... }
     /// 
-    ///   dynclass DynamicProxy : SomeProxy, IService {
+    ///   dynclass DynamicProxy : YourProxy, IService {
     /// 
     ///       private Action{object[]} invoke;
     ///
