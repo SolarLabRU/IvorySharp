@@ -5,10 +5,13 @@ namespace IvorySharp.Benchmark.Services
 {
     public interface IServiceForBenchmark
     {
-        [BypassAspect]
+        [BypassBoundaryAspect]
         int Identity(int value);
 
-        [BypassAspect]
+        [BypassBoundaryAspect]
         Task<int> IdentityAsync(int value);
+
+        [BypassInterceptionAspect]
+        int InterceptedIdentity(int value);
     }
 }

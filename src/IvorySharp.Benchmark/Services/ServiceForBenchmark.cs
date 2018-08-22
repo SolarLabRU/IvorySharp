@@ -14,5 +14,10 @@ namespace IvorySharp.Benchmark.Services
             return await Task.FromResult(value)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
+
+        public int InterceptedIdentity(int value)
+        {
+            return value;
+        }
     }
 }

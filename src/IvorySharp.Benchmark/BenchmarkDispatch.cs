@@ -59,14 +59,21 @@ namespace IvorySharp.Benchmark
         }
 
         [Benchmark]
-        public void DispatchWeavedMethod()
+        public void DispatchWeavedInterceptionMethod()
+        {
+            var result = _weavedService.InterceptedIdentity(10);
+            GC.KeepAlive(result);
+        }
+        
+        [Benchmark]
+        public void DispatchWeavedBoundaryMethod()
         {
             var result = _weavedService.Identity(10);
             GC.KeepAlive(result);
         }
 
         [Benchmark]
-        public void DispatchWindsorMethod()
+        public void DispatchWindsorBoundaryMethod()
         {
             var result = _windsorService.Identity(10);
             GC.KeepAlive(result);
@@ -80,14 +87,14 @@ namespace IvorySharp.Benchmark
         }
 
         [Benchmark]
-        public async Task DispatchWeavedAsyncMethod()
+        public async Task DispatchWeavedAsyncBoundaryMethod()
         {
             var result = await _weavedService.IdentityAsync(10);
             GC.KeepAlive(result);
         }
 
         [Benchmark]
-        public async Task DispatchWindsorAsyncMethod()
+        public async Task DispatchWindsorAsyncBoundaryMethod()
         {
             var result = await _windsorService.IdentityAsync(10);
             GC.KeepAlive(result);

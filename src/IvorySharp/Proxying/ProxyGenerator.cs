@@ -7,6 +7,12 @@ using IvorySharp.Reflection;
 
 namespace IvorySharp.Proxying
 {
+    internal static class ProxyCallTranslator
+    {
+        
+    }
+    
+    
     /// <summary>
     /// Генератор экземпляров прокси.
     /// Усовершенствованная версия генератора DispatchProxy:
@@ -65,20 +71,20 @@ namespace IvorySharp.Proxying
     ///           ]
     /// 
     ///           var packedArgs = new object[PackedArguments.Count];
-    ///           packedArgs[PackedArgPosition.Proxy] = this;
+    ///           packedArgs[PackedArgumentPosition.Proxy] = this;
     ///
     ///           [captured: 
     ///               var $token = MethodLinkStore.CreateToken($method);
     ///           ]
     ///
-    ///           packedArgs[PackedArgPosition.DeclaringType] = $token.DeclaringType;
-    ///           packedArgs[PackedArgPosition.MethodTokenKey] = $token.Key;
+    ///           packedArgs[PackedArgumentPosition.DeclaringType] = $token.DeclaringType;
+    ///           packedArgs[PackedArgumentPosition.MethodTokenKey] = $token.Key;
     /// 
     ///           var args = new object[$parameters.Length];
     ///           for (int i = 0; i < args.Length; i++)
     ///               args[i] = cast<$parameterTypes[i]>($parameters[i].Value);
     ///
-    ///           packedArgs[PackedArgPosition.MethodArguments] = args;
+    ///           packedArgs[PackedArgumentPosition.MethodArguments] = args;
     ///
     ///           [conditional emit:
     ///               if ($method.ContainsGenericParameters) {
@@ -96,7 +102,7 @@ namespace IvorySharp.Proxying
     /// 
     ///           [conditional emit:
     ///               if ($method.ReturnType != typeof(void))
-    ///                   return packedArgs[PackedArgPosition.ReturnValue];
+    ///                   return packedArgs[PackedArgumentPosition.ReturnValue];
     ///               else
     ///                   return;
     ///           ]
@@ -154,7 +160,7 @@ namespace IvorySharp.Proxying
         }
 
         /// <summary>
-        /// Вспомогательный метод для трансирования перехватываемых вызовов в
+        /// Вспомогательный метод для транслирования перехватываемых вызовов в
         /// метод <see cref="IvoryProxy.Invoke(MethodInfo, object[])"/>.
         /// Этот метод вызывается всеми сгенерированными прокси.
         /// Его задача распаковать аргументы и указатель на *this* и передать его на
@@ -167,8 +173,8 @@ namespace IvorySharp.Proxying
             var packed = new PackedArguments(packedArgs);
             var method = MethodLinkStore.ResolveMethod(packed.MethodToken);
 
-            if (method.IsGenericMethodDefinition && method is MethodInfo mi)
-                method = mi.MakeGenericMethod(packed.GenericTypes);
+            if (method.IsGenericMethodDefinition)
+                method = method.MakeGenericMethod(packed.GenericParameters);
 
             try
             {

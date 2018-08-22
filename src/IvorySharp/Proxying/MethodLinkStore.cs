@@ -9,13 +9,13 @@ namespace IvorySharp.Proxying
     /// </summary>
     internal sealed class MethodLinkStore
     {
-        private readonly Dictionary<MethodBase, int> _methodToKey;
-        private readonly List<MethodBase> _methodsByKey;
+        private readonly Dictionary<MethodInfo, int> _methodToKey;
+        private readonly List<MethodInfo> _methodsByKey;
 
         public MethodLinkStore()
         {
-            _methodToKey = new Dictionary<MethodBase, int>();
-            _methodsByKey = new List<MethodBase>();
+            _methodToKey = new Dictionary<MethodInfo, int>();
+            _methodsByKey = new List<MethodInfo>();
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace IvorySharp.Proxying
         /// Возвращает метод по сгенерированному токену.
         /// </summary>
         /// <param name="methodToken">Токен.</param>
-        public MethodBase ResolveMethod(MethodToken methodToken)
+        public MethodInfo ResolveMethod(MethodToken methodToken)
         {
             Debug.Assert(methodToken.Key >= 0, "token.Key >= 0");
             Debug.Assert(methodToken.Key < _methodsByKey.Count, "token.Key < _methodsByKey.Count");

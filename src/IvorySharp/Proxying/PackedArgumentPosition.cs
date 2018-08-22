@@ -3,13 +3,13 @@
     /// <summary>
     /// Позициии параметров в упакованном массиве <see cref="PackedArguments"/>.
     /// </summary>
-    internal enum PackedArgPosition
+    internal enum PackedArgumentPosition
     {
         Proxy = 0,
         DeclaringType = 1,
         MethodTokenKey = 2,
         MethodArguments = 3,
-        GenericArgs = 4,
+        GenericParameters = 4,
         ReturnValue = 5
     }
 }

@@ -240,20 +240,20 @@ namespace IvorySharp.Proxying.Generators
             public void EmitProxy()
             {
                 // packed[PackedArgs.DispatchProxyPosition] = this;
-                _internalEmitter.EmitBeginSet((int) PackedArgPosition.Proxy);
+                _internalEmitter.EmitBeginSet((int) PackedArgumentPosition.Proxy);
                 _ilGenerator.Emit(OpCodes.Ldarg_0);
                 _internalEmitter.EmitEndSet(typeof(IvoryProxy));
             }
 
             public void EmitMethodToken(MethodToken token)
             {
-                _internalEmitter.EmitBeginSet((int) PackedArgPosition.DeclaringType);
+                _internalEmitter.EmitBeginSet((int) PackedArgumentPosition.DeclaringType);
                 _ilGenerator.Emit(OpCodes.Ldtoken, token.DeclaringType);
                 _ilGenerator.Emit(OpCodes.Call, MethodReferences.GetTypeFromHandle);
                 _internalEmitter.EmitEndSet(typeof(object));
 
                 // packed[PackedArgs.MethodTokenPosition] = iface method token;
-                _internalEmitter.EmitBeginSet((int) PackedArgPosition.MethodTokenKey);
+                _internalEmitter.EmitBeginSet((int) PackedArgumentPosition.MethodTokenKey);
                 _ilGenerator.Emit(OpCodes.Ldc_I4, token.Key);
                 _internalEmitter.EmitEndSet(typeof(int));
             }
@@ -263,7 +263,7 @@ namespace IvorySharp.Proxying.Generators
                 // object[] args = new object[paramCount];
                 _ilGenerator.Emit(OpCodes.Nop);
 
-                _internalEmitter.EmitBeginSet((int) PackedArgPosition.MethodArguments);
+                _internalEmitter.EmitBeginSet((int) PackedArgumentPosition.MethodArguments);
 
                 var argsEmitter = new ArrayEmitter<object>(_ilGenerator, parameters.Count);
 
@@ -287,7 +287,7 @@ namespace IvorySharp.Proxying.Generators
 
             public void EmitGenericArguments(IReadOnlyList<Type> genericArgs)
             {
-                _internalEmitter.EmitBeginSet((int) PackedArgPosition.GenericArgs);
+                _internalEmitter.EmitBeginSet((int) PackedArgumentPosition.GenericParameters);
 
                 var typesEmitter = new ArrayEmitter<Type>(_ilGenerator, genericArgs.Count);
 
@@ -308,7 +308,7 @@ namespace IvorySharp.Proxying.Generators
             {
                 if (returnType != typeof(void))
                 {
-                    _internalEmitter.EmitGet((int) PackedArgPosition.ReturnValue);
+                    _internalEmitter.EmitGet((int) PackedArgumentPosition.ReturnValue);
                     ConvEmitter.Emit(_ilGenerator, typeof(object), returnType);
                 }
 

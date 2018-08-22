@@ -5,12 +5,12 @@ namespace IvorySharp.Proxying
     /// <summary>
     /// Вспомогательный класс для передачи параметров между сгенерированным прокси и методом перехвата вызова.
     /// </summary>
-    internal sealed class PackedArguments
+    internal struct PackedArguments
     {
         /// <summary>
         /// Количество параметров.
         /// </summary>
-        internal static readonly int Count = Enum.GetNames(typeof(PackedArgPosition)).Length;
+        internal static readonly int Count = Enum.GetNames(typeof(PackedArgumentPosition)).Length;
 
         private readonly object[] _arguments;
 
@@ -26,25 +26,25 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// Экземпляр прокси.
         /// </summary>
-        public IvoryProxy Proxy => Get<IvoryProxy>(PackedArgPosition.Proxy);
+        public IvoryProxy Proxy => Get<IvoryProxy>(PackedArgumentPosition.Proxy);
 
         /// <summary>
         /// Токен метода.
         /// </summary>
         public MethodToken MethodToken => new MethodToken(
-            Get<int>(PackedArgPosition.MethodTokenKey),
-            Get<Type>(PackedArgPosition.DeclaringType)
+            Get<int>(PackedArgumentPosition.MethodTokenKey),
+            Get<Type>(PackedArgumentPosition.DeclaringType)
         );
 
         /// <summary>
         /// Параметры метода.
         /// </summary>
-        public object[] MethodArguments => Get<object[]>(PackedArgPosition.MethodArguments);
+        public object[] MethodArguments => Get<object[]>(PackedArgumentPosition.MethodArguments);
 
         /// <summary>
         /// Обобщенные параметры.
         /// </summary>
-        public Type[] GenericTypes => Get<Type[]>(PackedArgPosition.GenericArgs);
+        public Type[] GenericParameters => Get<Type[]>(PackedArgumentPosition.GenericParameters);
 
         /// <summary>
         /// Возвращаемое значение.
@@ -52,8 +52,8 @@ namespace IvorySharp.Proxying
         public object ReturnValue
         {
             // ReSharper disable once UnusedMember.Global
-            get => Get<object>(PackedArgPosition.ReturnValue);
-            set => Set(PackedArgPosition.ReturnValue, value);
+            get => Get<object>(PackedArgumentPosition.ReturnValue);
+            set => Set(PackedArgumentPosition.ReturnValue, value);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace IvorySharp.Proxying
         /// <param name="position">Позиция параметра.</param>
         /// <typeparam name="T">Тип параметр.</typeparam>
         /// <returns>Параметр.</returns>
-        private T Get<T>(PackedArgPosition position)
+        private T Get<T>(PackedArgumentPosition position)
         {
             return (T) _arguments[(int) position];
         }
@@ -73,7 +73,7 @@ namespace IvorySharp.Proxying
         /// <param name="position">Позиция параметра.</param>
         /// <param name="value">Значение параметра.</param>
         /// <typeparam name="T">Тип параметра.</typeparam>
-        private void Set<T>(PackedArgPosition position, T value)
+        private void Set<T>(PackedArgumentPosition position, T value)
         {
             _arguments[(int) position] = value;
         }

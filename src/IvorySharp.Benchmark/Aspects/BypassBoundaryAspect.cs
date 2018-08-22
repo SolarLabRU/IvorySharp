@@ -3,7 +3,7 @@ using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Benchmark.Aspects
 {
-    public class BypassAspect : MethodBoundaryAspect
+    public class BypassBoundaryAspect : MethodBoundaryAspect
     {
     }
 }
