@@ -12,4 +12,4 @@ build:
   verbosity: minimal
 after_build:
   - ps: cd IvorySharp.Benchmark
-  - ps: dotnet run IvorySharp.Benchmark.csproj -c Release --framework net461 --filter *BenchmarkDispatch*
+  - ps: dotnet run IvorySharp.Benchmark.csproj -c Release --framework net461 --filter *
