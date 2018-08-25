@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
-using DependencyAttribute = IvorySharp.Aspects.Dependency.DependencyAttribute;
 
 namespace IvorySharp.Aspects.Creation
 {
@@ -18,19 +16,23 @@ namespace IvorySharp.Aspects.Creation
     {
         private readonly IComponentHolder<IAspectDeclarationCollector> _aspectDeclarationCollectorHolder;
         private readonly IComponentHolder<IAspectOrderStrategy> _orderStrategyHolder;
+        private readonly IComponentHolder<IAspectDependencySelector> _dependencySelectorHolder;
 
         private IAspectDeclarationCollector _aspectDeclarationCollector;
         private IAspectOrderStrategy _aspectOrderStrategy;
+        private IAspectDependencySelector _dependencySelector;
         
         /// <summary>
         /// Инициализирует экземпляр <see cref="DefaultAspectsPreInitializer"/>.
         /// </summary>
         public DefaultAspectsPreInitializer(
             IComponentHolder<IAspectDeclarationCollector> aspectDeclarationCollectorHolder,
-            IComponentHolder<IAspectOrderStrategy> orderStrategyHolder)
+            IComponentHolder<IAspectOrderStrategy> orderStrategyHolder,
+            IComponentHolder<IAspectDependencySelector> dependencySelectorHolder)
         {
             _aspectDeclarationCollectorHolder = aspectDeclarationCollectorHolder;
             _orderStrategyHolder = orderStrategyHolder;
+            _dependencySelectorHolder = dependencySelectorHolder;
         }
 
         /// <inheritdoc />
@@ -63,7 +65,11 @@ namespace IvorySharp.Aspects.Creation
                 
                 currentAspect.InternalOrder = currentAspect.Order + i + 1;
                 currentAspect.InternalId = Guid.NewGuid();
-                currentAspect.HasDependencies = HasDependencies(currentAspect.GetType());
+
+                if (_dependencySelector == null)
+                    _dependencySelector = _dependencySelectorHolder.Get();
+                
+                currentAspect.HasDependencies = _dependencySelector.HasDependencies(currentAspect.GetType());
             }
             
             return methodBoundaryAspects.ToArray();
@@ -88,23 +94,17 @@ namespace IvorySharp.Aspects.Creation
 
             if (aspectDeclarations.Length == 0)
                 return BypassMethodAspect.Instance;
-
+     
+            if (_dependencySelector == null)
+                _dependencySelector = _dependencySelectorHolder.Get();
+            
             var declaration = aspectDeclarations.Single();
 
             declaration.MethodAspect.MulticastTarget = declaration.MulticastTarget;
             declaration.MethodAspect.InternalId = Guid.NewGuid();
-            declaration.MethodAspect.HasDependencies = HasDependencies(declaration.MethodAspect.GetType());
+            declaration.MethodAspect.HasDependencies = _dependencySelector.HasDependencies(declaration.MethodAspect.GetType());
 
             return declaration.MethodAspect;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool HasDependencies(Type aspectType)
-        {
-            return aspectType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Any(p => p.CanWrite &&
-                          p.CustomAttributes.Select(ca => ca.AttributeType)
-                              .Any(t => t == typeof(DependencyAttribute)));
         }
     }
 }

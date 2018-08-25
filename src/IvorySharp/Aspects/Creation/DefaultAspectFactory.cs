@@ -53,8 +53,11 @@ namespace IvorySharp.Aspects.Creation
         /// <inheritdoc />
         public MethodInterceptionAspect CreateInterceptionAspect(IInvocationContext context)
         {
-            var aspect = _preInitializerHolder.Get().PrepareInterceptAspect(context);
+            if (_preInitializer == null)
+                _preInitializer = _preInitializerHolder.Get();
 
+            var aspect = _preInitializer.PrepareInterceptAspect(context);
+            
             if (aspect.HasDependencies)
             {
                 if (_dependencyInjector == null)

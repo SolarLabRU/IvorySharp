@@ -37,7 +37,7 @@ namespace IvorySharp.Aspects.Configuration
             var dependencyProvider = _container.GetDependencyProvider();
             var defaultComponents = new DefaultComponentsStore(dependencyProvider);
 
-            _componentsStore.DependencyHolder = dependencyProvider.ToProvider();
+            _componentsStore.DependencyHolder = dependencyProvider.ToInstanceHolder();
             
             if (_componentsStore.AspectSelector == null)
                 _componentsStore.AspectSelector = defaultComponents.AspectSelector;

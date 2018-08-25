@@ -9,6 +9,7 @@ namespace IvorySharp.Aspects.Dependency
     internal class CachedAspectDependencySelector : IAspectDependencySelector
     {
         private readonly Func<Type, AspectPropertyDependency[]> _cachedPropertyDependencyProvider;
+        private readonly Func<Type, bool> _cachedHasDependencies;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="CachedAspectDependencySelector"/>.
@@ -19,12 +20,21 @@ namespace IvorySharp.Aspects.Dependency
         {
             _cachedPropertyDependencyProvider = cacheDelegateFactory.CreateDelegate<Type, AspectPropertyDependency[]>(
                 dependencySelector.SelectPropertyDependencies);
+            
+            _cachedHasDependencies = cacheDelegateFactory.CreateDelegate<Type, bool>(
+                dependencySelector.HasDependencies);
         }
 
         /// <inheritdoc />
         public AspectPropertyDependency[] SelectPropertyDependencies(Type aspectType)
         {
             return _cachedPropertyDependencyProvider(aspectType);
+        }
+
+        /// <inheritdoc />
+        public bool HasDependencies(Type aspectType)
+        {
+            return _cachedHasDependencies(aspectType);
         }
     }
 }

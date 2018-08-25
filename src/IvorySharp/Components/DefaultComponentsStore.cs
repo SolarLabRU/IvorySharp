@@ -38,7 +38,7 @@ namespace IvorySharp.Components
 
         internal DefaultComponentsStore(IDependencyProvider dependencyProvider)
         {
-            DependencyHolder = dependencyProvider.ToProvider();
+            DependencyHolder = dependencyProvider.ToInstanceHolder();
             
             AspectSelector = new InstanceComponentHolder<IAspectSelector>(new DefaultAspectSelector());
             AspectWeavePredicate = new InstanceComponentHolder<IAspectWeavePredicate>(
@@ -53,21 +53,22 @@ namespace IvorySharp.Components
             AspectOrderStrategy = new InstanceComponentHolder<IAspectOrderStrategy>(
                 new DefaultAspectOrderStrategy());
             
-            var aspectsPreInitializerProvider = new InstanceComponentHolder<IAspectsPreInitializer>(
-                new CachedAspectsPreInitializer(
-                    new DefaultAspectsPreInitializer(AspectDeclarationCollector, AspectOrderStrategy),
-                    CacheDelegateFactory<ConcurrentDictionaryCacheFactory>.Instance));
-            
-            AspectFactory = new InstanceComponentHolder<IAspectFactory>(
-                new DefaultAspectFactory(aspectsPreInitializerProvider, AspectDependencyInjector));
-            
-            var selectorProvider = new LazyComponentHolder<IAspectDependencySelector>(
-                () => new CachedAspectDependencySelector(
+            var aspectDependencySelectorHolder = new InstanceComponentHolder<IAspectDependencySelector>(
+                new CachedAspectDependencySelector(
                     new DefaultAspectDependencySelector(),
                     CacheDelegateFactory<ConcurrentDictionaryCacheFactory>.Instance));
             
+            var aspectsPreInitializerHolder = new InstanceComponentHolder<IAspectsPreInitializer>(
+                new CachedAspectsPreInitializer(
+                    new DefaultAspectsPreInitializer(
+                        AspectDeclarationCollector, AspectOrderStrategy, aspectDependencySelectorHolder),
+                    CacheDelegateFactory<ConcurrentDictionaryCacheFactory>.Instance));
+            
             AspectDependencyInjector = new LazyComponentHolder<IAspectDependencyInjector>(
-                () => new AspectDependencyInjector(DependencyHolder, selectorProvider));
+                () => new AspectDependencyInjector(DependencyHolder, aspectDependencySelectorHolder));
+            
+            AspectFactory = new InstanceComponentHolder<IAspectFactory>(
+                new DefaultAspectFactory(aspectsPreInitializerHolder, AspectDependencyInjector));
         }
     }
 }

@@ -43,7 +43,8 @@ namespace IvorySharp.Aspects.Weaving
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static bool IsWeavingSuppressed(Type type)
         {
-            return !type.IsInterceptable() || type.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false).Any();
+            return !type.IsInterceptable() ||
+                   type.CustomAttributes.Any(t => t.AttributeType == typeof(SuppressAspectsWeavingAttribute));
         }
 
         /// <summary>
@@ -52,7 +53,8 @@ namespace IvorySharp.Aspects.Weaving
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static bool IsWeavingSuppressed(MethodInfo method)
         {
-            return !method.IsInterceptable() || method.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false).Any();
+            return !method.IsInterceptable() ||
+                   method.CustomAttributes.Any(t => t.AttributeType == typeof(SuppressAspectsWeavingAttribute));
         }
     }
 }

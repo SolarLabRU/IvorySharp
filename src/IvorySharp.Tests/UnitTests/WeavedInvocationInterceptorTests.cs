@@ -59,9 +59,9 @@ namespace IvorySharp.Tests.UnitTests
             // Arrange
             var aspect = new DisposableAspect();
             var interceptor = new InvocationInterceptor(
-                _predefinedAspectsFactory.ToProvider(), 
-                _pipelineFactory.ToProvider(), 
-                _weavePredicateAlwaysTrue.ToProvider());
+                _predefinedAspectsFactory.ToInstanceHolder(), 
+                _pipelineFactory.ToInstanceHolder(), 
+                _weavePredicateAlwaysTrue.ToInstanceHolder());
 
             _boundaryAspects = new MethodBoundaryAspect[] { aspect };
 

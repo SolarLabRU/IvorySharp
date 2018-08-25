@@ -15,14 +15,16 @@ namespace IvorySharp.Aspects.Selection
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasAnyAspect(Type type)
         {
-            return SelectAspectDeclarations<MethodAspect>(type).Any();
+            return type.CustomAttributes
+                .Any(a => typeof(MethodAspect).IsAssignableFrom(a.AttributeType));
         }
 
         /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasAnyAspect(MethodInfo method)
         {
-            return SelectAspectDeclarations<MethodAspect>(method).Any();
+            return method.CustomAttributes
+                .Any(a => typeof(MethodAspect).IsAssignableFrom(a.AttributeType));
         }
 
         /// <inheritdoc />

@@ -16,5 +16,12 @@ namespace IvorySharp.Aspects.Dependency
         /// <param name="aspectType">Тип аспекта.</param>
         /// <returns>Массив зависимостей-свойств аспекта.</returns>
         AspectPropertyDependency[] SelectPropertyDependencies(Type aspectType);
+
+        /// <summary>
+        /// Возвращает признак наличия зависимостей на аспекте.
+        /// </summary>
+        /// <param name="aspectType">Тип аспекта.</param>
+        /// <returns>Признак наличия зависимостей на аспекте.</returns>
+        bool HasDependencies(Type aspectType);
     }
 }

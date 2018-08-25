@@ -39,7 +39,7 @@ namespace IvorySharp.Tests.UnitTests
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(false);
 
             var predicate = new DeclaringTypeWeavePredicate(
-                selectionStategyMock.Object.ToProvider(), _cacheFactory);
+                selectionStategyMock.Object.ToInstanceHolder(), _cacheFactory);
 
             // Act
             var isWeaveable = predicate.IsWeaveable(typeof(IService), typeof(Service));
@@ -59,7 +59,7 @@ namespace IvorySharp.Tests.UnitTests
             // Arrange
             var selectionStategyMock = new Mock<IAspectSelector>();
             var predicate = new DeclaringTypeWeavePredicate(
-                selectionStategyMock.Object.ToProvider(), _cacheFactory);
+                selectionStategyMock.Object.ToInstanceHolder(), _cacheFactory);
 
             // Act
             var isWeaveable = predicate.IsWeaveable(typeof(Service), typeof(IService));
@@ -82,7 +82,7 @@ namespace IvorySharp.Tests.UnitTests
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(true);
 
             var predicate = new DeclaringTypeWeavePredicate(
-                selectionStategyMock.Object.ToProvider(), _cacheFactory);
+                selectionStategyMock.Object.ToInstanceHolder(), _cacheFactory);
 
             // Act
             var isWeaveable = predicate.IsWeaveable(typeof(IWeavingSuppressedService), typeof(WeavingSuppressedService));
@@ -105,7 +105,7 @@ namespace IvorySharp.Tests.UnitTests
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(true);
 
             var predicate = new DeclaringTypeWeavePredicate(
-                selectionStategyMock.Object.ToProvider(), _cacheFactory);
+                selectionStategyMock.Object.ToInstanceHolder(), _cacheFactory);
 
             // Act
             var isWeaveable = predicate.IsWeaveable(typeof(IService), typeof(Service));
@@ -128,7 +128,7 @@ namespace IvorySharp.Tests.UnitTests
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(false);
 
             var predicate = new DeclaringTypeWeavePredicate(
-                selectionStategyMock.Object.ToProvider(), _cacheFactory);
+                selectionStategyMock.Object.ToInstanceHolder(), _cacheFactory);
             
             // Act
             var isWeaveable = predicate.IsWeaveable(typeof(IService), typeof(Service));
@@ -152,7 +152,7 @@ namespace IvorySharp.Tests.UnitTests
                 .Returns(false);
 
             var predicate = new DeclaringTypeWeavePredicate(
-                selectionStategyMock.Object.ToProvider(), _cacheFactory);
+                selectionStategyMock.Object.ToInstanceHolder(), _cacheFactory);
 
             // Act
             var isWeaveable = predicate.IsWeaveable(typeof(IServiceExtend), typeof(Service));
@@ -175,7 +175,7 @@ namespace IvorySharp.Tests.UnitTests
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.IsAny<Type>())).Returns(false);
 
             var predicate = new DeclaringTypeWeavePredicate(
-                selectionStategyMock.Object.ToProvider(), _cacheFactory);
+                selectionStategyMock.Object.ToInstanceHolder(), _cacheFactory);
 
             // Act
             var isWeaveable = predicate.IsWeaveable(typeof(IServiceExtend), typeof(Service));
@@ -198,7 +198,7 @@ namespace IvorySharp.Tests.UnitTests
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m == method))).Returns(true);
 
             var predicate = new DeclaringTypeWeavePredicate(
-                selectionStategyMock.Object.ToProvider(), _cacheFactory);
+                selectionStategyMock.Object.ToInstanceHolder(), _cacheFactory);
             
             // Act
             var isWeaveable = predicate.IsWeaveable(typeof(IService), typeof(Service));
@@ -221,7 +221,7 @@ namespace IvorySharp.Tests.UnitTests
             selectionStategyMock.Setup(c => c.HasAnyAspect(It.Is<MethodInfo>(m => m == method))).Returns(true);
 
             var predicate = new DeclaringTypeWeavePredicate(
-                selectionStategyMock.Object.ToProvider(), _cacheFactory);
+                selectionStategyMock.Object.ToInstanceHolder(), _cacheFactory);
 
             // Act
             var isWeaveable = predicate.IsWeaveable(typeof(IService), typeof(Service));

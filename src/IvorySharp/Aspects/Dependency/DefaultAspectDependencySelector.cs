@@ -16,25 +16,34 @@ namespace IvorySharp.Aspects.Dependency
         public AspectPropertyDependency[] SelectPropertyDependencies(Type aspectType)
         {
             var dependencies = new List<AspectPropertyDependency>();
-            var properties = aspectType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (var property in properties)
+            foreach (var property in GetPropertyDependencies(aspectType))
             {
-                if (!property.CanWrite || property.GetSetMethod(nonPublic: false) == null)
-                    continue;
-
                 var aspectDependency = property
                     .GetCustomAttributes<DependencyAttribute>(inherit: false)
-                    .FirstOrDefault();
+                    .First();
                 
-                if (aspectDependency == null)
-                    continue;
-
                 dependencies.Add(new AspectPropertyDependency(aspectDependency, property));
             }
 
             return dependencies.ToArray();
+        }
+
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool HasDependencies(Type aspectType)
+        {
+            return GetPropertyDependencies(aspectType).Any();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable<PropertyInfo> GetPropertyDependencies(Type aspectType)
+        {
+            return aspectType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.CanWrite &&
+                            p.GetSetMethod(nonPublic: false) != null &&
+                            p.CustomAttributes.Any(a => a.AttributeType == typeof(DependencyAttribute)));
         }
     }
 }

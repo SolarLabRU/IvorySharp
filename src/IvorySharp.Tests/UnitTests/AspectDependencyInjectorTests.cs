@@ -33,8 +33,8 @@ namespace IvorySharp.Tests.UnitTests
             dependencyProvider.Setup(c => c.GetService(typeof(object))).Returns(dependencyService);
 
             var injector = new AspectDependencyInjector(
-                dependencyProvider.Object.ToProvider(),
-                dependencySelector.Object.ToProvider());
+                dependencyProvider.Object.ToInstanceHolder(),
+                dependencySelector.Object.ToInstanceHolder());
             
             var aspect = new SinglePublicPropertyDependencyAspect();
 
