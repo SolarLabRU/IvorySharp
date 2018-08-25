@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Components;
@@ -37,6 +38,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="declaringType">Объявленный тип исходного объекта.</param>
         /// <param name="targetType">Фактический тип исходного объекта.</param>
         /// <returns>Экземпляр связанного с аспектами исходного объекта типа <paramref name="declaringType"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public object Weave(object target, Type declaringType, Type targetType)
         {
             return AspectWeaveProxy.Create(

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace IvorySharp.Aspects.Dependency
 {
@@ -10,6 +11,8 @@ namespace IvorySharp.Aspects.Dependency
     /// </summary>
     internal sealed class DefaultAspectDependencySelector : IAspectDependencySelector
     {
+        /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public AspectPropertyDependency[] SelectPropertyDependencies(Type aspectType)
         {
             var dependencies = new List<AspectPropertyDependency>();

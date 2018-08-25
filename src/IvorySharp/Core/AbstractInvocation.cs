@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using IvorySharp.Caching;
 using IvorySharp.Extensions;
 using JetBrains.Annotations;
@@ -71,10 +72,11 @@ namespace IvorySharp.Core
         /// методу <see cref="Method"/>.
         /// </summary>
         /// <returns>Метод.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CanBeNull] protected MethodInfo GetTargetMethod()
         {
             if (TargetType != null && Method != null)
-                return MethodCache.Instance.GetMethodMap(TargetType, Method);
+                return MethodInfoCache.Instance.GetMethodMap(TargetType, Method);
             
             return null;
         }

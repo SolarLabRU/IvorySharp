@@ -11,6 +11,9 @@ namespace IvorySharp.Aspects.Creation
     {
         private readonly IComponentHolder<IAspectsPreInitializer> _preInitializerHolder;
         private readonly IComponentHolder<IAspectDependencyInjector> _dependencyInjectorHolder;
+
+        private IAspectsPreInitializer _preInitializer;
+        private IAspectDependencyInjector _dependencyInjector;
         
         /// <summary>
         /// Инициализирует экземпляр <see cref="DefaultAspectFactory"/>.
@@ -26,12 +29,21 @@ namespace IvorySharp.Aspects.Creation
         /// <inheritdoc />
         public MethodBoundaryAspect[] CreateBoundaryAspects(IInvocationContext context)
         {
-            var aspects = _preInitializerHolder.Get().PrepareBoundaryAspects(context);
-            var dependencyInjector = _dependencyInjectorHolder.Get();
+            if (_preInitializer == null)
+                _preInitializer = _preInitializerHolder.Get();
             
+            var aspects = _preInitializer.PrepareBoundaryAspects(context);
+   
             foreach (var aspect in aspects)
             {
-                dependencyInjector.InjectPropertyDependencies(aspect);
+                if (aspect.HasDependencies)
+                {
+                    if (_dependencyInjector == null)
+                        _dependencyInjector = _dependencyInjectorHolder.Get();
+                    
+                    _dependencyInjector.InjectPropertyDependencies(aspect);
+                }
+                
                 aspect.Initialize();
             }
 
@@ -42,9 +54,15 @@ namespace IvorySharp.Aspects.Creation
         public MethodInterceptionAspect CreateInterceptionAspect(IInvocationContext context)
         {
             var aspect = _preInitializerHolder.Get().PrepareInterceptAspect(context);
-            var dependencyInjector = _dependencyInjectorHolder.Get();
+
+            if (aspect.HasDependencies)
+            {
+                if (_dependencyInjector == null)
+                    _dependencyInjector = _dependencyInjectorHolder.Get();
+                
+                _dependencyInjector.InjectPropertyDependencies(aspect);
+            }
             
-            dependencyInjector.InjectPropertyDependencies(aspect);
             aspect.Initialize();
 
             return aspect;

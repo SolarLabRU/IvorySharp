@@ -10,15 +10,15 @@ namespace IvorySharp.Aspects.Pipeline
     /// </summary>
     internal sealed class AsyncDeterminingPipelineFactory : IInvocationPipelineFactory
     {
-        private readonly IMethodCache _cache;
+        private readonly IMethodInfoCache _cache;
         
         /// <summary>
         /// Инициализирует экземпляр <see cref="AsyncDeterminingPipelineFactory"/>.
         /// </summary>
-        /// <param name="methodCache">Кеш методов.</param>
-        internal AsyncDeterminingPipelineFactory(IMethodCache methodCache)
+        /// <param name="methodInfoCache">Кеш методов.</param>
+        internal AsyncDeterminingPipelineFactory(IMethodInfoCache methodInfoCache)
         {
-            _cache = methodCache;
+            _cache = methodInfoCache;
         }
         
         /// <inheritdoc />

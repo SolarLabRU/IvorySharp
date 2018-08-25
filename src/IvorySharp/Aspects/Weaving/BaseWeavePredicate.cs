@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Components;
 using IvorySharp.Core;
@@ -39,6 +40,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Возвращает признак того, что применение аспектов запрещено.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static bool IsWeavingSuppressed(Type type)
         {
             return !type.IsInterceptable() || type.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false).Any();
@@ -47,6 +49,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <summary>
         /// Возвращает признак того, что применение аспектов запрещено.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static bool IsWeavingSuppressed(MethodInfo method)
         {
             return !method.IsInterceptable() || method.GetCustomAttributes<SuppressAspectsWeavingAttribute>(inherit: false).Any();

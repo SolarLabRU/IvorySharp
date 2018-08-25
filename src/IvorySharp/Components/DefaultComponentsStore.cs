@@ -40,33 +40,34 @@ namespace IvorySharp.Components
         {
             DependencyHolder = dependencyProvider.ToProvider();
             
-            AspectSelector = new LazyComponentHolder<IAspectSelector>(() => new DefaultAspectSelector());
-            AspectWeavePredicate = new LazyComponentHolder<IAspectWeavePredicate>(
-                () => new CachedWeavePredicate(
-                    new DeclaringTypeWeavePredicate(AspectSelector)));
+            AspectSelector = new InstanceComponentHolder<IAspectSelector>(new DefaultAspectSelector());
+            AspectWeavePredicate = new InstanceComponentHolder<IAspectWeavePredicate>(
+                new DeclaringTypeWeavePredicate(AspectSelector, ConcurrentDictionaryCacheFactory.Default));
             
-            AspectDeclarationCollector = new LazyComponentHolder<IAspectDeclarationCollector>(
-                () => new DeclaringTypeAspectDeclarationCollector(AspectSelector));
+            AspectDeclarationCollector = new InstanceComponentHolder<IAspectDeclarationCollector>(
+                new DeclaringTypeAspectDeclarationCollector(AspectSelector));
             
-            PipelineFactory = new LazyComponentHolder<IInvocationPipelineFactory>(
-                () => new AsyncDeterminingPipelineFactory(MethodCache.Instance));
+            PipelineFactory = new InstanceComponentHolder<IInvocationPipelineFactory>(
+                new AsyncDeterminingPipelineFactory(MethodInfoCache.Instance));
             
-            var aspectsPreInitializerProvider = new LazyComponentHolder<IAspectsPreInitializer>(
-                () => new CachedAspectsPreInitializer(
-                    new DefaultAspectsPreInitializer(AspectDeclarationCollector, AspectOrderStrategy)));
+            AspectOrderStrategy = new InstanceComponentHolder<IAspectOrderStrategy>(
+                new DefaultAspectOrderStrategy());
             
-            AspectFactory = new LazyComponentHolder<IAspectFactory>(
-                () => new DefaultAspectFactory(aspectsPreInitializerProvider, AspectDependencyInjector));
+            var aspectsPreInitializerProvider = new InstanceComponentHolder<IAspectsPreInitializer>(
+                new CachedAspectsPreInitializer(
+                    new DefaultAspectsPreInitializer(AspectDeclarationCollector, AspectOrderStrategy),
+                    CacheDelegateFactory<ConcurrentDictionaryCacheFactory>.Instance));
+            
+            AspectFactory = new InstanceComponentHolder<IAspectFactory>(
+                new DefaultAspectFactory(aspectsPreInitializerProvider, AspectDependencyInjector));
             
             var selectorProvider = new LazyComponentHolder<IAspectDependencySelector>(
                 () => new CachedAspectDependencySelector(
-                    new DefaultAspectDependencySelector()));
+                    new DefaultAspectDependencySelector(),
+                    CacheDelegateFactory<ConcurrentDictionaryCacheFactory>.Instance));
             
             AspectDependencyInjector = new LazyComponentHolder<IAspectDependencyInjector>(
                 () => new AspectDependencyInjector(DependencyHolder, selectorProvider));
-            
-            AspectOrderStrategy = new LazyComponentHolder<IAspectOrderStrategy>(
-                () => new DefaultAspectOrderStrategy());
         }
     }
 }

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
+using DependencyAttribute = IvorySharp.Aspects.Dependency.DependencyAttribute;
 
 namespace IvorySharp.Aspects.Creation
 {
@@ -14,8 +17,11 @@ namespace IvorySharp.Aspects.Creation
     internal sealed class DefaultAspectsPreInitializer : IAspectsPreInitializer
     {
         private readonly IComponentHolder<IAspectDeclarationCollector> _aspectDeclarationCollectorHolder;
-        private readonly IComponentHolder<IAspectOrderStrategy> _orderStrategyHolder;  
+        private readonly IComponentHolder<IAspectOrderStrategy> _orderStrategyHolder;
 
+        private IAspectDeclarationCollector _aspectDeclarationCollector;
+        private IAspectOrderStrategy _aspectOrderStrategy;
+        
         /// <summary>
         /// Инициализирует экземпляр <see cref="DefaultAspectsPreInitializer"/>.
         /// </summary>
@@ -30,13 +36,16 @@ namespace IvorySharp.Aspects.Creation
         /// <inheritdoc />
         public MethodBoundaryAspect[] PrepareBoundaryAspects(IInvocationContext context)
         {
-            var collector = _aspectDeclarationCollectorHolder.Get();
-            var orderer = _orderStrategyHolder.Get();
+            if (_aspectDeclarationCollector == null)
+                _aspectDeclarationCollector = _aspectDeclarationCollectorHolder.Get();
+
+            if (_aspectOrderStrategy == null)
+                _aspectOrderStrategy = _orderStrategyHolder.Get();
             
             var methodBoundaryAspects = new List<MethodBoundaryAspect>();
-            var declarations = collector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
+            var declarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
 
-            foreach (var aspect in orderer.Order(declarations.Select(d => d.MethodAspect)))
+            foreach (var aspect in _aspectOrderStrategy.Order(declarations.Select(d => d.MethodAspect)))
             {
                 var existingAspect = methodBoundaryAspects.Find(aspect.Equals);
                 
@@ -50,8 +59,11 @@ namespace IvorySharp.Aspects.Creation
 
             for (var i = 0; i < methodBoundaryAspects.Count; i++)
             {
-                methodBoundaryAspects[i].InternalOrder = methodBoundaryAspects[i].Order + i + 1;
-                methodBoundaryAspects[i].InternalId = Guid.NewGuid();
+                var currentAspect = methodBoundaryAspects[i];
+                
+                currentAspect.InternalOrder = currentAspect.Order + i + 1;
+                currentAspect.InternalId = Guid.NewGuid();
+                currentAspect.HasDependencies = HasDependencies(currentAspect.GetType());
             }
             
             return methodBoundaryAspects.ToArray();
@@ -60,9 +72,10 @@ namespace IvorySharp.Aspects.Creation
         /// <inheritdoc />
         public MethodInterceptionAspect PrepareInterceptAspect(IInvocationContext context)
         {
-            var collector = _aspectDeclarationCollectorHolder.Get();
-            
-            var aspectDeclarations = collector
+            if (_aspectDeclarationCollector == null)
+                _aspectDeclarationCollector = _aspectDeclarationCollectorHolder.Get();
+       
+            var aspectDeclarations = _aspectDeclarationCollector
                 .CollectAspectDeclarations<MethodInterceptionAspect>(context)
                 .ToArray();
 
@@ -80,8 +93,18 @@ namespace IvorySharp.Aspects.Creation
 
             declaration.MethodAspect.MulticastTarget = declaration.MulticastTarget;
             declaration.MethodAspect.InternalId = Guid.NewGuid();
+            declaration.MethodAspect.HasDependencies = HasDependencies(declaration.MethodAspect.GetType());
 
             return declaration.MethodAspect;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool HasDependencies(Type aspectType)
+        {
+            return aspectType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Any(p => p.CanWrite &&
+                          p.CustomAttributes.Select(ca => ca.AttributeType)
+                              .Any(t => t == typeof(DependencyAttribute)));
         }
     }
 }

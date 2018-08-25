@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace IvorySharp.Aspects.Selection
 {
@@ -11,9 +12,13 @@ namespace IvorySharp.Aspects.Selection
     internal sealed class DefaultAspectOrderStrategy : IAspectOrderStrategy
     {
         /// <inheritdoc />
-        public IOrderedEnumerable<TAspect> Order<TAspect>(IEnumerable<TAspect> aspects) where TAspect : OrderableMethodAspect
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IOrderedEnumerable<TAspect> Order<TAspect>(IEnumerable<TAspect> aspects)
+            where TAspect : OrderableMethodAspect
         {
-            return aspects.OrderBy(a => a.Order).ThenBy(a => a.MulticastTarget);
+            return aspects
+                .OrderBy(a => a.Order)
+                .ThenBy(a => a.MulticastTarget);
         }
     }
 }

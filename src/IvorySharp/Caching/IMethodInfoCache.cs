@@ -5,9 +5,9 @@ using JetBrains.Annotations;
 namespace IvorySharp.Caching
 {
     /// <summary>
-    /// Кеш методов.
+    /// Кеш информации о методе.
     /// </summary>
-    internal interface IMethodCache
+    internal interface IMethodInfoCache
     {
         /// <summary>
         /// Получает либо добавляет делегат вызова метода в кеш.

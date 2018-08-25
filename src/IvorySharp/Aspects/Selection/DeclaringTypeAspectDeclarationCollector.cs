@@ -12,6 +12,7 @@ namespace IvorySharp.Aspects.Selection
     internal sealed class DeclaringTypeAspectDeclarationCollector : IAspectDeclarationCollector
     {
         private readonly IComponentHolder<IAspectSelector> _aspectSelectorHolder;
+        private IAspectSelector _aspectSelector;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="DeclaringTypeAspectDeclarationCollector"/>.
@@ -26,12 +27,13 @@ namespace IvorySharp.Aspects.Selection
         public IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(IInvocationContext context) 
             where TAspect : MethodAspect
         {
-            var selector = _aspectSelectorHolder.Get();
+            if (_aspectSelector == null)
+                _aspectSelector = _aspectSelectorHolder.Get();
             
-            var methodAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.Method);
-            var typeAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.DeclaringType)
+            var methodAspectDeclarations = _aspectSelector.SelectAspectDeclarations<TAspect>(context.Method);
+            var typeAspectDeclarations = _aspectSelector.SelectAspectDeclarations<TAspect>(context.DeclaringType)
                 .Concat(context.DeclaringType.GetInterceptableInterfaces()
-                    .SelectMany(i => selector.SelectAspectDeclarations<TAspect>(i)));
+                    .SelectMany(i => _aspectSelector.SelectAspectDeclarations<TAspect>(i)));
 
             var aspectDeclarations = typeAspectDeclarations
                 .Concat(methodAspectDeclarations)

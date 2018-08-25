@@ -20,7 +20,7 @@ namespace IvorySharp.Aspects.Weaving
         private IComponentHolder<IAspectFactory> _aspectFactory;
         private IComponentHolder<IInvocationPipelineFactory> _pipelineFactory;
         private IComponentHolder<IAspectWeavePredicate> _weavePredicate;
-        private IMethodCache _methodCache;
+        private IMethodInfoCache _methodInfoCache;
         
         /// <summary>
         /// Исходный объект, вызовы которого будут перехватываться.
@@ -73,7 +73,7 @@ namespace IvorySharp.Aspects.Weaving
                 aspectFactoryHolder, 
                 pipelineFactoryHolder,
                 weavePredicateHolder,
-                MethodCache.Instance);
+                MethodInfoCache.Instance);
 
             return transparentProxy;
         }
@@ -81,7 +81,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <inheritdoc />
         protected internal sealed override object Invoke(MethodInfo method, object[] args)
         {
-            var invoker = _methodCache.GetInvoker(method);
+            var invoker = _methodInfoCache.GetInvoker(method);
             var invocation = new Invocation(args, method, DeclaringType, TargetType, Proxy, Target, invoker);     
             var interceptor = new InvocationInterceptor(_aspectFactory, _pipelineFactory, _weavePredicate);
 
@@ -99,12 +99,12 @@ namespace IvorySharp.Aspects.Weaving
             IComponentHolder<IAspectFactory> aspectFactoryHolder,
             IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder,
             IComponentHolder<IAspectWeavePredicate> weavePredicateHolder,
-            IMethodCache methodCache)
+            IMethodInfoCache methodInfoCache)
         {
             _aspectFactory = aspectFactoryHolder;
             _pipelineFactory = pipelineFactoryHolder;
             _weavePredicate = weavePredicateHolder;
-            _methodCache = methodCache;
+            _methodInfoCache = methodInfoCache;
 
             Target = target;
             Proxy = proxy;

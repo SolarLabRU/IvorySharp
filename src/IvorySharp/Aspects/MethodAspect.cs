@@ -16,6 +16,11 @@ namespace IvorySharp.Aspects
         internal Guid InternalId { get; set; }
         
         /// <summary>
+        /// Признак наличия зависимостей у аспекта.
+        /// </summary>
+        internal bool HasDependencies { get; set; }
+        
+        /// <summary>
         /// Описание аспекта.
         /// </summary>
         public string Description { get; set; }

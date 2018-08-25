@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
 using IvorySharp.Comparers;
@@ -11,22 +10,23 @@ namespace IvorySharp.Caching
     /// <summary>
     /// Кеш методов.
     /// </summary>
-    internal sealed class MethodCache : IMethodCache
+    internal sealed class MethodInfoCache : IMethodInfoCache
     {
-        private readonly ConcurrentDictionary<MethodInfo, Func<object, object[], object>> _invokerCache;
-        private readonly ConcurrentDictionary<MethodMapCacheKey, MethodInfo> _methodMapCacheKey;
-        private readonly ConcurrentDictionary<MethodInfo, bool> _asyncMethodCache;
+        private readonly IKeyValueCache<MethodInfo, Func<object, object[], object>> _invokerCache;
+        private readonly IKeyValueCache<MethodMapCacheKey, MethodInfo> _methodMapCacheKey;
+        private readonly IKeyValueCache<MethodInfo, bool> _asyncMethodCache;
         
         /// <summary>
-        /// Инициализированный экземпляр <see cref="MethodCache"/>.
+        /// Инициализированный экземпляр <see cref="MethodInfoCache"/>.
         /// </summary>
-        public static readonly MethodCache Instance = new MethodCache();
+        public static readonly MethodInfoCache Instance = new MethodInfoCache(
+            ConcurrentDictionaryCacheFactory.Default);
         
-        private MethodCache()
+        private MethodInfoCache(IKeyValueCacheFactory cacheFactory)
         {
-            _invokerCache = new ConcurrentDictionary<MethodInfo, Func<object, object[], object>>(MethodEqualityComparer.Instance);
-            _methodMapCacheKey = new ConcurrentDictionary<MethodMapCacheKey, MethodInfo>();
-            _asyncMethodCache = new ConcurrentDictionary<MethodInfo, bool>(MethodEqualityComparer.Instance);
+            _invokerCache = cacheFactory.Create<MethodInfo, Func<object, object[], object>>(MethodEqualityComparer.Instance);
+            _methodMapCacheKey = cacheFactory.Create<MethodMapCacheKey, MethodInfo>();
+            _asyncMethodCache = cacheFactory.Create<MethodInfo, bool>(MethodEqualityComparer.Instance);
         }
 
         /// <inheritdoc />
@@ -58,7 +58,7 @@ namespace IvorySharp.Caching
         /// <summary>
         /// Ключ для хранения маппинга методов.
         /// </summary>
-        internal struct MethodMapCacheKey
+        private struct MethodMapCacheKey
         {
             public readonly Type TargetType;
             public readonly MethodInfo InterfaceMethod;

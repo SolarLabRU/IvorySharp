@@ -10,8 +10,10 @@ namespace IvorySharp.Aspects.Pipeline
     internal abstract class InvocationPipelineBase : IInvocationPipeline
     {
         private static readonly object SyncRoot = new object();
-        private readonly Dictionary<Guid, object> _pipelineData;
         
+        private readonly Lazy<Dictionary<Guid, object>> _pipelineDataProvider;
+        private Dictionary<Guid, object> PipelineData => _pipelineDataProvider.Value;
+         
         /// <summary>
         /// Аспекты типа <see cref="MethodBoundaryAspect"/>.
         /// </summary>
@@ -63,7 +65,8 @@ namespace IvorySharp.Aspects.Pipeline
             IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects,
             MethodInterceptionAspect interceptionAspect)
         {
-            _pipelineData = new Dictionary<Guid, object>();
+            _pipelineDataProvider = new Lazy<Dictionary<Guid, object>>(
+                () => new Dictionary<Guid, object>());
 
             Invocation = invocation;
             BoundaryAspects = boundaryAspects;
@@ -119,7 +122,7 @@ namespace IvorySharp.Aspects.Pipeline
                 if (ExecutionStateKey == null)
                     return null;
                 
-                return _pipelineData.TryGetValue(ExecutionStateKey.Value, out var data)
+                return PipelineData.TryGetValue(ExecutionStateKey.Value, out var data)
                     ? data 
                     : null;
             }
@@ -136,7 +139,7 @@ namespace IvorySharp.Aspects.Pipeline
                 if (ExecutionStateKey == null)
                     return;
 
-                _pipelineData[ExecutionStateKey.Value] = newState;
+                PipelineData[ExecutionStateKey.Value] = newState;
             }
         }
     }

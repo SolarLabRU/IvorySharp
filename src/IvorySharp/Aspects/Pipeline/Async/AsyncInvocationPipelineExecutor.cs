@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using IvorySharp.Aspects.Pipeline.Async.StateMachine;
 using IvorySharp.Aspects.Pipeline.StateMachine;
@@ -29,6 +30,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ExecutePipeline(IInvocationPipeline basePipeline)
         {
             // Это нарушает solid, но позволяет не выставлять кучу классов наружу библиотеки.
@@ -59,6 +61,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// <returns>Результат выполнения метода.</returns>
         /// 
         // ReSharper disable once MemberCanBeMadeStatic.Local
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private async Task SignalWhenAwait(AsyncInvocationPipeline pipeline)
         {
             var stateMachine = new AsyncInvocationStateMachine<AsyncInvocationPipeline>(pipeline);
@@ -78,6 +81,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// <returns>Результат выполнения метода.</returns>
         ///  
         // ReSharper disable once MemberCanBeMadeStatic.Local
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private async Task<T> SignalWhenAwait<T>(AsyncInvocationPipeline pipeline)
         {
             var stateMachine = new AsyncInvocationStateMachine<AsyncInvocationPipeline>(pipeline);

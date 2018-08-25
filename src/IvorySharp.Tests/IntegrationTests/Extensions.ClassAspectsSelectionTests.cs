@@ -6,11 +6,13 @@ using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
+using IvorySharp.Caching;
 using IvorySharp.Components;
 using IvorySharp.Extensions.ClassAspectSelection;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Selection;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Weaving;
 using IvorySharp.Tests.Assets;
+using IvorySharp.Tests.Assets.Cache;
 using Xunit;
 
 namespace IvorySharp.Tests.IntegrationTests
@@ -126,7 +128,7 @@ namespace IvorySharp.Tests.IntegrationTests
                 AspectOrderStrategy = componentsStore.AspectOrderStrategy;
             
                 componentsStore.AspectWeavePredicate
-                    .Replace(new TargetTypeWeavePredicate(AspectSelector));
+                    .Replace(new TargetTypeWeavePredicate(AspectSelector, new ConcurrentDictionaryCacheFactory()));
             
                 componentsStore.AspectDeclarationCollector
                     .Replace(new TargetTypeAspectDeclarationCollector(AspectSelector));

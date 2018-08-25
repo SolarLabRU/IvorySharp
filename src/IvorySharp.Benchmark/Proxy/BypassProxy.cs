@@ -10,7 +10,7 @@ namespace IvorySharp.Benchmark.Proxy
         
         protected internal override object Invoke(MethodInfo targetMethod, object[] args)
         {
-            return MethodCache.Instance.GetInvoker(targetMethod)(_service, args);
+            return MethodInfoCache.Instance.GetInvoker(targetMethod)(_service, args);
         }
         
         private void Initialize(TService service)

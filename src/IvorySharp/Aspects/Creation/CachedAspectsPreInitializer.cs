@@ -10,22 +10,24 @@ namespace IvorySharp.Aspects.Creation
     internal sealed class CachedAspectsPreInitializer : IAspectsPreInitializer
     {
         private readonly IAspectsPreInitializer _originalPreInitializer;
-        
+
         private readonly Func<IInvocationContext, MethodBoundaryAspect[]> _cachedPrepareMethodBoundaryAspect;
         private readonly Func<IInvocationContext, MethodInterceptionAspect> _cachedPrepareMethodInterceptionAspect;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="CachedAspectsPreInitializer"/>.
         /// </summary>
-        public CachedAspectsPreInitializer(IAspectsPreInitializer originalPreInitializer)
+        public CachedAspectsPreInitializer(
+            IAspectsPreInitializer originalPreInitializer, 
+            ICacheDelegateFactory cacheDelegateFactory)
         {
             _originalPreInitializer = originalPreInitializer;
 
-            _cachedPrepareMethodBoundaryAspect = Memoizer.CreateProducer(
+            _cachedPrepareMethodBoundaryAspect = cacheDelegateFactory.CreateDelegate(
                 ctx => _originalPreInitializer.PrepareBoundaryAspects(ctx),
                 InvocationContextComparer.Instance);
 
-            _cachedPrepareMethodInterceptionAspect = Memoizer.CreateProducer(
+            _cachedPrepareMethodInterceptionAspect = cacheDelegateFactory.CreateDelegate(
                 ctx => _originalPreInitializer.PrepareInterceptAspect(ctx),
                 InvocationContextComparer.Instance);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using IvorySharp.Aspects.Selection;
+using IvorySharp.Caching;
 using IvorySharp.Components;
 using IvorySharp.Core;
 
@@ -11,58 +12,72 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>
     internal sealed class DeclaringTypeWeavePredicate : BaseWeavePredicate
     {
+        private IKeyValueCache<Type, bool> _typeWeaveableCache;
+        private IKeyValueCache<IInvocationContext, bool> _invocationWeaveableCache;
+        
         /// <summary>
         /// Инициализирует экземпляр <see cref="DeclaringTypeWeavePredicate"/>.
         /// </summary>
-        public DeclaringTypeWeavePredicate(IComponentHolder<IAspectSelector> selector)
+        public DeclaringTypeWeavePredicate(
+            IComponentHolder<IAspectSelector> selector,
+            IKeyValueCacheFactory cacheFactory)
             : base(selector)
         {
+            _typeWeaveableCache = cacheFactory.Create<Type, bool>();
+            _invocationWeaveableCache = cacheFactory.Create<IInvocationContext, bool>(
+                InvocationContextComparer.Instance);
         }
 
         /// <inheritdoc />
         public override bool IsWeaveable(Type declaringType, Type targetType)
         {
-            if (!declaringType.IsInterface)
-                return false;
+            return _typeWeaveableCache.GetOrAdd(declaringType, dt =>
+            {
+                if (!dt.IsInterface)
+                    return false;
 
-            if (IsWeavingSuppressed(declaringType))
-                return false;
+                if (IsWeavingSuppressed(dt))
+                    return false;
 
-            var selector = AspectSelectorHolder.Get();
-            
-            // На интерфейсе есть аспект
-            if (selector.HasAnyAspect(declaringType))
-                return true;
+                var selector = AspectSelectorHolder.Get();
 
-            // На методах интерфейса есть аспекты
-            if (declaringType.GetMethods().Any(m => !IsWeavingSuppressed(m) && selector.HasAnyAspect(m)))
-                return true;
+                // На интерфейсе есть аспект
+                if (selector.HasAnyAspect(dt))
+                    return true;
 
-            var interaces = declaringType.GetInterfaces().Where(i => !IsWeavingSuppressed(i)).ToArray();
+                // На методах интерфейса есть аспекты
+                if (dt.GetMethods().Any(m => !IsWeavingSuppressed(m) && selector.HasAnyAspect(m)))
+                    return true;
 
-            // На базовом интерфейсе есть аспект
-            if (interaces.Any(i => selector.HasAnyAspect(i)))
-                return true;
+                var interaces = dt.GetInterfaces().Where(i => !IsWeavingSuppressed(i)).ToArray();
 
-            // На методах базового интерфейса есть аспекты
-            return interaces.SelectMany(i => i.GetMethods())
-                .Any(m => !IsWeavingSuppressed(m) && 
-                           selector.HasAnyAspect(m));
+                // На базовом интерфейсе есть аспект
+                if (interaces.Any(i => selector.HasAnyAspect(i)))
+                    return true;
+
+                // На методах базового интерфейса есть аспекты
+                return interaces.SelectMany(i => i.GetMethods())
+                    .Any(m => !IsWeavingSuppressed(m) &&
+                              selector.HasAnyAspect(m));
+            });
         }
 
         /// <inheritdoc />
         public override bool IsWeaveable(IInvocation invocation)
         {
-            if (!invocation.DeclaringType.IsInterface)
-                return false;
+            return _invocationWeaveableCache.GetOrAdd(invocation, iv =>
+            {
+                if (!iv.DeclaringType.IsInterface)
+                    return false;
 
-            if (IsWeavingSuppressed(invocation.Method))
-                return false;
+                if (IsWeavingSuppressed(iv.Method))
+                    return false;
 
-            var selector = AspectSelectorHolder.Get();
-            
-            return selector.HasAnyAspect(invocation.Method) || 
-                   IsWeaveable(invocation.DeclaringType, invocation.TargetType);
+                var selector = AspectSelectorHolder.Get();
+
+                return selector.HasAnyAspect(iv.Method) ||
+                       IsWeaveable(iv.DeclaringType, iv.TargetType);
+            });
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace IvorySharp.Aspects.Selection
 {
@@ -11,18 +12,21 @@ namespace IvorySharp.Aspects.Selection
     internal sealed class DefaultAspectSelector : IAspectSelector
     {
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasAnyAspect(Type type)
         {
             return SelectAspectDeclarations<MethodAspect>(type).Any();
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasAnyAspect(MethodInfo method)
         {
             return SelectAspectDeclarations<MethodAspect>(method).Any();
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<MethodAspectDeclaration<TAspect>> SelectAspectDeclarations<TAspect>(Type type)
             where TAspect : MethodAspect
         {
@@ -33,6 +37,7 @@ namespace IvorySharp.Aspects.Selection
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IEnumerable<MethodAspectDeclaration<TAspect>> SelectAspectDeclarations<TAspect>(MethodInfo method)
             where TAspect : MethodAspect
         {

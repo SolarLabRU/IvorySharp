@@ -13,9 +13,11 @@ namespace IvorySharp.Aspects.Dependency
         /// <summary>
         /// Инициализирует экземпляр <see cref="CachedAspectDependencySelector"/>.
         /// </summary>
-        public CachedAspectDependencySelector(IAspectDependencySelector dependencySelector)
+        public CachedAspectDependencySelector(
+            IAspectDependencySelector dependencySelector, 
+            ICacheDelegateFactory cacheDelegateFactory)
         {
-            _cachedPropertyDependencyProvider = Memoizer.CreateProducer<Type, AspectPropertyDependency[]>(
+            _cachedPropertyDependencyProvider = cacheDelegateFactory.CreateDelegate<Type, AspectPropertyDependency[]>(
                 dependencySelector.SelectPropertyDependencies);
         }
 

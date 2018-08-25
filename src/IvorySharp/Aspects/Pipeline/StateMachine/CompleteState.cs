@@ -1,4 +1,5 @@
-﻿using IvorySharp.Extensions;
+﻿using System.Runtime.CompilerServices;
+using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline.StateMachine
 {
@@ -17,6 +18,7 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         private CompleteState() { }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal override InvocationState<TPipeline> MakeTransition(TPipeline pipeline)
         {
             if (pipeline.IsExceptional())
