@@ -12,5 +12,12 @@ namespace IvorySharp.Aspects.Finalize
         /// </summary>
         /// <param name="methodAspect">Аспект.</param>
         void Finalize(MethodAspect methodAspect);
+
+        /// <summary>
+        /// Возвращает признак того, что аспект поддерживает финализацию.
+        /// </summary>
+        /// <param name="methodAspect">Аспект.</param>
+        /// <returns>Признак того, что аспект поддерживает финализацию.</returns>
+        bool IsFinalizable(MethodAspect methodAspect);
     }
 }

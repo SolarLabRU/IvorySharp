@@ -4,7 +4,9 @@ using System.Linq;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Finalize;
 using IvorySharp.Aspects.Selection;
+using IvorySharp.Caching;
 using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Tests.Assets;
@@ -33,11 +35,13 @@ namespace IvorySharp.Tests.UnitTests
             var collector = CreateAspectCollector(declarations);
             var orderer = CreateAspectOrderStrategy<MethodBoundaryAspect, int>(a => a.Order);
             var dependencySelector = CreateAspectDependencySelector();
+            var finalizer = CreateAspectFinalizer();
             
             var factory = new AspectFactory(
                 collector.ToInstanceHolder(), 
                 orderer.ToInstanceHolder(),
-                dependencySelector.ToInstanceHolder());
+                dependencySelector.ToInstanceHolder(),
+                finalizer.ToInstanceHolder());
             
             
             // Act
@@ -74,6 +78,12 @@ namespace IvorySharp.Tests.UnitTests
         private IAspectDependencySelector CreateAspectDependencySelector()
         {
             var mock = new Mock<IAspectDependencySelector>();
+            return mock.Object;
+        }
+
+        private IAspectFinalizer CreateAspectFinalizer()
+        {
+            var mock = new Mock<IAspectFinalizer>();
             return mock.Object;
         }
     }

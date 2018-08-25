@@ -48,7 +48,7 @@ namespace IvorySharp.Caching
         }
 
         /// <inheritdoc />
-        public bool GetIsAsync(MethodInfo method)
+        public bool IsAsync(MethodInfo method)
         {
             Debug.Assert(method != null, "method != null");
 

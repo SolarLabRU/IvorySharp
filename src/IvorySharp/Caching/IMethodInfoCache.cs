@@ -30,6 +30,6 @@ namespace IvorySharp.Caching
         /// </summary>
         /// <param name="method">Метод.</param>
         /// <returns>Признак того, что метод является асинхронным.</returns>
-        bool GetIsAsync([NotNull] MethodInfo method);
+        bool IsAsync([NotNull] MethodInfo method);
     }
 }

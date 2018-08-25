@@ -54,18 +54,23 @@ namespace IvorySharp.Aspects.Weaving
                 if (aspect.HasDependencies)
                     _dependencyInjector.InjectPropertyDependencies(aspect);         
 
-                aspect.Initialize();
+                if (aspect.IsInitializable)
+                    aspect.Initialize();
             }
             
             if (invocationData.InterceptionAspect.HasDependencies)
                 _dependencyInjector.InjectPropertyDependencies(invocationData.InterceptionAspect);
             
-            invocationData.InterceptionAspect.Initialize();
+            if (invocationData.InterceptionAspect.IsInitializable)
+                invocationData.InterceptionAspect.Initialize();
 
             invocationData.PipelineExecutor.ExecutePipeline(invocationData.Pipeline, invocation);
 
             foreach (var aspect in invocationData.BoundaryAspects)
-                _aspectFinalizer.Finalize(aspect);
+            {
+                if (aspect.IsFinalizable)
+                    _aspectFinalizer.Finalize(aspect);
+            }
 
             _aspectFinalizer.Finalize(invocationData.InterceptionAspect);
 

@@ -13,5 +13,11 @@ namespace IvorySharp.Aspects.Finalize
             if (methodAspect is IDisposable ds)
                 ds.Dispose();
         }
+
+        /// <inheritdoc />
+        public bool IsFinalizable(MethodAspect methodAspect)
+        {
+            return methodAspect is IDisposable;
+        }
     }
 }

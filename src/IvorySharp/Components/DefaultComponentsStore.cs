@@ -47,6 +47,7 @@ namespace IvorySharp.Components
         {
             DependencyHolder = dependencyProvider.ToInstanceHolder();
             
+            AspectFinalizer = new InstanceComponentHolder<IAspectFinalizer>(new DisposeAspectFinalizer());  
             AspectSelector = new InstanceComponentHolder<IAspectSelector>(new AspectSelector());
             AspectWeavePredicate = new InstanceComponentHolder<IAspectWeavePredicate>(
                 new DeclaringTypeWeavePredicate(AspectSelector));
@@ -67,7 +68,10 @@ namespace IvorySharp.Components
             
             AspectFactory = new InstanceComponentHolder<IAspectFactory>(
                 new AspectFactory(
-                    AspectDeclarationCollector, AspectOrderStrategy, aspectDependencySelectorHolder));
+                    AspectDeclarationCollector, 
+                    AspectOrderStrategy, 
+                    aspectDependencySelectorHolder,
+                    AspectFinalizer));
             
             AspectDependencyInjector = new LazyComponentHolder<IAspectDependencyInjector>(
                 () => new AspectDependencyInjector(DependencyHolder, aspectDependencySelectorHolder));
@@ -76,8 +80,6 @@ namespace IvorySharp.Components
                 new InvocationWeaveDataProviderFactory(
                     AspectWeavePredicate, AspectFactory, PipelineFactory, 
                     MethodInfoCache.Instance, ConcurrentDictionaryCacheFactory.Default));    
-            
-            AspectFinalizer = new InstanceComponentHolder<IAspectFinalizer>(new DisposeAspectFinalizer());
         }
     }
 }

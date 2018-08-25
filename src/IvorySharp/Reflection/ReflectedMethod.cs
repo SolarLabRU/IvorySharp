@@ -19,5 +19,10 @@ namespace IvorySharp.Reflection
 
             return index == -1 ? null : mapping.TargetMethods[index];
         }
+
+        internal static bool IsOverriden([NotNull] MethodInfo methodInfo)
+        {
+            return methodInfo.GetBaseDefinition().DeclaringType != methodInfo.DeclaringType;
+        }    
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects
@@ -21,6 +23,16 @@ namespace IvorySharp.Aspects
         internal bool HasDependencies { get; set; }
         
         /// <summary>
+        /// Признак того, что аспект поддерживает финализацию.
+        /// </summary>
+        internal bool IsFinalizable { get; set; }
+        
+        /// <summary>
+        /// Признак того, что аспект поддерживает инициализацию.
+        /// </summary>
+        internal bool IsInitializable { get; set; }
+        
+        /// <summary>
         /// Описание аспекта.
         /// </summary>
         public string Description { get; set; }
@@ -36,6 +48,17 @@ namespace IvorySharp.Aspects
         /// </summary>
         public MethodAspectMulticastTarget MulticastTarget { get; internal set; }
 
+        /// <summary>
+        /// Возвращает ссылку на метод <see cref="Initialize()"/>.
+        /// </summary>
+        /// <param name="aspect">Аспект.</param>
+        /// <returns>Ссылка на метод <see cref="Initialize()"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static MethodInfo GetInitializeMethod([NotNull] MethodAspect aspect)
+        {
+            return aspect.GetType().GetMethod(nameof(Initialize));
+        }
+        
         /// <inheritdoc />
         public override bool Equals(object obj)
         {

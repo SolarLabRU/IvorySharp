@@ -27,7 +27,7 @@ namespace IvorySharp.Aspects.Pipeline
             MethodBoundaryAspect[] boundaryAspects, 
             MethodInterceptionAspect interceptionAspect)
         {
-            if (_cache.GetIsAsync(signature.TargetMethod))
+            if (_cache.IsAsync(signature.TargetMethod))
                 return new AsyncInvocationPipeline(boundaryAspects, interceptionAspect);
             
             return new InvocationPipeline(boundaryAspects, interceptionAspect);
@@ -36,7 +36,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <inheritdoc />
         public IInvocationPipelineExecutor CreateExecutor(IInvocationSignature signature)
         {
-            if (_cache.GetIsAsync(signature.TargetMethod))
+            if (_cache.IsAsync(signature.TargetMethod))
                 return AsyncInvocationPipelineExecutor.Instance;
             
             return InvocationPipelineExecutor.Instance;

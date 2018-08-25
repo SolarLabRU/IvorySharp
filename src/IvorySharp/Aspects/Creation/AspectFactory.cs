@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Finalize;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
+using IvorySharp.Reflection;
 
 namespace IvorySharp.Aspects.Creation
 {
@@ -17,10 +19,12 @@ namespace IvorySharp.Aspects.Creation
         private readonly IComponentHolder<IAspectDeclarationCollector> _aspectDeclarationCollectorHolder;
         private readonly IComponentHolder<IAspectOrderStrategy> _orderStrategyHolder;
         private readonly IComponentHolder<IAspectDependencySelector> _dependencySelectorHolder;
-
+        private readonly IComponentHolder<IAspectFinalizer> _aspectFinalizerHolder;
+        
         private IAspectDeclarationCollector _aspectDeclarationCollector;
         private IAspectOrderStrategy _aspectOrderStrategy;
         private IAspectDependencySelector _dependencySelector;
+        private IAspectFinalizer _aspectFinalizer;
         
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectFactory"/>.
@@ -28,11 +32,13 @@ namespace IvorySharp.Aspects.Creation
         public AspectFactory(
             IComponentHolder<IAspectDeclarationCollector> aspectDeclarationCollectorHolder,
             IComponentHolder<IAspectOrderStrategy> orderStrategyHolder,
-            IComponentHolder<IAspectDependencySelector> dependencySelectorHolder)
+            IComponentHolder<IAspectDependencySelector> dependencySelectorHolder,
+            IComponentHolder<IAspectFinalizer> aspectFinalizerHolder)
         {
             _aspectDeclarationCollectorHolder = aspectDeclarationCollectorHolder;
             _orderStrategyHolder = orderStrategyHolder;
             _dependencySelectorHolder = dependencySelectorHolder;
+            _aspectFinalizerHolder = aspectFinalizerHolder;
         }
 
         /// <inheritdoc />
@@ -43,6 +49,12 @@ namespace IvorySharp.Aspects.Creation
 
             if (_aspectOrderStrategy == null)
                 _aspectOrderStrategy = _orderStrategyHolder.Get();
+
+            if (_aspectFinalizer == null)
+                _aspectFinalizer = _aspectFinalizerHolder.Get();
+            
+            if (_dependencySelector == null)
+                _dependencySelector = _dependencySelectorHolder.Get();
             
             var methodBoundaryAspects = new List<MethodBoundaryAspect>();
             var declarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(signature);
@@ -65,11 +77,10 @@ namespace IvorySharp.Aspects.Creation
                 
                 currentAspect.InternalOrder = currentAspect.Order + i + 1;
                 currentAspect.InternalId = Guid.NewGuid();
-
-                if (_dependencySelector == null)
-                    _dependencySelector = _dependencySelectorHolder.Get();
-                
                 currentAspect.HasDependencies = _dependencySelector.HasDependencies(currentAspect.GetType());
+                currentAspect.IsFinalizable = _aspectFinalizer.IsFinalizable(currentAspect);
+                currentAspect.IsInitializable = ReflectedMethod.IsOverriden(
+                    MethodAspect.GetInitializeMethod(currentAspect));
             }
             
             return methodBoundaryAspects.ToArray();
@@ -81,6 +92,9 @@ namespace IvorySharp.Aspects.Creation
             if (_aspectDeclarationCollector == null)
                 _aspectDeclarationCollector = _aspectDeclarationCollectorHolder.Get();
        
+            if (_aspectFinalizer == null)
+                _aspectFinalizer = _aspectFinalizerHolder.Get();
+            
             var aspectDeclarations = _aspectDeclarationCollector
                 .CollectAspectDeclarations<MethodInterceptionAspect>(context)
                 .ToArray();
@@ -103,7 +117,10 @@ namespace IvorySharp.Aspects.Creation
             declaration.MethodAspect.MulticastTarget = declaration.MulticastTarget;
             declaration.MethodAspect.InternalId = Guid.NewGuid();
             declaration.MethodAspect.HasDependencies = _dependencySelector.HasDependencies(declaration.MethodAspect.GetType());
-
+            declaration.MethodAspect.IsFinalizable = _aspectFinalizer.IsFinalizable(declaration.MethodAspect);
+            declaration.MethodAspect.IsInitializable = ReflectedMethod.IsOverriden(
+                MethodAspect.GetInitializeMethod(declaration.MethodAspect));
+            
             return declaration.MethodAspect;
         }
     }

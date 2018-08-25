@@ -95,13 +95,13 @@ namespace IvorySharp.Aspects.Pipeline.Async
 
         /// <summary>
         /// Возвращает хендлер для создания продолжения вызова с использованием <see cref="SignalWhenAwait{T}"/>
-        /// с внутренним типом задачи, возвращаемой методом <see cref="IInvocationContext.Method"/>.
+        /// с внутренним типом задачи, возвращаемой методом <see cref="IInvocationSignature.Method"/>.
         /// </summary>
-        /// <param name="invocation">Модель вызова.</param>
+        /// <param name="signature">Модель вызова.</param>
         /// <returns>Хендлер для создания продолжения вызова.</returns>
-        private MethodLambda GetAsyncFunctionHandler(IInvocationContext invocation)
+        private MethodLambda GetAsyncFunctionHandler(IInvocationSignature signature)
         {
-            var innerType = invocation.Method.ReturnType.GetGenericArguments()[0];
+            var innerType = signature.Method.ReturnType.GetGenericArguments()[0];
 
             return _handlersCache.GetOrAdd(innerType, key =>
             {
