@@ -12,7 +12,7 @@ namespace IvorySharp.Aspects.Creation
     /// <summary>
     /// Компонент подготовки аспектов для инициализации.
     /// </summary>
-    internal sealed class DefaultAspectsPreInitializer : IAspectsPreInitializer
+    internal sealed class AspectFactory : IAspectFactory
     {
         private readonly IComponentHolder<IAspectDeclarationCollector> _aspectDeclarationCollectorHolder;
         private readonly IComponentHolder<IAspectOrderStrategy> _orderStrategyHolder;
@@ -23,9 +23,9 @@ namespace IvorySharp.Aspects.Creation
         private IAspectDependencySelector _dependencySelector;
         
         /// <summary>
-        /// Инициализирует экземпляр <see cref="DefaultAspectsPreInitializer"/>.
+        /// Инициализирует экземпляр <see cref="AspectFactory"/>.
         /// </summary>
-        public DefaultAspectsPreInitializer(
+        public AspectFactory(
             IComponentHolder<IAspectDeclarationCollector> aspectDeclarationCollectorHolder,
             IComponentHolder<IAspectOrderStrategy> orderStrategyHolder,
             IComponentHolder<IAspectDependencySelector> dependencySelectorHolder)
@@ -36,7 +36,7 @@ namespace IvorySharp.Aspects.Creation
         }
 
         /// <inheritdoc />
-        public MethodBoundaryAspect[] PrepareBoundaryAspects(IInvocationContext context)
+        public MethodBoundaryAspect[] CreateBoundaryAspects(IInvocationSignature signature)
         {
             if (_aspectDeclarationCollector == null)
                 _aspectDeclarationCollector = _aspectDeclarationCollectorHolder.Get();
@@ -45,7 +45,7 @@ namespace IvorySharp.Aspects.Creation
                 _aspectOrderStrategy = _orderStrategyHolder.Get();
             
             var methodBoundaryAspects = new List<MethodBoundaryAspect>();
-            var declarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(context);
+            var declarations = _aspectDeclarationCollector.CollectAspectDeclarations<MethodBoundaryAspect>(signature);
 
             foreach (var aspect in _aspectOrderStrategy.Order(declarations.Select(d => d.MethodAspect)))
             {
@@ -76,7 +76,7 @@ namespace IvorySharp.Aspects.Creation
         }
 
         /// <inheritdoc />
-        public MethodInterceptionAspect PrepareInterceptAspect(IInvocationContext context)
+        public MethodInterceptionAspect CreateInterceptAspect(IInvocationSignature context)
         {
             if (_aspectDeclarationCollector == null)
                 _aspectDeclarationCollector = _aspectDeclarationCollectorHolder.Get();

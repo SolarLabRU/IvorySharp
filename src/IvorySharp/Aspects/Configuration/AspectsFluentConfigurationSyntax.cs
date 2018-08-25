@@ -60,6 +60,12 @@ namespace IvorySharp.Aspects.Configuration
             if (_componentsStore.AspectFactory == null)
                 _componentsStore.AspectFactory = defaultComponents.AspectFactory;
 
+            if (_componentsStore.WeaveDataProviderFactory == null)
+                _componentsStore.WeaveDataProviderFactory = defaultComponents.WeaveDataProviderFactory;
+
+            if (_componentsStore.AspectFinalizer == null)
+                _componentsStore.AspectFinalizer = defaultComponents.AspectFinalizer;
+            
             configurator(_aspectsConfiguration);
             
             _componentsStore.Freeze();

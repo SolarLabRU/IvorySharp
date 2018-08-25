@@ -44,8 +44,8 @@ namespace IvorySharp.Integration.CastleWindsor.Aspects.Integration
                         handler.ComponentModel.Implementation))
                     continue;
 
-                var interceptorType = typeof(WeavedInterceptor<>)
-                    .MakeGenericType(serviceType);
+                var interceptorType = typeof(WeavedInterceptor<,>)
+                    .MakeGenericType(serviceType, handler.ComponentModel.Implementation);
                    
                 handler.ComponentModel.Interceptors.AddIfNotInCollection(
                     new InterceptorReference(interceptorType));

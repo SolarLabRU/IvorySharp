@@ -16,7 +16,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
     /// </summary>
     internal sealed class AsyncInvocationPipelineExecutor : IInvocationPipelineExecutor
     {
-        private readonly ConcurrentDictionary<Type, Func<object, object[], object>> _handlersCache;
+        private readonly ConcurrentDictionary<Type, MethodLambda> _handlersCache;
 
         /// <summary>
         /// Инициализированный экземпляр <see cref="AsyncInvocationPipelineExecutor"/>.
@@ -26,15 +26,16 @@ namespace IvorySharp.Aspects.Pipeline.Async
 
         private AsyncInvocationPipelineExecutor()
         {
-            _handlersCache = new ConcurrentDictionary<Type, Func<object, object[], object>>();
+            _handlersCache = new ConcurrentDictionary<Type, MethodLambda>();
         }
 
         /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ExecutePipeline(IInvocationPipeline basePipeline)
+        public void ExecutePipeline(IInvocationPipeline basePipeline, IInvocation invocation)
         {
             // Это нарушает solid, но позволяет не выставлять кучу классов наружу библиотеки.
             var pipeline = (AsyncInvocationPipeline) basePipeline;
+            pipeline.Init(invocation);
 
             switch (pipeline.Invocation.InvocationType)
             {
@@ -98,7 +99,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// </summary>
         /// <param name="invocation">Модель вызова.</param>
         /// <returns>Хендлер для создания продолжения вызова.</returns>
-        private Func<object, object[], object> GetAsyncFunctionHandler(IInvocationContext invocation)
+        private MethodLambda GetAsyncFunctionHandler(IInvocationContext invocation)
         {
             var innerType = invocation.Method.ReturnType.GetGenericArguments()[0];
 

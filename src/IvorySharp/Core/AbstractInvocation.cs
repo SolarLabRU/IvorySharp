@@ -12,7 +12,7 @@ namespace IvorySharp.Core
     /// Базовая модель вызываемого метода.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public abstract class AbstractInvocation : IInvocation
+    internal abstract class AbstractInvocation : IInvocation
     {
         /// <inheritdoc />
         public InvocationArguments Arguments { get; }
@@ -62,7 +62,6 @@ namespace IvorySharp.Core
             InvocationType = Method.GetInvocationType();           
             _targetMethodProvider = new Lazy<MethodInfo>(GetTargetMethod);
         }
-
         
         /// <inheritdoc />
         public abstract object Proceed();

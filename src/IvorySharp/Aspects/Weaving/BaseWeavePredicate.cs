@@ -32,10 +32,10 @@ namespace IvorySharp.Aspects.Weaving
         }
 
         /// <inheritdoc />
-        public abstract bool IsWeaveable(Type declaringType, Type targetType);
+        public abstract bool IsWeaveable(Type declaredType, Type targetType);
 
         /// <inheritdoc />
-        public abstract bool IsWeaveable(IInvocation invocation);
+        public abstract bool IsWeaveable(IInvocationSignature signature);
 
         /// <summary>
         /// Возвращает признак того, что применение аспектов запрещено.

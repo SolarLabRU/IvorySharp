@@ -13,19 +13,19 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Создает модель пайплайна вызова метода.
         /// </summary>
-        /// <param name="invocation">Модель вызова метода.</param>
+        /// <param name="signature">Модель вызова метода.</param>
         /// <param name="boundaryAspects">Аспекты типа <see cref="MethodBoundaryAspect"/>.</param>
         /// <param name="interceptionAspect">Аспект типа <see cref="MethodInterceptionAspect"/>.</param>
         /// <returns>Модель пайплайна.</returns>
-        IInvocationPipeline CreatePipeline(IInvocation invocation,
+        IInvocationPipeline CreatePipeline(IInvocationSignature signature,
             MethodBoundaryAspect[] boundaryAspects, 
             MethodInterceptionAspect interceptionAspect);
 
         /// <summary>
         /// Создает компонент выполнения пайплайна вызова метода.
         /// </summary>
-        /// <param name="context">Контекст вызова.</param>
+        /// <param name="signature">Контекст вызова.</param>
         /// <returns>Компонент выполнения пайплайна.</returns>
-        IInvocationPipelineExecutor CreateExecutor(IInvocationContext context);
+        IInvocationPipelineExecutor CreateExecutor(IInvocationSignature signature);
     }
 }

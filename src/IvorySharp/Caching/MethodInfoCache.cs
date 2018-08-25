@@ -12,7 +12,7 @@ namespace IvorySharp.Caching
     /// </summary>
     internal sealed class MethodInfoCache : IMethodInfoCache
     {
-        private readonly IKeyValueCache<MethodInfo, Func<object, object[], object>> _invokerCache;
+        private readonly IKeyValueCache<MethodInfo, MethodLambda> _invokerCache;
         private readonly IKeyValueCache<MethodMapCacheKey, MethodInfo> _methodMapCacheKey;
         private readonly IKeyValueCache<MethodInfo, bool> _asyncMethodCache;
         
@@ -24,13 +24,13 @@ namespace IvorySharp.Caching
         
         private MethodInfoCache(IKeyValueCacheFactory cacheFactory)
         {
-            _invokerCache = cacheFactory.Create<MethodInfo, Func<object, object[], object>>(MethodEqualityComparer.Instance);
+            _invokerCache = cacheFactory.Create<MethodInfo, MethodLambda>(MethodEqualityComparer.Instance);
             _methodMapCacheKey = cacheFactory.Create<MethodMapCacheKey, MethodInfo>();
             _asyncMethodCache = cacheFactory.Create<MethodInfo, bool>(MethodEqualityComparer.Instance);
         }
 
         /// <inheritdoc />
-        public Func<object, object[], object> GetInvoker(MethodInfo method)
+        public MethodLambda GetInvoker(MethodInfo method)
         {
             Debug.Assert(method != null, "method != null");
             

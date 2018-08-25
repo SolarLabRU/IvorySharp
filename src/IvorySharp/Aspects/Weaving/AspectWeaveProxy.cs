@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
-using IvorySharp.Aspects.Creation;
-using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Finalize;
 using IvorySharp.Caching;
 using IvorySharp.Components;
 using IvorySharp.Core;
+using IvorySharp.Extensions;
 using IvorySharp.Proxying;
 using JetBrains.Annotations;
 
@@ -17,11 +18,6 @@ namespace IvorySharp.Aspects.Weaving
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public class AspectWeaveProxy : IvoryProxy
     {
-        private IComponentHolder<IAspectFactory> _aspectFactory;
-        private IComponentHolder<IInvocationPipelineFactory> _pipelineFactory;
-        private IComponentHolder<IAspectWeavePredicate> _weavePredicate;
-        private IMethodInfoCache _methodInfoCache;
-        
         /// <summary>
         /// Исходный объект, вызовы которого будут перехватываться.
         /// </summary>
@@ -43,22 +39,34 @@ namespace IvorySharp.Aspects.Weaving
         internal Type TargetType { get; private set; }
       
         /// <summary>
+        /// Кеш информации о методах
+        /// </summary>
+        internal IMethodInfoCache MethodCache { get; private set; }
+        
+        /// <summary>
+        /// Компонент для перехвата вызова метода.
+        /// </summary>
+        internal InvocationInterceptor Interceptor { get; private set; }
+
+        /// <summary>
         /// Создает экземпляр прокси.
         /// </summary>
         /// <param name="target">Целевой объект</param>
         /// <param name="targetType">Тип целевого объекта.</param>
         /// <param name="declaringType">Тип интерфейса, реализуемого целевым классом.</param>
-        /// <param name="aspectFactoryHolder">Фабрика аспектов.</param>
-        /// <param name="pipelineFactoryHolder">Фабрика компонентов пайлпайна.</param>
-        /// <param name="weavePredicateHolder">Предикат определения возможности применения аспектов.</param>
+        /// <param name="invocationWeaveDataProvider">Провайдер данных о вызове.</param>
+        /// <param name="aspectDependencyInjectorHolder">Компонент для внедрения зависимостей в аспекты.</param>
+        /// <param name="aspectFinalizerHolder">Финализатор аспектов.</param>
+        /// <param name="methodInfoCache">Кеш методов.</param>
         /// <returns>Экземпляр прокси.</returns>
         internal static object Create(
             object target,
             Type targetType,
             Type declaringType,
-            IComponentHolder<IAspectFactory> aspectFactoryHolder,
-            IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder,
-            IComponentHolder<IAspectWeavePredicate> weavePredicateHolder)
+            IInvocationWeaveDataProvider invocationWeaveDataProvider,
+            IComponentHolder<IAspectDependencyInjector> aspectDependencyInjectorHolder,
+            IComponentHolder<IAspectFinalizer> aspectFinalizerHolder,
+            IMethodInfoCache methodInfoCache)
         {
             var transparentProxy = ProxyGenerator.Instance.CreateTransparentProxy(
                 typeof(AspectWeaveProxy), declaringType);
@@ -70,10 +78,10 @@ namespace IvorySharp.Aspects.Weaving
                 transparentProxy,
                 targetType,
                 declaringType,
-                aspectFactoryHolder, 
-                pipelineFactoryHolder,
-                weavePredicateHolder,
-                MethodInfoCache.Instance);
+                invocationWeaveDataProvider,
+                aspectDependencyInjectorHolder,
+                aspectFinalizerHolder,
+                methodInfoCache);
 
             return transparentProxy;
         }
@@ -81,11 +89,12 @@ namespace IvorySharp.Aspects.Weaving
         /// <inheritdoc />
         protected internal sealed override object Invoke(MethodInfo method, object[] args)
         {
-            var invoker = _methodInfoCache.GetInvoker(method);
-            var invocation = new Invocation(args, method, DeclaringType, TargetType, Proxy, Target, invoker);     
-            var interceptor = new InvocationInterceptor(_aspectFactory, _pipelineFactory, _weavePredicate);
+            var targetMethod = MethodCache.GetMethodMap(TargetType, method);
+            var signature = new InvocationSignature(
+                method, targetMethod, DeclaringType,
+                TargetType, method.GetInvocationType());
 
-            return interceptor.Intercept(invocation);
+            return Interceptor.Intercept(signature, args, Target, Proxy);
         }
 
         /// <summary>
@@ -96,20 +105,22 @@ namespace IvorySharp.Aspects.Weaving
             object proxy,
             Type targetType,
             Type declaringType,
-            IComponentHolder<IAspectFactory> aspectFactoryHolder,
-            IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder,
-            IComponentHolder<IAspectWeavePredicate> weavePredicateHolder,
-            IMethodInfoCache methodInfoCache)
+            IInvocationWeaveDataProvider invocationWeaveDataProvider,
+            IComponentHolder<IAspectDependencyInjector> aspectDependencyInjectorHolder,
+            IComponentHolder<IAspectFinalizer> aspectFinalizerHolder,
+            IMethodInfoCache methodInfoCache)    
         {
-            _aspectFactory = aspectFactoryHolder;
-            _pipelineFactory = pipelineFactoryHolder;
-            _weavePredicate = weavePredicateHolder;
-            _methodInfoCache = methodInfoCache;
-
             Target = target;
             Proxy = proxy;
             TargetType = targetType;
             DeclaringType = declaringType;
+            
+            Interceptor = new InvocationInterceptor(
+                invocationWeaveDataProvider,
+                aspectDependencyInjectorHolder,
+                aspectFinalizerHolder);
+
+            MethodCache = methodInfoCache;
         }
     }
 }

@@ -8,11 +8,11 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для <see cref="DefaultAspectOrderStrategy"/>
+    /// Набор тестов для <see cref="AspectOrderStrategy"/>
     /// </summary>
     public class DefaultAspectOrderStrategyTests
     {
-        private readonly DefaultAspectOrderStrategy _orderStrategy;
+        private readonly AspectOrderStrategy _orderStrategy;
 
         private readonly MethodBoundaryAspect[] _methodAspects;
         private readonly MethodBoundaryAspect[] _typeAspects;
@@ -21,7 +21,7 @@ namespace IvorySharp.Tests.UnitTests
 
         public DefaultAspectOrderStrategyTests()
         {
-            _orderStrategy = new DefaultAspectOrderStrategy();
+            _orderStrategy = new AspectOrderStrategy();
 
             _methodAspects = new[] {
                 new EmptyAspect{ MulticastTarget = MethodAspectMulticastTarget.Method }, 

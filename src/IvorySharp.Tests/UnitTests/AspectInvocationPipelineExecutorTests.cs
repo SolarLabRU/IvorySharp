@@ -36,9 +36,12 @@ namespace IvorySharp.Tests.UnitTests
             MethodBoundaryAspect[] boundaryAspects,
             params object[] arguments)
         {
-            return new InvocationPipeline(
-                new ObservableInvocation(typeof(TService), instace, methodName, arguments), 
-                boundaryAspects, BypassMethodAspect.Instance);
+            var invocation = new ObservableInvocation(typeof(TService), instace, methodName, arguments);         
+            var pipeline = new InvocationPipeline(boundaryAspects, BypassMethodAspect.Instance);
+
+            pipeline.Init(invocation);
+
+            return pipeline;
         }
         
         #region Aspects

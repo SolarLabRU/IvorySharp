@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using IvorySharp.Reflection;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Caching
@@ -14,7 +15,7 @@ namespace IvorySharp.Caching
         /// </summary>
         /// <param name="method">Метод.</param>
         /// <returns>Делегат для быстрого вызова метода.</returns>
-        [NotNull] Func<object, object[], object> GetInvoker([NotNull] MethodInfo method);
+        [NotNull] MethodLambda GetInvoker([NotNull] MethodInfo method);
 
         /// <summary>
         /// Возвращает метод в типе <paramref name="targetType"/>, соответствующий методу <paramref name="interfaceMethod"/>.

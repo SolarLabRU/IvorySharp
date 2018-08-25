@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using IvorySharp.Core;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline
@@ -19,19 +18,17 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Инициализирует экземпляр <see cref="InvocationPipeline"/>.
         /// </summary>
-        public InvocationPipeline(
-            IInvocation invocation,
-            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects,
-            MethodInterceptionAspect interceptionAspect) 
-            : base(invocation, boundaryAspects, interceptionAspect)
+        public InvocationPipeline() 
         {
         }
-
+        
         /// <summary>
         /// Инициализирует экземпляр <see cref="InvocationPipeline"/>.
         /// </summary>
-        public InvocationPipeline(IInvocation invocation) 
-            : base(invocation)
+        public InvocationPipeline(
+            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects,
+            MethodInterceptionAspect interceptionAspect) 
+            : base(boundaryAspects, interceptionAspect)
         {
         }
 

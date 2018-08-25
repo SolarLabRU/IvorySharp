@@ -9,7 +9,7 @@ namespace IvorySharp.Aspects.Selection
     /// Сначала аспекты упорядочиваются по возрастанию <see cref="OrderableMethodAspect.Order"/>, затем по
     /// <see cref="MethodAspect.MulticastTarget"/>.
     /// </summary>
-    internal sealed class DefaultAspectOrderStrategy : IAspectOrderStrategy
+    internal sealed class AspectOrderStrategy : IAspectOrderStrategy
     {
         /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -32,8 +32,8 @@ namespace IvorySharp.Integration.CastleWindsor.Aspects.Integration
             _kernel.Register(Component.For<IComponentsStore>().Instance(settings));
             
             _kernel.Register(
-                Component.For(typeof(WeavedInterceptor<>))
-                    .ImplementedBy(typeof(WeavedInterceptor<>)));
+                Component.For(typeof(WeavedInterceptor<,>))
+                    .ImplementedBy(typeof(WeavedInterceptor<,>)));
             
             _kernel.AddFacility(new WindsorAspectFacility(settings));
         }

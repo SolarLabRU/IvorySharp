@@ -2,7 +2,7 @@
 
 namespace IvorySharp.Tests.Assets.Invocations
 {
-    public class ObservableInvocation : BypassInvocation
+    internal class ObservableInvocation : BypassInvocation
     {
         public bool IsProceedCalled { get; private set; }
         

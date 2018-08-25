@@ -40,8 +40,7 @@ namespace IvorySharp.Tests.Assets
             _dependency = dependency ?? Array.Empty<DependencyPair>();
             _windsorContainer = windsorContainer;
             _simpleInjectorContainer = simpleInjectorContainer;
-            _aspectWeaver = new AspectWeaver(
-                components.AspectWeavePredicate, components.PipelineFactory, components.AspectFactory);
+            _aspectWeaver = AspectWeaverFactory.Create(components);
         }
 
         private void InitializeWindsor(IEnumerable<DependencyPair> dependency)

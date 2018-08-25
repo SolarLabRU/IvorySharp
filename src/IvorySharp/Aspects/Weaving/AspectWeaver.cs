@@ -1,8 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using IvorySharp.Aspects.Creation;
-using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Finalize;
+using IvorySharp.Caching;
 using IvorySharp.Components;
 using JetBrains.Annotations;
 
@@ -14,21 +15,23 @@ namespace IvorySharp.Aspects.Weaving
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     public sealed class AspectWeaver
     {
-        private readonly IComponentHolder<IInvocationPipelineFactory> _pipelineFactoryHolder;
-        private readonly IComponentHolder<IAspectFactory> _aspectFactoryHolder;
-        private readonly IComponentHolder<IAspectWeavePredicate> _aspectWeavePredicateHolder;
+        private readonly IComponentHolder<IAspectDependencyInjector> _aspectDependencyInjectorHolder;
+        private readonly IComponentHolder<IAspectFinalizer> _aspectFinalizerHolder;
+        private readonly IComponentHolder<IInvocationWeaveDataProviderFactory> _weaveDataProviderFactoryHolder;
 
+        private IInvocationWeaveDataProviderFactory _weaveDataProviderFactory;
+        
         /// <summary>
-        /// Инициализирует экземпляр <see cref="AspectWeaver"/>.
+        /// Инициализирует экезмпляр <see cref="AspectWeaver"/>.
         /// </summary>
-        public AspectWeaver(
-            IComponentHolder<IAspectWeavePredicate> aspectWeavePredicateHolder, 
-            IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder, 
-            IComponentHolder<IAspectFactory> aspectFactoryHolder)
+        internal AspectWeaver(
+            IComponentHolder<IInvocationWeaveDataProviderFactory> weaveDataProviderFactoryHolder,
+            IComponentHolder<IAspectDependencyInjector> aspectDependencyInjectorHolder,
+            IComponentHolder<IAspectFinalizer> aspectFinalizerHolder)
         {
-            _pipelineFactoryHolder = pipelineFactoryHolder;
-            _aspectFactoryHolder = aspectFactoryHolder;
-            _aspectWeavePredicateHolder = aspectWeavePredicateHolder;
+            _weaveDataProviderFactoryHolder = weaveDataProviderFactoryHolder;
+            _aspectDependencyInjectorHolder = aspectDependencyInjectorHolder;
+            _aspectFinalizerHolder = aspectFinalizerHolder;
         }
 
         /// <summary>
@@ -41,13 +44,19 @@ namespace IvorySharp.Aspects.Weaving
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public object Weave(object target, Type declaringType, Type targetType)
         {
+            if (_weaveDataProviderFactory == null)
+                _weaveDataProviderFactory = _weaveDataProviderFactoryHolder.Get();
+            
+            var dataProvider = _weaveDataProviderFactory.Create(declaringType, targetType);
+
             return AspectWeaveProxy.Create(
-                target, 
+                target,
                 targetType, 
-                declaringType, 
-                _aspectFactoryHolder, 
-                _pipelineFactoryHolder,
-                _aspectWeavePredicateHolder);
+                declaringType,
+                dataProvider,
+                _aspectDependencyInjectorHolder,
+                _aspectFinalizerHolder,
+                MethodInfoCache.Instance);
         }
     }
 }

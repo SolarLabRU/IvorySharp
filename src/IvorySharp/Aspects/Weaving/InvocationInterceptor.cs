@@ -1,8 +1,8 @@
-﻿using System;
-using IvorySharp.Aspects.Creation;
-using IvorySharp.Aspects.Pipeline;
+﻿using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Finalize;
 using IvorySharp.Components;
 using IvorySharp.Core;
+using IvorySharp.Exceptions;
 
 namespace IvorySharp.Aspects.Weaving
 {
@@ -11,63 +11,63 @@ namespace IvorySharp.Aspects.Weaving
     /// </summary>   
     internal sealed class InvocationInterceptor
     {
-        private readonly IComponentHolder<IAspectFactory> _aspectFactoryHolder;
-        private readonly IComponentHolder<IInvocationPipelineFactory> _pipelineFactoryHolder;
-        private readonly IComponentHolder<IAspectWeavePredicate> _aspectWeavePredicateHolder;
+        private readonly IInvocationWeaveDataProvider _weaveDataProvider;
+        private readonly IAspectDependencyInjector _dependencyInjector;
+        private readonly IAspectFinalizer _aspectFinalizer;
 
-        private IAspectFactory _aspectFactory;
-        private IInvocationPipelineFactory _pipelineFactory;
-        private IAspectWeavePredicate _aspectWeavePredicate;
-        
-        /// <summary>
-        /// Инициализирует экземпляр <see cref="InvocationInterceptor"/>.
-        /// </summary>
         public InvocationInterceptor(
-            IComponentHolder<IAspectFactory>  aspectFactoryHolder,
-            IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder,
-            IComponentHolder<IAspectWeavePredicate> aspectWeavePredicateHolder)
+            IInvocationWeaveDataProvider weaveDataProvider,
+            IComponentHolder<IAspectDependencyInjector> dependencyInjectorHolder,
+            IComponentHolder<IAspectFinalizer> aspectFinalizerHolder)
         {
-            _aspectFactoryHolder = aspectFactoryHolder;
-            _pipelineFactoryHolder = pipelineFactoryHolder;         
-            _aspectWeavePredicateHolder = aspectWeavePredicateHolder;
+            _weaveDataProvider = weaveDataProvider;
+            _dependencyInjector = dependencyInjectorHolder.Get();
+            _aspectFinalizer = aspectFinalizerHolder.Get();
         }
 
         /// <summary>
         /// Выполняет перехват вызова исходного метода с применением аспектов.
         /// </summary>
-        /// <param name="invocation">Модель исходного вызова.</param>
+        /// <param name="signature">Сигнатура метода.</param>
+        /// <param name="args">Параметры вызова метода.</param>
+        /// <param name="target">Экземпляр сервиса.</param>
+        /// <param name="proxy">Прокси сервиса.</param>
         /// <returns>Результат вызова метода.</returns>
-        internal object Intercept(IInvocation invocation)
+        internal object Intercept(IInvocationSignature signature, object[] args, object target, object proxy)
         {
-            if (_aspectWeavePredicate == null)
-                _aspectWeavePredicate = _aspectWeavePredicateHolder.Get();
-            
-            if (!_aspectWeavePredicate.IsWeaveable(invocation))
-                return invocation.Proceed();
-            
-            if (_aspectFactory == null)
-                _aspectFactory = _aspectFactoryHolder.Get();
+            var invocationData = _weaveDataProvider.Get(signature);
 
-            if (_pipelineFactory == null)
-                _pipelineFactory = _pipelineFactoryHolder.Get();
-            
-            var boundaryAspects = _aspectFactory.CreateBoundaryAspects(invocation);
-            var interceptAspect = _aspectFactory.CreateInterceptionAspect(invocation);
-            var executor = _pipelineFactory.CreateExecutor(invocation);
-            var pipeline = _pipelineFactory.CreatePipeline(invocation, boundaryAspects, interceptAspect);    
-            
-            executor.ExecutePipeline(pipeline);
+            if (invocationData == null)
+                throw new IvorySharpException(
+                    $"Не найдена информация о вызываемом методе '{signature.Method.Name}'. " +
+                    $"DeclaringType: {signature.DeclaringType.Name} " +
+                    $"TargetType: {signature.TargetType.Name}");
 
-            foreach (var aspect in boundaryAspects)
+            if (!invocationData.IsWeaveable)
+                // Bypass
+                return invocationData.MethodInvoker(target, args);
+
+            var invocation = new Invocation(signature, args, proxy, target, invocationData.MethodInvoker);
+            
+            foreach (var aspect in invocationData.BoundaryAspects)
             {
-                // ReSharper disable once SuspiciousTypeConversion.Global
-                if (aspect is IDisposable ds1)
-                    ds1.Dispose();
-            }
+                if (aspect.HasDependencies)
+                    _dependencyInjector.InjectPropertyDependencies(aspect);         
 
-            // ReSharper disable once SuspiciousTypeConversion.Global
-            if (interceptAspect is IDisposable ds2)
-                ds2.Dispose();
+                aspect.Initialize();
+            }
+            
+            if (invocationData.InterceptionAspect.HasDependencies)
+                _dependencyInjector.InjectPropertyDependencies(invocationData.InterceptionAspect);
+            
+            invocationData.InterceptionAspect.Initialize();
+
+            invocationData.PipelineExecutor.ExecutePipeline(invocationData.Pipeline, invocation);
+
+            foreach (var aspect in invocationData.BoundaryAspects)
+                _aspectFinalizer.Finalize(aspect);
+
+            _aspectFinalizer.Finalize(invocationData.InterceptionAspect);
 
             return invocation.ReturnValue;
         }

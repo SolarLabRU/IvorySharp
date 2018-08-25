@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -12,6 +13,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// Выполняет пайплайн вызова метода.
         /// </summary>
         /// <param name="pipeline">Пайплайн вызова метода.</param>
-        void ExecutePipeline(IInvocationPipeline pipeline);
+        /// <param name="invocation">Вызов метода.</param>
+        void ExecutePipeline(IInvocationPipeline pipeline, IInvocation invocation);
     }
 }

@@ -110,7 +110,7 @@ namespace IvorySharp.Proxying
     {
         private static readonly object Lock = new object();
 
-        private static readonly Func<object, object[], object> FastProxyInvoke =
+        private static readonly MethodLambda FastProxyInvoke =
             Expressions.CreateLambda(MethodReferences.ProxyInvoke);
 
         /// <summary>

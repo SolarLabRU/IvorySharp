@@ -32,7 +32,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Модель вызова метода.
         /// </summary>
-        internal IInvocation Invocation { get; }
+        internal IInvocation Invocation { get; private set; }
 
         /// <summary>
         /// Ключ состояния вызова, для установки/получения <see cref="ExecutionState"/>.
@@ -61,14 +61,12 @@ namespace IvorySharp.Aspects.Pipeline
         /// Инициаилизирует экземпляр <see cref="InvocationPipelineBase"/>.
         /// </summary>
         protected InvocationPipelineBase(
-            IInvocation invocation,
             IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects,
             MethodInterceptionAspect interceptionAspect)
         {
             _pipelineDataProvider = new Lazy<Dictionary<Guid, object>>(
                 () => new Dictionary<Guid, object>());
 
-            Invocation = invocation;
             BoundaryAspects = boundaryAspects;
             InterceptionAspect = interceptionAspect;
         }
@@ -76,10 +74,20 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Инициализирует экземпляр <see cref="InvocationPipelineBase"/>.
         /// </summary>
-        /// <param name="invocation">Модель вызова метода.</param>
-        protected InvocationPipelineBase(IInvocation invocation)
-           : this(invocation, Array.Empty<MethodBoundaryAspect>(), BypassMethodAspect.Instance) 
+        protected InvocationPipelineBase()
+           : this(Array.Empty<MethodBoundaryAspect>(), BypassMethodAspect.Instance) 
         { }
+
+        /// <summary>
+        /// Инициализирует пайплайн.
+        /// </summary>
+        /// <param name="invocation">Контекст вызова.</param>
+        /// <returns>Инициализированный пайплайн.</returns>
+        internal InvocationPipelineBase Init(IInvocation invocation)
+        {
+            Invocation = invocation;
+            return this;
+        }
 
         /// <inheritdoc />
         public virtual void Return()

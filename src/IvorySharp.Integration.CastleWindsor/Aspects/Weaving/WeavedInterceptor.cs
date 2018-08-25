@@ -1,7 +1,9 @@
 ﻿using Castle.DynamicProxy;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Components;
-using IvorySharp.Integration.CastleWindsor.Core;
+using IvorySharp.Core;
+using IvorySharp.Extensions;
+using IInvocation = Castle.DynamicProxy.IInvocation;
 
 namespace IvorySharp.Integration.CastleWindsor.Aspects.Weaving
 {
@@ -10,9 +12,10 @@ namespace IvorySharp.Integration.CastleWindsor.Aspects.Weaving
     /// И прокси использоваться тоже будут кастловские.
     /// </summary>
     /// <typeparam name="TService">Тип сервиса.</typeparam>
-    public class WeavedInterceptor<TService> : IInterceptor
+    /// <typeparam name="TImplementation">Тип реализации.</typeparam>
+    public class WeavedInterceptor<TService, TImplementation> : IInterceptor
     {
-        private readonly InvocationInterceptor _invocationFacade;
+        private readonly InvocationInterceptor _invocationInterceptor;
 
         /// <summary>
         /// Адаптер для обработчика вызовов <see cref="IInterceptor"/>.
@@ -20,15 +23,27 @@ namespace IvorySharp.Integration.CastleWindsor.Aspects.Weaving
         /// <param name="components">Компоненты библиотеки.</param>
         public WeavedInterceptor(IComponentsStore components)
         {
-            _invocationFacade = new InvocationInterceptor(
-                components.AspectFactory, components.PipelineFactory, components.AspectWeavePredicate);
+            var dataProviderFactory = components.WeaveDataProviderFactory.Get();         
+            var dataProvider = dataProviderFactory.Create(typeof(TService), typeof(TImplementation));
+
+            _invocationInterceptor = new InvocationInterceptor(
+                dataProvider, 
+                components.AspectDependencyInjector, 
+                components.AspectFinalizer);
         }
 
         /// <inheritdoc />
         public void Intercept(IInvocation invocation)
         {
-            invocation.ReturnValue = _invocationFacade.Intercept(
-                new InvocationAdapter(invocation, typeof(TService)));
+            var signature = new InvocationSignature(
+                invocation.Method,
+                invocation.MethodInvocationTarget, 
+                typeof(TService),
+                typeof(TImplementation), 
+                invocation.Method.GetInvocationType());
+
+            invocation.ReturnValue = _invocationInterceptor.Intercept(
+                signature, invocation.Arguments, invocation.InvocationTarget, invocation.Proxy);
         }
     }
 }

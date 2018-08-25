@@ -1,5 +1,6 @@
 ﻿using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Finalize;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
@@ -35,6 +36,12 @@ namespace IvorySharp.Components
         /// <inheritdoc />
         public IComponentHolder<IAspectOrderStrategy> AspectOrderStrategy { get; set; }
 
+        /// <inheritdoc />
+        public IComponentHolder<IInvocationWeaveDataProviderFactory> WeaveDataProviderFactory { get; set; }
+
+        /// <inheritdoc />
+        public IComponentHolder<IAspectFinalizer> AspectFinalizer { get; set; }
+
         /// <summary>
         /// Замораживает компоненты (запрещает замену внутренней реализации).
         /// </summary>
@@ -48,6 +55,8 @@ namespace IvorySharp.Components
             AspectFactory.Freeze();
             AspectDependencyInjector.Freeze();
             AspectOrderStrategy.Freeze();
+            WeaveDataProviderFactory.Freeze();
+            AspectFinalizer.Freeze();
         }
     }
 }

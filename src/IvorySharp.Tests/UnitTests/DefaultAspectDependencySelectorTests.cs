@@ -6,15 +6,15 @@ using Xunit;
 namespace IvorySharp.Tests.UnitTests
 {
     /// <summary>
-    /// Набор тестов для <see cref="DefaultAspectDependencySelector"/>.
+    /// Набор тестов для <see cref="AspectDependencySelector"/>.
     /// </summary>
     public class DefaultAspectDependencySelectorTests
     {
-        private readonly DefaultAspectDependencySelector _dependencySelector;
+        private readonly AspectDependencySelector _dependencySelector;
 
         public DefaultAspectDependencySelectorTests()
         {
-            _dependencySelector = new DefaultAspectDependencySelector();
+            _dependencySelector = new AspectDependencySelector();
         }
 
         [Fact]

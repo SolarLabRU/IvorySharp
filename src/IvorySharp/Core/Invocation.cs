@@ -16,7 +16,7 @@ namespace IvorySharp.Core
         /// <summary>
         /// Делегат для быстрого вызова метода.
         /// </summary>
-        private readonly Func<object, object[], object> _invoker;
+        private readonly MethodLambda _invoker;
 
         /// <inheritdoc />
         public override object ReturnValue
@@ -37,13 +37,33 @@ namespace IvorySharp.Core
             Type targetType, 
             object proxy, 
             object target,
-            Func<object, object[], object> invoker) 
+            MethodLambda invoker) 
             : base(
                 arguments,
                 proxiedMethod,
                 declaringType,
                 targetType, 
                 proxy, 
+                target)
+        {
+            _invoker = invoker;
+        }
+
+        /// <summary>
+        /// Инициализирует экземпляр класса <see cref="Invocation"/>.
+        /// </summary>
+        internal Invocation(
+            IInvocationSignature signature,
+            InvocationArguments arguments,
+            object proxy,
+            object target,
+            MethodLambda invoker)
+            : base(
+                arguments,
+                signature.Method,
+                signature.DeclaringType,
+                signature.TargetType,
+                proxy,
                 target)
         {
             _invoker = invoker;

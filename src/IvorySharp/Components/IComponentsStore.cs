@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Finalize;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
@@ -53,5 +54,15 @@ namespace IvorySharp.Components
         /// Стратегия упорядочивания аспектов.
         /// </summary>
         IComponentHolder<IAspectOrderStrategy> AspectOrderStrategy { get; }
+        
+        /// <summary>
+        /// Фабрика провайдеров данных вызова.
+        /// </summary>
+        IComponentHolder<IInvocationWeaveDataProviderFactory> WeaveDataProviderFactory { get; }
+        
+        /// <summary>
+        /// Финализатор аспектов.
+        /// </summary>
+        IComponentHolder<IAspectFinalizer> AspectFinalizer { get; }
     }
 }

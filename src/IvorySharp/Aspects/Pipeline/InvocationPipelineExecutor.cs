@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using IvorySharp.Aspects.Pipeline.StateMachine;
+using IvorySharp.Core;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -18,10 +19,12 @@ namespace IvorySharp.Aspects.Pipeline
 
         /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void ExecutePipeline(IInvocationPipeline basePipeline)
+        public void ExecutePipeline(IInvocationPipeline basePipeline, IInvocation invocation)
         {
             // Это нарушает solid, но позволяет не выставлять кучу классов наружу библиотеки.
             var pipeline = (InvocationPipeline) basePipeline;
+            pipeline.Init(invocation);
+            
             var stateMachine = new InvocationStateMachine<InvocationPipeline>(pipeline);  
             
             stateMachine.Execute(new EntryState<InvocationPipeline>(

@@ -42,7 +42,7 @@ namespace IvorySharp.Benchmark
             _reflectedMethod = typeof(IServiceForBenchmark).GetMethod(nameof(IServiceForBenchmark.Identity));
 
             var settings = new DefaultComponentsStore(new NullDependencyProvider());
-            var weaver = new AspectWeaver(settings.AspectWeavePredicate, settings.PipelineFactory, settings.AspectFactory);
+            var weaver = AspectWeaverFactory.Create(settings);
             
             _weavedService = (IServiceForBenchmark) weaver.Weave(
                 new ServiceForBenchmark(), typeof(IServiceForBenchmark), typeof(ServiceForBenchmark));
@@ -51,19 +51,19 @@ namespace IvorySharp.Benchmark
                 new ServiceForBenchmark());
         }
         
-        [Benchmark]
-        public void DispatchProxiedMethod()
-        {
-            var result = _proxiedService.Identity(10);
-            GC.KeepAlive(result);
-        }
+//        [Benchmark]
+//        public void DispatchProxiedMethod()
+//        {
+//            var result = _proxiedService.Identity(10);
+//            GC.KeepAlive(result);
+//        }
 
-        [Benchmark]
-        public void DispatchWeavedInterceptionMethod()
-        {
-            var result = _weavedService.InterceptedIdentity(10);
-            GC.KeepAlive(result);
-        }
+//        [Benchmark]
+//        public void DispatchWeavedInterceptionMethod()
+//        {
+//            var result = _weavedService.InterceptedIdentity(10);
+//            GC.KeepAlive(result);
+//        }
         
         [Benchmark]
         public void DispatchWeavedBoundaryMethod()
@@ -86,18 +86,18 @@ namespace IvorySharp.Benchmark
             GC.KeepAlive(result);
         }
 
-        [Benchmark]
-        public async Task DispatchWeavedAsyncBoundaryMethod()
-        {
-            var result = await _weavedService.IdentityAsync(10);
-            GC.KeepAlive(result);
-        }
-
-        [Benchmark]
-        public async Task DispatchWindsorAsyncBoundaryMethod()
-        {
-            var result = await _windsorService.IdentityAsync(10);
-            GC.KeepAlive(result);
-        }
+//        [Benchmark]
+//        public async Task DispatchWeavedAsyncBoundaryMethod()
+//        {
+//            var result = await _weavedService.IdentityAsync(10);
+//            GC.KeepAlive(result);
+//        }
+//
+//        [Benchmark]
+//        public async Task DispatchWindsorAsyncBoundaryMethod()
+//        {
+//            var result = await _windsorService.IdentityAsync(10);
+//            GC.KeepAlive(result);
+//        }
     }
 }

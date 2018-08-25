@@ -13,9 +13,9 @@ namespace IvorySharp.Aspects.Selection
         /// Собирает аспекты, которые необходимо внедрить в вызов.
         /// </summary>
         /// <typeparam name="TAspect">Тип аспекта.</typeparam>
-        /// <param name="context">Контекст вызова.</param>
+        /// <param name="signature">Сигнатура вызова.</param>
         /// <returns>Перечень деклараций аспектов для применения.</returns>
-        IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(IInvocationContext context)
-            where TAspect : MethodAspect;
+        IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(
+            IInvocationSignature signature) where TAspect : MethodAspect;
     }
 }

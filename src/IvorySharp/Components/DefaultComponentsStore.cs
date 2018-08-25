@@ -1,5 +1,6 @@
 ﻿using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Finalize;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
@@ -36,13 +37,19 @@ namespace IvorySharp.Components
         /// <inheritdoc />
         public IComponentHolder<IAspectOrderStrategy> AspectOrderStrategy { get; }
 
+        /// <inheritdoc />
+        public IComponentHolder<IInvocationWeaveDataProviderFactory> WeaveDataProviderFactory { get; }
+
+        /// <inheritdoc />
+        public IComponentHolder<IAspectFinalizer> AspectFinalizer { get; }
+
         internal DefaultComponentsStore(IDependencyProvider dependencyProvider)
         {
             DependencyHolder = dependencyProvider.ToInstanceHolder();
             
-            AspectSelector = new InstanceComponentHolder<IAspectSelector>(new DefaultAspectSelector());
+            AspectSelector = new InstanceComponentHolder<IAspectSelector>(new AspectSelector());
             AspectWeavePredicate = new InstanceComponentHolder<IAspectWeavePredicate>(
-                new DeclaringTypeWeavePredicate(AspectSelector, ConcurrentDictionaryCacheFactory.Default));
+                new DeclaringTypeWeavePredicate(AspectSelector));
             
             AspectDeclarationCollector = new InstanceComponentHolder<IAspectDeclarationCollector>(
                 new DeclaringTypeAspectDeclarationCollector(AspectSelector));
@@ -51,24 +58,26 @@ namespace IvorySharp.Components
                 new AsyncDeterminingPipelineFactory(MethodInfoCache.Instance));
             
             AspectOrderStrategy = new InstanceComponentHolder<IAspectOrderStrategy>(
-                new DefaultAspectOrderStrategy());
+                new AspectOrderStrategy());
             
             var aspectDependencySelectorHolder = new InstanceComponentHolder<IAspectDependencySelector>(
                 new CachedAspectDependencySelector(
-                    new DefaultAspectDependencySelector(),
+                    new AspectDependencySelector(),
                     CacheDelegateFactory<ConcurrentDictionaryCacheFactory>.Instance));
             
-            var aspectsPreInitializerHolder = new InstanceComponentHolder<IAspectsPreInitializer>(
-                new CachedAspectsPreInitializer(
-                    new DefaultAspectsPreInitializer(
-                        AspectDeclarationCollector, AspectOrderStrategy, aspectDependencySelectorHolder),
-                    CacheDelegateFactory<ConcurrentDictionaryCacheFactory>.Instance));
+            AspectFactory = new InstanceComponentHolder<IAspectFactory>(
+                new AspectFactory(
+                    AspectDeclarationCollector, AspectOrderStrategy, aspectDependencySelectorHolder));
             
             AspectDependencyInjector = new LazyComponentHolder<IAspectDependencyInjector>(
                 () => new AspectDependencyInjector(DependencyHolder, aspectDependencySelectorHolder));
             
-            AspectFactory = new InstanceComponentHolder<IAspectFactory>(
-                new DefaultAspectFactory(aspectsPreInitializerHolder, AspectDependencyInjector));
+            WeaveDataProviderFactory = new InstanceComponentHolder<IInvocationWeaveDataProviderFactory>(
+                new InvocationWeaveDataProviderFactory(
+                    AspectWeavePredicate, AspectFactory, PipelineFactory, 
+                    MethodInfoCache.Instance, ConcurrentDictionaryCacheFactory.Default));    
+            
+            AspectFinalizer = new InstanceComponentHolder<IAspectFinalizer>(new DisposeAspectFinalizer());
         }
     }
 }

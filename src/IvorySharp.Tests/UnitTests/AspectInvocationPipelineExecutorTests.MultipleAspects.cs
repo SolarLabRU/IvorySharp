@@ -25,7 +25,7 @@ namespace IvorySharp.Tests.UnitTests
                 Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             
             // Assert
 
@@ -57,7 +57,7 @@ namespace IvorySharp.Tests.UnitTests
                 Args.Pack<MethodBoundaryAspect>(beforeBreaker, breaker, afterBreaker));
             
             // Assert
-            Assert.Throws<ApplicationException>(() => _executor.ExecutePipeline(pipeline));        
+            Assert.Throws<ApplicationException>(() => _executor.ExecutePipeline(pipeline, pipeline.Invocation));        
             Assert.Equal(_exceptionExecutionStack, breaker.ExecutionStack);     
             Assert.Equal(_exceptionExecutionStack, beforeBreaker.ExecutionStack);
         }
@@ -76,7 +76,7 @@ namespace IvorySharp.Tests.UnitTests
                 Args.Box(10));
             
             // Assert
-            Assert.Throws<ApplicationException>(() => _executor.ExecutePipeline(pipeline)); 
+            Assert.Throws<ApplicationException>(() => _executor.ExecutePipeline(pipeline, pipeline.Invocation)); 
             Assert.Empty(afterBreaker.ExecutionStack);
             Assert.Equal(new []
             {
@@ -108,7 +108,7 @@ namespace IvorySharp.Tests.UnitTests
                 Args.Box(10));
             
             // Assert
-            Assert.Throws<ApplicationException>(() => _executor.ExecutePipeline(pipeline)); 
+            Assert.Throws<ApplicationException>(() => _executor.ExecutePipeline(pipeline, pipeline.Invocation)); 
             Assert.Empty(afterBreaker.ExecutionStack);
             Assert.Equal(new []
             {

@@ -4,7 +4,7 @@ using IvorySharp.Core;
 
 namespace IvorySharp.Tests.Assets.Invocations
 {
-    public class BypassInvocation : AbstractInvocation
+    internal class BypassInvocation : AbstractInvocation
     {
         internal BypassInvocation(
             Type declaringType,

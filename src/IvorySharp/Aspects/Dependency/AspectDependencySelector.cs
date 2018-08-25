@@ -9,7 +9,7 @@ namespace IvorySharp.Aspects.Dependency
     /// <summary>
     /// Селектор зависимостей аспектов.
     /// </summary>
-    internal sealed class DefaultAspectDependencySelector : IAspectDependencySelector
+    internal sealed class AspectDependencySelector : IAspectDependencySelector
     {
         /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

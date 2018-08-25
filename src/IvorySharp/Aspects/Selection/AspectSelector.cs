@@ -9,7 +9,7 @@ namespace IvorySharp.Aspects.Selection
     /// <summary>
     /// Компонент выбора аспектов по умолчанию.
     /// </summary>
-    internal sealed class DefaultAspectSelector : IAspectSelector
+    internal sealed class AspectSelector : IAspectSelector
     {
         /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

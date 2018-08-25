@@ -17,22 +17,20 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// <summary>
         /// Инициализирует экземпляр <see cref="AsyncInvocationPipeline"/>.
         /// </summary>
-        public AsyncInvocationPipeline(
-            IInvocation invocation, 
-            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, 
-            MethodInterceptionAspect interceptionAspect) 
-            : base(invocation, boundaryAspects, interceptionAspect)
-        {
-        }
-
-        /// <summary>
-        /// Инициализирует экземпляр <see cref="AsyncInvocationPipeline"/>.
-        /// </summary>
-        public AsyncInvocationPipeline(IInvocation invocation) 
-            : base(invocation)
+        public AsyncInvocationPipeline() 
         {
         }
         
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="AsyncInvocationPipeline"/>.
+        /// </summary>
+        public AsyncInvocationPipeline(
+            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, 
+            MethodInterceptionAspect interceptionAspect) 
+            : base(boundaryAspects, interceptionAspect)
+        {
+        }
+
         /// <inheritdoc />
         public override void Return()
         {

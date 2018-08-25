@@ -22,7 +22,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             
             // Assert       
             InvocationAssert.ProceedCalled(pipeline.Invocation);
@@ -39,7 +39,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.ThrowArgumentException), Args.Pack(aspect));
             
             // Act && Assert
-            Assert.Throws<ArgumentException>(() => _executor.ExecutePipeline(pipeline));
+            Assert.Throws<ArgumentException>(() => _executor.ExecutePipeline(pipeline, pipeline.Invocation));
             
             InvocationAssert.ProceedCalled(pipeline.Invocation);
             Assert.Equal(_exceptionExecutionStack, aspect.ExecutionStack);
@@ -54,7 +54,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
             // Act && Assert
-            Assert.Throws<ArgumentException>(() => _executor.ExecutePipeline(pipeline));
+            Assert.Throws<ArgumentException>(() => _executor.ExecutePipeline(pipeline, pipeline.Invocation));
             
             InvocationAssert.ProceedNotCalled(pipeline.Invocation);
             Assert.Equal(BoundaryType.Entry, aspect.ExecutionStack.Pop().BoundaryType);
@@ -69,7 +69,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
             // Act && Assert
-            Assert.Throws<ArgumentException>(() => _executor.ExecutePipeline(pipeline));
+            Assert.Throws<ArgumentException>(() => _executor.ExecutePipeline(pipeline, pipeline.Invocation));
             
             InvocationAssert.ProceedNotCalled(pipeline.Invocation);
             Assert.Equal(new[]
@@ -87,7 +87,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             
             // Assert
            
@@ -108,7 +108,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             
             // Assert
             Assert.Equal(11, pipeline.Invocation.ReturnValue);
@@ -131,7 +131,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.Identity), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            Assert.Throws<ArgumentException>(() =>  _executor.ExecutePipeline(pipeline));
+            Assert.Throws<ArgumentException>(() =>  _executor.ExecutePipeline(pipeline, pipeline.Invocation));
 
             // Assert
             Assert.Equal(new []
@@ -153,7 +153,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.ShouldNotThrow), Args.Pack(aspect));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             
             // Assert
             

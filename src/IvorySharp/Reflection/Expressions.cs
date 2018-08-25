@@ -52,7 +52,7 @@ namespace IvorySharp.Reflection
             return expression.Compile();
         }
 
-        public static Func<object, object[], object> CreateLambda(MethodInfo method)
+        public static MethodLambda CreateLambda(MethodInfo method)
         {
             if (method == null)
                 throw new ArgumentNullException(nameof(method));
@@ -97,7 +97,7 @@ namespace IvorySharp.Reflection
                 )
                 : Expression.Convert(callExpression, typeof(object));
 
-            var lambdaExpression = Expression.Lambda<Func<object, object[], object>>(
+            var lambdaExpression = Expression.Lambda<MethodLambda>(
                 finalExpression,
                 instanceParameterExpression,
                 argumentsParameterExpression

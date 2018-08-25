@@ -30,7 +30,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.IdentityAsync), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             
             // Assert
             Assert.Equal(new [] { new BoundaryState(BoundaryType.Entry)}, aspect.ExecutionStack);
@@ -53,7 +53,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.ThrowArgumentExceptionAsync), Args.Pack(aspect));
 
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             
             // Assert
             Assert.Equal(new [] { new BoundaryState(BoundaryType.Entry)}, aspect.ExecutionStack);
@@ -76,7 +76,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.IdentityAsync), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             var result = await Await<int>(pipeline.Invocation);
             
             // Assert
@@ -100,7 +100,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.IdentityAsync), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
 
             await Assert.ThrowsAsync<ArgumentException>(
                 async () => await Await<int>(pipeline.Invocation));
@@ -121,7 +121,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.IdentityAsync), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
 
             await Assert.ThrowsAsync<ArgumentException>(
                 async () => await Await<int>(pipeline.Invocation));
@@ -145,7 +145,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.IdentityAsync), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             
             var result = await Await<int>(pipeline.Invocation);
             
@@ -170,7 +170,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.IdentityAsync), Args.Pack(aspect), Args.Box(10));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
 
             await Assert.ThrowsAsync<ArgumentException>(
                 async () => await Await<int>(pipeline.Invocation));
@@ -195,7 +195,7 @@ namespace IvorySharp.Tests.UnitTests
                 new Service(), nameof(IService.ShouldNotThrow), Args.Pack(aspect));
             
             // Act
-            _executor.ExecutePipeline(pipeline);
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
             
             // Assert
             var result = await Await<string>(pipeline.Invocation);

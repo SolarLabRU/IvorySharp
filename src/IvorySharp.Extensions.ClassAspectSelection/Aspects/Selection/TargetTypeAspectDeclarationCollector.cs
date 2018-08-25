@@ -25,14 +25,14 @@ namespace IvorySharp.Extensions.ClassAspectSelection.Aspects.Selection
         
         /// <inheritdoc />
         public IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(
-            IInvocationContext context) where TAspect : MethodAspect
+            IInvocationSignature signature) where TAspect : MethodAspect
         {
             var selector = _selectorHolder.Get();
             
-            var methodAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.TargetMethod);
+            var methodAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(signature.TargetMethod);
             
-            var typeAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(context.TargetType)
-                .Concat(context.TargetType.GetInterceptableBaseTypes()
+            var typeAspectDeclarations = selector.SelectAspectDeclarations<TAspect>(signature.TargetType)
+                .Concat(signature.TargetType.GetInterceptableBaseTypes()
                     .SelectMany(t => selector.SelectAspectDeclarations<TAspect>(t)));
 
             var aspectDeclarations = typeAspectDeclarations

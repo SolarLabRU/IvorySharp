@@ -19,8 +19,7 @@ namespace IvorySharp.Extensions.ClassAspectSelection
                 .Use(st => new TargetTypeAspectDeclarationCollector(st.AspectSelector));
                     
             configuration.ReplaceComponent(s => s.AspectWeavePredicate)
-                .Use(st => new TargetTypeWeavePredicate(st.AspectSelector, 
-                    ConcurrentDictionaryCacheFactory.Default));
+                .Use(st => new TargetTypeWeavePredicate(st.AspectSelector));
         }
     }
 }

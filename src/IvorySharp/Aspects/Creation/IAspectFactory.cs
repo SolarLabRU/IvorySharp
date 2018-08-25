@@ -1,27 +1,28 @@
 ﻿using System.ComponentModel;
 using IvorySharp.Core;
+using JetBrains.Annotations;
 using IComponent = IvorySharp.Components.IComponent;
 
 namespace IvorySharp.Aspects.Creation
 {
     /// <summary>
-    /// Компонент, выполняющий создание аспектов.
+    /// Фабрика аспектов.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IAspectFactory : IComponent
     {
         /// <summary>
-        /// Создает аспекты типа <see cref="MethodBoundaryAspect"/> из модели вызова <paramref name="context"/>.
+        /// Создает аспекты типа <see cref="MethodBoundaryAspect"/>.
         /// </summary>
-        /// <param name="context">Контекст вызова.</param>
-        /// <returns>Массив инициализированных аспектов.</returns>
-        MethodBoundaryAspect[] CreateBoundaryAspects(IInvocationContext context);
+        /// <param name="signature">Сигнатура вызова метода.</param>
+        /// <returns>Массив не инициализированных аспектов.</returns>
+        [NotNull] MethodBoundaryAspect[] CreateBoundaryAspects([NotNull] IInvocationSignature signature);
 
         /// <summary>
-        /// Создает аспект типа <see cref="MethodInterceptionAspect"/> из модели вызова <paramref name="context"/>.
+        /// Создает аспект типа <see cref="MethodInterceptionAspect"/>.
         /// </summary>
-        /// <param name="context">Контекст вызова.</param>
-        /// <returns>Инициализированный аспект.</returns>
-        MethodInterceptionAspect CreateInterceptionAspect(IInvocationContext context);
+        /// <param name="signature">Сигнатура вызова метода.</param>
+        /// <returns>Не инициализированный аспект типа <see cref="MethodInterceptionAspect"/>.</returns>
+        [NotNull] MethodInterceptionAspect CreateInterceptAspect([NotNull] IInvocationSignature signature);
     }
 }

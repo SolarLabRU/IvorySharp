@@ -3,6 +3,7 @@ using IvorySharp.Aspects;
 using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
+using IvorySharp.Aspects.Finalize;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
@@ -115,6 +116,8 @@ namespace IvorySharp.Tests.IntegrationTests
             public IComponentHolder<IAspectFactory> AspectFactory { get; }
             public IComponentHolder<IAspectDependencyInjector> AspectDependencyInjector { get; }
             public IComponentHolder<IAspectOrderStrategy> AspectOrderStrategy { get; }
+            public IComponentHolder<IInvocationWeaveDataProviderFactory> WeaveDataProviderFactory { get; }
+            public IComponentHolder<IAspectFinalizer> AspectFinalizer { get; }
 
             public TargetAspectSelectionComponents(IComponentsStore componentsStore)
             {
@@ -126,9 +129,11 @@ namespace IvorySharp.Tests.IntegrationTests
                 AspectFactory = componentsStore.AspectFactory;
                 AspectDependencyInjector = componentsStore.AspectDependencyInjector;
                 AspectOrderStrategy = componentsStore.AspectOrderStrategy;
+                WeaveDataProviderFactory = componentsStore.WeaveDataProviderFactory;
+                AspectFinalizer = componentsStore.AspectFinalizer;
             
                 componentsStore.AspectWeavePredicate
-                    .Replace(new TargetTypeWeavePredicate(AspectSelector, new ConcurrentDictionaryCacheFactory()));
+                    .Replace(new TargetTypeWeavePredicate(AspectSelector));
             
                 componentsStore.AspectDeclarationCollector
                     .Replace(new TargetTypeAspectDeclarationCollector(AspectSelector));
