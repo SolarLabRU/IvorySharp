@@ -52,7 +52,7 @@ namespace IvorySharp.Aspects.Dependency
                             propertyDependency.Property.PropertyType, propertyDependency.Dependency.ServiceKey);
                 }
 
-                propertyDependency.FastPropertySetter(aspect, service);
+                propertyDependency.PropertySetter(aspect, service);
             }
         }
     }

@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using IvorySharp.Reflection;
+using IvorySharp.Linq;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Caching
@@ -10,13 +10,6 @@ namespace IvorySharp.Caching
     /// </summary>
     internal interface IMethodInfoCache
     {
-        /// <summary>
-        /// Получает либо добавляет делегат вызова метода в кеш.
-        /// </summary>
-        /// <param name="method">Метод.</param>
-        /// <returns>Делегат для быстрого вызова метода.</returns>
-        [NotNull] MethodLambda GetInvoker([NotNull] MethodInfo method);
-
         /// <summary>
         /// Возвращает метод в типе <paramref name="targetType"/>, соответствующий методу <paramref name="interfaceMethod"/>.
         /// </summary>

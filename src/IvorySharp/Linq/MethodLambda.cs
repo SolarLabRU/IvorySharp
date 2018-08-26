@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
+using JetBrains.Annotations;
 
-namespace IvorySharp.Reflection
+namespace IvorySharp.Linq
 {
     /// <summary>
     /// Делегат вызова метода.
@@ -8,5 +9,6 @@ namespace IvorySharp.Reflection
     /// <param name="target">Экземпляр класса на котором необходимо вызвать метод.</param>
     /// <param name="args">Параметры вызова.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public delegate object MethodLambda(object target, object[] args);
+    [CanBeNull]
+    public delegate object MethodLambda([NotNull] object target, [NotNull] object[] args);
 }

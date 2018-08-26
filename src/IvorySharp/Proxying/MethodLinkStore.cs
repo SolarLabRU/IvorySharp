@@ -24,13 +24,12 @@ namespace IvorySharp.Proxying
         /// <returns>Токен.</returns>
         public MethodToken CreateToken(MethodLambdaInfo method)
         {
-            // ReSharper disable once InvertIf
-            if (!_methodToKey.TryGetValue(method, out var key))
-            {
-                _methodsByKey.Add(method);
-                key = _methodsByKey.Count - 1;
-                _methodToKey[method] = key;
-            }
+            if (_methodToKey.TryGetValue(method, out var key))
+                return new MethodToken(key, method.MethodInfo.DeclaringType);
+            
+            _methodsByKey.Add(method);
+            key = _methodsByKey.Count - 1;
+            _methodToKey[method] = key;
 
             return new MethodToken(key, method.MethodInfo.DeclaringType);
         }

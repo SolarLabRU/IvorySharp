@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using IvorySharp.Core;
+using IvorySharp.Linq;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -22,12 +23,12 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Провайдера генератора возвращаемых значений по умолчанию.
         /// </summary>
-        internal abstract Lazy<Func<object>> DefaultReturnValueGeneratorProvider { get; }
+        internal abstract Lazy<DefaultValueGenerator> DefaultReturnValueGeneratorProvider { get; }
 
         /// <summary>
         /// Генератор возвращаемых значений по умолчанию.
         /// </summary>
-        internal Func<object> DefaultReturnValueGenerator => DefaultReturnValueGeneratorProvider.Value;
+        internal DefaultValueGenerator DefaultReturnValueGenerator => DefaultReturnValueGeneratorProvider.Value;
         
         /// <summary>
         /// Аспекты типа <see cref="MethodBoundaryAspect"/>.

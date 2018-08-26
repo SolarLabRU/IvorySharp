@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using IvorySharp.Reflection;
+using IvorySharp.Linq;
 
 namespace IvorySharp.Proxying
 {

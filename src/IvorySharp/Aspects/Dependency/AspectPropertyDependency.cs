@@ -1,6 +1,5 @@
-﻿using System;
-using System.Reflection;
-using IvorySharp.Reflection;
+﻿using System.Reflection;
+using IvorySharp.Linq;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Dependency
@@ -22,9 +21,9 @@ namespace IvorySharp.Aspects.Dependency
         public PropertyInfo Property { get; }
 
         /// <summary>
-        /// Быстрый сеттер свойства.
+        /// Сеттер свойства.
         /// </summary>
-        public Action<object, object> FastPropertySetter { get; }
+        public PropertySetter PropertySetter { get; }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AspectPropertyDependency"/>.
@@ -35,7 +34,7 @@ namespace IvorySharp.Aspects.Dependency
         {
             Dependency = dependency;
             Property = property;
-            FastPropertySetter = Expressions.CreatePropertySetter(property);
+            PropertySetter = Expressions.CreatePropertySetter(property);
         }
     }
 }

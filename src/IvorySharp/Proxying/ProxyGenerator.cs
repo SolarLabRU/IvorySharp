@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using IvorySharp.Comparers;
 using IvorySharp.Extensions;
-using IvorySharp.Reflection;
+using IvorySharp.Linq;
 
 namespace IvorySharp.Proxying
 {

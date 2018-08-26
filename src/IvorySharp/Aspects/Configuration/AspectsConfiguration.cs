@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 using IvorySharp.Components;
-using IvorySharp.Reflection;
+using IvorySharp.Linq;
 using JetBrains.Annotations;
 using IComponent = IvorySharp.Components.IComponent;
 

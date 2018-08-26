@@ -7,7 +7,7 @@ using IvorySharp.Aspects.Pipeline.Async.StateMachine;
 using IvorySharp.Aspects.Pipeline.StateMachine;
 using IvorySharp.Caching;
 using IvorySharp.Core;
-using IvorySharp.Reflection;
+using IvorySharp.Linq;
 
 namespace IvorySharp.Aspects.Pipeline.Async
 {

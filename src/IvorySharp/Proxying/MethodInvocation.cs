@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
-using IvorySharp.Reflection;
+using IvorySharp.Linq;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Proxying

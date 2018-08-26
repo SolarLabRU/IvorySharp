@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Reflection;
 using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
+using IvorySharp.Linq;
 using IvorySharp.Reflection;
 
 namespace IvorySharp.Core

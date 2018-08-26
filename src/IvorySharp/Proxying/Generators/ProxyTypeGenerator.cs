@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using IvorySharp.Comparers;
+using IvorySharp.Linq;
 using IvorySharp.Proxying.Accessors;
 using IvorySharp.Proxying.Emitters;
 using IvorySharp.Reflection;

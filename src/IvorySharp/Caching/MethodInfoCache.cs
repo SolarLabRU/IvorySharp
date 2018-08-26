@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using IvorySharp.Comparers;
 using IvorySharp.Extensions;
+using IvorySharp.Linq;
 using IvorySharp.Reflection;
 
 namespace IvorySharp.Caching
@@ -27,14 +28,6 @@ namespace IvorySharp.Caching
             _invokerCache = cacheFactory.Create<MethodInfo, MethodLambda>(MethodEqualityComparer.Instance);
             _methodMapCacheKey = cacheFactory.Create<MethodMapCacheKey, MethodInfo>();
             _asyncMethodCache = cacheFactory.Create<MethodInfo, bool>(MethodEqualityComparer.Instance);
-        }
-
-        /// <inheritdoc />
-        public MethodLambda GetInvoker(MethodInfo method)
-        {
-            Debug.Assert(method != null, "method != null");
-            
-            return _invokerCache.GetOrAdd(method, Expressions.CreateLambda);
         }
 
         /// <inheritdoc />

@@ -3,7 +3,7 @@ using IvorySharp.Aspects.Finalize;
 using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
-using IvorySharp.Reflection;
+using IvorySharp.Linq;
 
 namespace IvorySharp.Aspects.Weaving
 {

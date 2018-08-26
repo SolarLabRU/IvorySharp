@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace IvorySharp.Reflection
+namespace IvorySharp.Linq
 {
     internal static class Expressions
     {
@@ -30,7 +30,7 @@ namespace IvorySharp.Reflection
             return GetMemberName(selector.Body);
         }
 
-        public static Action<object, object> CreatePropertySetter(PropertyInfo property)
+        public static PropertySetter CreatePropertySetter(PropertyInfo property)
         {
             if (property == null)
                 throw new ArgumentNullException(nameof(property));
@@ -41,7 +41,7 @@ namespace IvorySharp.Reflection
             var instance = Expression.Parameter(typeof(object), "instance");
             var value = Expression.Parameter(typeof(object), "value");
 
-            var expression = Expression.Lambda<Action<object, object>>(
+            var expression = Expression.Lambda<PropertySetter>(
                 Expression.Call(
                     Expression.Convert(instance, property.DeclaringType),
                     property.SetMethod,
@@ -52,9 +52,9 @@ namespace IvorySharp.Reflection
             return expression.Compile();
         }
 
-        public static Func<object> CreateDefaultValueGenerator(Type type)
+        public static DefaultValueGenerator CreateDefaultValueGenerator(Type type)
         {
-            return Expression.Lambda<Func<object>>(
+            return Expression.Lambda<DefaultValueGenerator>(
                 Expression.Convert(
                     Expression.Default(type), typeof(object)
                 )).Compile();

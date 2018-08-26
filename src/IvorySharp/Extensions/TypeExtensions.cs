@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using IvorySharp.Aspects;
-using IvorySharp.Reflection;
+using IvorySharp.Linq;
 
 namespace IvorySharp.Extensions
 {
@@ -16,10 +16,7 @@ namespace IvorySharp.Extensions
             if (type == null) 
                 throw new ArgumentNullException(nameof(type));
 
-            if (type == typeof(void))
-                return null;
-
-            return Expressions.CreateDefaultValueGenerator(type)();
+            return type == typeof(void) ? null : Expressions.CreateDefaultValueGenerator(type)();
         }
 
         internal static IEnumerable<Type> GetInterceptableInterfaces(this Type type)
