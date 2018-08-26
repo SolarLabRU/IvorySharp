@@ -45,14 +45,14 @@ namespace IvorySharp.Aspects.Pipeline
         /// <inheritdoc />
         protected override void SetReturnValue(object returnValue)
         {
-            if (CanReturnValue)
+            if (Invocation != null && CanReturnValue)
                 CurrentReturnValue = returnValue;
         }
 
         /// <inheritdoc />
         protected override void SetDefaultReturnValue()
         {
-            if (CanReturnValue)
+            if (Invocation != null && CanReturnValue)
                 CurrentReturnValue = Context.Method.ReturnType.GetDefaultValue();
         }
     }

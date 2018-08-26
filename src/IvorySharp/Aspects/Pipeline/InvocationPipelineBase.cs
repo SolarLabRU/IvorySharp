@@ -103,8 +103,9 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Сбрасывает состояние пайплайна.
         /// </summary>
-        internal virtual void ResetState()
-        {        
+        internal void ResetState()
+        {       
+            SetDefaultReturnValue();
             ExecutionStateKey = null;
             CurrentException = null;
             Invocation = null;
