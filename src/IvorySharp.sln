@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Benchmark", "Ivo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Tests", "IvorySharp.Tests\IvorySharp.Tests.csproj", "{97B21EEF-17AD-480E-AD0F-45641E95E032}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Examples", "IvorySharp.Examples\IvorySharp.Examples.csproj", "{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{29097D4D-10CF-4CCC-9BCB-4E172BFE5380}"
 ProjectSection(SolutionItems) = preProject
 	..\LICENSE = ..\LICENSE
@@ -44,10 +42,6 @@ Global
 		{97B21EEF-17AD-480E-AD0F-45641E95E032}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97B21EEF-17AD-480E-AD0F-45641E95E032}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97B21EEF-17AD-480E-AD0F-45641E95E032}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A3C6626-6D9C-4A3B-BF87-D597B243BCB7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0D62CD8C-591C-4DB1-B699-0DCA0A99413D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0D62CD8C-591C-4DB1-B699-0DCA0A99413D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D62CD8C-591C-4DB1-B699-0DCA0A99413D}.Release|Any CPU.ActiveCfg = Release|Any CPU

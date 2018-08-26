@@ -33,10 +33,22 @@ namespace IvorySharp.Aspects.Pipeline
         }
 
         /// <inheritdoc />
+        internal override void ResetReturnValue()
+        {
+            if (Invocation != null)
+            {
+                if (!Invocation.Method.IsVoidReturn())
+                    Invocation.ReturnValue = Invocation.Method.ReturnType.GetDefaultValue();
+            }
+        }
+
+        /// <inheritdoc />
         public override void Return()
         {
             base.Return();
-            CurrentReturnValue = Context.Method.ReturnType.GetDefaultValue();
+            
+            if (!Context.Method.IsVoidReturn())
+                CurrentReturnValue = Context.Method.ReturnType.GetDefaultValue();
         }
 
         /// <inheritdoc />

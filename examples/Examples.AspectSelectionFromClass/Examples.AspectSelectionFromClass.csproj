@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="IvorySharp" Version="1.0.2-alpha" />
+    <PackageReference Include="IvorySharp.Extensions.ClassAspectSelection" Version="1.0.0-alpha" />
+    <PackageReference Include="IvorySharp.Integration.SimpleInjector" Version="1.0.0-alpha" />
+  </ItemGroup>
+</Project>

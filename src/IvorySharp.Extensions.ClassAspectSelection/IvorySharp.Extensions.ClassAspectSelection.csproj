@@ -6,7 +6,10 @@
     <ProjectReference Include="..\IvorySharp\IvorySharp.csproj" />
   </ItemGroup>
   <PropertyGroup>
-    <Version>1.0.0-alpha</Version>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionSufix>$(VersionSuffix)</VersionSufix>
+  </PropertyGroup>
+  <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>

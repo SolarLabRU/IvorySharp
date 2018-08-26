@@ -32,6 +32,23 @@ namespace IvorySharp.Aspects.Pipeline.Async
         }
 
         /// <inheritdoc />
+        internal override void ResetReturnValue()
+        {
+            if (Invocation == null) 
+                return;
+            
+            if (Invocation.InvocationType == InvocationType.AsyncAction)
+            {
+                CurrentReturnValue = null;
+            }
+            else
+            {
+                var innerType = Invocation.Method.ReturnType.GetGenericArguments()[0];
+                CurrentReturnValue = innerType.GetDefaultValue();
+            }
+        }
+
+        /// <inheritdoc />
         public override void Return()
         {
             base.Return();

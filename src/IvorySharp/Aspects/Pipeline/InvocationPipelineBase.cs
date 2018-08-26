@@ -85,10 +85,29 @@ namespace IvorySharp.Aspects.Pipeline
         /// <returns>Инициализированный пайплайн.</returns>
         internal InvocationPipelineBase Init(IInvocation invocation)
         {
+            ResetState();
             Invocation = invocation;
             return this;
         }
 
+        /// <summary>
+        /// Сбрасывает состояние пайплайна.
+        /// </summary>
+        internal void ResetState()
+        {
+            ResetReturnValue();           
+            ExecutionStateKey = null;
+            CurrentException = null;
+            Invocation = null;
+            InternalState = InvocationPipelineState.Continue;
+            FlowBehavior = FlowBehavior.Continue;
+        }
+
+        /// <summary>
+        /// Сбрасывает возвращаемое значение.
+        /// </summary>
+        internal abstract void ResetReturnValue();
+        
         /// <inheritdoc />
         public virtual void Return()
         {
