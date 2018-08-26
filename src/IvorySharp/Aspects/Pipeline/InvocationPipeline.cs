@@ -53,7 +53,7 @@ namespace IvorySharp.Aspects.Pipeline
         protected override void SetDefaultReturnValue()
         {
             if (Invocation != null && CanReturnValue)
-                CurrentReturnValue = Context.Method.ReturnType.GetDefaultValue();
+                CurrentReturnValue = DefaultReturnValueGenerator();
         }
     }
 }
