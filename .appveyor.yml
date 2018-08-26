@@ -8,6 +8,7 @@ before_build:
   - ps: cd src
   - ps: dotnet restore
 build:
+  project: IvorySharp.sln
   parallel: true
   verbosity: minimal
 after_build:
