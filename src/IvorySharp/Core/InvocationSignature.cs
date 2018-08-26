@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -76,5 +77,40 @@ namespace IvorySharp.Core
                 return hashCode;
             }
         }
+        
+        /// <summary>
+        /// Сравнивает сигнатуры вызова на основе методов.
+        /// </summary>
+        public sealed class InvocationSignatureMethodEqualityComparer : EqualityComparer<IInvocationSignature>
+        {
+            /// <summary>
+            /// Инициализированный экземпляр <see cref="InvocationSignatureMethodEqualityComparer"/>.
+            /// </summary>
+            public static readonly InvocationSignatureMethodEqualityComparer Instance 
+                = new InvocationSignatureMethodEqualityComparer();
+            
+            /// <inheritdoc />
+            public override bool Equals(IInvocationSignature x, IInvocationSignature y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return x.Method.Equals(y.Method) && x.TargetMethod.Equals(y.TargetMethod);
+            }
+
+            /// <inheritdoc />
+            public override int GetHashCode(IInvocationSignature obj)
+            {
+                if (obj == null)
+                    return 0;
+                
+                unchecked
+                {
+                    return (obj.Method.GetHashCode() * 397) ^ obj.TargetMethod.GetHashCode();
+                }
+            }
+        }
+
     }
 }

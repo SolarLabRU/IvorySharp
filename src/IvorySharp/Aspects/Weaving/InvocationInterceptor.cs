@@ -72,7 +72,8 @@ namespace IvorySharp.Aspects.Weaving
                     _aspectFinalizer.Finalize(aspect);
             }
 
-            _aspectFinalizer.Finalize(invocationData.InterceptionAspect);
+            if (invocationData.InterceptionAspect.IsFinalizable)
+                _aspectFinalizer.Finalize(invocationData.InterceptionAspect);
 
             return invocation.ReturnValue;
         }

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Pipeline;
@@ -48,7 +48,8 @@ namespace IvorySharp.Aspects.Weaving
 
             return _providerCache.GetOrAdd(key, typeKey =>
             {
-                var invocationsData = new Dictionary<IInvocationSignature, InvocationWeaveData>();
+                var invocationsData = new ConcurrentDictionary<IInvocationSignature, InvocationWeaveData>(
+                    InvocationSignature.InvocationSignatureMethodEqualityComparer.Instance);
 
                 var declaredMethods = typeKey.DeclaredType.GetMethods()
                     .Union(typeKey.DeclaredType.GetInterfaces()
@@ -73,7 +74,7 @@ namespace IvorySharp.Aspects.Weaving
                     var isWeaveable = _weavePredicate.IsWeaveable(signature);
                     if (!isWeaveable)
                     {
-                        invocationsData.Add(signature, InvocationWeaveData.Unweavable(methodInvoker));
+                        invocationsData.TryAdd(signature, InvocationWeaveData.Unweavable(methodInvoker));
                         continue;
                     }
 
@@ -89,7 +90,7 @@ namespace IvorySharp.Aspects.Weaving
                     var pipeline = _pipelineFactory.CreatePipeline(signature, boundaryAspects, interceptAspect);
                     var executor = _pipelineFactory.CreateExecutor(signature);
 
-                    invocationsData.Add(signature,
+                    invocationsData.TryAdd(signature,
                         InvocationWeaveData.Weavable(
                             methodInvoker, pipeline, executor, boundaryAspects, interceptAspect));
                 }
