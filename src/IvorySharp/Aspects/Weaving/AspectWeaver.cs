@@ -5,6 +5,7 @@ using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Finalize;
 using IvorySharp.Caching;
 using IvorySharp.Components;
+using IvorySharp.Exceptions;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Weaving
@@ -57,6 +58,23 @@ namespace IvorySharp.Aspects.Weaving
                 _aspectDependencyInjectorHolder,
                 _aspectFinalizerHolder,
                 MethodInfoCache.Instance);
+        }
+
+        /// <summary>
+        /// Выполняет связывание исходного объекта с заданными для него аспектами.
+        /// </summary>
+        /// <param name="target">Экземпляр исходного объекта.</param>
+        /// <typeparam name="TService">Объявленный тип.</typeparam>
+        /// <typeparam name="TImplementation">Фактический тип.</typeparam>
+        /// <returns>Экземпляр сервиса связанного с аспектами.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public TService Weave<TService, TImplementation>(TImplementation target)
+            where TImplementation : TService
+        {
+            if (!typeof(TService).IsInterface)
+                throw new IvorySharpException($"Тип '{typeof(TService).Name}' не является интерфейсом");
+
+            return (TService)Weave(target, typeof(TService), typeof(TImplementation));
         }
     }
 }

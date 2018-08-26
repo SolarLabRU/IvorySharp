@@ -15,6 +15,16 @@ namespace IvorySharp.Aspects.Pipeline
         private Dictionary<Guid, object> PipelineData => _pipelineDataProvider.Value;
          
         /// <summary>
+        /// Возвращает признак того, что из пайплайна можно вернуть значение.
+        /// </summary>
+        internal abstract bool CanReturnValue { get; }
+        
+        /// <summary>
+        /// Генератор возвращаемых значений по умолчанию.
+        /// </summary>
+        internal abstract Func<object> DefaultReturnValueGenerator { get; }
+        
+        /// <summary>
         /// Аспекты типа <see cref="MethodBoundaryAspect"/>.
         /// </summary>
         internal IReadOnlyCollection<MethodBoundaryAspect> BoundaryAspects { get; }
@@ -34,6 +44,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// </summary>
         internal IInvocation Invocation { get; private set; }
 
+        /// <summary>
+        /// Сигнатура вызова.
+        /// </summary>
+        internal IInvocationSignature InvocationSignature { get; }
+        
         /// <summary>
         /// Ключ состояния вызова, для установки/получения <see cref="ExecutionState"/>.
         /// </summary>
@@ -61,23 +76,18 @@ namespace IvorySharp.Aspects.Pipeline
         /// Инициаилизирует экземпляр <see cref="InvocationPipelineBase"/>.
         /// </summary>
         protected InvocationPipelineBase(
+            IInvocationSignature signature,
             IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects,
             MethodInterceptionAspect interceptionAspect)
         {
             _pipelineDataProvider = new Lazy<Dictionary<Guid, object>>(
                 () => new Dictionary<Guid, object>());
 
+            InvocationSignature = signature;
             BoundaryAspects = boundaryAspects;
             InterceptionAspect = interceptionAspect;
         }
         
-        /// <summary>
-        /// Инициализирует экземпляр <see cref="InvocationPipelineBase"/>.
-        /// </summary>
-        protected InvocationPipelineBase()
-           : this(Array.Empty<MethodBoundaryAspect>(), BypassMethodAspect.Instance) 
-        { }
-
         /// <summary>
         /// Инициализирует пайплайн.
         /// </summary>
@@ -93,9 +103,8 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Сбрасывает состояние пайплайна.
         /// </summary>
-        internal void ResetState()
-        {
-            ResetReturnValue();           
+        internal virtual void ResetState()
+        {        
             ExecutionStateKey = null;
             CurrentException = null;
             Invocation = null;
@@ -103,11 +112,6 @@ namespace IvorySharp.Aspects.Pipeline
             FlowBehavior = FlowBehavior.Continue;
         }
 
-        /// <summary>
-        /// Сбрасывает возвращаемое значение.
-        /// </summary>
-        internal abstract void ResetReturnValue();
-        
         /// <inheritdoc />
         public virtual void Return()
         {

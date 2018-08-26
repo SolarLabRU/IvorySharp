@@ -52,6 +52,14 @@ namespace IvorySharp.Reflection
             return expression.Compile();
         }
 
+        public static Func<object> CreateDefaultValueGenerator(Type type)
+        {
+            return Expression.Lambda<Func<object>>(
+                Expression.Convert(
+                    Expression.Default(type), typeof(object)
+                )).Compile();
+        }
+
         public static MethodLambda CreateLambda(MethodInfo method)
         {
             if (method == null)

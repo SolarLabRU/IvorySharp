@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Reflection;
@@ -71,7 +70,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="pipelineExecutor">Компонент выполнения пайплайна.</param>
         /// <param name="boundaryAspects">Аспекты <see cref="MethodBoundaryAspect"/>.</param>
         /// <param name="interceptionAspect">Аспект <see cref="MethodInterceptionAspect"/>.</param>
-        /// <returns></returns>
+        /// <returns>Экземляр <see cref="InvocationWeaveData"/>.</returns>
         internal static InvocationWeaveData Weavable(
              MethodLambda methodInvoker,
             IInvocationPipeline pipeline,

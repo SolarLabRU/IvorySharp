@@ -1,6 +1,7 @@
 ﻿using System;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Pipeline;
+using IvorySharp.Core;
 using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Aspects;
 using IvorySharp.Tests.Assets.Invocations;
@@ -37,7 +38,14 @@ namespace IvorySharp.Tests.UnitTests
             params object[] arguments)
         {
             var invocation = new ObservableInvocation(typeof(TService), instace, methodName, arguments);         
-            var pipeline = new InvocationPipeline(boundaryAspects, BypassMethodAspect.Instance);
+            var pipeline = new InvocationPipeline(
+                new InvocationSignature(
+                    invocation.Method, 
+                    invocation.TargetMethod, 
+                    invocation.DeclaringType,
+                    invocation.TargetType,
+                    invocation.InvocationType),  
+                boundaryAspects, BypassMethodAspect.Instance);
 
             pipeline.Init(invocation);
 

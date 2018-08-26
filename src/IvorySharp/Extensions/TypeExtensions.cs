@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using IvorySharp.Aspects;
+using IvorySharp.Reflection;
 
 namespace IvorySharp.Extensions
 {
@@ -19,13 +19,7 @@ namespace IvorySharp.Extensions
             if (type == typeof(void))
                 return null;
 
-            var prodiver = Expression.Lambda<Func<object>>(
-                Expression.Convert(
-                    Expression.Default(type), typeof(object)
-                )
-            ).Compile();
-
-            return prodiver();
+            return Expressions.CreateDefaultValueGenerator(type)();
         }
 
         internal static IEnumerable<Type> GetInterceptableInterfaces(this Type type)

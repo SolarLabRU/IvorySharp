@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
-using IvorySharp.Extensions;
 using IvorySharp.Reflection;
 
 namespace IvorySharp.Aspects.Pipeline.Async
@@ -12,40 +12,47 @@ namespace IvorySharp.Aspects.Pipeline.Async
     internal sealed class AsyncInvocationPipeline : InvocationPipelineBase
     {
         /// <inheritdoc />
+        internal override bool CanReturnValue { get; }
+
+        /// <inheritdoc />
+        internal override Func<object> DefaultReturnValueGenerator { get; }
+
+        /// <summary>
+        /// Внутренний тип возвращаемого значения.
+        /// Устанавливается только если выполняется асинхронная функция (Task{T}).
+        /// </summary>
+        internal Type ReturnTypeInner { get; }
+
+        /// <inheritdoc />
         public override object CurrentReturnValue { get; set; }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AsyncInvocationPipeline"/>.
         /// </summary>
-        public AsyncInvocationPipeline() 
-        {
-        }
-        
-        /// <summary>
-        /// Инициализирует экземпляр <see cref="AsyncInvocationPipeline"/>.
-        /// </summary>
         public AsyncInvocationPipeline(
-            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects, 
-            MethodInterceptionAspect interceptionAspect) 
-            : base(boundaryAspects, interceptionAspect)
+            IInvocationSignature signature,
+            IReadOnlyCollection<MethodBoundaryAspect> boundaryAspects,
+            MethodInterceptionAspect interceptionAspect)
+            : base(signature, boundaryAspects, interceptionAspect)
         {
+            ReturnTypeInner = signature.InvocationType == InvocationType.AsyncFunction
+                ? signature.Method.ReturnType.GetGenericArguments()[0]
+                : null;
+
+            CanReturnValue = ReturnTypeInner != null;
+            DefaultReturnValueGenerator = ReturnTypeInner != null
+                ? Expressions.CreateDefaultValueGenerator(ReturnTypeInner)
+                : () => null;
         }
 
         /// <inheritdoc />
-        internal override void ResetReturnValue()
+        internal override void ResetState()
         {
-            if (Invocation == null) 
-                return;
-            
-            if (Invocation.InvocationType == InvocationType.AsyncAction)
-            {
-                CurrentReturnValue = null;
-            }
-            else
-            {
-                var innerType = Invocation.Method.ReturnType.GetGenericArguments()[0];
-                CurrentReturnValue = innerType.GetDefaultValue();
-            }
+            CurrentReturnValue = CanReturnValue
+                ? DefaultReturnValueGenerator()
+                : null;
+
+            base.ResetState();
         }
 
         /// <inheritdoc />
@@ -56,34 +63,32 @@ namespace IvorySharp.Aspects.Pipeline.Async
             if (Context.InvocationType == InvocationType.AsyncAction)
                 CurrentReturnValue = null;
 
-            var innerType = Context.Method.ReturnType.GetGenericArguments()[0];
-            CurrentReturnValue = innerType.GetDefaultValue();
+            CurrentReturnValue = DefaultReturnValueGenerator();
         }
 
         /// <inheritdoc />
         public override void ReturnValue(object returnValue)
         {
             base.ReturnValue(returnValue);
-            
+
             if (Context.InvocationType == InvocationType.AsyncAction)
                 return;
-            
-            var innerType = Context.Method.ReturnType.GetGenericArguments()[0];
+
             if (returnValue == null)
             {
-                CurrentReturnValue = innerType.GetDefaultValue();
+                CurrentReturnValue = DefaultReturnValueGenerator();
                 return;
             }
-            
-            if (TypeConversion.TryConvert(returnValue, innerType, out var converted))
-            {                   
+
+            if (TypeConversion.TryConvert(returnValue, ReturnTypeInner, out var converted))
+            {
                 CurrentReturnValue = converted;
             }
             else
             {
                 var message = $"Невозможно установить возвращаемое значение '{returnValue}', " +
                               $"т.к. его тип '{returnValue.GetType()}' неприводим " +
-                              $"к ожидаемому возвращаемому типу '{innerType}'";
+                              $"к ожидаемому возвращаемому типу '{ReturnTypeInner}'";
 
                 throw new IvorySharpException(message);
             }

@@ -15,19 +15,21 @@ namespace IvorySharp.Tests.UnitTests
     /// </summary>
     public partial class AsyncAspectInvocationPipelineExecutorTests
     {
-        private readonly BoundaryState[] _normalExecutionStack = {
+        private readonly BoundaryState[] _normalExecutionStack =
+        {
             new BoundaryState(BoundaryType.Exit),
             new BoundaryState(BoundaryType.Success),
-            new BoundaryState(BoundaryType.Entry), 
+            new BoundaryState(BoundaryType.Entry),
         };
 
-        private readonly BoundaryState[] _exceptionExecutionStack = {
+        private readonly BoundaryState[] _exceptionExecutionStack =
+        {
             new BoundaryState(BoundaryType.Exit),
             new BoundaryState(BoundaryType.Exception),
             new BoundaryState(BoundaryType.Entry),
         };
 
-        
+
         private static async Task Await(IInvocation invocation)
         {
             await ((Task) invocation.ReturnValue);
@@ -36,22 +38,29 @@ namespace IvorySharp.Tests.UnitTests
         private static async Task<T> Await<T>(IInvocation invocation)
         {
             return await (Task<T>) invocation.ReturnValue;
-        }    
-        
+        }
+
         private AsyncInvocationPipeline CreatePipeline<TService>(
-            TService instace, 
-            string methodName,  
+            TService instace,
+            string methodName,
             MethodBoundaryAspect[] boundaryAspects,
             params object[] arguments)
         {
             var invocation = new ObservableInvocation(typeof(TService), instace, methodName, arguments);
-            var pipeline = new AsyncInvocationPipeline(boundaryAspects, BypassMethodAspect.Instance);
+            var pipeline = new AsyncInvocationPipeline(
+                new InvocationSignature(
+                    invocation.Method,
+                    invocation.TargetMethod,
+                    invocation.DeclaringType,
+                    invocation.TargetType,
+                    invocation.InvocationType), 
+                boundaryAspects, BypassMethodAspect.Instance);
 
             pipeline.Init(invocation);
 
             return pipeline;
         }
-        
+
         #region Services
 
         private interface IService
@@ -60,7 +69,7 @@ namespace IvorySharp.Tests.UnitTests
             Task ThrowArgumentExceptionAsync();
             Task<string> ShouldNotThrow();
         }
-        
+
         public class Service : IService
         {
             public async Task<int> IdentityAsync(int value)
@@ -89,7 +98,7 @@ namespace IvorySharp.Tests.UnitTests
         {
             protected override void Success(IInvocationPipeline pipeline)
             {
-                var result = (int)pipeline.CurrentReturnValue;
+                var result = (int) pipeline.CurrentReturnValue;
                 pipeline.ReturnValue(result + 1);
             }
         }

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using IvorySharp.Aspects.Pipeline.Async;
 using IvorySharp.Caching;
 using IvorySharp.Core;
@@ -22,18 +23,20 @@ namespace IvorySharp.Aspects.Pipeline
         }
         
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IInvocationPipeline CreatePipeline(
             IInvocationSignature signature,
             MethodBoundaryAspect[] boundaryAspects, 
             MethodInterceptionAspect interceptionAspect)
         {
             if (_cache.IsAsync(signature.TargetMethod))
-                return new AsyncInvocationPipeline(boundaryAspects, interceptionAspect);
+                return new AsyncInvocationPipeline(signature, boundaryAspects, interceptionAspect);
             
-            return new InvocationPipeline(boundaryAspects, interceptionAspect);
+            return new InvocationPipeline(signature, boundaryAspects, interceptionAspect);
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IInvocationPipelineExecutor CreateExecutor(IInvocationSignature signature)
         {
             if (_cache.IsAsync(signature.TargetMethod))
