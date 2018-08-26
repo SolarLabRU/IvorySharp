@@ -34,6 +34,7 @@ namespace IvorySharp.Aspects.Weaving
         /// </summary>
         /// <param name="dependencyProvider">Провайдер зависимостей.</param>
         /// <returns>Инициализированный экземпляр <see cref="AspectWeaver"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [NotNull] public static AspectWeaver Create([NotNull] IDependencyProvider dependencyProvider)
         {
             if (dependencyProvider == null)
@@ -47,6 +48,7 @@ namespace IvorySharp.Aspects.Weaving
         ///  Создает новый экземпляр <see cref="AspectWeaver"/>.
         /// </summary>
         /// <returns>Инициализированный экземпляр <see cref="AspectWeaver"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [NotNull] public static AspectWeaver Create()
         {
             return Create(NullDependencyProvider.Instance);
