@@ -8,7 +8,7 @@ namespace Examples.NativeWeaving
         static void Main(string[] args)
         {
             var weaver = AspectWeaverFactory.Create();
-            var service = (IDataService)weaver.Weave(new DataService(), typeof(IDataService), typeof(DataService));
+            var service = weaver.Weave<IDataService, DataService>(new DataService());
             
             service.GenerateData();
         }
