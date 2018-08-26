@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using IvorySharp.Comparers;
 using IvorySharp.Extensions;
 using IvorySharp.Reflection;
 
@@ -124,6 +126,12 @@ namespace IvorySharp.Proxying
         public static readonly ProxyGenerator Instance = new ProxyGenerator();
 
         /// <summary>
+        /// Кеш делегатов.
+        /// </summary>
+        private static readonly ConcurrentDictionary<MethodInfo, MethodLambda> LambdasCache 
+            = new ConcurrentDictionary<MethodInfo, MethodLambda>(MethodEqualityComparer.Instance);
+        
+        /// <summary>
         /// Кеш прокси типов.
         /// </summary>
         private readonly ProxyTypeCache _proxyTypeCache;
@@ -157,7 +165,7 @@ namespace IvorySharp.Proxying
 
         /// <summary>
         /// Вспомогательный метод для транслирования перехватываемых вызовов в
-        /// метод <see cref="IvoryProxy.Invoke(MethodInfo, object[])"/>.
+        /// метод <see cref="IvoryProxy.Invoke(MethodInvocation)"/>.
         /// Этот метод вызывается всеми сгенерированными прокси.
         /// Его задача распаковать аргументы и указатель на *this* и передать его на
         /// вход целевому методу прокси <see cref="MethodReferences.ProxyInvoke"/>.
@@ -168,14 +176,23 @@ namespace IvorySharp.Proxying
         {
             var packed = new PackedArguments(packedArgs);
             var method = MethodLinkStore.ResolveMethod(packed.MethodToken);
-
-            if (method.IsGenericMethodDefinition)
-                method = method.MakeGenericMethod(packed.GenericParameters);
-
+            
+            var methodInfo = method.MethodInfo.IsGenericMethodDefinition
+                ? method.MethodInfo.MakeGenericMethod(packed.GenericParameters)
+                : method.MethodInfo;
+            
+            var lambda = method.MethodLambda == null
+                ? LambdasCache.GetOrAdd(method.MethodInfo, Expressions.CreateLambda)
+                : method.MethodLambda;
+            
+            var proxiedMethod = new MethodInvocation(
+                methodInfo, lambda, packed.MethodArguments, 
+                packed.GenericParameters, packed.Proxy);
+            
             try
             {
                 packed.ReturnValue = FastProxyInvoke(
-                    packed.Proxy, new object[] {method, packed.MethodArguments});
+                    packed.Proxy, new object[] { proxiedMethod });
             }
             catch (TargetInvocationException tie)
             {

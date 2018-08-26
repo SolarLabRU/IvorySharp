@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using IvorySharp.Caching;
-using IvorySharp.Proxying;
+﻿using IvorySharp.Proxying;
 
 namespace IvorySharp.Benchmark.Proxy
 {
@@ -8,9 +6,9 @@ namespace IvorySharp.Benchmark.Proxy
     {
         private TService _service;
         
-        protected internal override object Invoke(MethodInfo targetMethod, object[] args)
+        protected internal override object Invoke(MethodInvocation invocation)
         {
-            return MethodInfoCache.Instance.GetInvoker(targetMethod)(_service, args);
+            return invocation.MethodLambda(_service, invocation.Arguments);
         }
         
         private void Initialize(TService service)

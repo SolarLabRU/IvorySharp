@@ -184,8 +184,14 @@ namespace IvorySharp.Proxying.Generators
             ilGenerator.Emit(OpCodes.Nop);
 
             packedArgsEmitter.EmitProxy();
+
+            // Обобщенные параметры будут известны только во время вызова
+            // поэтому заранее собрать делегат не выйдетю
+            var methodLambda = method.ContainsGenericParameters
+                ? new MethodLambdaInfo(method, null)
+                : new MethodLambdaInfo(method, Expressions.CreateLambda(method));
             
-            var token = _methodLinkStore.CreateToken(method);
+            var token = _methodLinkStore.CreateToken(methodLambda);
             packedArgsEmitter.EmitMethodToken(token);
             
             var argumentsEmitter = packedArgsEmitter.EmitArguments(parameters, parametersEmitter);

@@ -4,6 +4,11 @@ namespace IvorySharp.Benchmark.Services
 {
     public class ServiceForBenchmark : IServiceForBenchmark
     {
+        public T IdenitityGeneric<T>(T arg)
+        {
+            return arg;
+        }
+
         public int Identity(int value)
         {
             return value;

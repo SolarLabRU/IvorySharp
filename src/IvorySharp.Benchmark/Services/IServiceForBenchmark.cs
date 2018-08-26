@@ -6,6 +6,9 @@ namespace IvorySharp.Benchmark.Services
     public interface IServiceForBenchmark
     {
         [BypassBoundaryAspect]
+        T IdenitityGeneric<T>(T arg);
+        
+        [BypassBoundaryAspect]
         int Identity(int value);
 
         [BypassBoundaryAspect]

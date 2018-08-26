@@ -15,7 +15,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         internal override bool CanReturnValue { get; }
 
         /// <inheritdoc />
-        internal override Func<object> DefaultReturnValueGenerator { get; }
+        internal override Lazy<Func<object>> DefaultReturnValueGeneratorProvider { get; }
 
         /// <summary>
         /// Внутренний тип возвращаемого значения.
@@ -40,9 +40,12 @@ namespace IvorySharp.Aspects.Pipeline.Async
                 : null;
 
             CanReturnValue = ReturnTypeInner != null;
-            DefaultReturnValueGenerator = ReturnTypeInner != null
-                ? Expressions.CreateDefaultValueGenerator(ReturnTypeInner)
-                : () => null;
+            DefaultReturnValueGeneratorProvider = new Lazy<Func<object>>(() =>
+            {
+                return ReturnTypeInner != null
+                    ? Expressions.CreateDefaultValueGenerator(ReturnTypeInner)
+                    : () => null;
+            });
         }
 
         /// <inheritdoc />

@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Reflection;
-using JetBrains.Annotations;
 
 namespace IvorySharp.Proxying
 {
@@ -18,9 +16,8 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// При каждом вызове метода прокси, вызывается данный метод для делегирования вызова.
         /// </summary>
-        /// <param name="targetMethod">Целевой метод.</param>
-        /// <param name="args">Параметры вызова метода.</param>
+        /// <param name="invocation">Модель вызова проксированного метода.</param>
         /// <returns>Результат выполнения метода.</returns>
-        protected internal abstract object Invoke([NotNull] MethodInfo targetMethod, [NotNull] object[] args);
+        protected internal abstract object Invoke(MethodInvocation invocation);
     }
 }

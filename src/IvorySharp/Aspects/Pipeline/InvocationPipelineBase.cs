@@ -20,9 +20,14 @@ namespace IvorySharp.Aspects.Pipeline
         internal abstract bool CanReturnValue { get; }
         
         /// <summary>
+        /// Провайдера генератора возвращаемых значений по умолчанию.
+        /// </summary>
+        internal abstract Lazy<Func<object>> DefaultReturnValueGeneratorProvider { get; }
+
+        /// <summary>
         /// Генератор возвращаемых значений по умолчанию.
         /// </summary>
-        internal abstract Func<object> DefaultReturnValueGenerator { get; }
+        internal Func<object> DefaultReturnValueGenerator => DefaultReturnValueGeneratorProvider.Value;
         
         /// <summary>
         /// Аспекты типа <see cref="MethodBoundaryAspect"/>.

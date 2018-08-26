@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reflection;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Finalize;
 using IvorySharp.Caching;
@@ -22,11 +21,6 @@ namespace IvorySharp.Aspects.Weaving
         /// Исходный объект, вызовы которого будут перехватываться.
         /// </summary>
         internal object Target { get; private set; }
-
-        /// <summary>
-        /// Экземпляр прокси.
-        /// </summary>
-        internal object Proxy { get; private set; }
 
         /// <summary>
         /// Тип, в котором объявлен целевой метод (интерфейс).
@@ -75,7 +69,6 @@ namespace IvorySharp.Aspects.Weaving
 
             weavedProxy.Initialize(
                 target, 
-                transparentProxy,
                 targetType,
                 declaringType,
                 invocationWeaveDataProvider,
@@ -86,23 +79,11 @@ namespace IvorySharp.Aspects.Weaving
             return transparentProxy;
         }
 
-        /// <inheritdoc />
-        protected internal sealed override object Invoke(MethodInfo method, object[] args)
-        {
-            var targetMethod = MethodCache.GetMethodMap(TargetType, method);
-            var signature = new InvocationSignature(
-                method, targetMethod, DeclaringType,
-                TargetType, method.GetInvocationType());
-
-            return Interceptor.Intercept(signature, args, Target, Proxy);
-        }
-
         /// <summary>
         /// Выполняет инициализацию прокси.
         /// </summary>
         private void Initialize(
             object target,
-            object proxy,
             Type targetType,
             Type declaringType,
             IInvocationWeaveDataProvider invocationWeaveDataProvider,
@@ -111,7 +92,6 @@ namespace IvorySharp.Aspects.Weaving
             IMethodInfoCache methodInfoCache)    
         {
             Target = target;
-            Proxy = proxy;
             TargetType = targetType;
             DeclaringType = declaringType;
             
@@ -121,6 +101,20 @@ namespace IvorySharp.Aspects.Weaving
                 aspectFinalizerHolder);
 
             MethodCache = methodInfoCache;
+        }
+
+        /// <inheritdoc />
+        protected internal override object Invoke(MethodInvocation invocation)
+        {
+            var targetMethod = MethodCache.GetMethodMap(TargetType, invocation.Method);
+            var signature = new InvocationSignature(
+                invocation.Method, targetMethod, DeclaringType,
+                TargetType, invocation.Method.GetInvocationType());
+
+            return Interceptor.Intercept(
+                signature, invocation.MethodLambda,
+                invocation.Arguments, Target, 
+                invocation.TransparentProxy);
         }
     }
 }

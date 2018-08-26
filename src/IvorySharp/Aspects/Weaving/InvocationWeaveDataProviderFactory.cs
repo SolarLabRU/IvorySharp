@@ -61,9 +61,7 @@ namespace IvorySharp.Aspects.Weaving
                     if (targetMethod == null)
                         throw new IvorySharpException(
                             $"Не удалось найти метод '{declaredMethod.Name}' в типе '{typeKey.TargetType.Name}'");
-
-                    var methodInvoker = Expressions.CreateLambda(declaredMethod); 
-
+                    
                     var signature = new InvocationSignature(
                         declaredMethod, targetMethod, typeKey.DeclaredType,
                         typeKey.TargetType, declaredMethod.GetInvocationType());
@@ -74,7 +72,7 @@ namespace IvorySharp.Aspects.Weaving
                     var isWeaveable = _weavePredicate.IsWeaveable(signature);
                     if (!isWeaveable)
                     {
-                        invocationsData.TryAdd(signature, InvocationWeaveData.Unweavable(methodInvoker));
+                        invocationsData.TryAdd(signature, InvocationWeaveData.Unweavable());
                         continue;
                     }
 
@@ -91,8 +89,7 @@ namespace IvorySharp.Aspects.Weaving
                     var executor = _pipelineFactory.CreateExecutor(signature);
 
                     invocationsData.TryAdd(signature,
-                        InvocationWeaveData.Weavable(
-                            methodInvoker, pipeline, executor, boundaryAspects, interceptAspect));
+                        InvocationWeaveData.Weavable(pipeline, executor, boundaryAspects, interceptAspect));
                 }
 
                 return new InvocationWeaveDataProvider(invocationsData);

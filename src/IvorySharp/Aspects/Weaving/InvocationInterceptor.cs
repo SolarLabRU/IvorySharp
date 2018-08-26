@@ -3,6 +3,7 @@ using IvorySharp.Aspects.Finalize;
 using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
+using IvorySharp.Reflection;
 
 namespace IvorySharp.Aspects.Weaving
 {
@@ -29,11 +30,14 @@ namespace IvorySharp.Aspects.Weaving
         /// Выполняет перехват вызова исходного метода с применением аспектов.
         /// </summary>
         /// <param name="signature">Сигнатура метода.</param>
+        /// <param name="methodCall">Делегат вызова метода.</param>
         /// <param name="args">Параметры вызова метода.</param>
         /// <param name="target">Экземпляр сервиса.</param>
         /// <param name="proxy">Прокси сервиса.</param>
         /// <returns>Результат вызова метода.</returns>
-        internal object Intercept(IInvocationSignature signature, object[] args, object target, object proxy)
+        internal object Intercept(
+            IInvocationSignature signature, MethodLambda methodCall,
+            object[] args, object target, object proxy)
         {
             var invocationData = _weaveDataProvider.Get(signature);
 
@@ -45,9 +49,9 @@ namespace IvorySharp.Aspects.Weaving
 
             if (!invocationData.IsWeaveable)
                 // Bypass
-                return invocationData.MethodInvoker(target, args);
+                return methodCall(target, args);
 
-            var invocation = new Invocation(signature, args, proxy, target, invocationData.MethodInvoker);
+            var invocation = new Invocation(signature, args, proxy, target, methodCall);
             
             foreach (var aspect in invocationData.BoundaryAspects)
             {

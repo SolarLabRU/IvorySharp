@@ -35,6 +35,12 @@ namespace IvorySharp.Integration.CastleWindsor.Aspects.Weaving
         /// <inheritdoc />
         public void Intercept(IInvocation invocation)
         {
+            object Proceed(object target, object[] arguments)
+            {
+                invocation.Proceed();
+                return invocation.ReturnValue;
+            }
+            
             var signature = new InvocationSignature(
                 invocation.Method,
                 invocation.MethodInvocationTarget, 
@@ -43,7 +49,8 @@ namespace IvorySharp.Integration.CastleWindsor.Aspects.Weaving
                 invocation.Method.GetInvocationType());
 
             invocation.ReturnValue = _invocationInterceptor.Intercept(
-                signature, invocation.Arguments, invocation.InvocationTarget, invocation.Proxy);
+                signature, Proceed, invocation.Arguments, 
+                invocation.InvocationTarget, invocation.Proxy);
         }
     }
 }
