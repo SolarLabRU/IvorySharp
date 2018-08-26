@@ -53,7 +53,7 @@ namespace IvorySharp.Aspects.Weaving
         /// </summary>
         /// <param name="methodInvoker">Делегал для быстрого вызова метода.</param>
         /// <returns>Экземляр <see cref="InvocationWeaveData"/>.</returns>
-        internal static InvocationWeaveData Unweaveble(MethodLambda methodInvoker)
+        internal static InvocationWeaveData Unweavable(MethodLambda methodInvoker)
         {
             return new InvocationWeaveData
             {
@@ -72,7 +72,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="boundaryAspects">Аспекты <see cref="MethodBoundaryAspect"/>.</param>
         /// <param name="interceptionAspect">Аспект <see cref="MethodInterceptionAspect"/>.</param>
         /// <returns></returns>
-        internal static InvocationWeaveData Weaveble(
+        internal static InvocationWeaveData Weavable(
              MethodLambda methodInvoker,
             IInvocationPipeline pipeline,
             IInvocationPipelineExecutor pipelineExecutor,

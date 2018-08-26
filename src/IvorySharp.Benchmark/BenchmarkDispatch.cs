@@ -8,7 +8,6 @@ using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Benchmark.Proxy;
 using IvorySharp.Benchmark.Services;
-using IvorySharp.Components;
 using IvorySharp.Integration.CastleWindsor.Aspects.Integration;
 
 namespace IvorySharp.Benchmark
@@ -41,8 +40,7 @@ namespace IvorySharp.Benchmark
             _reflectedMethodService = new ServiceForBenchmark();
             _reflectedMethod = typeof(IServiceForBenchmark).GetMethod(nameof(IServiceForBenchmark.Identity));
 
-            var settings = new DefaultComponentsStore(new NullDependencyProvider());
-            var weaver = AspectWeaverFactory.Create(settings);
+            var weaver = AspectWeaverFactory.Create();
             
             _weavedService = (IServiceForBenchmark) weaver.Weave(
                 new ServiceForBenchmark(), typeof(IServiceForBenchmark), typeof(ServiceForBenchmark));

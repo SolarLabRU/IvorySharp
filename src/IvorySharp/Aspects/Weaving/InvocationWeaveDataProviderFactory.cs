@@ -8,6 +8,7 @@ using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
 using IvorySharp.Extensions;
+using IvorySharp.Reflection;
 
 namespace IvorySharp.Aspects.Weaving
 {
@@ -19,14 +20,12 @@ namespace IvorySharp.Aspects.Weaving
         private readonly IComponentHolder<IAspectWeavePredicate> _weavePredicateHolder;
         private readonly IComponentHolder<IAspectFactory> _preInitializerHolder;
         private readonly IComponentHolder<IInvocationPipelineFactory> _pipelineFactoryHolder;
-        private readonly IMethodInfoCache _methodInfoCache;
+        private readonly IKeyValueCache<TypePair, IInvocationWeaveDataProvider> _providerCache;
         
         private IAspectWeavePredicate _weavePredicate;
         private IAspectFactory _factory;
         private IInvocationPipelineFactory _pipelineFactory;
-
-        private readonly IKeyValueCache<TypePair, IInvocationWeaveDataProvider> _providerCache;
-        
+     
         /// <summary>
         /// Инициализирует экземпляр <see cref="InvocationWeaveDataProviderFactory"/>.
         /// </summary>
@@ -34,13 +33,11 @@ namespace IvorySharp.Aspects.Weaving
             IComponentHolder<IAspectWeavePredicate> weavePredicateHolder, 
             IComponentHolder<IAspectFactory> preInitializerHolder, 
             IComponentHolder<IInvocationPipelineFactory> pipelineFactoryHolder,
-            IMethodInfoCache methodInfoCache,
             IKeyValueCacheFactory cacheFactory)
         {
             _weavePredicateHolder = weavePredicateHolder;
             _preInitializerHolder = preInitializerHolder;
             _pipelineFactoryHolder = pipelineFactoryHolder;
-            _methodInfoCache = methodInfoCache;
             _providerCache = cacheFactory.Create<TypePair, IInvocationWeaveDataProvider>();
         }
 
@@ -59,12 +56,12 @@ namespace IvorySharp.Aspects.Weaving
 
                 foreach (var declaredMethod in declaredMethods)
                 {
-                    var targetMethod = _methodInfoCache.GetMethodMap(typeKey.TargetType, declaredMethod);
+                    var targetMethod = ReflectedMethod.GetMethodMap(typeKey.TargetType, declaredMethod);
                     if (targetMethod == null)
                         throw new IvorySharpException(
                             $"Не удалось найти метод '{declaredMethod.Name}' в типе '{typeKey.TargetType.Name}'");
 
-                    var methodInvoker = _methodInfoCache.GetInvoker(declaredMethod);
+                    var methodInvoker = Expressions.CreateLambda(declaredMethod); 
 
                     var signature = new InvocationSignature(
                         declaredMethod, targetMethod, typeKey.DeclaredType,
@@ -76,7 +73,7 @@ namespace IvorySharp.Aspects.Weaving
                     var isWeaveable = _weavePredicate.IsWeaveable(signature);
                     if (!isWeaveable)
                     {
-                        invocationsData.Add(signature, InvocationWeaveData.Unweaveble(methodInvoker));
+                        invocationsData.Add(signature, InvocationWeaveData.Unweavable(methodInvoker));
                         continue;
                     }
 
@@ -93,7 +90,7 @@ namespace IvorySharp.Aspects.Weaving
                     var executor = _pipelineFactory.CreateExecutor(signature);
 
                     invocationsData.Add(signature,
-                        InvocationWeaveData.Weaveble(
+                        InvocationWeaveData.Weavable(
                             methodInvoker, pipeline, executor, boundaryAspects, interceptAspect));
                 }
 

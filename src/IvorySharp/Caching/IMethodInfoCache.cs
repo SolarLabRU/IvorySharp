@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using IvorySharp.Reflection;
 using JetBrains.Annotations;

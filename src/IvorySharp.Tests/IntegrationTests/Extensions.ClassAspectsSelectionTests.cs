@@ -29,7 +29,7 @@ namespace IvorySharp.Tests.IntegrationTests
         {
             _parserProvider = new Weaved<ICommandParser, ConcreteCommandParser>(
                 new TargetAspectSelectionComponents(
-                    new DefaultComponentsStore(new NullDependencyProvider())), 
+                    new DefaultComponentsStore(NullDependencyProvider.Instance)), 
                 a => a.UseClassAspectSelection());
         }
         

@@ -43,6 +43,10 @@ namespace IvorySharp.Components
         /// <inheritdoc />
         public IComponentHolder<IAspectFinalizer> AspectFinalizer { get; }
 
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="DefaultComponentsStore"/>.
+        /// </summary>
+        /// <param name="dependencyProvider">Провайдер зависимостей.</param>
         internal DefaultComponentsStore(IDependencyProvider dependencyProvider)
         {
             DependencyHolder = dependencyProvider.ToInstanceHolder();
@@ -79,7 +83,7 @@ namespace IvorySharp.Components
             WeaveDataProviderFactory = new InstanceComponentHolder<IInvocationWeaveDataProviderFactory>(
                 new InvocationWeaveDataProviderFactory(
                     AspectWeavePredicate, AspectFactory, PipelineFactory, 
-                    MethodInfoCache.Instance, ConcurrentDictionaryCacheFactory.Default));    
+                    ConcurrentDictionaryCacheFactory.Default));    
         }
     }
 }

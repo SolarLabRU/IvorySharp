@@ -2,6 +2,7 @@
 using Castle.Windsor;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Components;
 using IvorySharp.Tests.Assets;
@@ -21,10 +22,10 @@ namespace IvorySharp.Tests.IntegrationTests
             var simpleInjectorContainer = new Container();
             
             _commandExecutorProvider = new Weaved<IIntCommandExecutor, IntCommandExecutor>(
-                new DefaultComponentsStore(new NullDependencyProvider()), simpleInjectorContainer, windsorContainer);
+                new DefaultComponentsStore(NullDependencyProvider.Instance), simpleInjectorContainer, windsorContainer);
             
             _commandExecutorBaseProvider = new Weaved<ICommandExecutor<int>, IntCommandExecutor>(
-                new DefaultComponentsStore(new NullDependencyProvider()), simpleInjectorContainer, windsorContainer);
+                new DefaultComponentsStore(NullDependencyProvider.Instance), simpleInjectorContainer, windsorContainer);
         }
         
         #region Services

@@ -1,6 +1,7 @@
 ﻿using System;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Configuration;
+using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Components;
 using IvorySharp.Tests.Assets;
@@ -17,7 +18,7 @@ namespace IvorySharp.Tests.IntegrationTests
 
         public SingleMethodLevelAspectTests()
         {
-            IComponentsStore componentsStore = new DefaultComponentsStore(new NullDependencyProvider());
+            IComponentsStore componentsStore = new DefaultComponentsStore(NullDependencyProvider.Instance);
             _serviceProvider = new Weaved<IService, Service>(componentsStore);
         }
 
