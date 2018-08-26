@@ -37,28 +37,41 @@ namespace IvorySharp.Aspects.Pipeline
         [NotNull] object ExecutionState { get; set; }
         
         /// <summary>
-        /// Выполняет возврат значения из пайплайна.
+        /// Выполняет возврат значения из пайплайна, прекращая его выполнение.
         /// Устанавливает состояние пайплайна в <see cref="Aspects.Pipeline.FlowBehavior.Return"/>.
         /// </summary>
         /// <param name="returnValue">Возвращаемое значение.</param>
-        void ReturnValue([CanBeNull] object returnValue);
+        void Return([CanBeNull] object returnValue);
 
         /// <summary>
-        /// Выполняет возврат значения по умолчанию (default({ReturnType})) из пайплайна.
+        /// Выполняет возврат значения по умолчанию (default({ReturnType})) из пайплайна, при этом
+        /// прекращая его выполнение.
         /// Устанавливает состояние пайплайна в <see cref="Aspects.Pipeline.FlowBehavior.Return"/>.
         /// </summary>
         void Return();
         
         /// <summary>
-        /// Завершает выполнение пайплайна, выбрасывая новое исключение.
+        /// Прекращает выполнение пайплайна, выбрасывая новое исключение.
         /// </summary>
         /// <param name="exception">Исключение.</param>
-        void ThrowException([NotNull] Exception exception);
+        void Throw([NotNull] Exception exception);
 
         /// <summary>
-        /// Прокидывает исключение дальше по пайплайну, не прерывая выполнение.
+        /// Продолжает выполнение пайплайна, устанавливая исключение.
+        /// Переводит состояние пайплайна в <see cref="Aspects.Pipeline.FlowBehavior.RethrowException"/>.
         /// </summary>
-        /// <param name="exception">Исключение,</param>
-        void RethrowException([NotNull] Exception exception);
+        /// <param name="exception">Исключение.</param>
+        void Continue([NotNull] Exception exception);
+
+        /// <summary>
+        /// Продолжает выполнение пайплайна, устанавливая возвращаемый результат.
+        /// </summary>
+        /// <param name="returnValue">Возвращаемое значение.</param>
+        void Continue([CanBeNull] object returnValue);
+
+        /// <summary>
+        /// Продолжает выполнение пайплайна, устанавливая возвращаемый результат.
+        /// </summary>
+        void Continue();
     }
 }

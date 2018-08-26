@@ -62,7 +62,7 @@ namespace IvorySharp.Tests.Assets.Aspects
             if (_throwAsUnhandled)
                 throw exception;
             
-            pipeline.ThrowException(exception);
+            pipeline.Throw(exception);
         }
 
         protected static Exception CreateException(Type exceptionType)

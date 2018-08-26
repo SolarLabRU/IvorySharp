@@ -126,7 +126,7 @@ namespace IvorySharp.Tests.IntegrationTests
         {
             public override void OnException(IInvocationPipeline pipeline)
             {
-                pipeline.RethrowException(new ArgumentException(string.Empty, pipeline.CurrentException));
+                pipeline.Continue(new ArgumentException(string.Empty, pipeline.CurrentException));
             }
         }
         
@@ -134,7 +134,7 @@ namespace IvorySharp.Tests.IntegrationTests
         {
             public override void OnException(IInvocationPipeline pipeline)
             {
-                pipeline.RethrowException(new ApplicationException(string.Empty, pipeline.CurrentException));
+                pipeline.Continue(new ApplicationException(string.Empty, pipeline.CurrentException));
             }
         }
 

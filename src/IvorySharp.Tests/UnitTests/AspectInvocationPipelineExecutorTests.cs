@@ -59,7 +59,7 @@ namespace IvorySharp.Tests.UnitTests
             protected override void Success(IInvocationPipeline pipeline)
             {
                 var result = (int)pipeline.CurrentReturnValue;
-                pipeline.ReturnValue(result + 1);
+                pipeline.Return(result + 1);
             }
         }
 
@@ -89,6 +89,18 @@ namespace IvorySharp.Tests.UnitTests
             public string ShouldNotThrow()
             {
                 throw new ArgumentException();
+            }
+        }
+
+        #endregion
+
+        #region Aspects
+
+        internal class SwallowExceptionAspect : ObservableAspect
+        {
+            protected override void Exception(IInvocationPipeline pipeline)
+            {
+                pipeline.Continue();
             }
         }
 

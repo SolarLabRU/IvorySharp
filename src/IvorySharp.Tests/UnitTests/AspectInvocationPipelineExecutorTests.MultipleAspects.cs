@@ -120,5 +120,25 @@ namespace IvorySharp.Tests.UnitTests
                 new BoundaryState(BoundaryType.Entry) 
             }, breaker.ExecutionStack);
         }
+
+        [Fact]
+        public void MultipleAspects_OnException_Continue_DontBreakesPipeline()
+        {
+            // Arrange
+            var afterSwallow = new ObservableAspect { InternalOrder = 2 };
+            var swallowException = new SwallowExceptionAspect {InternalOrder = 1};        
+            var beforeSwallow = new ObservableAspect() { InternalOrder = 0};
+            
+            var pipeline = CreatePipeline<IService>(
+                new Service(), nameof(IService.ThrowArgumentException), 
+                Args.Pack<MethodBoundaryAspect>(beforeSwallow, swallowException, afterSwallow));
+            
+            // Assert
+            _executor.ExecutePipeline(pipeline, pipeline.Invocation);
+            
+            Assert.Equal(_exceptionExecutionStack, swallowException.ExecutionStack);
+            Assert.Equal(_exceptionExecutionStack, beforeSwallow.ExecutionStack);
+            Assert.Equal(_normalExecutionStack, afterSwallow.ExecutionStack);
+        }
     }
 }

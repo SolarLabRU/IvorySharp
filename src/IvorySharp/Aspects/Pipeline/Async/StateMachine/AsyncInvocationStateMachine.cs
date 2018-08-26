@@ -44,7 +44,7 @@ namespace IvorySharp.Aspects.Pipeline.Async.StateMachine
             }
             catch (Exception e)
             {
-                _pipeline.ThrowException(e);
+                _pipeline.Throw(e);
             }
 
             if (_pipeline.IsReturn())
@@ -78,7 +78,7 @@ namespace IvorySharp.Aspects.Pipeline.Async.StateMachine
             }
             catch (Exception e)
             {
-                _pipeline.ThrowException(e);
+                _pipeline.Throw(e);
             }
 
             if (_pipeline.IsExceptional())

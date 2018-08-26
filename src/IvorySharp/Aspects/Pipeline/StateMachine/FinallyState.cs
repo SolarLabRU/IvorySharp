@@ -26,15 +26,15 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         }
 
         /// <inheritdoc />
-        protected override bool ShouldBreak(BoundaryStateData data, out InvocationState<TPipeline> transition)
+        protected override bool ShouldBreak(TPipeline pipeline, MethodBoundaryAspect aspect,  out InvocationState<TPipeline> transition)
         {
-            var flow = data.Pipeline.FlowBehavior;
+            var flow = pipeline.FlowBehavior;
 
             switch (flow)
             {
                 case FlowBehavior.Return:
                 case FlowBehavior.ThrowException:
-                    transition = new FinallyState<TPipeline>(BoundaryAspects.TakeBefore(data.CurrentAspect));
+                    transition = new FinallyState<TPipeline>(BoundaryAspects.TakeBeforeExclusive(aspect));
                     break;
 
                 default:

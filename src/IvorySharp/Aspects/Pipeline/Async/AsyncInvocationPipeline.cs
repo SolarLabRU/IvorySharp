@@ -46,52 +46,43 @@ namespace IvorySharp.Aspects.Pipeline.Async
         }
 
         /// <inheritdoc />
-        internal override void ResetState()
+        protected override void SetReturnValue(object returnValue)
+        {
+            // Метод возвращает Task
+            if (!CanReturnValue)
+            {
+                CurrentReturnValue = null;
+            }
+            else
+            {
+                // Значение не указано
+                if (returnValue == null)
+                {
+                    CurrentReturnValue = DefaultReturnValueGenerator();
+                    return;
+                }
+                
+                if (TypeConversion.TryConvert(returnValue, ReturnTypeInner, out var converted))
+                {
+                    CurrentReturnValue = converted;
+                }
+                else
+                {
+                    var message = $"Невозможно установить возвращаемое значение '{returnValue}', " +
+                                  $"т.к. его тип '{returnValue.GetType()}' неприводим " +
+                                  $"к ожидаемому возвращаемому типу '{ReturnTypeInner}'";
+
+                    throw new IvorySharpException(message);
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        protected override void SetDefaultReturnValue()
         {
             CurrentReturnValue = CanReturnValue
                 ? DefaultReturnValueGenerator()
                 : null;
-
-            base.ResetState();
-        }
-
-        /// <inheritdoc />
-        public override void Return()
-        {
-            base.Return();
-
-            if (Context.InvocationType == InvocationType.AsyncAction)
-                CurrentReturnValue = null;
-
-            CurrentReturnValue = DefaultReturnValueGenerator();
-        }
-
-        /// <inheritdoc />
-        public override void ReturnValue(object returnValue)
-        {
-            base.ReturnValue(returnValue);
-
-            if (Context.InvocationType == InvocationType.AsyncAction)
-                return;
-
-            if (returnValue == null)
-            {
-                CurrentReturnValue = DefaultReturnValueGenerator();
-                return;
-            }
-
-            if (TypeConversion.TryConvert(returnValue, ReturnTypeInner, out var converted))
-            {
-                CurrentReturnValue = converted;
-            }
-            else
-            {
-                var message = $"Невозможно установить возвращаемое значение '{returnValue}', " +
-                              $"т.к. его тип '{returnValue.GetType()}' неприводим " +
-                              $"к ожидаемому возвращаемому типу '{ReturnTypeInner}'";
-
-                throw new IvorySharpException(message);
-            }
         }
     }
 }

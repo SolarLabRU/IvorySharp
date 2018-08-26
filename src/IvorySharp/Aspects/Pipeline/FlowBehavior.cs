@@ -53,6 +53,11 @@ namespace IvorySharp.Aspects.Pipeline
         /// (большим значением <see cref="OrderableMethodAspect.Order"/>)
         /// никакие из точек прикрепления внутри метода выполнены не будут.
         /// </summary>
-        RethrowException = 3
+        RethrowException = 3,
+        
+        /// <summary>
+        /// Обновление возвращаемого значения без прекращения выполнения пайплайна.
+        /// </summary>
+        UpdateReturnValue = 4,
     }
 }

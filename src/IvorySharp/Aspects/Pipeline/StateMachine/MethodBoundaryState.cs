@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline.StateMachine
 {
@@ -7,12 +10,18 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
     /// точки прикрепления аспектов типа <see cref="MethodBoundaryAspect"/>.
     /// </summary>
     /// <typeparam name="TPipeline">Тип пайплайна.</typeparam>
-    internal abstract class MethodBoundaryState<TPipeline> : InvocationState<TPipeline> where TPipeline : InvocationPipelineBase
+    internal abstract class MethodBoundaryState<TPipeline> : InvocationState<TPipeline> 
+        where TPipeline : InvocationPipelineBase
     {
         /// <summary>
         /// Перечень аспектов для применения.
         /// </summary>
         internal IEnumerable<MethodBoundaryAspect> BoundaryAspects { get; }
+        
+        /// <summary>
+        /// Аспекты которые необходимо игнорировать.
+        /// </summary>
+        internal IReadOnlyCollection<MethodBoundaryAspect> IgnoredAspects { get; set; }
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="MethodBoundaryState{TPipeline}"/>.
@@ -21,18 +30,22 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         protected MethodBoundaryState(IEnumerable<MethodBoundaryAspect> boundaryAspects)
         {
             BoundaryAspects = boundaryAspects;
+            IgnoredAspects = Array.Empty<MethodBoundaryAspect>();
         }
-
+        
         /// <inheritdoc />
         internal override InvocationState<TPipeline> MakeTransition(TPipeline pipeline)
         {
             foreach (var aspect in BoundaryAspects)
             {
+                if (IgnoredAspects.Count > 0 && IgnoredAspects.ContainsReference(aspect))
+                    continue;
+                
                 pipeline.ExecutionStateKey = aspect.InternalId;
 
                 Apply(aspect, pipeline);
 
-                if (ShouldBreak(new BoundaryStateData(pipeline, aspect), out var transition))
+                if (ShouldBreak(pipeline, aspect, out var transition))
                 {
                     pipeline.FlowBehavior = FlowBehavior.Continue;
                     return transition;
@@ -47,46 +60,25 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         /// </summary>
         /// <param name="aspect">Аспект.</param>
         /// <param name="pipeline">Пайплайн.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected abstract void Apply(MethodBoundaryAspect aspect, TPipeline pipeline);
 
         /// <summary>
         /// Возвращает признак того, что необходимо прервать выполнение текущего действия и
         /// выполнить переход в состояние <paramref name="transition"/>.
         /// </summary>
-        /// <param name="data">Контекст выполнения состояния.</param>
+        /// <param name="aspect">Текущий аспект.</param>
         /// <param name="transition">Состояние, в которое необходимо выполнить переход.</param>
+        /// <param name="pipeline">Пайплайн.</param>
         /// <returns>Признак того, что необходимо прервать выполнение текущего действия.</returns>
-        protected abstract bool ShouldBreak(BoundaryStateData data, out InvocationState<TPipeline> transition);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected abstract bool ShouldBreak(TPipeline pipeline, MethodBoundaryAspect aspect, out InvocationState<TPipeline> transition);
 
         /// <summary>
         /// Создает переход к следующему состоянию (при успешном выполнении действия).
         /// </summary>
         /// <returns>Результирующий переход.</returns>
-        protected abstract InvocationState<TPipeline> CreateContinuation();
-        
-        /// <summary>
-        /// Контекст выполнения действия.
-        /// </summary>
-        internal struct BoundaryStateData
-        {
-            /// <summary>
-            /// Пайплайн выполнения метода.
-            /// </summary>
-            public readonly TPipeline Pipeline;
-            
-            /// <summary>
-            /// Текущий выполняющийся аспект.
-            /// </summary>
-            public readonly MethodBoundaryAspect CurrentAspect;
-
-            /// <summary>
-            /// Инициализирует экземпляр <see cref="BoundaryStateData"/>.
-            /// </summary>
-            public BoundaryStateData(TPipeline pipeline, MethodBoundaryAspect currentAspect)
-            {
-                Pipeline = pipeline;
-                CurrentAspect = currentAspect;
-            }
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected abstract InvocationState<TPipeline> CreateContinuation();    
     }
 }

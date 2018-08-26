@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline.StateMachine
@@ -25,9 +26,9 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         }
 
         /// <inheritdoc />
-        protected override bool ShouldBreak(BoundaryStateData data, out InvocationState<TPipeline> transition)
+        protected override bool ShouldBreak(TPipeline pipeline, MethodBoundaryAspect aspect, out InvocationState<TPipeline> transition)
         {
-            var flow = data.Pipeline.FlowBehavior;
+            var flow = pipeline.FlowBehavior;
 
             switch (flow)
             {
@@ -35,13 +36,22 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
                 // для уже выполнившихся до Return аспектов должно казаться что метод выполнился без
                 // ошибок и вернул результат.
                 case FlowBehavior.Return:
-                    transition = new SuccessState<TPipeline>(BoundaryAspects.TakeBefore(data.CurrentAspect));
+                    transition = new SuccessState<TPipeline>(BoundaryAspects.TakeBeforeExclusive(aspect));
                     break;
                 
                 case FlowBehavior.ThrowException:
-                    transition = new FinallyState<TPipeline>(BoundaryAspects.TakeBefore(data.CurrentAspect));
+                    transition = new FinallyState<TPipeline>(BoundaryAspects.TakeBeforeExclusive(aspect));
                     break;
 
+                // OnEntry -> MethodCall [exception] -> Catch [Swallow] -> OnSuccess [all except executed]
+                case FlowBehavior.UpdateReturnValue:
+                    transition = new SuccessState<TPipeline>(BoundaryAspects)
+                    {
+                        IgnoredAspects = BoundaryAspects.TakeBeforeInclusive(aspect)
+                            .ToArray()
+                    };
+                    break;
+                
                 default:
                     transition = null;
                     break;

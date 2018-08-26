@@ -30,24 +30,32 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         }
 
         /// <inheritdoc />
-        protected override bool ShouldBreak(BoundaryStateData data, out InvocationState<TPipeline> transition)
+        protected override bool ShouldBreak(TPipeline pipeline, MethodBoundaryAspect aspect, out InvocationState<TPipeline> transition)
         {
-            var flow = data.Pipeline.FlowBehavior;
+            var flow = pipeline.FlowBehavior;
             switch (flow)
             {
                 // OnEntry -> Return(value) -> OnSuccess [only executed] -> OnExit [only executed] 
                 case FlowBehavior.Return:
-                    transition = new SuccessState<TPipeline>(BoundaryAspects.TakeBefore(data.CurrentAspect));
+                    transition = new SuccessState<TPipeline>(BoundaryAspects.TakeBeforeExclusive(aspect));
                     break;
                 
                 // OnEntry -> Throw(exception) -> OnExit [only executed]
                 case FlowBehavior.ThrowException:
-                    transition = new FinallyState<TPipeline>(BoundaryAspects.TakeBefore(data.CurrentAspect));
+                    transition = new FinallyState<TPipeline>(BoundaryAspects.TakeBeforeExclusive(aspect));
                     break;
                 
-                // OnEntry -> Rethrow(exception) -> OnException [only executed] -> {maybe: OnSuccess} -> OnExit [only executed]
+                // OnEntry -> Rethrow(exception) -> OnException [all except current] -> {maybe: OnSuccess} -> OnExit
                 case FlowBehavior.RethrowException:
-                    transition = new CatchState<TPipeline>(BoundaryAspects.TakeBefore(data.CurrentAspect));
+                    transition = new CatchState<TPipeline>(BoundaryAspects)
+                    {
+                        IgnoredAspects = new[]{ aspect }
+                    };
+                    break;
+                
+                // OnEntry -> Continue(value) -> OnSuccess [all] -> OnExit
+                case FlowBehavior.UpdateReturnValue:
+                    transition = new SuccessState<TPipeline>(BoundaryAspects);
                     break;
                 
                 default:

@@ -113,21 +113,23 @@ namespace IvorySharp.Aspects.Pipeline
         }
 
         /// <inheritdoc />
-        public virtual void Return()
+        public void Return()
         {
+            SetDefaultReturnValue();
             FlowBehavior = FlowBehavior.Return;
             InternalState = InvocationPipelineState.Return;
         }
 
         /// <inheritdoc />
-        public virtual void ReturnValue(object returnValue)
+        public void Return(object returnValue)
         {
+            SetReturnValue(returnValue);
             FlowBehavior = FlowBehavior.Return;
             InternalState = InvocationPipelineState.Return;
         }
 
         /// <inheritdoc />
-        public void ThrowException(Exception exception)
+        public void Throw(Exception exception)
         {
             CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
             FlowBehavior = FlowBehavior.ThrowException;
@@ -135,12 +137,39 @@ namespace IvorySharp.Aspects.Pipeline
         }
 
         /// <inheritdoc />
-        public void RethrowException(Exception exception)
+        public void Continue(Exception exception)
         {
             CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
             FlowBehavior = FlowBehavior.RethrowException;
             InternalState = InvocationPipelineState.Exception;
         }
+
+        /// <inheritdoc />
+        public void Continue(object returnValue)
+        {
+            SetReturnValue(returnValue);
+            FlowBehavior = FlowBehavior.UpdateReturnValue;
+            InternalState = InvocationPipelineState.Continue;
+        }
+
+        /// <inheritdoc />
+        public void Continue()
+        {
+            SetDefaultReturnValue();
+            FlowBehavior = FlowBehavior.UpdateReturnValue;
+            InternalState = InvocationPipelineState.Continue;
+        }
+
+        /// <summary>
+        /// Устанавливает возвращаемое значение.
+        /// </summary>
+        /// <param name="returnValue">Возвращаемое значение,</param>
+        protected abstract void SetReturnValue(object returnValue);
+        
+        /// <summary>
+        /// Устанавливает возвращаемое значение по умолчанию.
+        /// </summary>
+        protected abstract void SetDefaultReturnValue();
         
         /// <summary>
         /// Возвращает текущее состояние аспекта.

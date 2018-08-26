@@ -99,7 +99,7 @@ namespace IvorySharp.Tests.UnitTests
             protected override void Success(IInvocationPipeline pipeline)
             {
                 var result = (int) pipeline.CurrentReturnValue;
-                pipeline.ReturnValue(result + 1);
+                pipeline.Return(result + 1);
             }
         }
 

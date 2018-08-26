@@ -43,19 +43,17 @@ namespace IvorySharp.Aspects.Pipeline
         }
 
         /// <inheritdoc />
-        public override void Return()
+        protected override void SetReturnValue(object returnValue)
         {
-            base.Return();
-            
-            if (!Context.Method.IsVoidReturn())
-                CurrentReturnValue = Context.Method.ReturnType.GetDefaultValue();
+            if (CanReturnValue)
+                CurrentReturnValue = returnValue;
         }
 
         /// <inheritdoc />
-        public override void ReturnValue(object returnValue)
+        protected override void SetDefaultReturnValue()
         {
-            base.ReturnValue(returnValue);      
-            CurrentReturnValue = returnValue;
+            if (CanReturnValue)
+                CurrentReturnValue = Context.Method.ReturnType.GetDefaultValue();
         }
     }
 }

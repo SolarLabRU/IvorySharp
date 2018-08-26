@@ -18,7 +18,7 @@ namespace IvorySharp.Tests.Assets.Aspects
             base.Entry(pipeline);
             if (_boundaryType == BoundaryType.Entry)
             {
-                pipeline.ReturnValue(_valueToReturn);
+                pipeline.Return(_valueToReturn);
             }
         }
 
@@ -27,7 +27,7 @@ namespace IvorySharp.Tests.Assets.Aspects
             base.OnSuccess(pipeline);
             if (_boundaryType == BoundaryType.Success)
             {
-                pipeline.ReturnValue(_valueToReturn);
+                pipeline.Return(_valueToReturn);
             }
         }
 
@@ -36,7 +36,7 @@ namespace IvorySharp.Tests.Assets.Aspects
             base.Exception(pipeline);
             if (_boundaryType == BoundaryType.Exception)
             {
-                pipeline.ReturnValue(_valueToReturn);
+                pipeline.Return(_valueToReturn);
             }
         }
 
@@ -45,7 +45,7 @@ namespace IvorySharp.Tests.Assets.Aspects
             base.Exit(pipeline);
             if (_boundaryType == BoundaryType.Exit)
             {
-                pipeline.ReturnValue(_valueToReturn);
+                pipeline.Return(_valueToReturn);
             }      
         }
     }

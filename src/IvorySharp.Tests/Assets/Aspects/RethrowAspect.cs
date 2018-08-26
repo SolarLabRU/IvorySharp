@@ -3,6 +3,7 @@ using IvorySharp.Aspects.Pipeline;
 
 namespace IvorySharp.Tests.Assets.Aspects
 {
+    
     internal class RethrowAspect : ObservableAspect
     {
         private readonly Type _exceptionType;
@@ -14,7 +15,7 @@ namespace IvorySharp.Tests.Assets.Aspects
 
         protected override void Exception(IInvocationPipeline pipeline)
         {
-            pipeline.RethrowException(CreateException(_exceptionType, pipeline.CurrentException));
+            pipeline.Continue(CreateException(_exceptionType, pipeline.CurrentException));
         }
 
         protected static Exception CreateException(Type exceptionType, Exception inner)

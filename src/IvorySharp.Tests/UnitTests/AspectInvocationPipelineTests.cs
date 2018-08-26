@@ -30,7 +30,7 @@ namespace IvorySharp.Tests.UnitTests
             var exception = new ArgumentException();
 
             // Act
-            pipeline.RethrowException(exception);
+            pipeline.Continue(exception);
 
             // Assert
             Assert.Equal(exception, pipeline.CurrentException);
@@ -45,7 +45,7 @@ namespace IvorySharp.Tests.UnitTests
             var exception = new ArgumentException();
 
             // Act
-            pipeline.ThrowException(exception);
+            pipeline.Throw(exception);
 
             // Assert
             Assert.Equal(exception, pipeline.CurrentException);
@@ -73,7 +73,7 @@ namespace IvorySharp.Tests.UnitTests
             var pipeline = CreatePipeline(_returnTenMethodInvocation);
 
             // Act
-            pipeline.ReturnValue(15);
+            pipeline.Return(15);
 
             // Assert
             Assert.Equal(15, pipeline.Invocation.ReturnValue);
