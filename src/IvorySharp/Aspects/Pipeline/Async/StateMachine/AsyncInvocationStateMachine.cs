@@ -5,7 +5,7 @@ using IvorySharp.Aspects.Pipeline.StateMachine;
 namespace IvorySharp.Aspects.Pipeline.Async.StateMachine
 {
     /// <summary>
-    /// Аналогично <see cref="InvocationStateMachine{TPipeline}"/>, только для асинхронных методов.
+    /// Аналогично <see cref="InvocationStateMachine"/>, только для асинхронных методов.
     /// </summary>
     /// <typeparam name="TPipeline">Тип пайплайна.</typeparam>
     internal sealed class AsyncInvocationStateMachine<TPipeline> 

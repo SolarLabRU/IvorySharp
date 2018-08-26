@@ -24,12 +24,11 @@ namespace IvorySharp.Aspects.Pipeline
             // Это нарушает solid, но позволяет не выставлять кучу классов наружу библиотеки.
             var pipeline = (InvocationPipeline) basePipeline;
             pipeline.Init(invocation);
+
+            var entryState = new EntryState<InvocationPipeline>(
+                pipeline.BoundaryAspects, pipeline.InterceptionAspect);
             
-            var stateMachine = new InvocationStateMachine<InvocationPipeline>(pipeline);  
-            
-            stateMachine.Execute(new EntryState<InvocationPipeline>(
-                pipeline.BoundaryAspects,
-                pipeline.InterceptionAspect));
+            InvocationStateMachine.Execute(pipeline, entryState);
         }
     }
 }

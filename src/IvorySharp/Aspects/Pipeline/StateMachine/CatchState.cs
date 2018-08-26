@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline.StateMachine
@@ -20,13 +21,15 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         }
         
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override void Apply(MethodBoundaryAspect aspect, TPipeline pipeline)
         {
             aspect.OnException(pipeline);
         }
 
         /// <inheritdoc />
-        protected override bool ShouldBreak(TPipeline pipeline, MethodBoundaryAspect aspect, out InvocationState<TPipeline> transition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected override bool ShouldBreak(TPipeline pipeline, MethodBoundaryAspect aspect, out IInvocationState<TPipeline> transition)
         {
             var flow = pipeline.FlowBehavior;
 
@@ -61,7 +64,8 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         }
 
         /// <inheritdoc />
-        protected override InvocationState<TPipeline> CreateContinuation()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected override IInvocationState<TPipeline> CreateContinuation()
         {
             return new FinallyState<TPipeline>(BoundaryAspects);
         }

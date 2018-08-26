@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using IvorySharp.Extensions;
 
 namespace IvorySharp.Aspects.Pipeline.StateMachine
@@ -9,7 +10,7 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
     /// Состояние вызова исходного метода.
     /// </summary>
     /// <typeparam name="TPipeline">Тип пайплайна,</typeparam>
-    internal sealed class MethodCallState<TPipeline> : InvocationState<TPipeline>
+    internal sealed class MethodCallState<TPipeline> : IInvocationState<TPipeline>
         where TPipeline : InvocationPipelineBase
     {
         /// <summary>
@@ -31,7 +32,8 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         }
 
         /// <inheritdoc />
-        internal override InvocationState<TPipeline> MakeTransition(TPipeline pipeline)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IInvocationState<TPipeline> MakeTransition(TPipeline pipeline)
         {
             try
             {

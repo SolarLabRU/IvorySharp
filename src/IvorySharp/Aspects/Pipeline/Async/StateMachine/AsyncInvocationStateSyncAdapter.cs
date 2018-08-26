@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using IvorySharp.Aspects.Pipeline.StateMachine;
 
 namespace IvorySharp.Aspects.Pipeline.Async.StateMachine
@@ -10,24 +11,26 @@ namespace IvorySharp.Aspects.Pipeline.Async.StateMachine
     internal sealed class AsyncInvocationStateSyncAdapter<TPipeline> : AsyncInvocationState<TPipeline>
         where TPipeline : InvocationPipelineBase
     {
-        private readonly InvocationState<TPipeline> _invocationState;
+        private readonly IInvocationState<TPipeline> _invocationState;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AsyncInvocationStateSyncAdapter{TPipeline}"/>.
         /// </summary>
         /// <param name="invocationState">Состояние вызова.</param>
-        public AsyncInvocationStateSyncAdapter(InvocationState<TPipeline> invocationState)
+        public AsyncInvocationStateSyncAdapter(IInvocationState<TPipeline> invocationState)
         {
             _invocationState = invocationState;
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Task<AsyncInvocationState<TPipeline>> MakeTransitionAsync<TResult>(TPipeline pipeline)
         {
             return MakeTransitionAsync(pipeline);
         }
 
         /// <inheritdoc />
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Task<AsyncInvocationState<TPipeline>> MakeTransitionAsync(TPipeline pipeline)
         {
             var nextState = _invocationState.MakeTransition(pipeline);

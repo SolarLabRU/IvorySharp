@@ -7,7 +7,7 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
     /// Состояние завершения пайплайна.
     /// </summary>
     /// <typeparam name="TPipeline">Тип пайплайна.</typeparam>
-    internal sealed class CompleteState<TPipeline> : InvocationState<TPipeline> 
+    internal sealed class CompleteState<TPipeline> : IInvocationState<TPipeline> 
         where TPipeline : InvocationPipelineBase
     {
         /// <summary>
@@ -19,7 +19,7 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
 
         /// <inheritdoc />
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal override InvocationState<TPipeline> MakeTransition(TPipeline pipeline)
+        public IInvocationState<TPipeline> MakeTransition(TPipeline pipeline)
         {
             if (pipeline.IsExceptional())
                 pipeline.CurrentException.Throw();

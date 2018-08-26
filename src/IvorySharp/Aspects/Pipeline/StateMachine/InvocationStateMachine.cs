@@ -1,33 +1,29 @@
-﻿namespace IvorySharp.Aspects.Pipeline.StateMachine
+﻿using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
+
+namespace IvorySharp.Aspects.Pipeline.StateMachine
 {
     /// <summary>
     /// Машина состояний, реализующая переход состояния вызова метода между аспектами.
     /// Этот компонент является координатором выполнения метода.
     /// </summary>
-    /// <typeparam name="TPipeline">Тип пайплайна.</typeparam>
-    internal sealed class InvocationStateMachine<TPipeline> where TPipeline : InvocationPipelineBase
+    internal static class InvocationStateMachine
     {
-        private readonly TPipeline _pipeline;
-
-        /// <summary>
-        /// Инициализирует экземпляр <see cref="InvocationStateMachine{TPipeline}"/>.
-        /// </summary>
-        /// <param name="pipeline">Пайплайн выполнения метода.</param>
-        public InvocationStateMachine(TPipeline pipeline)
-        {
-            _pipeline = pipeline;
-        }
-
         /// <summary>
         /// Инициирует выполнение стейт-машины обработки пайплайна вызова метода.
         /// </summary>
+        /// <param name="pipeline">Пайплайн вызова.</param>
         /// <param name="initialState">Начальное состояние стейт-машины.</param>
-        public void Execute(InvocationState<TPipeline> initialState)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Execute<TPipeline>(
+            [NotNull] TPipeline pipeline,
+            [NotNull] IInvocationState<TPipeline> initialState)
+                where TPipeline : InvocationPipelineBase
         {
-            var nextState = initialState.MakeTransition(_pipeline);
+            var nextState = initialState.MakeTransition(pipeline);
             while (nextState != null)
             {
-                nextState = nextState.MakeTransition(_pipeline);
+                nextState = nextState.MakeTransition(pipeline);
             }
         }
     }

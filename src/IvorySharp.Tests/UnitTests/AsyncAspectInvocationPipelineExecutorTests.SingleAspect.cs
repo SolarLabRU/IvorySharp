@@ -4,6 +4,7 @@ using IvorySharp.Aspects.Pipeline.Async;
 using IvorySharp.Tests.Asserts;
 using IvorySharp.Tests.Assets;
 using IvorySharp.Tests.Assets.Aspects;
+using IvorySharp.Tests.Assets.Cache;
 using IvorySharp.Tests.Utility;
 using Xunit;
 
@@ -18,7 +19,7 @@ namespace IvorySharp.Tests.UnitTests
 
         public AsyncAspectInvocationPipelineExecutorTests()
         {
-            _executor = AsyncInvocationPipelineExecutor.Instance;
+            _executor = new AsyncInvocationPipelineExecutor(new NullKeyValueCacheFactory());
         }
 
         [Fact]

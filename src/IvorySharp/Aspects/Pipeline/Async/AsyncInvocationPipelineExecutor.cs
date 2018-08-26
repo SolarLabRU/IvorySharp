@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using IvorySharp.Aspects.Pipeline.Async.StateMachine;
 using IvorySharp.Aspects.Pipeline.StateMachine;
+using IvorySharp.Caching;
 using IvorySharp.Core;
 using IvorySharp.Reflection;
 
@@ -16,17 +17,15 @@ namespace IvorySharp.Aspects.Pipeline.Async
     /// </summary>
     internal sealed class AsyncInvocationPipelineExecutor : IInvocationPipelineExecutor
     {
-        private readonly ConcurrentDictionary<Type, MethodLambda> _handlersCache;
+        private readonly IKeyValueCache<Type, MethodLambda> _handlersCache;
 
         /// <summary>
-        /// Инициализированный экземпляр <see cref="AsyncInvocationPipelineExecutor"/>.
+        /// Инициализирует экземпляр <see cref="AsyncInvocationPipelineExecutor"/>.
         /// </summary>
-        internal static readonly AsyncInvocationPipelineExecutor Instance
-            = new AsyncInvocationPipelineExecutor();
-
-        private AsyncInvocationPipelineExecutor()
+        /// <param name="cacheFactory">Фабрика кеша.</param>
+        internal AsyncInvocationPipelineExecutor(IKeyValueCacheFactory cacheFactory)
         {
-            _handlersCache = new ConcurrentDictionary<Type, MethodLambda>();
+            _handlersCache = cacheFactory.Create<Type, MethodLambda>();
         }
 
         /// <inheritdoc />
@@ -44,7 +43,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
                     break;
 
                 case InvocationType.AsyncFunction:
-                    var signalWhenAwait = GetAsyncFunctionHandler(pipeline.Invocation);
+                    var signalWhenAwait = GetAsyncFunctionHandler(_handlersCache, pipeline.Invocation);
                     pipeline.Invocation.ReturnValue = signalWhenAwait(this, new object[] { pipeline });
                     break;
 
@@ -97,13 +96,17 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// Возвращает хендлер для создания продолжения вызова с использованием <see cref="SignalWhenAwait{T}"/>
         /// с внутренним типом задачи, возвращаемой методом <see cref="IInvocationSignature.Method"/>.
         /// </summary>
+        /// <param name="cache">Кеш хендлеров.</param>
         /// <param name="signature">Модель вызова.</param>
         /// <returns>Хендлер для создания продолжения вызова.</returns>
-        private MethodLambda GetAsyncFunctionHandler(IInvocationSignature signature)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static MethodLambda GetAsyncFunctionHandler(
+            IKeyValueCache<Type, MethodLambda> cache, 
+            IInvocationSignature signature)
         {
             var innerType = signature.Method.ReturnType.GetGenericArguments()[0];
 
-            return _handlersCache.GetOrAdd(innerType, key =>
+            return cache.GetOrAdd(innerType, key =>
             {
                 var method = typeof(AsyncInvocationPipelineExecutor)
                     .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)

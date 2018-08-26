@@ -10,7 +10,7 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
     /// точки прикрепления аспектов типа <see cref="MethodBoundaryAspect"/>.
     /// </summary>
     /// <typeparam name="TPipeline">Тип пайплайна.</typeparam>
-    internal abstract class MethodBoundaryState<TPipeline> : InvocationState<TPipeline> 
+    internal abstract class MethodBoundaryState<TPipeline> : IInvocationState<TPipeline> 
         where TPipeline : InvocationPipelineBase
     {
         /// <summary>
@@ -34,7 +34,8 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         }
         
         /// <inheritdoc />
-        internal override InvocationState<TPipeline> MakeTransition(TPipeline pipeline)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IInvocationState<TPipeline> MakeTransition(TPipeline pipeline)
         {
             foreach (var aspect in BoundaryAspects)
             {
@@ -60,7 +61,6 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         /// </summary>
         /// <param name="aspect">Аспект.</param>
         /// <param name="pipeline">Пайплайн.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected abstract void Apply(MethodBoundaryAspect aspect, TPipeline pipeline);
 
         /// <summary>
@@ -71,14 +71,12 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
         /// <param name="transition">Состояние, в которое необходимо выполнить переход.</param>
         /// <param name="pipeline">Пайплайн.</param>
         /// <returns>Признак того, что необходимо прервать выполнение текущего действия.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected abstract bool ShouldBreak(TPipeline pipeline, MethodBoundaryAspect aspect, out InvocationState<TPipeline> transition);
+        protected abstract bool ShouldBreak(TPipeline pipeline, MethodBoundaryAspect aspect, out IInvocationState<TPipeline> transition);
 
         /// <summary>
         /// Создает переход к следующему состоянию (при успешном выполнении действия).
         /// </summary>
         /// <returns>Результирующий переход.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected abstract InvocationState<TPipeline> CreateContinuation();    
+        protected abstract IInvocationState<TPipeline> CreateContinuation();    
     }
 }

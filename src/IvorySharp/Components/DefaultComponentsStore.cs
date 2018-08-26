@@ -60,7 +60,8 @@ namespace IvorySharp.Components
                 new DeclaringTypeAspectDeclarationCollector(AspectSelector));
             
             PipelineFactory = new InstanceComponentHolder<IInvocationPipelineFactory>(
-                new AsyncDeterminingPipelineFactory(MethodInfoCache.Instance));
+                new AsyncDeterminingPipelineFactory(
+                    MethodInfoCache.Instance, ConcurrentDictionaryCacheFactory.Default));
             
             AspectOrderStrategy = new InstanceComponentHolder<IAspectOrderStrategy>(
                 new AspectOrderStrategy());
