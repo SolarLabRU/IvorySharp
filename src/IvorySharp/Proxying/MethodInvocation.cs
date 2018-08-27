@@ -10,7 +10,7 @@ namespace IvorySharp.Proxying
     /// Модель вызова проксированного метода.
     /// </summary>
     [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
-    public struct MethodInvocation
+    public readonly struct MethodInvocation
     {
         /// <summary>
         /// Проксированный метод.

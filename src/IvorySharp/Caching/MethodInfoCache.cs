@@ -59,7 +59,7 @@ namespace IvorySharp.Caching
         /// <summary>
         /// Ключ для хранения маппинга методов.
         /// </summary>
-        private struct MethodMapCacheKey
+        private readonly struct MethodMapCacheKey
         {
             public readonly Type TargetType;
             public readonly MethodInfo InterfaceMethod;

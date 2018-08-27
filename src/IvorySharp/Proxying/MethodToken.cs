@@ -5,7 +5,7 @@ namespace IvorySharp.Proxying
     /// <summary>
     /// Токен для передачи между сгенерированным прокси и методом перехвата вызовов.
     /// </summary>
-    internal struct MethodToken
+    internal readonly struct MethodToken
     {
         /// <summary>
         /// Ключ.

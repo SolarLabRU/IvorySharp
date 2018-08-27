@@ -5,7 +5,7 @@ namespace IvorySharp.Proxying
     /// <summary>
     /// Вспомогательный класс для передачи параметров между сгенерированным прокси и методом перехвата вызова.
     /// </summary>
-    internal struct PackedArguments
+    internal readonly struct PackedArguments
     {
         /// <summary>
         /// Количество параметров.

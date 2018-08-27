@@ -7,7 +7,7 @@ namespace IvorySharp.Proxying
     /// <summary>
     /// Расширенная информация о методе.
     /// </summary>
-    internal struct MethodLambdaInfo : IEquatable<MethodLambdaInfo>
+    internal readonly struct MethodLambdaInfo : IEquatable<MethodLambdaInfo>
     {
         /// <summary>
         /// Делегат для быстрого вызова.
