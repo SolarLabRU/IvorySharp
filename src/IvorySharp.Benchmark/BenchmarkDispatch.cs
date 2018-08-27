@@ -12,6 +12,7 @@ using IvorySharp.Integration.CastleWindsor.Aspects.Integration;
 
 namespace IvorySharp.Benchmark
 {
+    [MemoryDiagnoser]
     public class BenchmarkDispatch
     {
         private IServiceForBenchmark _proxiedService;
