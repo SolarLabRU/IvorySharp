@@ -20,5 +20,21 @@ namespace IvorySharp.Caching
         /// <param name="generator">Генератор значений.</param>
         /// <returns>Значение.</returns>
         TValue GetOrAdd([NotNull] TKey key, [NotNull] Func<TKey, TValue> generator);
+
+        /// <summary>
+        /// Выполняет попытку получить значение по ключу.
+        /// </summary>
+        /// <param name="key">Ключ.</param>
+        /// <param name="value">Значение.</param>
+        /// <returns>Признак успешности получения значения.</returns>
+        bool TryGetValue([NotNull] TKey key, [CanBeNull] out TValue value);
+
+        /// <summary>
+        /// Выполняет попытку добавить значение в кеш.
+        /// </summary>
+        /// <param name="key">Ключ.</param>
+        /// <param name="value">Значение.</param>
+        /// <returns>Признак успешности добавления.</returns>
+        bool TryAdd([NotNull] TKey key, [NotNull] TValue value);
     }
 }

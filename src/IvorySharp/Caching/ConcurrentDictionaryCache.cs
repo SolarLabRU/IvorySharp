@@ -37,5 +37,17 @@ namespace IvorySharp.Caching
         {
             return _concurrentDictionary.GetOrAdd(key, generator);
         }
+
+        /// <inheritdoc />
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            return _concurrentDictionary.TryGetValue(key, out value);
+        }
+
+        /// <inheritdoc />
+        public bool TryAdd(TKey key, TValue value)
+        {
+            return _concurrentDictionary.TryAdd(key, value);
+        }
     }
 }

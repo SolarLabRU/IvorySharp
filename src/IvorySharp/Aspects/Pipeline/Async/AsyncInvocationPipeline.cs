@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using IvorySharp.Core;
 using IvorySharp.Exceptions;
-using IvorySharp.Linq;
+using IvorySharp.Extensions;
 using IvorySharp.Reflection;
 
 namespace IvorySharp.Aspects.Pipeline.Async
@@ -16,8 +16,8 @@ namespace IvorySharp.Aspects.Pipeline.Async
         internal override bool CanReturnValue { get; }
 
         /// <inheritdoc />
-        internal override Lazy<DefaultValueGenerator> DefaultReturnValueGeneratorProvider { get; }
-
+        internal override Lazy<object> DefaultReturnValueProvider { get; }
+        
         /// <summary>
         /// Внутренний тип возвращаемого значения.
         /// Устанавливается только если выполняется асинхронная функция (Task{T}).
@@ -41,12 +41,16 @@ namespace IvorySharp.Aspects.Pipeline.Async
                 : null;
 
             CanReturnValue = ReturnTypeInner != null;
-            DefaultReturnValueGeneratorProvider = new Lazy<DefaultValueGenerator>(() =>
-            {
-                return ReturnTypeInner != null
-                    ? Expressions.CreateDefaultValueGenerator(ReturnTypeInner)
-                    : () => null;
-            });
+            DefaultReturnValueProvider = new Lazy<object>(() => ReturnTypeInner != null
+                ? ReturnTypeInner.GetDefaultValue()
+                : null);
+        }
+
+        /// <inheritdoc />
+        internal override void ResetState()
+        {
+            SetDefaultReturnValue();
+            base.ResetState();
         }
 
         /// <inheritdoc />
@@ -62,7 +66,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
                 // Значение не указано
                 if (returnValue == null)
                 {
-                    CurrentReturnValue = DefaultReturnValueGenerator();
+                    CurrentReturnValue = DefaultReturnValueProvider.Value;
                     return;
                 }
                 
@@ -85,7 +89,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         protected override void SetDefaultReturnValue()
         {
             CurrentReturnValue = CanReturnValue
-                ? DefaultReturnValueGenerator()
+                ? DefaultReturnValueProvider.Value
                 : null;
         }
     }

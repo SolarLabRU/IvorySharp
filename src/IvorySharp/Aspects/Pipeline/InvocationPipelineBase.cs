@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using IvorySharp.Core;
-using IvorySharp.Linq;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -19,17 +18,12 @@ namespace IvorySharp.Aspects.Pipeline
         /// Возвращает признак того, что из пайплайна можно вернуть значение.
         /// </summary>
         internal abstract bool CanReturnValue { get; }
-        
-        /// <summary>
-        /// Провайдера генератора возвращаемых значений по умолчанию.
-        /// </summary>
-        internal abstract Lazy<DefaultValueGenerator> DefaultReturnValueGeneratorProvider { get; }
 
         /// <summary>
-        /// Генератор возвращаемых значений по умолчанию.
+        /// Провайдер возвращаемого значения по умолчанию.
         /// </summary>
-        internal DefaultValueGenerator DefaultReturnValueGenerator => DefaultReturnValueGeneratorProvider.Value;
-        
+        internal abstract Lazy<object> DefaultReturnValueProvider { get; }
+         
         /// <summary>
         /// Аспекты типа <see cref="MethodBoundaryAspect"/>.
         /// </summary>
@@ -109,9 +103,8 @@ namespace IvorySharp.Aspects.Pipeline
         /// <summary>
         /// Сбрасывает состояние пайплайна.
         /// </summary>
-        internal void ResetState()
-        {       
-            SetDefaultReturnValue();
+        internal virtual void ResetState()
+        {
             ExecutionStateKey = null;
             CurrentException = null;
             Invocation = null;

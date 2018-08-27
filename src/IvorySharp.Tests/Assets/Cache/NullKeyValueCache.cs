@@ -9,5 +9,16 @@ namespace IvorySharp.Tests.Assets.Cache
         {
             return generator(key);
         }
+
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            value = default(TValue);
+            return false;
+        }
+
+        public bool TryAdd(TKey key, TValue value)
+        {
+            return false;
+        }
     }
 }

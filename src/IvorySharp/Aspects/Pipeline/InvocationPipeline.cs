@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using IvorySharp.Core;
 using IvorySharp.Extensions;
-using IvorySharp.Linq;
 
 namespace IvorySharp.Aspects.Pipeline
 {
@@ -15,7 +14,7 @@ namespace IvorySharp.Aspects.Pipeline
         internal override bool CanReturnValue { get; }
 
         /// <inheritdoc />
-        internal override Lazy<DefaultValueGenerator> DefaultReturnValueGeneratorProvider { get; }
+        internal override Lazy<object> DefaultReturnValueProvider { get; }
 
         /// <inheritdoc />
         public override object CurrentReturnValue
@@ -37,12 +36,9 @@ namespace IvorySharp.Aspects.Pipeline
                 interceptionAspect)
         {
             CanReturnValue = !signature.Method.IsVoidReturn();        
-            DefaultReturnValueGeneratorProvider = new Lazy<DefaultValueGenerator>(() =>
-            {
-                return CanReturnValue
-                    ? Expressions.CreateDefaultValueGenerator(signature.Method.ReturnType)
-                    : () => null;
-            });
+            DefaultReturnValueProvider = new Lazy<object>(() => CanReturnValue
+                ? signature.Method.ReturnType.GetDefaultValue()
+                : null);
         }
 
         /// <inheritdoc />
@@ -56,7 +52,7 @@ namespace IvorySharp.Aspects.Pipeline
         protected override void SetDefaultReturnValue()
         {
             if (Invocation != null && CanReturnValue)
-                CurrentReturnValue = DefaultReturnValueGenerator();
+                CurrentReturnValue = DefaultReturnValueProvider.Value;
         }
     }
 }
