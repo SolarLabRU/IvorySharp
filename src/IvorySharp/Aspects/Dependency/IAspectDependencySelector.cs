@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
+using JetBrains.Annotations;
 using IComponent = IvorySharp.Components.IComponent;
 
 namespace IvorySharp.Aspects.Dependency
@@ -7,7 +7,7 @@ namespace IvorySharp.Aspects.Dependency
     /// <summary>
     /// Селектор зависимостей аспектов.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public interface IAspectDependencySelector : IComponent
     {
         /// <summary>
@@ -15,13 +15,13 @@ namespace IvorySharp.Aspects.Dependency
         /// </summary>
         /// <param name="aspectType">Тип аспекта.</param>
         /// <returns>Массив зависимостей-свойств аспекта.</returns>
-        AspectPropertyDependency[] SelectPropertyDependencies(Type aspectType);
+        [NotNull] AspectPropertyDependency[] SelectPropertyDependencies([NotNull] Type aspectType);
 
         /// <summary>
         /// Возвращает признак наличия зависимостей на аспекте.
         /// </summary>
         /// <param name="aspectType">Тип аспекта.</param>
         /// <returns>Признак наличия зависимостей на аспекте.</returns>
-        bool HasDependencies(Type aspectType);
+        bool HasDependencies([NotNull] Type aspectType);
     }
 }

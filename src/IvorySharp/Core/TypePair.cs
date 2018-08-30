@@ -3,11 +3,9 @@ using System.ComponentModel;
 
 namespace IvorySharp.Core
 {
-    
     /// <summary>
     /// Хранит пару типов.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     internal readonly struct TypePair : IEquatable<TypePair>
     {
         /// <summary>

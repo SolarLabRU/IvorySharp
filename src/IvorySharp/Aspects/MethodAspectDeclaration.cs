@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Reflection;
 using JetBrains.Annotations;
 
@@ -9,7 +8,7 @@ namespace IvorySharp.Aspects
     /// Объявление аспекта.
     /// </summary>
     /// <typeparam name="TAspect">Тип аспекта.</typeparam>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public sealed class MethodAspectDeclaration<TAspect> where TAspect : MethodAspect
     {
         /// <summary>
@@ -27,7 +26,13 @@ namespace IvorySharp.Aspects
         /// </summary>
         public MemberInfo AspectDeclaredMember { get; }
 
-        private MethodAspectDeclaration(TAspect methodAspect, MethodAspectMulticastTarget multicastTarget, MemberInfo aspectDeclaredMember)
+        /// <summary>
+        /// Инициализирует экземпляр <see cref="MethodAspectDeclaration{TAspect}"/>.
+        /// </summary>
+        private MethodAspectDeclaration(
+            TAspect methodAspect, 
+            MethodAspectMulticastTarget multicastTarget,
+            MemberInfo aspectDeclaredMember)
         {
             MethodAspect = methodAspect;
             MulticastTarget = multicastTarget;

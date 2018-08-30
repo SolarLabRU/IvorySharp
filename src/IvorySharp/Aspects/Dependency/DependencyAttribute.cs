@@ -6,7 +6,7 @@ namespace IvorySharp.Aspects.Dependency
     /// <summary>
     /// Атрибут для обозначения свойств, которые должны быть внедрены как зависимости аспекта.
     /// </summary>
-    [PublicAPI, AttributeUsage(AttributeTargets.Property)]
+    [PublicAPI, AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public sealed class DependencyAttribute : Attribute
     {    
         /// <summary>

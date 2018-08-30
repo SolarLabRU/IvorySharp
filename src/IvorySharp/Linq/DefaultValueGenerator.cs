@@ -1,10 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Linq
 {
     /// <summary>
     /// Генерирует значение по умолчанию для заданного типа.
     /// </summary>
-    [CanBeNull]
+    [CanBeNull, EditorBrowsable(EditorBrowsableState.Never)]
     public delegate object DefaultValueGenerator();
 }

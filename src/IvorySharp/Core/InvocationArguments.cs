@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Core
 {
     /// <summary>
     /// Параметры вызова метода.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public sealed class InvocationArguments : IReadOnlyCollection<object>
     {
         /// <summary>
@@ -50,7 +51,7 @@ namespace IvorySharp.Core
         /// </summary>
         /// <param name="arguments">Параметры вызова.</param>
         /// <returns>Массив нетипизированных параметров вызова.</returns>
-        public static implicit operator object[](InvocationArguments arguments)
+        public static implicit operator object[]([NotNull] InvocationArguments arguments)
         {
             return arguments._args;
         }
@@ -60,7 +61,7 @@ namespace IvorySharp.Core
         /// </summary>
         /// <param name="args">Массив нетипизированных параметров вызова.</param>
         /// <returns>Параметры вызова метода.</returns>
-        public static implicit operator InvocationArguments(object[] args)
+        public static implicit operator InvocationArguments([NotNull] object[] args)
         {
             return new InvocationArguments(args);
         }

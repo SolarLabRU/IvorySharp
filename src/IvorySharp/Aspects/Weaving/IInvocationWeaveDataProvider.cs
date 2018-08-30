@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using IvorySharp.Core;
+﻿using IvorySharp.Core;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Weaving
@@ -7,7 +6,7 @@ namespace IvorySharp.Aspects.Weaving
     /// <summary>
     /// Провайдер данных о вызове.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public interface IInvocationWeaveDataProvider
     {
         /// <summary>
@@ -15,6 +14,6 @@ namespace IvorySharp.Aspects.Weaving
         /// </summary>
         /// <param name="signature">Сигнатура вызова.</param>
         /// <returns>Данные о вызове.</returns>
-        InvocationWeaveData Get([NotNull] IInvocationSignature signature);
+        [NotNull] InvocationWeaveData Get([NotNull] IInvocationSignature signature);
     }
 }

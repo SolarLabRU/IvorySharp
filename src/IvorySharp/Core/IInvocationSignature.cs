@@ -8,7 +8,7 @@ namespace IvorySharp.Core
     /// <summary>
     /// Сигнатура вызова (доступна до фактического вызова метода).
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public interface IInvocationSignature
     {
         /// <summary>
@@ -16,22 +16,22 @@ namespace IvorySharp.Core
         /// Обычно это метод, находящийся в интерфейсе, который реализуется
         /// целевым классом.
         /// </summary>
-        MethodInfo Method { get; }
+        [NotNull] MethodInfo Method { get; }
         
         /// <summary>
         /// Метод, находящийся в фактическом типе целевого объекта (классе).
         /// </summary>
-        MethodInfo TargetMethod { get; }
+        [NotNull] MethodInfo TargetMethod { get; }
         
         /// <summary>
         /// Объявленный тип целевого объекта (интерфейс).
         /// </summary>
-        Type DeclaringType { get; }
+        [NotNull] Type DeclaringType { get; }
 
         /// <summary>
         /// Фактический тип целевого объекта (класс).
         /// </summary>
-        Type TargetType { get; }
+        [NotNull] Type TargetType { get; }
                     
         /// <summary>
         /// Тип вызываемого метода.

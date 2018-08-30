@@ -1,8 +1,11 @@
-﻿namespace IvorySharp.Components
+﻿using System.ComponentModel;
+
+namespace IvorySharp.Components
 {
     /// <summary>
     /// Компонент для хранения компонентов.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IComponentHolder<TComponent> where TComponent : IComponent
     {
         /// <summary>

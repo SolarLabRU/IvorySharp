@@ -8,7 +8,6 @@ namespace IvorySharp.Linq
     /// </summary>
     /// <param name="target">Экземпляр класса на котором необходимо вызвать метод.</param>
     /// <param name="args">Параметры вызова.</param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [CanBeNull]
+    [CanBeNull, EditorBrowsable(EditorBrowsableState.Never)]
     public delegate object MethodLambda([NotNull] object target, [NotNull] object[] args);
 }

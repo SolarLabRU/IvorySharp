@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Reflection;
 using IvorySharp.Components;
 using JetBrains.Annotations;
@@ -11,7 +10,7 @@ namespace IvorySharp.Aspects.Configuration
     /// Синтаксис замены компонента.
     /// </summary>
     /// <typeparam name="TComponent">Тип компонента.</typeparam>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public sealed class ReplaceComponentSyntax<TComponent> where TComponent : IComponent
     {
         private readonly MutableComponentsStore _componentsStore;
@@ -32,7 +31,7 @@ namespace IvorySharp.Aspects.Configuration
         /// Устанавливает для использования компонент <paramref name="component"/>.
         /// </summary>
         /// <param name="component">Компонент.</param>
-        public void Use(TComponent component)
+        public void Use([NotNull] TComponent component)
         {
             if (component == null)
                 throw new ArgumentNullException(nameof(component));
@@ -45,7 +44,7 @@ namespace IvorySharp.Aspects.Configuration
         /// Устанавливает для использования компонент, сгенерированный фабрикой <paramref name="componentFactory"/>.
         /// </summary>
         /// <param name="componentFactory">Фабрика компонента.</param>
-        public void Use(Func<IComponentsStore, TComponent> componentFactory)
+        public void Use([NotNull] Func<IComponentsStore, TComponent> componentFactory)
         {
             if (componentFactory == null)
                 throw new ArgumentNullException(nameof(componentFactory));

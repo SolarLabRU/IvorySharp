@@ -9,7 +9,6 @@ namespace IvorySharp.Core
     /// <summary>
     /// Сигнатура вызова метода.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
     internal sealed class InvocationSignature : IInvocationSignature, IEquatable<InvocationSignature>
     {
         /// <inheritdoc />

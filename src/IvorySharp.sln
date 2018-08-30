@@ -6,14 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Benchmark", "Ivo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Tests", "IvorySharp.Tests\IvorySharp.Tests.csproj", "{97B21EEF-17AD-480E-AD0F-45641E95E032}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{29097D4D-10CF-4CCC-9BCB-4E172BFE5380}"
-ProjectSection(SolutionItems) = preProject
-	..\LICENSE = ..\LICENSE
-	..\README.md = ..\README.md
-	..\.appveyor.yml = ..\.appveyor.yml
-	..\.travis.yml = ..\.travis.yml
-EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Extensions.ClassAspectSelection", "IvorySharp.Extensions.ClassAspectSelection\IvorySharp.Extensions.ClassAspectSelection.csproj", "{0D62CD8C-591C-4DB1-B699-0DCA0A99413D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{A8C8CF74-517F-4750-87BA-0D3B29938E04}"
@@ -23,6 +15,43 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Integration.CastleWindsor", "IvorySharp.Integration.CastleWindsor\IvorySharp.Integration.CastleWindsor.csproj", "{EE5D38B9-FFC6-47CA-A01D-3A485F47D204}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Integration.SimpleInjector", "IvorySharp.Integration.SimpleInjector\IvorySharp.Integration.SimpleInjector.csproj", "{0637A4BD-8524-448A-AC48-D78A3DC3368E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{C5F0028D-5084-40D7-8E73-EC50D6A2EE5A}"
+ProjectSection(SolutionItems) = preProject
+	..\LICENSE = ..\LICENSE
+	..\README.md = ..\README.md
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{0D4A49AB-819E-40FF-89C4-CF94AAA7C87B}"
+ProjectSection(SolutionItems) = preProject
+	..\docs\docfx.json = ..\docs\docfx.json
+	..\docs\index.md = ..\docs\index.md
+	..\docs\toc.yml = ..\docs\toc.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{5B5A99E1-C2EC-4A8C-B998-880A6EFF1BA3}"
+ProjectSection(SolutionItems) = preProject
+	..\docs\api\index.md = ..\docs\api\index.md
+	..\docs\api\toc.yml = ..\docs\api\toc.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "articles", "articles", "{BEEB6F39-CA9D-498E-B12A-ED2117717009}"
+ProjectSection(SolutionItems) = preProject
+	..\docs\articles\intro.md = ..\docs\articles\intro.md
+	..\docs\articles\toc.yml = ..\docs\articles\toc.yml
+	..\docs\articles\license.md = ..\docs\articles\license.md
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".ci", ".ci", "{FD5B24F3-EC09-47F2-9ED5-C093C955B86D}"
+ProjectSection(SolutionItems) = preProject
+	..\.appveyor.yml = ..\.appveyor.yml
+	..\.travis.yml = ..\.travis.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{83070F9A-3A90-4EF1-BA31-62ACD1FDBC0B}"
+ProjectSection(SolutionItems) = preProject
+	..\build\generate-docs.sh = ..\build\generate-docs.sh
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,5 +88,7 @@ Global
 		{0D62CD8C-591C-4DB1-B699-0DCA0A99413D} = {A8C8CF74-517F-4750-87BA-0D3B29938E04}
 		{EE5D38B9-FFC6-47CA-A01D-3A485F47D204} = {441E68D7-A39B-40DD-AB8E-83289774F7A0}
 		{0637A4BD-8524-448A-AC48-D78A3DC3368E} = {441E68D7-A39B-40DD-AB8E-83289774F7A0}
+		{5B5A99E1-C2EC-4A8C-B998-880A6EFF1BA3} = {0D4A49AB-819E-40FF-89C4-CF94AAA7C87B}
+		{BEEB6F39-CA9D-498E-B12A-ED2117717009} = {0D4A49AB-819E-40FF-89C4-CF94AAA7C87B}
 	EndGlobalSection
 EndGlobal

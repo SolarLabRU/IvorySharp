@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Linq.Expressions;
 using IvorySharp.Components;
 using IvorySharp.Linq;
@@ -11,7 +10,7 @@ namespace IvorySharp.Aspects.Configuration
     /// <summary>
     /// Модель настройки аспектов.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public sealed class AspectsConfiguration
     {
         /// <summary>
@@ -35,7 +34,7 @@ namespace IvorySharp.Aspects.Configuration
         /// <typeparam name="TComponent">Тип компонента.</typeparam>
         /// <returns>Синтаксис замены компонента.</returns>
         public ReplaceComponentSyntax<TComponent> ReplaceComponent<TComponent>(
-            Expression<Func<IComponentsStore, IComponentHolder<TComponent>>> componentSelector)
+            [NotNull] Expression<Func<IComponentsStore, IComponentHolder<TComponent>>> componentSelector)
             where TComponent : IComponent
         {
             var propertyName = Expressions.GetMemberName(componentSelector);

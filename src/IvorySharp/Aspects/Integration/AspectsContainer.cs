@@ -14,12 +14,12 @@ namespace IvorySharp.Aspects.Integration
         /// Выполняет привязку аспектов к зарегистрированным в контейнере компонентам.
         /// </summary>
         /// <param name="settings">Конфигурация.</param>
-        public abstract void BindAspects(IComponentsStore settings);
+        public abstract void BindAspects([NotNull] IComponentsStore settings);
 
         /// <summary>
         /// Возвращает сервис провайдер.
         /// </summary>
         /// <returns>Экземпляр провайдера.</returns>
-        public abstract IDependencyProvider GetDependencyProvider();
+        [NotNull] public abstract IDependencyProvider GetDependencyProvider();
     }
 }

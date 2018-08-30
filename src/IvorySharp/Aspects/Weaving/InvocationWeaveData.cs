@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using IvorySharp.Aspects.Pipeline;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Weaving
 {
     /// <summary>
     /// Данные о вызове.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public sealed class InvocationWeaveData
     {
         /// <summary>

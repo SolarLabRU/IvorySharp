@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using IvorySharp.Aspects.Integration;
 using IvorySharp.Components;
 using JetBrains.Annotations;
@@ -9,7 +8,7 @@ namespace IvorySharp.Aspects.Configuration
     /// <summary>
     /// Синтаксис конфигурации аспектов.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public sealed class AspectsFluentConfigurationSyntax
     {
         private readonly MutableComponentsStore _componentsStore;
@@ -32,7 +31,7 @@ namespace IvorySharp.Aspects.Configuration
         /// </summary>
         /// <param name="configurator">Конфигуратор настроек.</param>
         //  ReSharper disable once MemberCanBePrivate.Global
-        public void Initialize(Action<AspectsConfiguration> configurator)
+        public void Initialize([NotNull] Action<AspectsConfiguration> configurator)
         {
             var dependencyProvider = _container.GetDependencyProvider();
             var defaultComponents = new DefaultComponentsStore(dependencyProvider);

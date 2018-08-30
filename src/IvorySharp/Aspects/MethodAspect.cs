@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
@@ -9,7 +8,7 @@ namespace IvorySharp.Aspects
     /// <summary>
     /// Базовый класс для аспектов, применяемых на уровне метода.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public abstract class MethodAspect : AspectAttribute
     {
         /// <summary>

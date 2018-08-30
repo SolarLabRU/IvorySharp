@@ -14,7 +14,7 @@ namespace IvorySharp.Aspects.Weaving
     /// <summary>
     /// Базовый класс предиката возможности применения аспектов.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class BaseWeavePredicate : IAspectWeavePredicate
     {
         /// <summary>
@@ -32,10 +32,10 @@ namespace IvorySharp.Aspects.Weaving
         }
 
         /// <inheritdoc />
-        public abstract bool IsWeaveable(Type declaredType, Type targetType);
+        public abstract bool IsWeaveable([NotNull]  Type declaredType, [NotNull] Type targetType);
 
         /// <inheritdoc />
-        public abstract bool IsWeaveable(IInvocationSignature signature);
+        public abstract bool IsWeaveable([NotNull]  IInvocationSignature signature);
 
         /// <summary>
         /// Возвращает признак того, что применение аспектов запрещено.

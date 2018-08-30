@@ -7,7 +7,7 @@ namespace IvorySharp.Aspects.Weaving
     /// <summary>
     /// Фабрика провайдера данных о вызове.
     /// </summary>
-    [NotNull]
+    [PublicAPI]
     public interface IInvocationWeaveDataProviderFactory : IComponent
     {
         /// <summary>

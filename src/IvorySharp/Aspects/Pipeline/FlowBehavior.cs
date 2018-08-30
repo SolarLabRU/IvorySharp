@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using IvorySharp.Core;
+﻿using IvorySharp.Core;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Pipeline
@@ -7,7 +6,7 @@ namespace IvorySharp.Aspects.Pipeline
     /// <summary>
     /// Возможные состояния выполнения потока программы.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public enum FlowBehavior
     {
         /// <summary>

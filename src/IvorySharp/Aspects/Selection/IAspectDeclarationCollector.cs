@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using IvorySharp.Components;
 using IvorySharp.Core;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Selection
 {
     /// <summary>
     /// Компонент, агрегирующий получение аспектов вызова.
     /// </summary>
+    [PublicAPI]
     public interface IAspectDeclarationCollector : IComponent
     {
         /// <summary>
@@ -15,7 +17,7 @@ namespace IvorySharp.Aspects.Selection
         /// <typeparam name="TAspect">Тип аспекта.</typeparam>
         /// <param name="signature">Сигнатура вызова.</param>
         /// <returns>Перечень деклараций аспектов для применения.</returns>
-        IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(
-            IInvocationSignature signature) where TAspect : MethodAspect;
+        [NotNull] IEnumerable<MethodAspectDeclaration<TAspect>> CollectAspectDeclarations<TAspect>(
+             [NotNull] IInvocationSignature signature) where TAspect : MethodAspect;
     }
 }

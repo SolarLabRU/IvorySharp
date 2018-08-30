@@ -11,7 +11,6 @@ namespace IvorySharp.Core
     /// <summary>
     /// Базовая модель вызываемого метода.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     internal abstract class AbstractInvocation : IInvocation
     {
         /// <inheritdoc />

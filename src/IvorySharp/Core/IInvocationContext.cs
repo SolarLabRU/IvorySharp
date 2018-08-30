@@ -6,13 +6,13 @@ namespace IvorySharp.Core
     /// <summary>
     /// Контекст вызова метода.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public interface IInvocationContext : IInvocationSignature
     {
         /// <summary>
         /// Параметры вызова метода.
         /// </summary>
-        InvocationArguments Arguments { get; }
+        [NotNull] InvocationArguments Arguments { get; }
         
         /// <summary>
         /// Прокси целевого объекта.

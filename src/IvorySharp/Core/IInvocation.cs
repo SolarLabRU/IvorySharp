@@ -6,13 +6,13 @@ namespace IvorySharp.Core
     /// <summary>
     /// Интерфейс выполнения метода.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public interface IInvocation : IInvocationContext
     {
         /// <summary>
         /// Возвращаемое значение.
         /// </summary>
-        object ReturnValue { get; set; }
+        [CanBeNull] object ReturnValue { get; set; }
     
         /// <summary>
         /// Выполняет оригинальный метод.

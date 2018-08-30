@@ -11,7 +11,6 @@ namespace IvorySharp.Core
     /// <summary>
     /// Модель выполнения метода.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
     internal sealed class Invocation : AbstractInvocation
     {
         /// <summary>

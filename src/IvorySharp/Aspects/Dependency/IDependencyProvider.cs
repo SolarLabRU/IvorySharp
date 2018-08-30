@@ -15,7 +15,7 @@ namespace IvorySharp.Aspects.Dependency
         /// </summary>
         /// <typeparam name="TService">Тип сервиса.</typeparam>
         /// <returns>Экземпляр сервиса.</returns>
-        TService GetService<TService>() where TService : class;
+         TService GetService<TService>() where TService : class;
         
         /// <summary>
         /// Получает экземпляр сервиса без обвязки (не проксированный).

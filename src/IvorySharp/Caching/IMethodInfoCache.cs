@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using IvorySharp.Linq;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Caching

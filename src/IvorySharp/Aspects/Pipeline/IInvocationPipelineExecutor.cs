@@ -1,12 +1,12 @@
-﻿using System.ComponentModel;
-using IvorySharp.Core;
+﻿using IvorySharp.Core;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects.Pipeline
 {
     /// <summary>
     /// Компонент, выполняющий пайплан вызова метода.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public interface IInvocationPipelineExecutor
     {
         /// <summary>
@@ -14,6 +14,6 @@ namespace IvorySharp.Aspects.Pipeline
         /// </summary>
         /// <param name="pipeline">Пайплайн вызова метода.</param>
         /// <param name="invocation">Вызов метода.</param>
-        void ExecutePipeline(IInvocationPipeline pipeline, IInvocation invocation);
+        void ExecutePipeline([NotNull] IInvocationPipeline pipeline, [NotNull] IInvocation invocation);
     }
 }

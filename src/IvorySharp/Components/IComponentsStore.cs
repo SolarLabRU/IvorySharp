@@ -12,7 +12,7 @@ namespace IvorySharp.Components
     /// <summary>
     /// Компоненты библиотеки.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public interface IComponentsStore 
     { 
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using IvorySharp.Core;
 using JetBrains.Annotations;
 
@@ -8,7 +7,7 @@ namespace IvorySharp.Aspects.Pipeline
     /// <summary>
     /// Пайплайн выполнения вызова метода.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public interface IInvocationPipeline
     {
         /// <summary>

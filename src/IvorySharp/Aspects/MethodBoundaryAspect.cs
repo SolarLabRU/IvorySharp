@@ -13,7 +13,6 @@ namespace IvorySharp.Aspects
         /// Выполняется перед началом выполнения метода.
         /// </summary>
         /// <param name="pipeline">Пайплайн выполнения.</param>
-        [PublicAPI]
         public virtual void OnEntry([NotNull] IInvocationPipeline pipeline)
         { }
 
@@ -21,7 +20,6 @@ namespace IvorySharp.Aspects
         /// Выполняется в случае успешного выполнения метода.
         /// </summary>
         /// <param name="pipeline">Пайплайн выполнения.</param>
-        [PublicAPI]
         public virtual void OnSuccess([NotNull] IInvocationPipeline pipeline)
         { }
 
@@ -29,7 +27,6 @@ namespace IvorySharp.Aspects
         /// Выполняется при исключении.
         /// </summary>
         /// <param name="pipeline">Пайплайн выполнения.</param>
-        [PublicAPI]
         public virtual void OnException([NotNull] IInvocationPipeline pipeline)
         { }
 
@@ -37,7 +34,6 @@ namespace IvorySharp.Aspects
         /// Выполняется при завершении метода, независимо от того, произошло исключение или нет.
         /// </summary>
         /// <param name="pipeline">Пайплайн выполнения.</param>
-        [PublicAPI]
         public virtual void OnExit([NotNull] IInvocationPipeline pipeline)
         { }
     }

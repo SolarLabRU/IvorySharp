@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using IvorySharp.Core;
+﻿using IvorySharp.Core;
 using JetBrains.Annotations;
 using IComponent = IvorySharp.Components.IComponent;
 
@@ -8,7 +7,7 @@ namespace IvorySharp.Aspects.Creation
     /// <summary>
     /// Фабрика аспектов.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public interface IAspectFactory : IComponent
     {
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Components
@@ -7,7 +8,7 @@ namespace IvorySharp.Components
     /// Базовый провайдер компонентов.
     /// </summary>
     /// <typeparam name="TComponent">Тип компонента.</typeparam>
-    [PublicAPI]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class ComponentHolderBase<TComponent> : IComponentHolder<TComponent>
         where TComponent : IComponent
     {

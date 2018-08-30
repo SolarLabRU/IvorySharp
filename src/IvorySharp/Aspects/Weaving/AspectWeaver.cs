@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Finalize;
@@ -13,7 +12,7 @@ namespace IvorySharp.Aspects.Weaving
     /// <summary>
     /// Компонент для выполнения связывания исходного объекта с аспектами.
     /// </summary>
-    [PublicAPI, EditorBrowsable(EditorBrowsableState.Never)]
+    [PublicAPI]
     public sealed class AspectWeaver
     {
         private readonly IComponentHolder<IAspectDependencyInjector> _aspectDependencyInjectorHolder;
@@ -43,7 +42,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="targetType">Фактический тип исходного объекта.</param>
         /// <returns>Экземпляр связанного с аспектами исходного объекта типа <paramref name="declaringType"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public object Weave(object target, Type declaringType, Type targetType)
+        [NotNull] public object Weave([NotNull] object target, [NotNull] Type declaringType, [NotNull] Type targetType)
         {
             if (_weaveDataProviderFactory == null)
                 _weaveDataProviderFactory = _weaveDataProviderFactoryHolder.Get();
@@ -68,7 +67,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <typeparam name="TImplementation">Фактический тип.</typeparam>
         /// <returns>Экземпляр сервиса связанного с аспектами.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public TService Weave<TService, TImplementation>(TImplementation target)
+        [NotNull] public TService Weave<TService, TImplementation>([NotNull] TImplementation target)
             where TImplementation : TService
         {
             if (!typeof(TService).IsInterface)

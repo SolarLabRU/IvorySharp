@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Aspects
@@ -7,7 +6,7 @@ namespace IvorySharp.Aspects
     /// <summary>
     /// Базовый атрибут аспекта.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never), PublicAPI, AttributeUsage(AttributeTargets.Method | AttributeTargets.Interface | AttributeTargets.Class)]
+    [PublicAPI, AttributeUsage(AttributeTargets.Method | AttributeTargets.Interface | AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public abstract class AspectAttribute : Attribute
     {
     }
