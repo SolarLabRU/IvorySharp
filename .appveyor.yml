@@ -1,16 +1,15 @@
-version: 1.0.{build}
+version: 1.0.0-alpha-{build}
 pull_requests:
   do_not_increment_build_number: true
 skip_tags: true
 image: Visual Studio 2017
 configuration: Release
 before_build: 
-  - ps: cd src
   - ps: dotnet restore
 build:
-  project: src\IvorySharp.sln
+  project: IvorySharp.sln
   parallel: true
   verbosity: minimal
 after_build:
-  - ps: cd IvorySharp.Benchmark
+  - ps: cd benchmarks\IvorySharp.Benchmark
   - ps: dotnet run IvorySharp.Benchmark.csproj -c Release --framework net461 --filter *

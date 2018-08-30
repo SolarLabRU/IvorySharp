@@ -7,10 +7,10 @@ matrix:
       before_install:
         - dotnet --version
       install:
-        - dotnet restore src/IvorySharp.sln
+        - dotnet restore IvorySharp.sln
       script: 
-        - dotnet build src/IvorySharp.sln
-        - cd src/IvorySharp.Tests
+        - dotnet build IvorySharp.sln
+        - cd tests/IvorySharp.Tests
         - dotnet xunit -fxversion $(ls /usr/share/dotnet/shared/Microsoft.NETCore.App/)
-        - cd ../IvorySharp.Benchmark
+        - cd ../benchmarks/IvorySharp.Benchmark
         - dotnet run IvorySharp.Benchmark.csproj -c Release --filter *

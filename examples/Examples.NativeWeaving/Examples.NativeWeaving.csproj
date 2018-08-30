@@ -4,6 +4,6 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="IvorySharp" Version="1.0.0-alpha-1" />
+    <ProjectReference Include="..\..\src\IvorySharp\IvorySharp.csproj" />
   </ItemGroup>
 </Project>

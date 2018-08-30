@@ -4,7 +4,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="IvorySharp" Version="1.0.0-alpha-1" />
-    <PackageReference Include="IvorySharp.Integration.CastleWindsor" Version="1.0.0-alpha-1" />
+    <ProjectReference Include="..\..\src\IvorySharp.Integration.CastleWindsor\IvorySharp.Integration.CastleWindsor.csproj" />
+    <ProjectReference Include="..\..\src\IvorySharp\IvorySharp.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Castle.Windsor" Version="4.1.0" />
   </ItemGroup>
 </Project>

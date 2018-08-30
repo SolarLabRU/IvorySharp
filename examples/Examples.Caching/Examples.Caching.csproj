@@ -4,8 +4,13 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="IvorySharp" Version="1.0.0-alpha-1" />
-    <PackageReference Include="IvorySharp.Integration.SimpleInjector" Version="1.0.0-alpha-1" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\IvorySharp.Integration.SimpleInjector\IvorySharp.Integration.SimpleInjector.csproj" />
+    <ProjectReference Include="..\..\src\IvorySharp\IvorySharp.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SimpleInjector" Version="4.3.0" />
   </ItemGroup>
 </Project>
