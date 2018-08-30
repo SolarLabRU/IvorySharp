@@ -34,7 +34,7 @@ namespace Examples.AutoRetry
                     
                     return;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     if (attempt < RetriesCount)
                     {

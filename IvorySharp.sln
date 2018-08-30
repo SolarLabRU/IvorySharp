@@ -1,48 +1,48 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp", "IvorySharp\IvorySharp.csproj", "{4A3CFD50-40A2-42A9-B8B2-8EE13634C3D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp", "src\IvorySharp\IvorySharp.csproj", "{4A3CFD50-40A2-42A9-B8B2-8EE13634C3D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Extensions.ClassAspectSelection", "IvorySharp.Extensions.ClassAspectSelection\IvorySharp.Extensions.ClassAspectSelection.csproj", "{0D62CD8C-591C-4DB1-B699-0DCA0A99413D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Extensions.ClassAspectSelection", "src\IvorySharp.Extensions.ClassAspectSelection\IvorySharp.Extensions.ClassAspectSelection.csproj", "{0D62CD8C-591C-4DB1-B699-0DCA0A99413D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Integration.CastleWindsor", "IvorySharp.Integration.CastleWindsor\IvorySharp.Integration.CastleWindsor.csproj", "{EE5D38B9-FFC6-47CA-A01D-3A485F47D204}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Integration.CastleWindsor", "src\IvorySharp.Integration.CastleWindsor\IvorySharp.Integration.CastleWindsor.csproj", "{EE5D38B9-FFC6-47CA-A01D-3A485F47D204}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Integration.SimpleInjector", "IvorySharp.Integration.SimpleInjector\IvorySharp.Integration.SimpleInjector.csproj", "{0637A4BD-8524-448A-AC48-D78A3DC3368E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Integration.SimpleInjector", "src\IvorySharp.Integration.SimpleInjector\IvorySharp.Integration.SimpleInjector.csproj", "{0637A4BD-8524-448A-AC48-D78A3DC3368E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{C5F0028D-5084-40D7-8E73-EC50D6A2EE5A}"
 ProjectSection(SolutionItems) = preProject
-	..\LICENSE = ..\LICENSE
-	..\README.md = ..\README.md
+	LICENSE = LICENSE
+	README.md = README.md
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{0D4A49AB-819E-40FF-89C4-CF94AAA7C87B}"
 ProjectSection(SolutionItems) = preProject
-	..\docs\docfx.json = ..\docs\docfx.json
-	..\docs\index.md = ..\docs\index.md
-	..\docs\toc.yml = ..\docs\toc.yml
+	docs\docfx.json = docs\docfx.json
+	docs\index.md = docs\index.md
+	docs\toc.yml = docs\toc.yml
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{5B5A99E1-C2EC-4A8C-B998-880A6EFF1BA3}"
 ProjectSection(SolutionItems) = preProject
-	..\docs\api\index.md = ..\docs\api\index.md
-	..\docs\api\toc.yml = ..\docs\api\toc.yml
+	docs\api\index.md = docs\api\index.md
+	docs\api\toc.yml = docs\api\toc.yml
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "articles", "articles", "{BEEB6F39-CA9D-498E-B12A-ED2117717009}"
 ProjectSection(SolutionItems) = preProject
-	..\docs\articles\intro.md = ..\docs\articles\intro.md
-	..\docs\articles\toc.yml = ..\docs\articles\toc.yml
-	..\docs\articles\license.md = ..\docs\articles\license.md
+	docs\articles\intro.md = docs\articles\intro.md
+	docs\articles\toc.yml = docs\articles\toc.yml
+	docs\articles\license.md = docs\articles\license.md
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".ci", ".ci", "{FD5B24F3-EC09-47F2-9ED5-C093C955B86D}"
 ProjectSection(SolutionItems) = preProject
-	..\.appveyor.yml = ..\.appveyor.yml
-	..\.travis.yml = ..\.travis.yml
+	.appveyor.yml = .appveyor.yml
+	.travis.yml = .travis.yml
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{83070F9A-3A90-4EF1-BA31-62ACD1FDBC0B}"
 ProjectSection(SolutionItems) = preProject
-	..\generate-docs.sh = ..\generate-docs.sh
+	generate-docs.sh = generate-docs.sh
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5B6A3125-B484-4B07-9C17-F80CE2F6F450}"
@@ -53,21 +53,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0D203B7C-857
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{8C37B094-FBEB-4E0B-B124-F479DB75ECE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.AspectSelectionFromClass", "..\examples\Examples.AspectSelectionFromClass\Examples.AspectSelectionFromClass.csproj", "{B43C1291-1667-4C85-8A93-5CE04CB7249C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.AspectSelectionFromClass", "examples\Examples.AspectSelectionFromClass\Examples.AspectSelectionFromClass.csproj", "{B43C1291-1667-4C85-8A93-5CE04CB7249C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.AutoRetry", "..\examples\Examples.AutoRetry\Examples.AutoRetry.csproj", "{82958069-998F-4E32-8E48-A43F5FBBACA5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.AutoRetry", "examples\Examples.AutoRetry\Examples.AutoRetry.csproj", "{82958069-998F-4E32-8E48-A43F5FBBACA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.Caching", "..\examples\Examples.Caching\Examples.Caching.csproj", "{0CC5BCEA-14EB-4BCC-8B4A-A0FCD4580164}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.Caching", "examples\Examples.Caching\Examples.Caching.csproj", "{0CC5BCEA-14EB-4BCC-8B4A-A0FCD4580164}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.ExceptionHandling", "..\examples\Examples.ExceptionHandling\Examples.ExceptionHandling.csproj", "{ED231E1D-8A49-43B6-ADCD-4DDC251A9B99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.ExceptionHandling", "examples\Examples.ExceptionHandling\Examples.ExceptionHandling.csproj", "{ED231E1D-8A49-43B6-ADCD-4DDC251A9B99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.Logging", "..\examples\Examples.Logging\Examples.Logging.csproj", "{2581C03D-4827-4B9F-9F8F-C6F26B9593A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.Logging", "examples\Examples.Logging\Examples.Logging.csproj", "{2581C03D-4827-4B9F-9F8F-C6F26B9593A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.NativeWeaving", "..\examples\Examples.NativeWeaving\Examples.NativeWeaving.csproj", "{CACB2A4F-0D53-42BD-81D1-97171E763757}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.NativeWeaving", "examples\Examples.NativeWeaving\Examples.NativeWeaving.csproj", "{CACB2A4F-0D53-42BD-81D1-97171E763757}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Benchmark", "..\benchmarks\IvorySharp.Benchmark\IvorySharp.Benchmark.csproj", "{E218ADF0-0497-495A-A940-8048F8F1944A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Benchmark", "benchmarks\IvorySharp.Benchmark\IvorySharp.Benchmark.csproj", "{E218ADF0-0497-495A-A940-8048F8F1944A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Tests", "..\tests\IvorySharp.Tests\IvorySharp.Tests.csproj", "{9F82D79E-4ACB-47B7-9B25-449E5BA68256}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvorySharp.Tests", "tests\IvorySharp.Tests\IvorySharp.Tests.csproj", "{9F82D79E-4ACB-47B7-9B25-449E5BA68256}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
