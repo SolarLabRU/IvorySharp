@@ -1,1 +1,197 @@
-The documentation will be here.
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>IvorySharp | IvorySharp </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="IvorySharp | IvorySharp ">
+    <meta name="generator" content="docfx 2.38.1.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="ivorysharp">IvorySharp</h1>
+
+<p><a href="https://travis-ci.org/rex-core/IvorySharp"><img src="https://travis-ci.org/rex-core/IvorySharp.svg?branch=master" alt="Build status"></a>
+<a href="https://ci.appveyor.com/project/rex-core/ivorysharp/branch/master"><img src="https://ci.appveyor.com/api/projects/status/1ojaoq8ew6y2jvpn/branch/master?svg=true" alt="Build status"></a>
+<a href="https://www.nuget.org/packages/IvorySharp/"><img src="https://img.shields.io/nuget/v/IvorySharp.svg" alt="NuGet version"></a></p>
+<blockquote>
+<p>Платформа: NET Standard 2.0 |</p>
+</blockquote>
+<p>Библиотека предоставляет набор компонентов, реализующих некоторые возможности парадигмы <a href="https://ru.wikipedia.org/wiki/%D0%90%D1%81%D0%BF%D0%B5%D0%BA%D1%82%D0%BD%D0%BE-%D0%BE%D1%80%D0%B8%D0%B5%D0%BD%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5">АОП</a> в языке C#. Если точнее, то библиотека позволяет вынести сквозную функциональность в отдельные компоненты и декларативно применять их к методам бизнес логики, используя атрибуты.</p>
+<h2 id="и-зачем-мне-это-ваше-аоп-">И зачем мне это ваше АОП ?</h2>
+<p>Как уже отмечалось, применений идей парадигмы позволяет избавиться от дублирующегося кода, разбросанного по всем слоям приложения. Примером может стать обработка ошибок. Допустим, есть ряд репозиториев, расположенных на уровне доступа к данным.</p>
+<pre><code class="lang-C#">interface IUserRepository 
+{
+    int Add(User user);
+    int Update(User user); 
+}
+
+</code></pre>
+<p>В каждом методе репозитория находится одинаковая обработка ошибок вида</p>
+<pre><code class="lang-C#">class UserRepository : IUserRepository 
+{
+  int Add(User user)
+  {
+    try {
+      // Добавление в базу пользователя
+    } catch (Exception e) {
+      Logger.Error(e.Message, e);
+      throw new WrappedException(e);
+    }
+  }
+}
+
+</code></pre>
+<p>Рано или поздно обилие однообразных фрагментов кода приводит к появлению обобщенных обработчиков вида</p>
+<pre><code class="lang-C#">class ExceptionHandlers {
+
+  public static T HandleExceptions&lt;T&gt;(Func&lt;T&gt; action) 
+  { ... }
+
+}
+</code></pre>
+<p>И репозиторий преображается в следующий вид</p>
+<pre><code class="lang-C#">class UserRepository : IUserRepository 
+{
+  int Add(User user)
+  {
+    return ExceptionHandlers.HandleExceptions(() =&gt; 
+    { 
+      // Добавление пользователя
+    });
+  }
+}
+</code></pre>
+<p>Однако, это не решает проблему и так же нарушает принцип <a href="https://ru.wikipedia.org/wiki/Don%E2%80%99t_repeat_yourself">DRY</a>, так как для отличающихся по сигнатуре делегатов придется писать свой дублирующийся фрагмент кода. При этом комбинирование такого рода обработчиков сводит читаемость и удобство поддержки функциональности на нет. В варианте с применением АОП репозиторий преобразуется следующим образом</p>
+<pre><code class="lang-C#">interface IUserRepository 
+{
+    [HandleExceptionAspect]
+    int Add(User user);
+}
+
+class UserRepository : IUserRepository {
+  int Add(User user) {
+    // Добавление пользователя
+  }
+}
+
+[AttributeUsage(AttributeTargets.Method)]
+class HandleExceptionAspect : MethodBoundaryAspect 
+{
+  public override void OnException(IInvocationPipeline pipeline)
+  {
+    var exception = pipeline.CurrentException;
+    Logger.Error(exception.Message, exception);
+    
+    // Выбросит исключение, сохранив стек-трейс
+    pipeline.Throw(new WrapperException(exception));
+  }
+}
+
+</code></pre>
+<p>При этом возможно применение нескольких аспектов, в том числе аспектов верхнего уровня на интерфейсах без потери читаемости и поддерживаемости бизнес логики. Детализированные примеры аспектов и их использования представлены <a href="https://github.com/rex-core/IvorySharp/tree/master/src/IvorySharp.Examples">тут</a>.</p>
+<h2 id="и-никто-раньше-такого-не-делал">И никто раньше такого не делал?</h2>
+<p>Делали само собой. Наиболее популярная библиотека реализующая АОП  - это <a href="https://www.postsharp.net">PostSharp</a>. Его функциональность гораздо шире этой библиотеки, однако есть один минус - он платный. Есть и бесплатные альтернативы, например <a href="https://github.com/Fody/Fody">Fody</a> и <a href="https://github.com/ArxOne/MrAdvice">Mr.Advice</a>, однако у них другой принцип работы. Данная библиотека выполняет динамическое проксирование вызовов через стандартные механизмы платформы (<a href="https://github.com/dotnet/corefx/blob/master/src/System.Reflection.DispatchProxy/src/System/Reflection/DispatchProxy.cs">DispatchProxy</a>), в то время как PostSharp и Fody выполняют <a href="http://www.mono-project.com/docs/tools+libraries/libraries/Mono.Cecil/">инъекцию IL кода</a> во время компиляции, что улучшает общую производительность, однако модифицирует код сборки. Наиболее близкое по принципу работы к представленной библиотеке - механизм динамического перехвата вызова в <a href="https://github.com/castleproject/Core/blob/master/docs/dynamicproxy-introduction.md">Castle.DynamicProxy</a>.
+Для того чтобы лучше понять детали реализации библиотеки советую ознакомиться с <a href="https://msdn.microsoft.com/en-us/magazine/dn574804.aspx">этой</a> статьей.</p>
+<h2 id="и-в-чем-тогда-преимущества-этой-библиотеки">И в чем тогда преимущества этой библиотеки?</h2>
+<p>При разработке основной упор делается на производительность, так что сейчас вызов скомпонованного с аспектами метода немногим уступает по скорости, чем <a href="https://github.com/rex-core/IvorySharp/wiki/%D0%91%D1%8B%D1%81%D1%82%D1%80%D0%BE%D0%B4%D0%B5%D0%B9%D1%81%D1%82%D0%B2%D0%B8%D0%B5">вызов метода через рефлексию</a>. Так же есть возможность использования нескольких аспектов на методе и гибкий механизм управления <a href="https://github.com/rex-core/IvorySharp/wiki/%D0%9F%D0%B0%D0%B9%D0%BF%D0%BB%D0%B0%D0%B9%D0%BD-%D0%B2%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F">пайплайном выполнения метода</a>. Доступны плагины для интеграции со сторонними фреймворками по внедрению зависимостей и реализован механизм <a href="https://github.com/rex-core/IvorySharp/wiki/%D0%92%D0%BD%D0%B5%D0%B4%D1%80%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B7%D0%B0%D0%B2%D0%B8%D1%81%D0%B8%D0%BC%D0%BE%D1%81%D1%82%D0%B5%D0%B9">внедрения зависимостей в аспекты</a>.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/rex-core/IvorySharp/blob/master/docs/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright &copy; 2018 SolarLab and contributors
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

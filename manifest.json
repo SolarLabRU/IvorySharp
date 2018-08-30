@@ -1,0 +1,752 @@
+{
+  "homepages": [],
+  "source_base_path": "/Users/bitshift/RiderProjects/IvorySharp/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.AspectAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.AspectAttribute.html",
+          "hash": "kHRtecrHGHqm+JfE1Q65kw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Configuration.AspectsConfiguration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Configuration.AspectsConfiguration.html",
+          "hash": "04K/bCvBE70dGUlETMTHJQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Configuration.AspectsConfigurator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Configuration.AspectsConfigurator.html",
+          "hash": "liyKtGkzvJlSMxwW7jJ6BQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Configuration.AspectsFluentConfigurationSyntax.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Configuration.AspectsFluentConfigurationSyntax.html",
+          "hash": "rHNt1rhXinlqyCCdPLIXZg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Configuration.ReplaceComponentSyntax-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Configuration.ReplaceComponentSyntax-1.html",
+          "hash": "Ego0lazZ1YchokX/vJfrZA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Configuration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Configuration.html",
+          "hash": "77iUag19QbaKzhQPq6Wqjg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Creation.IAspectFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Creation.IAspectFactory.html",
+          "hash": "qib+jykeJBVpWTkt5Yso0g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Creation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Creation.html",
+          "hash": "gH9c4/P5YGc0gOneVFhBQQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Dependency.AspectPropertyDependency.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Dependency.AspectPropertyDependency.html",
+          "hash": "hheLebMWPLoGVwHoTSCzxA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Dependency.DependencyAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Dependency.DependencyAttribute.html",
+          "hash": "gIIzL2Z8Xzf0ThV93xcAtA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Dependency.IAspectDependencyInjector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Dependency.IAspectDependencyInjector.html",
+          "hash": "DRxNtf5B75TDNDbxldTfVQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Dependency.IAspectDependencySelector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Dependency.IAspectDependencySelector.html",
+          "hash": "PHCHV6r1GmXSzt5UAcLlWQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Dependency.IDependencyProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Dependency.IDependencyProvider.html",
+          "hash": "Gh3iCsxodcuzvIfEIC8Prg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Dependency.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Dependency.html",
+          "hash": "k6z6xd10WsbvGALHAxaYVw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Finalize.IAspectFinalizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Finalize.IAspectFinalizer.html",
+          "hash": "4VujCgHdEb42jerwi1dX3A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Finalize.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Finalize.html",
+          "hash": "g5uSTujMAQNoPxCheY+XwA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Integration.AspectsContainer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Integration.AspectsContainer.html",
+          "hash": "sCgvldGMx1g8Y63AgTNltA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Integration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Integration.html",
+          "hash": "Vy11hgzweDFPNCrrExc9aQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.MethodAspect.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.MethodAspect.html",
+          "hash": "mGX8/UNw3JUc5hm4lg8O4A=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.MethodAspectDeclaration-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.MethodAspectDeclaration-1.html",
+          "hash": "No7rnxYm2Sx7mw3+7U3UYQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.MethodAspectMulticastTarget.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.MethodAspectMulticastTarget.html",
+          "hash": "shfBDQCcZI9cz9t/jjW43g=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.MethodBoundaryAspect.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.MethodBoundaryAspect.html",
+          "hash": "XE9bUhM6wa0dS64Lg5M+kQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.MethodInterceptionAspect.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.MethodInterceptionAspect.html",
+          "hash": "2VAiffedeIYcy2b+X5W+eQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.OrderableMethodAspect.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.OrderableMethodAspect.html",
+          "hash": "7WyjszR5hVgzvRTFiUoUlg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Pipeline.FlowBehavior.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Pipeline.FlowBehavior.html",
+          "hash": "YRT6wjC4+q7ZAh1h5uG9LQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Pipeline.IInvocationPipeline.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Pipeline.IInvocationPipeline.html",
+          "hash": "SD38QOgrIcAjrle/zRx9hQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Pipeline.IInvocationPipelineExecutor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Pipeline.IInvocationPipelineExecutor.html",
+          "hash": "q3NJ0+/p/11w+Tdlb4OFfg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Pipeline.IInvocationPipelineFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Pipeline.IInvocationPipelineFactory.html",
+          "hash": "R1znd6DYEp/Ju9b6vlerNA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Pipeline.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Pipeline.html",
+          "hash": "N3rQrPiZyMkYt6P7s4nPrw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Selection.IAspectDeclarationCollector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Selection.IAspectDeclarationCollector.html",
+          "hash": "JHgYtHGkL4iE3a/5T6gOwA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Selection.IAspectOrderStrategy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Selection.IAspectOrderStrategy.html",
+          "hash": "OP7iWCFRfMdJclIw5C3Lkw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Selection.IAspectSelector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Selection.IAspectSelector.html",
+          "hash": "+C6sWCUZYxKRabXgq4vPkA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Selection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Selection.html",
+          "hash": "9yIW4fcCv/bJXPpp7WR/ag=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.SuppressAspectsWeavingAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.SuppressAspectsWeavingAttribute.html",
+          "hash": "Plak+IxE2FZOFajp9SqEDA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Weaving.AspectWeaver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Weaving.AspectWeaver.html",
+          "hash": "f1XkMYiE+VGM3UQFCteegQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Weaving.AspectWeaverFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Weaving.AspectWeaverFactory.html",
+          "hash": "x+sGA8REJEn8iVf7ky8xcA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Weaving.IAspectWeavePredicate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Weaving.IAspectWeavePredicate.html",
+          "hash": "fSaak9r0hqIXj1OO9dc+tA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Weaving.IInvocationWeaveDataProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Weaving.IInvocationWeaveDataProvider.html",
+          "hash": "z0VprRvcBV/0MciguOwNYw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Weaving.IInvocationWeaveDataProviderFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Weaving.IInvocationWeaveDataProviderFactory.html",
+          "hash": "LGUELmpf9IqhpC25RQvXxA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Weaving.InvocationWeaveData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Weaving.InvocationWeaveData.html",
+          "hash": "Sm8uJfg/jzKoC7UzpFoQzQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.Weaving.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.Weaving.html",
+          "hash": "ZQFOAaO8nn9baNq4OtDOpA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Aspects.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Aspects.html",
+          "hash": "dFKl075ugJFRd+lsZywSjg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Components.IComponentsStore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Components.IComponentsStore.html",
+          "hash": "xl6agqyuIhOiMvxJULMaGg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Components.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Components.html",
+          "hash": "yXhIlAG+J8MMJ4Hp8LvcPA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Core.IInvocation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Core.IInvocation.html",
+          "hash": "YuBGghXJv8nXINf0DATKhQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Core.IInvocationContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Core.IInvocationContext.html",
+          "hash": "UMG7oLT/AP/CXJwWJ53Rbw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Core.IInvocationSignature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Core.IInvocationSignature.html",
+          "hash": "gh+H/owXziT3BFG+5EKfdQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Core.InvocationArguments.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Core.InvocationArguments.html",
+          "hash": "9J9QhvlyHjIvLHCQdZtN0Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Core.InvocationType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Core.InvocationType.html",
+          "hash": "qsDncxQ1v5p/XKvKM4cfnw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Core.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Core.html",
+          "hash": "QnSMbBKcsKMy6mOsGN7HHg=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Exceptions.IvorySharpException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Exceptions.IvorySharpException.html",
+          "hash": "sN+auheLCiwo5387YYc7sw=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/IvorySharp.Exceptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/IvorySharp.Exceptions.html",
+          "hash": "BnhEzyMaS2EjpFHVXmKLDA=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "QEqzBX4jQkGdHoXnjJJ1Ag=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "PxMkgMBsLUHIfkRvsiNjPQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "0D9PZ1f52ziyCoOgcJfl4Q=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/license.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/license.html",
+          "hash": "5CwQuFdvucaYI7jxwxMYZQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "tDInPf9rMZmQkoZv6vh2ng=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "krPjNpYGdK2FCEr4B58MhQ=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "u5p+oM4UXQh3KkDe3ibDOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": true,
+        "incrementalPhase": "build"
+      },
+      "processors": {
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build"
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build"
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build"
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
+        "incrementalPhase": "postProcessing"
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

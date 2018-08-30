@@ -1,0 +1,406 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IInvocationPipeline
+   | IvorySharp </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IInvocationPipeline
+   | IvorySharp ">
+    <meta name="generator" content="docfx 2.38.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline">
+  
+  
+  <h1 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline" class="text-break">Interface IInvocationPipeline
+  </h1>
+  <div class="markdown level0 summary"><p>Пайплайн выполнения вызова метода.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="IvorySharp.Aspects.Pipeline.html">IvorySharp.Aspects.Pipeline</a></h6>
+  <h6><strong>Assembly</strong>: IvorySharp.dll</h6>
+  <h5 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IInvocationPipeline</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Context_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Context*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Context" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Context">Context</h4>
+  <div class="markdown level1 summary"><p>Параметры вызова метода.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IInvocationContext Context { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IvorySharp.Core.IInvocationContext.html">IInvocationContext</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_CurrentException_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.CurrentException*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_CurrentException" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.CurrentException">CurrentException</h4>
+  <div class="markdown level1 summary"><p>Исключение, возникшее в ходе выполнения пайплайна.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Exception CurrentException { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_CurrentReturnValue_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.CurrentReturnValue*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_CurrentReturnValue" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.CurrentReturnValue">CurrentReturnValue</h4>
+  <div class="markdown level1 summary"><p>Возвращаемое значение, установленное в ходе выполнения пайплайна.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">object CurrentReturnValue { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_ExecutionState_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.ExecutionState*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_ExecutionState" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.ExecutionState">ExecutionState</h4>
+  <div class="markdown level1 summary"><p>Пользовательское состояние, устанавливаемое в рамках выполнения текущего аспекта.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">object ExecutionState { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_FlowBehavior_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.FlowBehavior*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_FlowBehavior" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.FlowBehavior">FlowBehavior</h4>
+  <div class="markdown level1 summary"><p>Текущее состояние потока.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">FlowBehavior FlowBehavior { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="IvorySharp.Aspects.Pipeline.FlowBehavior.html">FlowBehavior</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Continue_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Continue*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Continue" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Continue">Continue()</h4>
+  <div class="markdown level1 summary"><p>Продолжает выполнение пайплайна, устанавливая возвращаемый результат.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Continue()</code></pre>
+  </div>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Continue_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Continue*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Continue_System_Exception_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Continue(System.Exception)">Continue(Exception)</h4>
+  <div class="markdown level1 summary"><p>Продолжает выполнение пайплайна, устанавливая исключение.
+Переводит состояние пайплайна в <a class="xref" href="IvorySharp.Aspects.Pipeline.FlowBehavior.html#IvorySharp_Aspects_Pipeline_FlowBehavior_RethrowException">RethrowException</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Continue(Exception exception)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">exception</span></td>
+        <td><p>Исключение.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Continue_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Continue*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Continue_System_Object_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Continue(System.Object)">Continue(Object)</h4>
+  <div class="markdown level1 summary"><p>Продолжает выполнение пайплайна, устанавливая возвращаемый результат.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Continue(object returnValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">returnValue</span></td>
+        <td><p>Возвращаемое значение.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Return_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Return*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Return" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Return">Return()</h4>
+  <div class="markdown level1 summary"><p>Выполняет возврат значения по умолчанию (default({ReturnType})) из пайплайна, при этом
+прекращая его выполнение.
+Устанавливает состояние пайплайна в <a class="xref" href="IvorySharp.Aspects.Pipeline.FlowBehavior.html#IvorySharp_Aspects_Pipeline_FlowBehavior_Return">Return</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Return()</code></pre>
+  </div>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Return_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Return*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Return_System_Object_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Return(System.Object)">Return(Object)</h4>
+  <div class="markdown level1 summary"><p>Выполняет возврат значения из пайплайна, прекращая его выполнение.
+Устанавливает состояние пайплайна в <a class="xref" href="IvorySharp.Aspects.Pipeline.FlowBehavior.html#IvorySharp_Aspects_Pipeline_FlowBehavior_Return">Return</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Return(object returnValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">returnValue</span></td>
+        <td><p>Возвращаемое значение.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  
+  <a id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Throw_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Throw*"></a>
+  <h4 id="IvorySharp_Aspects_Pipeline_IInvocationPipeline_Throw_System_Exception_" data-uid="IvorySharp.Aspects.Pipeline.IInvocationPipeline.Throw(System.Exception)">Throw(Exception)</h4>
+  <div class="markdown level1 summary"><p>Прекращает выполнение пайплайна, выбрасывая новое исключение.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Throw(Exception exception)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Exception</span></td>
+        <td><span class="parametername">exception</span></td>
+        <td><p>Исключение.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright &copy; 2018 SolarLab and contributors
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
