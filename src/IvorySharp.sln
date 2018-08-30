@@ -50,7 +50,7 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{83070F9A-3A90-4EF1-BA31-62ACD1FDBC0B}"
 ProjectSection(SolutionItems) = preProject
-	..\build\generate-docs.sh = ..\build\generate-docs.sh
+	..\generate-docs.sh = ..\generate-docs.sh
 EndProjectSection
 EndProject
 Global
