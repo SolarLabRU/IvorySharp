@@ -24,7 +24,7 @@ namespace Examples.ExceptionHandling
                                   $"InnerException Message: '{innerException.Message}'");
             }
             
-            pipeline.Return();
+            pipeline.Continue();
         }
     }
 }

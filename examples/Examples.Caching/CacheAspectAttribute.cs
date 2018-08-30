@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Pipeline;
@@ -25,7 +24,7 @@ namespace Examples.Caching
             if (Cache.TryGetValue(cacheKey, out var cached))
             {
                 Console.WriteLine($"Aspect OnEntry: Return '{pipeline.Context.Method.ReturnType.Name}' with key '{cacheKey}' from cache");
-                pipeline.ReturnValue(cached);
+                pipeline.Return(cached);
             }
             // Значение нет в кеше
             else
