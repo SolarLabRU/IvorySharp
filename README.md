@@ -1,7 +1,7 @@
 # IvorySharp
 
 [![Build status](https://travis-ci.org/SolarLabRU/IvorySharp.svg?branch=master)](https://travis-ci.org/SolarLabRU/IvorySharp)
-[![Build status](https://ci.appveyor.com/api/projects/status/1ojaoq8ew6y2jvpn/branch/master?svg=true)](https://ci.appveyor.com/project/rex-core/ivorysharp/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/ofrx1gco2b70axwh/branch/master?svg=true)](https://ci.appveyor.com/project/rex-core/ivorysharp/branch/master)
 [![NuGet version](https://img.shields.io/nuget/v/IvorySharp.svg)](https://www.nuget.org/packages/IvorySharp/)
 
 > Платформа: NET Standard 2.0 |
