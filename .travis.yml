@@ -13,3 +13,6 @@ matrix:
         - dotnet build IvorySharp.sln
         - cd tests/IvorySharp.Tests
         - dotnet xunit -fxversion $(ls /usr/share/dotnet/shared/Microsoft.NETCore.App/)
+      global:
+        - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
+        - DOTNET_CLI_TELEMETRY_OPTOUT=1
