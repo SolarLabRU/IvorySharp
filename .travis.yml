@@ -2,7 +2,7 @@ language: csharp
 
 matrix:
   include:
-    - dotnet: 2.3.101
+    - dotnet: 2.2.101
       mono: none
       before_install:
         - dotnet --version
