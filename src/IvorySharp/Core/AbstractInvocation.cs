@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using IvorySharp.Caching;
@@ -13,6 +12,9 @@ namespace IvorySharp.Core
     /// </summary>
     internal abstract class AbstractInvocation : IInvocation
     {
+        /// <inheritdoc />
+        public Guid ContextId { get; }
+
         /// <inheritdoc />
         public InvocationArguments Arguments { get; }
 
@@ -52,6 +54,7 @@ namespace IvorySharp.Core
             object proxy,
             object target)
         {
+            ContextId = Guid.NewGuid();
             Arguments = arguments;
             Method = proxiedMethod;
             DeclaringType = declaringType;

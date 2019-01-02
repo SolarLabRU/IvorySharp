@@ -19,7 +19,7 @@
     <Title>IvorySharp.Integration.SimpleInjector</Title>
     <Description>Integration plugin for SimpleInjector framework.</Description>
     <Authors>bitshift.it@icloud.com</Authors>
-    <Copyright>Copyright © Igor Polyakov 2018</Copyright>
+    <Copyright>Copyright © Igor Polyakov 2018-2019</Copyright>
     <PackageProjectUrl>https://github.com/rex-core/IvorySharp</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/rex-core/IvorySharp/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/rex-core/IvorySharp.git</RepositoryUrl>

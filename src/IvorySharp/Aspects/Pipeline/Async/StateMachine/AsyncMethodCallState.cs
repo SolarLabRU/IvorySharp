@@ -55,7 +55,7 @@ namespace IvorySharp.Aspects.Pipeline.Async.StateMachine
             {
                 var innerException = e.GetInnerIf(e is TargetInvocationException && e.InnerException != null);
                 
-                pipeline.Continue(innerException);
+                pipeline.ContinueFaulted(innerException);
                 
                 return new AsyncInvocationStateSyncAdapter<TPipeline>(
                     new CatchState<TPipeline>(_boundaryAspects));
@@ -87,7 +87,7 @@ namespace IvorySharp.Aspects.Pipeline.Async.StateMachine
             {            
                 var innerException = e.GetInnerIf(e is TargetInvocationException && e.InnerException != null);
                 
-                pipeline.Continue(innerException);
+                pipeline.ContinueFaulted(innerException);
 
                 return new AsyncInvocationStateSyncAdapter<TPipeline>(
                     new CatchState<TPipeline>(_boundaryAspects));

@@ -4,6 +4,7 @@
     {
         Native = 0,
         SimpleInjector = 1,
-        CastleWindsor = 2
+        CastleWindsor = 2,
+        MicrosoftDependencyInjection = 3
     }
 }

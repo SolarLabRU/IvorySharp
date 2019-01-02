@@ -6,7 +6,9 @@ using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Components;
 using IvorySharp.Integration.CastleWindsor.Aspects.Integration;
+using IvorySharp.Integration.Microsoft.DependencyInjection;
 using IvorySharp.Integration.SimpleInjector.Aspects.Integration;
+using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 
 namespace IvorySharp.Tests.Assets
@@ -21,6 +23,7 @@ namespace IvorySharp.Tests.Assets
         private readonly DependencyPair[] _dependency;
         private readonly Action<AspectsConfiguration> _configurator;
 
+        private IServiceProvider _serviceProvider;
         private bool _isInitialized;
 
         public Weaved(IComponentsStore components, Action<AspectsConfiguration> configurator)
@@ -64,7 +67,7 @@ namespace IvorySharp.Tests.Assets
             }
         }
 
-        private void InitializeSimpleInjector(DependencyPair[] dependency)
+        private void InitializeSimpleInjector(IEnumerable<DependencyPair> dependency)
         {
             AspectsConfigurator
                 .UseContainer(new SimpleInjectorAspectContainer(_simpleInjectorContainer))
@@ -82,12 +85,32 @@ namespace IvorySharp.Tests.Assets
             }
         }
 
+        private void InitializeMicrosoftDependencyInjection(IEnumerable<DependencyPair> dependency)
+        {
+            var serviceCollection = new ServiceCollection();
+
+            serviceCollection.AddTransient<TService, TImplementation>();
+            
+            foreach (var pair in dependency)
+            {
+                serviceCollection.AddTransient(pair.ServiceType, pair.ImplementationType);
+            }
+
+            if (_configurator != null)
+                serviceCollection.UseAspectsWeaving(_configurator);
+            else
+                serviceCollection.UseAspectsWeaving();
+            
+            _serviceProvider = serviceCollection.BuildServiceProvider();
+        }
+
         public TService Get(FrameworkType frameworkType)
         {
             if (!_isInitialized)
             {
                 InitializeSimpleInjector(_dependency);
                 InitializeWindsor(_dependency);
+                InitializeMicrosoftDependencyInjection(_dependency);
 
                 _isInitialized = true;
             }
@@ -101,6 +124,8 @@ namespace IvorySharp.Tests.Assets
                     return _windsorContainer.Resolve<TService>();
                 case FrameworkType.SimpleInjector:
                     return _simpleInjectorContainer.GetInstance<TService>();
+                case FrameworkType.MicrosoftDependencyInjection:
+                    return _serviceProvider.GetService<TService>();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(frameworkType), frameworkType, null);
             }

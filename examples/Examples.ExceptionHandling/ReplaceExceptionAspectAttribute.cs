@@ -14,7 +14,7 @@ namespace Examples.ExceptionHandling
         {
             Console.WriteLine("ReplaceExceptionAspect OnException called");
             
-            pipeline.Continue(
+            pipeline.ContinueFaulted(
                 new ApplicationException("Additional exception info", pipeline.CurrentException));
         }
     }

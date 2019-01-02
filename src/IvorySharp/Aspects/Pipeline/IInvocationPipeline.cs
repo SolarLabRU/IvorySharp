@@ -60,7 +60,7 @@ namespace IvorySharp.Aspects.Pipeline
         /// Переводит состояние пайплайна в <see cref="Aspects.Pipeline.FlowBehavior.RethrowException"/>.
         /// </summary>
         /// <param name="exception">Исключение.</param>
-        void Continue([NotNull] Exception exception);
+        void ContinueFaulted([NotNull] Exception exception);
 
         /// <summary>
         /// Продолжает выполнение пайплайна, устанавливая возвращаемый результат.
@@ -69,7 +69,7 @@ namespace IvorySharp.Aspects.Pipeline
         void Continue([CanBeNull] object returnValue);
 
         /// <summary>
-        /// Продолжает выполнение пайплайна, устанавливая возвращаемый результат.
+        /// Продолжает выполнение пайплайна, устанавливая возвращаемый результат по умолчанию.
         /// </summary>
         void Continue();
     }

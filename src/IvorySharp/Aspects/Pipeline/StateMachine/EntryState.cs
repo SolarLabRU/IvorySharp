@@ -56,7 +56,7 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
                     };
                     break;
                 
-                // OnEntry -> Continue(value) -> OnSuccess [all] -> OnExit
+                // OnEntry -> ContinueFaulted(value) -> OnSuccess [all] -> OnExit
                 case FlowBehavior.UpdateReturnValue:
                     transition = new SuccessState<TPipeline>(BoundaryAspects);
                     break;

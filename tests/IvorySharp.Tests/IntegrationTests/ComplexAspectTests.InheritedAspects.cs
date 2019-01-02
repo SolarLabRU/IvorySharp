@@ -38,6 +38,7 @@ namespace IvorySharp.Tests.IntegrationTests
         [InlineData(FrameworkType.Native)]
         [InlineData(FrameworkType.SimpleInjector)]
         [InlineData(FrameworkType.CastleWindsor)]
+        [InlineData(FrameworkType.MicrosoftDependencyInjection)]
         public void Test_ExceptionThrowed_ConcreteService_Resolve(FrameworkType frameworkType)
         {
             // Arrange
@@ -60,6 +61,7 @@ namespace IvorySharp.Tests.IntegrationTests
         [InlineData(FrameworkType.Native)]
         [InlineData(FrameworkType.SimpleInjector)]
         [InlineData(FrameworkType.CastleWindsor)]
+        [InlineData(FrameworkType.MicrosoftDependencyInjection)]
         public void Test_ExceptionThrowed_BaseService_Resolve(FrameworkType frameworkType)
         {
             // Arrange
@@ -126,7 +128,7 @@ namespace IvorySharp.Tests.IntegrationTests
         {
             public override void OnException(IInvocationPipeline pipeline)
             {
-                pipeline.Continue(new ArgumentException(string.Empty, pipeline.CurrentException));
+                pipeline.ContinueFaulted(new ArgumentException(string.Empty, pipeline.CurrentException));
             }
         }
         
@@ -134,7 +136,7 @@ namespace IvorySharp.Tests.IntegrationTests
         {
             public override void OnException(IInvocationPipeline pipeline)
             {
-                pipeline.Continue(new ApplicationException(string.Empty, pipeline.CurrentException));
+                pipeline.ContinueFaulted(new ApplicationException(string.Empty, pipeline.CurrentException));
             }
         }
 

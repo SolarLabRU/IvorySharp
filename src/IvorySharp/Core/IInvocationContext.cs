@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Dynamic;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Core
@@ -9,6 +11,11 @@ namespace IvorySharp.Core
     [PublicAPI]
     public interface IInvocationContext : IInvocationSignature
     {
+        /// <summary>
+        /// Уникальный идентификатор контекста выполнения метода.
+        /// </summary>
+        Guid ContextId { get; }
+        
         /// <summary>
         /// Параметры вызова метода.
         /// </summary>

@@ -49,7 +49,7 @@ namespace IvorySharp.Aspects.Pipeline.StateMachine
                 var innerException = e.GetInnerIf(e is TargetInvocationException && e.InnerException != null);
 
                 //  OnEntry -> MethodCall [exception] -> OnException -> OnExit
-                pipeline.Continue(innerException);
+                pipeline.ContinueFaulted(innerException);
 
                 return new CatchState<TPipeline>(BoundaryAspects);
             }

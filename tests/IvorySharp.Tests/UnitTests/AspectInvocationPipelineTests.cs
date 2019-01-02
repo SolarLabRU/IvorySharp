@@ -30,7 +30,7 @@ namespace IvorySharp.Tests.UnitTests
             var exception = new ArgumentException();
 
             // Act
-            pipeline.Continue(exception);
+            pipeline.ContinueFaulted(exception);
 
             // Assert
             Assert.Equal(exception, pipeline.CurrentException);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace IvorySharp.Extensions
 {
@@ -9,13 +10,7 @@ namespace IvorySharp.Extensions
         {
             Debug.Assert(target != null, "target != null");
 
-            foreach (var item in source)
-            {
-                if (ReferenceEquals(item, target))
-                    return true;
-            }
-            
-            return false;
+            return source.Any(item => ReferenceEquals(item, target));
         }
         
         public static IEnumerable<T> TakeBeforeExclusive<T>(this IEnumerable<T> source, T target) 

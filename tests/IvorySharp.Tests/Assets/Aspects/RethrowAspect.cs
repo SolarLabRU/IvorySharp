@@ -15,7 +15,7 @@ namespace IvorySharp.Tests.Assets.Aspects
 
         protected override void Exception(IInvocationPipeline pipeline)
         {
-            pipeline.Continue(CreateException(_exceptionType, pipeline.CurrentException));
+            pipeline.ContinueFaulted(CreateException(_exceptionType, pipeline.CurrentException));
         }
 
         protected static Exception CreateException(Type exceptionType, Exception inner)

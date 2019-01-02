@@ -25,6 +25,7 @@ namespace IvorySharp.Tests.IntegrationTests
         [InlineData(FrameworkType.Native)]
         [InlineData(FrameworkType.SimpleInjector)]
         [InlineData(FrameworkType.CastleWindsor)]
+        [InlineData(FrameworkType.MicrosoftDependencyInjection)]
         public async Task OnSuccess_ChangeReturnResult_By_ReturnValueProp(FrameworkType frameworkType)
         {
             // Arrange
@@ -41,6 +42,7 @@ namespace IvorySharp.Tests.IntegrationTests
         [InlineData(FrameworkType.Native)]
         [InlineData(FrameworkType.SimpleInjector)]
         [InlineData(FrameworkType.CastleWindsor)]
+        [InlineData(FrameworkType.MicrosoftDependencyInjection)]
         public async Task BypassAspect_Should_Not_SwallowException_If_It_WasThrown_By_Method(FrameworkType frameworkType)
         {
             // Arrange
@@ -54,6 +56,7 @@ namespace IvorySharp.Tests.IntegrationTests
         [InlineData(FrameworkType.Native)]
         [InlineData(FrameworkType.SimpleInjector)]
         [InlineData(FrameworkType.CastleWindsor)]
+        [InlineData(FrameworkType.MicrosoftDependencyInjection)]
         public async Task SwallowException_In_OnExceptionBlock_ShouldReturnDefault(FrameworkType frameworkType)
         {
             // Arrange
@@ -70,6 +73,7 @@ namespace IvorySharp.Tests.IntegrationTests
         [InlineData(FrameworkType.Native)]
         [InlineData(FrameworkType.SimpleInjector)]
         [InlineData(FrameworkType.CastleWindsor)]
+        [InlineData(FrameworkType.MicrosoftDependencyInjection)]
         public async Task OnEntry_ReturnValue_ShouldNotTriggerMethod_Invocation(FrameworkType frameworkType)
         {
             // Arrange
@@ -86,6 +90,7 @@ namespace IvorySharp.Tests.IntegrationTests
         [InlineData(FrameworkType.Native)]
         [InlineData(FrameworkType.SimpleInjector)]
         [InlineData(FrameworkType.CastleWindsor)]
+        [InlineData(FrameworkType.MicrosoftDependencyInjection)]
         public async Task ThrowException_In_OnSuccessBlock_ShouldFaultInvocation(FrameworkType frameworkType)
         {
             // Arrange

@@ -137,7 +137,7 @@ namespace IvorySharp.Aspects.Pipeline
         }
 
         /// <inheritdoc />
-        public void Continue(Exception exception)
+        public void ContinueFaulted(Exception exception)
         {
             CurrentException = exception ?? throw new ArgumentNullException(nameof(exception));
             FlowBehavior = FlowBehavior.RethrowException;

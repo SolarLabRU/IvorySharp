@@ -1,27 +1,24 @@
-﻿using System;
+using System;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Weaving;
 using IvorySharp.Exceptions;
-using SimpleInjector;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace IvorySharp.Integration.SimpleInjector.Aspects.Integration
+namespace IvorySharp.Integration.Microsoft.DependencyInjection.Aspects.Integration
 {
     /// <summary>
-    /// Провайдер сервисов.
+    /// Провайдер зависимостей.
     /// </summary>
-    public class SimpleInjectorDependencyProvider : IDependencyProvider
+    public class MicrosoftDependencyProvider : IDependencyProvider
     {
-        private readonly Container _container;
+        private readonly Lazy<IServiceProvider> _serviceProviderContainer;
+        private IServiceProvider ServiceProvider => _serviceProviderContainer.Value;
 
-        /// <summary>
-        /// Инициализирует экземпляр <see cref="SimpleInjectorDependencyProvider"/>.
-        /// </summary>
-        /// <param name="container">Контейнер зависимостей.</param>
-        public SimpleInjectorDependencyProvider(Container container)
+        internal MicrosoftDependencyProvider(IServiceCollection serviceCollection)
         {
-            _container = container;
+            _serviceProviderContainer = new Lazy<IServiceProvider>(serviceCollection.BuildServiceProvider);
         }
-
+        
         /// <inheritdoc />
         public TService GetService<TService>() where TService : class
         {
@@ -51,7 +48,7 @@ namespace IvorySharp.Integration.SimpleInjector.Aspects.Integration
         {
             try
             {
-                return _container.GetInstance(serviceType);
+                return ServiceProvider.GetService(serviceType);
             }
             catch (Exception e)
             {

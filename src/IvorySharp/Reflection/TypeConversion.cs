@@ -5,18 +5,18 @@ using System.Linq.Expressions;
 namespace IvorySharp.Reflection
 {
     /// <summary>
-    /// Вспомогательный класс для конвертирования типов.
+    /// Helper class to handle type conversion.
     /// </summary>
     internal static class TypeConversion
     {    
         /// <summary>
-        /// Выполняет попытку преобразования типа объекта
-        /// <paramref name="value"/> в тип <paramref name="targetType"/>.
+        /// Converts the source object (<paramref name="value"/>) into type <paramref name="targetType"/>.
+        /// A return value indicates whether the conversion succeeded.
         /// </summary>
-        /// <param name="value">Объект для конвертации.</param>
-        /// <param name="targetType">Целевой тип.</param>
-        /// <param name="result">Результат преобразования.</param>
-        /// <returns>Признак успешного преобразования.</returns>
+        /// <param name="value">Source object for type conversion.\</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="result">Conversion result. If conversion failed <paramref name="result"/> equals null.</param>
+        /// <returns>True if <paramref name="value"/> was converted successfully, otherwise - false.</returns>
         public static bool TryConvert(object value, Type targetType, out object result)
         {
             result = null;
@@ -29,11 +29,11 @@ namespace IvorySharp.Reflection
             
             var valueType = value.GetType();
 
-            // Пытаемся распаковать target из Nullable{T}
+            // Try to unpack target from Nullable{T}
             var targetUnpackedType = Nullable.GetUnderlyingType(targetType);
             if (targetUnpackedType != null)
             {
-                // Если прямое преобразование типов допустимо
+                // If we can cast types directly
                 if (targetUnpackedType.IsAssignableFrom(valueType))
                 {
                     // Implicit boxing (Nullable<Target>)(Target)value
@@ -42,7 +42,7 @@ namespace IvorySharp.Reflection
                 }
             }
 
-            // Пытаемся распаковать value из Nullable{T}
+            // Try to unpack value from Nullable{T}
             var valueUnpackedType = Nullable.GetUnderlyingType(targetType);
             if (valueUnpackedType == null) 
                 return false;
