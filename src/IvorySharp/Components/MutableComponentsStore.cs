@@ -8,7 +8,7 @@ using IvorySharp.Aspects.Weaving;
 namespace IvorySharp.Components
 {
     /// <summary>
-    /// Компоненты библиотеки.
+    /// Represents components store that can be modified.
     /// </summary>
     internal sealed class MutableComponentsStore : IComponentsStore
     {
@@ -43,7 +43,7 @@ namespace IvorySharp.Components
         public IComponentHolder<IAspectFinalizer> AspectFinalizer { get; set; }
 
         /// <summary>
-        /// Замораживает компоненты (запрещает замену внутренней реализации).
+        /// Freezes components (prohibits assignment of components inside component holders).
         /// </summary>
         public void Freeze()
         {

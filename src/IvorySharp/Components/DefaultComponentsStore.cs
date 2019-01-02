@@ -9,7 +9,7 @@ using IvorySharp.Caching;
 namespace IvorySharp.Components
 {
     /// <summary>
-    /// Компоненты по умолчанию.
+    /// A set of default library components.
     /// </summary>
     internal sealed class DefaultComponentsStore : IComponentsStore
     {
@@ -44,9 +44,9 @@ namespace IvorySharp.Components
         public IComponentHolder<IAspectFinalizer> AspectFinalizer { get; }
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="DefaultComponentsStore"/>.
+        /// Creates a new instance of <see cref="DefaultComponentsStore"/>.
         /// </summary>
-        /// <param name="dependencyProvider">Провайдер зависимостей.</param>
+        /// <param name="dependencyProvider">Dependency provider.</param>
         internal DefaultComponentsStore(IDependencyProvider dependencyProvider)
         {
             DependencyHolder = dependencyProvider.ToInstanceHolder();

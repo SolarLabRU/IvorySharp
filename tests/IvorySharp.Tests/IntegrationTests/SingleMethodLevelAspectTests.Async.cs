@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Components;

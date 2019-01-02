@@ -3,25 +3,26 @@
 namespace IvorySharp.Components
 {
     /// <summary>
-    /// Компонент для хранения компонентов.
+    /// Describes a component holder.
     /// </summary>
+    /// <typeparam name="TComponent">Component type.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IComponentHolder<TComponent> where TComponent : IComponent
     {
         /// <summary>
-        /// Возвращает экземпляр компонента.
+        /// Returns component instance.
         /// </summary>
-        /// <returns>Экземпляр компонента.</returns>
+        /// <returns>Component.</returns>
         TComponent Get();
 
         /// <summary>
-        /// Заменяет текущую реализацию компонента на <paramref name="component"/>.
+        /// Replaces component inside with new instance.
         /// </summary>
-        /// <param name="component">Новый компонент.</param>
+        /// <param name="component">New component.</param>
         void Replace(TComponent component);
 
         /// <summary>
-        /// Замораживает контейнтер, запрещая замену компонентов на новые.
+        /// Freezes the holder (prohibits the component replacement).
         /// </summary>
         void Freeze();
     }

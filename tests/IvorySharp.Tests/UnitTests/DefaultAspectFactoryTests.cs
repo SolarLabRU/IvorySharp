@@ -6,7 +6,6 @@ using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Finalize;
 using IvorySharp.Aspects.Selection;
-using IvorySharp.Caching;
 using IvorySharp.Components;
 using IvorySharp.Core;
 using IvorySharp.Tests.Assets;

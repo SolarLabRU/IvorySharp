@@ -36,7 +36,7 @@ namespace IvorySharp.Aspects.Weaving
         /// <param name="proxy">Прокси сервиса.</param>
         /// <returns>Результат вызова метода.</returns>
         internal object Intercept(
-            IInvocationSignature signature, MethodLambda methodCall,
+            IInvocationSignature signature, MethodCall methodCall,
             object[] args, object target, object proxy)
         {
             var invocationData = _weaveDataProvider.Get(signature);
@@ -45,7 +45,7 @@ namespace IvorySharp.Aspects.Weaving
                 throw new IvorySharpException(
                     $"Не найдена информация о вызываемом методе '{signature.Method.Name}'. " +
                     $"DeclaringType: {signature.DeclaringType.Name} " +
-                    $"TargetType: {signature.TargetType.Name}");
+                    $"ImplementationType: {signature.TargetType.Name}");
 
             if (!invocationData.IsWeaveable)
                 // Bypass

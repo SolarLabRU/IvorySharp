@@ -1,36 +1,35 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Параметры вызова метода.
+    /// Represents a collection of arguments passed to the method.
     /// </summary>
     [PublicAPI]
     public sealed class InvocationArguments : IReadOnlyCollection<object>
     {
         /// <summary>
-        /// Инициализированный пустой экземпляр <see cref="InvocationArguments"/>.
+        /// An empty instance of <see cref="InvocationArguments"/>.
         /// </summary>
         public static readonly InvocationArguments Empty = new InvocationArguments(Array.Empty<object>());
         
         private readonly object[] _args;
         
         /// <summary>
-        /// Инициализирует экзмпляр <see cref="InvocationArguments"/>.
+        /// Creates instance of <see cref="InvocationArguments"/>.
         /// </summary>
-        /// <param name="args">Массив нетипизированных параметров.</param>
+        /// <param name="args">Array of untyped method arguments.</param>
         private InvocationArguments(object[] args)
         {
             _args = args ?? Array.Empty<object>();
         }
 
         /// <summary>
-        /// Количество параметров.
+        /// Arguments count.
         /// </summary>
         public int Count => _args.Length;
 
@@ -47,20 +46,20 @@ namespace IvorySharp.Core
         }
 
         /// <summary>
-        /// Оператор приведения типа.
+        /// Implicitly converts <see cref="InvocationArguments"/> to array of <see cref="object"/>.
         /// </summary>
-        /// <param name="arguments">Параметры вызова.</param>
-        /// <returns>Массив нетипизированных параметров вызова.</returns>
+        /// <param name="arguments">Method arguments collection.</param>
+        /// <returns>Untyped method arguments array.</returns>
         public static implicit operator object[]([NotNull] InvocationArguments arguments)
         {
             return arguments._args;
         }
 
         /// <summary>
-        /// Оператор приведения типа.
+        /// Implicitly converts an array of untyped method arguments to the <see cref="InvocationArguments"/>.
         /// </summary>
-        /// <param name="args">Массив нетипизированных параметров вызова.</param>
-        /// <returns>Параметры вызова метода.</returns>
+        /// <param name="args">Untyped method arguments array.</param>
+        /// <returns>Method arguments collection.</returns>
         public static implicit operator InvocationArguments([NotNull] object[] args)
         {
             return new InvocationArguments(args);

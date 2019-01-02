@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using IvorySharp.Aspects.Creation;
+﻿using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Finalize;
 using IvorySharp.Aspects.Pipeline;
@@ -10,33 +9,33 @@ using JetBrains.Annotations;
 namespace IvorySharp.Components
 {
     /// <summary>
-    /// Компоненты библиотеки.
+    /// A store of library components that can be replaced.
     /// </summary>
     [PublicAPI]
     public interface IComponentsStore 
     { 
         /// <summary>
-        /// Провайдер зависимостей.
+        /// Service dependency provider. 
         /// </summary>
         IComponentHolder<IDependencyProvider> DependencyHolder { get; }
 
         /// <summary>
-        /// Стратегия получения аспектов.
+        /// Aspect selection stategy.
         /// </summary>
         IComponentHolder<IAspectSelector> AspectSelector { get; }
 
         /// <summary>
-        /// Предикат, определяющий возможность применения аспекта.
+        /// Aspect weave predicate. 
         /// </summary>
         IComponentHolder<IAspectWeavePredicate> AspectWeavePredicate { get; }
 
         /// <summary>
-        /// Компонент, агрегирующий аспекты вызова.
+        /// Aspect declarations collector.
         /// </summary>
         IComponentHolder<IAspectDeclarationCollector> AspectDeclarationCollector { get; }
 
         /// <summary>
-        /// Фабрика компонентов пайлпайна.
+        /// Common pipeline components factory.
         /// </summary>
         IComponentHolder<IInvocationPipelineFactory> PipelineFactory { get; }
 
@@ -46,22 +45,22 @@ namespace IvorySharp.Components
         IComponentHolder<IAspectFactory> AspectFactory { get; }
 
         /// <summary>
-        /// Компонент, для внедрения зависимостей в аспекты.
+        /// Aspect dependency injector.
         /// </summary>
         IComponentHolder<IAspectDependencyInjector> AspectDependencyInjector { get; }
 
         /// <summary>
-        /// Стратегия упорядочивания аспектов.
+        /// Aspect ordering strategy.
         /// </summary>
         IComponentHolder<IAspectOrderStrategy> AspectOrderStrategy { get; }
         
         /// <summary>
-        /// Фабрика провайдеров данных вызова.
+        /// Factory that creates data required for aspect weaving. 
         /// </summary>
         IComponentHolder<IInvocationWeaveDataProviderFactory> WeaveDataProviderFactory { get; }
         
         /// <summary>
-        /// Финализатор аспектов.
+        /// Aspect finalizer.
         /// </summary>
         IComponentHolder<IAspectFinalizer> AspectFinalizer { get; }
     }

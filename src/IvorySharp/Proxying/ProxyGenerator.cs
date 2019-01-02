@@ -112,8 +112,8 @@ namespace IvorySharp.Proxying
     {
         private static readonly object Lock = new object();
 
-        private static readonly MethodLambda FastProxyInvoke =
-            Expressions.CreateLambda(MethodReferences.ProxyInvoke);
+        private static readonly MethodCall FastProxyInvoke =
+            Expressions.CreateMethodCall(MethodReferences.ProxyInvoke);
 
         /// <summary>
         /// Хранит информацию о связях методов.
@@ -128,8 +128,8 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// Кеш делегатов.
         /// </summary>
-        private static readonly ConcurrentDictionary<MethodInfo, MethodLambda> LambdasCache 
-            = new ConcurrentDictionary<MethodInfo, MethodLambda>(MethodEqualityComparer.Instance);
+        private static readonly ConcurrentDictionary<MethodInfo, MethodCall> LambdasCache 
+            = new ConcurrentDictionary<MethodInfo, MethodCall>(MethodEqualityComparer.Instance);
         
         /// <summary>
         /// Кеш прокси типов.
@@ -181,9 +181,9 @@ namespace IvorySharp.Proxying
                 ? method.MethodInfo.MakeGenericMethod(packed.GenericParameters)
                 : method.MethodInfo;
             
-            var lambda = method.MethodLambda == null
-                ? LambdasCache.GetOrAdd(method.MethodInfo, Expressions.CreateLambda)
-                : method.MethodLambda;
+            var lambda = method.MethodCall == null
+                ? LambdasCache.GetOrAdd(method.MethodInfo, Expressions.CreateMethodCall)
+                : method.MethodCall;
             
             var proxiedMethod = new MethodInvocation(
                 methodInfo, lambda, packed.MethodArguments, 

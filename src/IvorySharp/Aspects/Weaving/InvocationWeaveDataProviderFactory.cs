@@ -51,20 +51,20 @@ namespace IvorySharp.Aspects.Weaving
                 var invocationsData = new ConcurrentDictionary<IInvocationSignature, InvocationWeaveData>(
                     InvocationSignature.InvocationSignatureMethodEqualityComparer.Instance);
 
-                var declaredMethods = typeKey.DeclaredType.GetMethods()
-                    .Union(typeKey.DeclaredType.GetInterfaces()
+                var declaredMethods = typeKey.DeclaringType.GetMethods()
+                    .Union(typeKey.DeclaringType.GetInterfaces()
                         .SelectMany(i => i.GetMethods()));
 
                 foreach (var declaredMethod in declaredMethods)
                 {
-                    var targetMethod = ReflectedMethod.GetMethodMap(typeKey.TargetType, declaredMethod);
+                    var targetMethod = ReflectedMethod.GetMethodMap(typeKey.ImplementationType, declaredMethod);
                     if (targetMethod == null)
                         throw new IvorySharpException(
-                            $"Не удалось найти метод '{declaredMethod.Name}' в типе '{typeKey.TargetType.Name}'");
+                            $"Не удалось найти метод '{declaredMethod.Name}' в типе '{typeKey.ImplementationType.Name}'");
                     
                     var signature = new InvocationSignature(
-                        declaredMethod, targetMethod, typeKey.DeclaredType,
-                        typeKey.TargetType, declaredMethod.GetInvocationType());
+                        declaredMethod, targetMethod, typeKey.DeclaringType,
+                        typeKey.ImplementationType, declaredMethod.GetInvocationType());
 
                     if (_weavePredicate == null)
                         _weavePredicate = _weavePredicateHolder.Get();

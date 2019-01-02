@@ -4,9 +4,9 @@ using System.ComponentModel;
 namespace IvorySharp.Components
 {
     /// <summary>
-    /// Провайдер компонентов на основе <see cref="Lazy{T}"/>.
+    /// Lazy components store (based of <see cref="Lazy{T}"/>).
     /// </summary>
-    /// <typeparam name="TComponent">Тип компонента.</typeparam>
+    /// <typeparam name="TComponent">Component type.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public sealed class LazyComponentHolder<TComponent> : ComponentHolderBase<TComponent>
         where TComponent : IComponent
@@ -14,9 +14,9 @@ namespace IvorySharp.Components
         private Lazy<TComponent> _instanceProvider;
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="LazyComponentHolder{TComponent}"/>.
+        /// Creates a new instance of  <see cref="LazyComponentHolder{TComponent}"/>.
         /// </summary>
-        /// <param name="provider">Провайдер экземпляра.</param>
+        /// <param name="provider">Component factory.</param>
         public LazyComponentHolder(Func<TComponent> provider)
         {
             _instanceProvider = new Lazy<TComponent>(provider);

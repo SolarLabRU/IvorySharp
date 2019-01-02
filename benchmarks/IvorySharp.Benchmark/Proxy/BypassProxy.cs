@@ -8,7 +8,7 @@ namespace IvorySharp.Benchmark.Proxy
         
         protected internal override object Invoke(MethodInvocation invocation)
         {
-            return invocation.MethodLambda(_service, invocation.Arguments);
+            return invocation.MethodCall(_service, invocation.Arguments);
         }
         
         private void Initialize(TService service)

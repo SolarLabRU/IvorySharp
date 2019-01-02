@@ -4,7 +4,7 @@ using System.Runtime.ExceptionServices;
 namespace IvorySharp.Extensions
 {
     /// <summary>
-    /// Набор расширений для исключений.
+    /// A set of extenstion methods for <see cref="Exception"/>.
     /// </summary>
     internal static class ExceptionExtensions
     {

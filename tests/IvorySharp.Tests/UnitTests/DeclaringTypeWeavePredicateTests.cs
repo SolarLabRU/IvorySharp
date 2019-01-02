@@ -4,9 +4,7 @@ using System.Reflection;
 using IvorySharp.Aspects;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
-using IvorySharp.Caching;
 using IvorySharp.Components;
-using IvorySharp.Tests.Assets.Cache;
 using Moq;
 using Xunit;
 

@@ -1,33 +1,31 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Dynamic;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Контекст вызова метода.
+    /// Method invocation context (available after method call).
     /// </summary>
     [PublicAPI]
     public interface IInvocationContext : IInvocationSignature
     {
         /// <summary>
-        /// Уникальный идентификатор контекста выполнения метода.
+        /// Context identifier.
         /// </summary>
         Guid ContextId { get; }
         
         /// <summary>
-        /// Параметры вызова метода.
+        /// Method invocation arguments.
         /// </summary>
         [NotNull] InvocationArguments Arguments { get; }
         
         /// <summary>
-        /// Прокси целевого объекта.
+        /// Proxy instance of target service (<see cref="Target"/>). 
         /// </summary>
         object Proxy { get; }
         
         /// <summary>
-        /// Экземпляр целевого объекта.
+        /// Transparent instance of target service.
         /// </summary>
         object Target { get; }
     }

@@ -6,6 +6,9 @@ using IvorySharp.Linq;
 
 namespace IvorySharp.Extensions
 {
+    /// <summary>
+    /// A set of extenstion methods for <see cref="Type"/>.
+    /// </summary>
     internal static class TypeExtensions
     {
         private static readonly Type[] NotInterceptableTypes =

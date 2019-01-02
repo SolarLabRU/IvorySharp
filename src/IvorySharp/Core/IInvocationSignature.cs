@@ -1,40 +1,38 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Reflection;
 using JetBrains.Annotations;
 
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Сигнатура вызова (доступна до фактического вызова метода).
+    /// Describes the method call signature (it's available before method call).
     /// </summary>
     [PublicAPI]
     public interface IInvocationSignature
     {
         /// <summary>
-        /// Метод, вызов которого перехватываается.
-        /// Обычно это метод, находящийся в интерфейсе, который реализуется
-        /// целевым классом.
+        /// Method which call is intercepting.
+        /// It lives inside of <see cref="DeclaringType"/>.
         /// </summary>
         [NotNull] MethodInfo Method { get; }
         
         /// <summary>
-        /// Метод, находящийся в фактическом типе целевого объекта (классе).
+        /// Method that lives inside of <see cref="TargetType"/> (related to <see cref="Method"/> in <see cref="DeclaringType"/>).
         /// </summary>
         [NotNull] MethodInfo TargetMethod { get; }
         
         /// <summary>
-        /// Объявленный тип целевого объекта (интерфейс).
+        /// Declaring service type (interface).
         /// </summary>
         [NotNull] Type DeclaringType { get; }
 
         /// <summary>
-        /// Фактический тип целевого объекта (класс).
+        /// Actual service type (class that implements <see cref="DeclaringType"/>).
         /// </summary>
         [NotNull] Type TargetType { get; }
                     
         /// <summary>
-        /// Тип вызываемого метода.
+        /// The kind of called method.
         /// </summary>
         InvocationType InvocationType { get; }
     }

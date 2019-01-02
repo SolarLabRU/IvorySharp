@@ -1,5 +1,4 @@
-﻿using System;
-using IvorySharp.Aspects.Weaving;
+﻿using IvorySharp.Aspects.Weaving;
 
 namespace Examples.NativeWeaving
 {

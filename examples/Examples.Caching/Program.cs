@@ -1,5 +1,4 @@
-﻿using System;
-using IvorySharp.Aspects.Configuration;
+﻿using IvorySharp.Aspects.Configuration;
 using IvorySharp.Integration.SimpleInjector.Aspects.Integration;
 using SimpleInjector;
 

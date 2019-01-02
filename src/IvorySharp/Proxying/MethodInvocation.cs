@@ -20,7 +20,7 @@ namespace IvorySharp.Proxying
         /// <summary>
         /// Делегат для быстрого вызова метода.
         /// </summary>
-        public readonly MethodLambda MethodLambda;
+        public readonly MethodCall MethodCall;
         
         /// <summary>
         /// Экземпляр прокси.
@@ -41,19 +41,19 @@ namespace IvorySharp.Proxying
         /// Инициализирует экземпляр <see cref="MethodInvocation"/>.
         /// </summary>
         /// <param name="method"></param>
-        /// <param name="methodLambda"></param>
+        /// <param name="methodCall"></param>
         /// <param name="arguments"></param>
         /// <param name="genericParameters"></param>
         /// <param name="transparentProxy"></param>
         public MethodInvocation(
             MethodInfo method, 
-            MethodLambda methodLambda,
+            MethodCall methodCall,
             object[] arguments, 
             Type[] genericParameters, 
             object transparentProxy)
         {
             Method = method;
-            MethodLambda = methodLambda;
+            MethodCall = methodCall;
             Arguments = arguments ?? Array.Empty<object>();
             GenericParameters = genericParameters ?? Array.Empty<Type>();
             TransparentProxy = transparentProxy;

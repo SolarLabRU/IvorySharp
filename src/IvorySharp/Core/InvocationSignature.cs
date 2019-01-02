@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Сигнатура вызова метода.
+    /// Describes the signature of method invocation.
     /// </summary>
     internal sealed class InvocationSignature : IInvocationSignature, IEquatable<InvocationSignature>
     {
@@ -27,7 +25,7 @@ namespace IvorySharp.Core
         public InvocationType InvocationType { get; }
         
         /// <summary>
-        /// Инициализирует экземпляр <see cref="InvocationSignature"/>.
+        /// Creates a new instance of <see cref="InvocationSignature"/>.
         /// </summary>
         public InvocationSignature(
             MethodInfo method,
@@ -78,12 +76,12 @@ namespace IvorySharp.Core
         }
         
         /// <summary>
-        /// Сравнивает сигнатуры вызова на основе методов.
+        /// Compares two invocation signatures based on underlying method <see cref="IInvocationSignature.Method"/>.
         /// </summary>
         public sealed class InvocationSignatureMethodEqualityComparer : EqualityComparer<IInvocationSignature>
         {
             /// <summary>
-            /// Инициализированный экземпляр <see cref="InvocationSignatureMethodEqualityComparer"/>.
+            /// Initialized instance of <see cref="InvocationSignatureMethodEqualityComparer"/>.
             /// </summary>
             public static readonly InvocationSignatureMethodEqualityComparer Instance 
                 = new InvocationSignatureMethodEqualityComparer();

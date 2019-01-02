@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Базовая модель вызываемого метода.
+    /// Abstract method invocation that not tied to method invocation kind.
     /// </summary>
     internal abstract class AbstractInvocation : IInvocation
     {
@@ -44,7 +44,7 @@ namespace IvorySharp.Core
         public abstract object ReturnValue { get; set; }
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="AbstractInvocation"/>.
+        /// Creates a new instance of <see cref="AbstractInvocation"/>.
         /// </summary>
         protected internal AbstractInvocation(
             InvocationArguments arguments,
@@ -69,10 +69,10 @@ namespace IvorySharp.Core
         public abstract object Proceed();
 
         /// <summary>
-        /// Возвращает метод в типе <see cref="TargetType"/>, соответствующий перехватываемому
-        /// методу <see cref="Method"/>.
+        /// Returns related method inside <see cref="TargetType"/>
+        /// that matched declared method <see cref="Method"/> inside of <see cref="DeclaringType"/>. 
         /// </summary>
-        /// <returns>Метод.</returns>
+        /// <returns>Target method.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CanBeNull] protected MethodInfo GetTargetMethod()
         {

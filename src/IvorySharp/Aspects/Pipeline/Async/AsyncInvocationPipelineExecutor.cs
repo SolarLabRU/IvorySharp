@@ -16,7 +16,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
     /// </summary>
     internal sealed class AsyncInvocationPipelineExecutor : IInvocationPipelineExecutor
     {
-        private readonly IKeyValueCache<Type, MethodLambda> _handlersCache;
+        private readonly IKeyValueCache<Type, MethodCall> _handlersCache;
 
         /// <summary>
         /// Инициализирует экземпляр <see cref="AsyncInvocationPipelineExecutor"/>.
@@ -24,7 +24,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// <param name="cacheFactory">Фабрика кеша.</param>
         internal AsyncInvocationPipelineExecutor(IKeyValueCacheFactory cacheFactory)
         {
-            _handlersCache = cacheFactory.Create<Type, MethodLambda>();
+            _handlersCache = cacheFactory.Create<Type, MethodCall>();
         }
 
         /// <inheritdoc />
@@ -99,8 +99,8 @@ namespace IvorySharp.Aspects.Pipeline.Async
         /// <param name="signature">Модель вызова.</param>
         /// <returns>Хендлер для создания продолжения вызова.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static MethodLambda GetAsyncFunctionHandler(
-            IKeyValueCache<Type, MethodLambda> cache, 
+        private static MethodCall GetAsyncFunctionHandler(
+            IKeyValueCache<Type, MethodCall> cache, 
             IInvocationSignature signature)
         {
             var innerType = signature.Method.ReturnType.GetGenericArguments()[0];
@@ -112,7 +112,7 @@ namespace IvorySharp.Aspects.Pipeline.Async
                     .First(m => m.IsGenericMethodDefinition && m.Name == nameof(SignalWhenAwait))
                     .MakeGenericMethod(innerType);
 
-                return Expressions.CreateLambda(method);
+                return Expressions.CreateMethodCall(method);
             });
         }
     }

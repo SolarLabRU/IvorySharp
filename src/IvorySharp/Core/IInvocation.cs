@@ -1,23 +1,22 @@
-﻿using System.ComponentModel;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Интерфейс выполнения метода.
+    /// Describes method invocation.
     /// </summary>
     [PublicAPI]
     public interface IInvocation : IInvocationContext
     {
         /// <summary>
-        /// Возвращаемое значение.
+        /// The return value of the method.
         /// </summary>
         [CanBeNull] object ReturnValue { get; set; }
     
         /// <summary>
-        /// Выполняет оригинальный метод.
+        /// Proceeds the original (underlying) method call.
         /// </summary>
-        /// <returns>Результат вызова метода (void -> null).</returns>
+        /// <returns>The result of method call (null if method returns void).</returns>
         [CanBeNull] object Proceed();
     }
 }

@@ -1,36 +1,35 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Хранит пару типов.
+    /// Represents container that holds the pair of related types.
     /// </summary>
     internal readonly struct TypePair : IEquatable<TypePair>
     {
         /// <summary>
-        /// Объявленный тип компонента.
+        /// Component declaring type (interface).
         /// </summary>
-        public readonly Type DeclaredType;
+        public readonly Type DeclaringType;
         
         /// <summary>
-        /// Фактический тип компонента.
+        /// Component implementation type.
         /// </summary>
-        public readonly Type TargetType;
+        public readonly Type ImplementationType;
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="TypePair"/>.
+        /// Creates a new instance of <see cref="TypePair"/>.
         /// </summary>
-        public TypePair(Type declaredType, Type targetType)
+        public TypePair(Type declaringType, Type implementationType)
         {
-            DeclaredType = declaredType;
-            TargetType = targetType;
+            DeclaringType = declaringType;
+            ImplementationType = implementationType;
         }
         
         /// <inheritdoc />
         public bool Equals(TypePair other)
         {
-            return DeclaredType == other.DeclaredType && TargetType == other.TargetType;
+            return DeclaringType == other.DeclaringType && ImplementationType == other.ImplementationType;
         }
 
         /// <inheritdoc />
@@ -45,7 +44,7 @@ namespace IvorySharp.Core
         {
             unchecked
             {
-                return (DeclaredType.GetHashCode() * 397) ^ TargetType.GetHashCode();
+                return (DeclaringType.GetHashCode() * 397) ^ ImplementationType.GetHashCode();
             }
         }
     }

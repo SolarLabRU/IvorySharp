@@ -1,19 +1,16 @@
 ﻿using System;
 using IvorySharp.Aspects;
-using IvorySharp.Aspects.Configuration;
 using IvorySharp.Aspects.Creation;
 using IvorySharp.Aspects.Dependency;
 using IvorySharp.Aspects.Finalize;
 using IvorySharp.Aspects.Pipeline;
 using IvorySharp.Aspects.Selection;
 using IvorySharp.Aspects.Weaving;
-using IvorySharp.Caching;
 using IvorySharp.Components;
 using IvorySharp.Extensions.ClassAspectSelection;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Selection;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Weaving;
 using IvorySharp.Tests.Assets;
-using IvorySharp.Tests.Assets.Cache;
 using Xunit;
 
 namespace IvorySharp.Tests.IntegrationTests

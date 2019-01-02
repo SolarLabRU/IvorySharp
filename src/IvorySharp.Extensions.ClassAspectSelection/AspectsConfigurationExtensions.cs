@@ -1,5 +1,4 @@
 ﻿using IvorySharp.Aspects.Configuration;
-using IvorySharp.Caching;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Selection;
 using IvorySharp.Extensions.ClassAspectSelection.Aspects.Weaving;
 

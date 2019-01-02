@@ -4,10 +4,10 @@ using JetBrains.Annotations;
 namespace IvorySharp.Linq
 {
     /// <summary>
-    /// Делегат установки значения свойства.
+    /// Delegate for setting value to the property.
     /// </summary>
-    /// <param name="target">Экземпляр класса.</param>
-    /// <param name="value">Значение свойства.</param>
+    /// <param name="target">Object instance to set property value.</param>
+    /// <param name="value">Property value to set.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public delegate void PropertySetter([NotNull] object target, [CanBeNull] object value);
 }

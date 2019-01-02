@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using JetBrains.Annotations;
 
 namespace IvorySharp.Exceptions
 {
     /// <summary>
-    /// Исключение, возникающее при работе с библиотекой.
+    /// The exception that occurs when something goes wrong inside the library.
     /// </summary>
-    [Serializable]
+    [Serializable, PublicAPI]
     public sealed class IvorySharpException : Exception
     {
         /// <summary>
-        /// Инициализирует экземпляр <see cref="IvorySharpException"/>.
+        /// Initializes a new instance of <see cref="IvorySharpException"/>.
         /// </summary>
         public IvorySharpException(string message) : base(message)
         {
         }
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="IvorySharpException"/>.
+        /// Initializes a new instance of <see cref="IvorySharpException"/>.
         /// </summary>
         public IvorySharpException(string message, Exception innerException) : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="IvorySharpException"/>.
+        /// Initializes a new instance of <see cref="IvorySharpException"/>.
         /// </summary>
         internal IvorySharpException(SerializationInfo info, StreamingContext context) : base(info, context)
         {

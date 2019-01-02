@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
-using JetBrains.Annotations;
 
 namespace IvorySharp.Components
 {
     /// <summary>
-    /// Компонент библиотеки.
+    /// Describes any replaceable library component.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public interface IComponent

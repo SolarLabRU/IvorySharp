@@ -1,13 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
-using JetBrains.Annotations;
 
 namespace IvorySharp.Components
 {
     /// <summary>
-    /// Базовый провайдер компонентов.
+    /// Basic component provider.
     /// </summary>
-    /// <typeparam name="TComponent">Тип компонента.</typeparam>
+    /// <typeparam name="TComponent">Component type.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public abstract class ComponentHolderBase<TComponent> : IComponentHolder<TComponent>
         where TComponent : IComponent
@@ -16,7 +15,7 @@ namespace IvorySharp.Components
         private static readonly object Lock = new object();
 
         /// <summary>
-        /// Признак того, что провайдер "заморожен".
+        /// Determines when provider is "frozen" (component replacement prohibited).
         /// </summary>
         public bool IsFrozen { get; private set; }
 
@@ -41,9 +40,9 @@ namespace IvorySharp.Components
         }
 
         /// <summary>
-        /// Выполняет замену компонента.
+        /// Replaces the component with the new one.
         /// </summary>
-        /// <param name="component">Новый компонент.</param>
+        /// <param name="component">New component instance.</param>
         protected abstract void ReplaceInternal(TComponent component);
 
         /// <inheritdoc />

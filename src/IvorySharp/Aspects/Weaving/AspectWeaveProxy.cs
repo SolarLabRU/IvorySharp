@@ -112,7 +112,7 @@ namespace IvorySharp.Aspects.Weaving
                 TargetType, invocation.Method.GetInvocationType());
 
             return Interceptor.Intercept(
-                signature, invocation.MethodLambda,
+                signature, invocation.MethodCall,
                 invocation.Arguments, Target, 
                 invocation.TransparentProxy);
         }

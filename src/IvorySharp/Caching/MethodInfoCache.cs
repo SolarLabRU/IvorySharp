@@ -24,7 +24,7 @@ namespace IvorySharp.Caching
         
         private MethodInfoCache(IKeyValueCacheFactory cacheFactory)
         {
-            cacheFactory.Create<MethodInfo, MethodLambda>(MethodEqualityComparer.Instance);
+            cacheFactory.Create<MethodInfo, MethodCall>(MethodEqualityComparer.Instance);
             _methodMapCacheKey = cacheFactory.Create<MethodMapCacheKey, MethodInfo>();
             _asyncMethodCache = cacheFactory.Create<MethodInfo, bool>(MethodEqualityComparer.Instance);
         }

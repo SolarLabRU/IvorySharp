@@ -4,10 +4,13 @@ using System.Reflection;
 namespace IvorySharp.Comparers
 {
     /// <summary>
-    /// Компонент для сравнения методов на равенство.
+    /// Equality comparer for <see cref="MethodInfo"/>.
     /// </summary>
     internal sealed class MethodEqualityComparer : EqualityComparer<MethodInfo>
     {
+        /// <summary>
+        /// Initialized instance of <see cref="MethodEqualityComparer"/>.
+        /// </summary>
         public static readonly MethodEqualityComparer Instance = new MethodEqualityComparer();
 
         private MethodEqualityComparer() { }

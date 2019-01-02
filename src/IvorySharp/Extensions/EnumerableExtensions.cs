@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace IvorySharp.Extensions
 {
+    /// <summary>
+    /// A set of extenstion methods for <see cref="IEnumerable{T}"/>.
+    /// </summary>
     internal static class EnumerableExtensions
     {
         public static bool ContainsReference<T>(this IEnumerable<T> source, T target)

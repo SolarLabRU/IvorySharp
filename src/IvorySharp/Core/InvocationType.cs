@@ -1,25 +1,24 @@
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace IvorySharp.Core
 {
     /// <summary>
-    /// Тип метода.
+    /// Describes the method invocation kind.
     /// </summary>
     public enum InvocationType
     {
         /// <summary>
-        /// Синхронный метод.
+        /// Synchronous method invocation (default).
         /// </summary>
         Synchronous = 0,
         
         /// <summary>
-        /// Асинхронная функция (return: <see cref="Task{TResult}"/>)
+        /// Async function (method returns <see cref="Task{TResult}"/>)
         /// </summary>
         AsyncFunction = 1,
         
         /// <summary>
-        /// Асинхронное действие (return <see cref="Task"/>)
+        /// Async action (method returns <see cref="Task"/>)
         /// </summary>
         AsyncAction = 2
     }

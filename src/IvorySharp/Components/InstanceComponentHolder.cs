@@ -4,9 +4,10 @@ using System.ComponentModel;
 namespace IvorySharp.Components
 {
     /// <summary>
-    /// Провайдер компонента на основе экземпляра.
+    /// Component store based on created component instance.
+    /// Actually it just wraps component instance.
     /// </summary>
-    /// <typeparam name="TComponent">Тип компонента.</typeparam>
+    /// <typeparam name="TComponent">Component type.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public sealed class InstanceComponentHolder<TComponent> : ComponentHolderBase<TComponent>
         where TComponent : IComponent
@@ -14,9 +15,9 @@ namespace IvorySharp.Components
         private TComponent _instance;
 
         /// <summary>
-        /// Инициализирует экземпляр <see cref="InstanceComponentHolder{TComponent}"/>.
+        /// Creates a new instance of <see cref="InstanceComponentHolder{TComponent}"/>.
         /// </summary>
-        /// <param name="instance">Экземпляр компонента.</param>
+        /// <param name="instance">Component instance.</param>
         public InstanceComponentHolder(TComponent instance)
         {
             if (instance == null)
